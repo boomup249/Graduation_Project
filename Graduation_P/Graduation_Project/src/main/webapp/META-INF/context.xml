@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context>
+<Resource name="jdbc/member"
+auth="Container"
+type="javax.sql.DataSource"
+driverClassName="com.mysql.cj.jdbc.Driver"
+url="jdbc:mysql://localhost:3306/member"
+username="root"
+password="qkqh12"
+maxTotal="16"
+maxIdle="4"
+maxWaitMillis="-1" />
+</Context>
+
+
