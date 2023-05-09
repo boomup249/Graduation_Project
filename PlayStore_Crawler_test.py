@@ -24,4 +24,8 @@ for item in game:
     price_span = price.find("span")
     sale = item.find("span", {"class": "VfPpfd VixbEe"})
     sale_span = sale.find("span")
-    print("게임 이름 : ", name.text, ", 별점 : ", rank.text, ", 정가 : ", price_span.text, ", 할인가 : ", sale_span.text)
+
+    img = item.find("div", {"class": "TjRVLb"})
+    img1 = img.find("img")['src']
+
+    print("게임 이름 : ", name.text, ", 별점 : ", rank.text, ", 정가 : ", price_span.text, ", 할인가 : ", sale_span.text, ", 이미지 링크 : ", img1)
