@@ -21,11 +21,13 @@ for item in game:
     name = item.find("div", {"class": None})
     rank = item.find("div", {"class": "LrNMN"})
     price = item.find("span", {"class": "SUZt4c P8AFK"})
-    price_span = price.find("span")
+    #price_span = price.find("span")
     sale = item.find("span", {"class": "VfPpfd VixbEe"})
     sale_span = sale.find("span")
 
     img = item.find("div", {"class": "TjRVLb"})
     img1 = img.find("img")['src']
 
-    print("게임 이름 : ", name.text, ", 별점 : ", rank.text, ", 정가 : ", price_span.text, ", 할인가 : ", sale_span.text, ", 이미지 링크 : ", img1)
+    #price_span이 존재하지않는 항목들이 존재해서 오류가 발생함
+    #print("게임 이름 : ", name.text, ", 별점 : ", rank.text, ", 정가 : ", price_span.text, ", 할인가 : ", sale_span.text, ", 이미지 링크 : ", img1)
+    print("게임 이름 : ", name.text, ", 별점 : ", rank.text, ", 할인가 : ", sale_span.text, ", 이미지 링크 : ", img1)
