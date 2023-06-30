@@ -1,0 +1,157 @@
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>loco > join</title>
+		<style>
+			/*폰트*/
+			@font-face {
+						    font-family: 'GmarketSansMedium';
+						    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
+						    font-weight: normal;
+						    font-style: normal;
+						}
+						
+			@font-face {
+						    font-family: 'DOSPilgiMedium';
+						    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2304-2@1.0/DOSPilgiMedium.woff2') format('woff2');
+						    font-weight: normal;
+						    font-style: normal;
+						}
+						
+			/*css 속성*/
+			/*logo*/
+			#logo {z-index: 2; /* logo가 b_img보다 위에 배치되어야 함*/
+					position: absolute;
+					top: 0px;
+					left: 0px;
+					width: 100%; height: 50px; /*logo 담을 가상 헤더 header 100px 고정 -> 50 + 25 + 25*/ 
+					padding-top: 25px; padding-bottom: 25px;}
+			.link img {height: 50px;} /*로고 이미지*/
+			.link a {float: left; margin-left: 25px;} /*왼쪽 정렬, 마진 25px*/
+			
+			
+			/*내용*/
+			#content {z-index: 3;
+						position: relative;
+						top: 0px;
+						left: 0px;
+						width: 100%; height: 100%;
+						/*자식 수직 중앙 정렬*/
+						display: flex;
+						flex-direction: column;
+						justify-content: center;}
+			
+			#input {width: 1000px; /*input 공통 속성*/
+					height: 80px;
+					padding-left: 30px;
+					font-family: 'GmarketSansMedium';
+					font-size: 20pt;
+					border: solid 5px #000; border-radius: 8px;}
+								
+			#sub {background-image: url('imgs/next.png'); /*제출 버튼*/
+					background-size: cover;
+					background-position: center;
+					background-repeat: no-repeat;
+					width: 80px;
+					height: 80px;
+					border: solid 3px #005982; border-radius: 8px; }
+					
+			#text {float: left; margin-left: 25px;}
+			p {font-family: 'DOSPilgiMedium';
+					font-size: 25pt;
+					color: #474747;}
+						
+			.item4 input {float: left; margin-left: 25px;}
+			
+			/*위치 잡기*/
+			.item1 {width: 536px; height: 150px;
+					/*요소가 마진포함 466, 여백 양쪽 35px 있어야 item2와 정렬*/
+					position: relative;
+					left: 50%;
+					margin-left: -625px; 
+					/*자식 중앙정렬*/
+					display: flex;
+					justify-content: center;
+					align-items: center;}
+					
+			.item2 {width: 1000px; height: 110px;
+					position: relative;
+					left: 50%;
+					margin-left: -565px;
+					/*자식 중앙정렬*/
+					display: flex;
+					justify-content: center;
+					align-items: center;}
+			
+			.item3 {width: 1000px; height: 110px;
+					position: relative;
+					left: 50%;
+					margin-left: -565px;
+					/*자식 중앙정렬*/
+					display: flex;
+					justify-content: center;
+					align-items: center;}
+			
+			.item4 {width: 1200px; height: 110px;
+					position: relative;
+					left: 50%;
+					margin-left: -625px; /*content에 수직 중앙 정렬(left -25px(margin))*/
+					/*자식 중앙정렬*/
+					display: flex;
+					justify-content: center;
+					align-items: center;}
+					
+			
+			/* 배경 이미지 body 부분 꽉차게*/	
+			#b_img {z-index: 1;
+					position: absolute;
+					top: 0px;
+					left: 0px;
+					width: 100%;
+					height: 100%;
+					/*이미지 디비에서 주소값 받아서 url에 넣기(아래는 예시)*/
+					background-image: url("https://cdn.cloudflare.steamstatic.com/steam/apps/1172620/header.jpg?t=1682374543");
+					background-size: cover;
+					background-position: center;
+					background-repeat: no-repeat;
+					opacity: 0.6;
+					}
+			
+			body { background-color: #fff;
+					margin: 0; padding: 0;}
+		</style>
+	</head>
+	
+	<body>
+		<div id="b_img"></div><!-- 배경 이미지 불투명도 조절해서 넣기 -->
+		
+		<div id="logo">
+			<div class="link">
+				<a href=""><img src="imgs/header/logo.png"/></a>
+			</div>
+		</div>
+		
+		<div id="content">
+			
+			<div class="item1">
+				<img src="imgs/logo2.png" id="text" width="300px" height="125px"/>
+				<p id="text">welcome</p>
+			</div>
+			
+			<div id="writing">
+				<div class="item2">
+					<input type="email" id="input" placeholder="yuhan@yuhan.ac.kr" />
+				</div>
+				<div class="item3">
+					<input type="password" id="input" placeholder="비밀번호를 입력해주세요" />
+				</div>
+				<div class="item4">
+					<input type="password" id="input" placeholder="비밀번호를 다시 한 번 입력해주세요" />
+					<input type="submit" id="sub" value=""/>
+				</div>
+			</div>
+			
+		</div>
+		
+	</body>
+</html>
