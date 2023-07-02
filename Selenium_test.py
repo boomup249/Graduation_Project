@@ -2,10 +2,8 @@ import selenium
 from time import sleep
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.action_chains import ActionChains
 from bs4 import BeautifulSoup
 
@@ -23,12 +21,14 @@ driver = webdriver.Chrome(options=options)
 driver.set_window_size(1400,1000)
 driver.get(URL)
 #암시적 대기 설정(페이지가 변경될시 10초동안 대기하는데 페이지가 로딩되면 바로 다음 명령어를 실행)
+#대기시간 없이 다음 명령어를 바로 수행하려하면 정상적으로 작동되지 않기때문에 반드시 필요한 설정임
 driver.implicitly_wait(10)
 
 #네이버 검색창 아래 쇼핑 버튼 클릭
 driver.find_element(By.XPATH, "/html/body/div[2]/div[1]/div/div[5]/ul/li[4]/a/span[2]").click()
 
 #쇼핑 버튼을 누르면 새탭이 생기는데 해당 탭으로 이동하는 명령어
+#여기서 쇼핑 버튼을 눌렀을때 탭이 새로 생성되는걸 못봐서 오래 막혔었음(그냥 페이지 이동되는줄 앎)
 driver.switch_to.window(driver.window_handles[-1])
 
 #오른쪽 상단 쇼핑 BEST 클릭
@@ -46,10 +46,10 @@ button.click()
 
 
 
-#                       카테고리 베스트 페이지는 매번 정보가 바뀌는 동적 페이지기 때문에
-#                       selenium으로 화면을 전부 불러온후 BeautifulSoup을 이용해 상품 정보를 크롤링해야한다
 
 
+#카테고리 베스트 페이지는 매번 정보가 바뀌는 동적 페이지기 때문에
+#selenium으로 화면을 전부 불러온후 BeautifulSoup을 이용해 상품 정보를 크롤링해야한다
 
 #pagedown 변수에 페이지 자체에 명령을 입력할수있게 body 태그를 설정
 pagedown = driver.find_element(By.TAG_NAME, "body")
@@ -57,6 +57,7 @@ pagedown = driver.find_element(By.TAG_NAME, "body")
 #나중에 화면이 맨아래까지 내려온걸 체크하는 메서드를 찾으면 while문으로 바꾸면될듯
 for i in range(15):
     pagedown.send_keys(Keys.PAGE_DOWN)
+    #PAGE_DOWN 키가 입력되는걸 가시적으로 확인하기위해 sleep 추가
     sleep(0.5)
 
 """
