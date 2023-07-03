@@ -94,13 +94,6 @@ product = panel.find_all("li", {"class", "imageProduct_item__KZB_F"})
 
 
 
-
-
-
-
-
-
-
 #                                                       엑셀 파일에 크롤링 데이터 저장하는 부분
 
 #파일이름을 현재시간.xlsx로 지정하기위해 time 변수에 현재시간 설정
