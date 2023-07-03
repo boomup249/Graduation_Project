@@ -6,6 +6,11 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
 from bs4 import BeautifulSoup
+from datetime import datetime
+import openpyxl
+from io import BytesIO
+import dload
+from pathlib import Path
 
 #selenium 4.6 이상부턴 크롬드라이버의 경로를 지정해줄필요가 없음
 
@@ -16,7 +21,7 @@ URL = 'https://www.naver.com'
 options = Options()
 options.add_experimental_option("detach", True)
 
-#chromedriver 설정(순서대로 객체 생성, 윈도우 창 크기 조절, URL 지정)
+#chromedriver 설정(순서대로 인스턴스 생성, 윈도우 창 크기 조절, URL 지정)
 driver = webdriver.Chrome(options=options)
 driver.set_window_size(1400,1000)
 driver.get(URL)
@@ -67,6 +72,7 @@ for i in range(15):
     제품 이름 div class = "imageProduct_title__Wdeb1"
     제품 가격 = div class name : "imageProduct_price_W6pU1" 하단의 strong 태그
     제품 순위 = span class = "imageProduct_rank__lEppJ"
+    제품 이미지 = div class "imageProduct_thumbnail__Szi5F" 하단의 img 태그
         *일부 상품에만 포함되는 정보*
     배달비 span class = "imageProduct_ico_delivery__OBgnG" // 배달비가 없을시 '판매처별 상이'로 출력
     판매자 div class = "imageProduct_mall__tJkQR" // 판매자가 없을시 '다양한 판매자'로 출력
@@ -74,13 +80,53 @@ for i in range(15):
 
 #BeautifulSoup을 사용하기위해 현재 페이지의 주소를 html 변수에 저장
 html = driver.page_source
-#soup 변수에 html을 넣고 BeautifulSoup 사용 선언
+#BeautifulSoup을 사용해 html을 python이 읽을수있는 객체로 변환해줌(parsing)
 soup = BeautifulSoup(html, "html.parser")
 
 #상품 전체 패널을 panel 변수에 저장
 panel = soup.find("div", {"class": "category_panel"})
 #product 변수에 상품 하나의 정보를 포함하고있는 li 태그를 전부 저장(배열)
 product = panel.find_all("li", {"class", "imageProduct_item__KZB_F"})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#                                                       엑셀 파일에 크롤링 데이터 저장하는 부분
+
+#파일이름을 현재시간.xlsx로 지정하기위해 time 변수에 현재시간 설정
+time = datetime.now()
+#timestr 변수에 '4자리년도+2자리월+2자리일_2자리시간+2자리분' 형식으로 현재 시간을 저장
+timestr = time.strftime("%Y%m%d_%H%M")
+
+#excel_File에 크롤링 데이터 액셀파일 저장을 위한 인스턴스 생성
+excel_File = openpyxl.Workbook()
+#현재 시트 활성화
+excel_sheet = excel_File.active
+
+#액셀 첫 행에 제품순위, 제품명, 가격, 배달비, 판매자, 파일 이미지를 순서대로 집어넣음
+row_column = ["제품 순위", "제품명", "가격", "배달비", "판매자", "파일 이미지"]
+excel_sheet.append(row_column)
+
+#D:\Python\Study\SaveTest\에 timestr 형식의 폴더가 없으면 생성한다
+path = f'D:\Python\Study\SaveTest\{timestr}'
+Path(path).mkdir(parents=True, exist_ok=True)
+
+
+
+
+
+
+#                                                       반복문으로 상품 정보 읽어오기
 
 for item in product:
     #제품명 div 태그를 name 변수에 저장
@@ -89,7 +135,9 @@ for item in product:
     price = item.find("strong", {"class": None})
     #제품 순위 span 태그를 rank 변수에 저장
     rank = item.find("span", {"class": "imageProduct_rank__lEppJ"})
-    
+    #제품 이미지 img 태그를 img 변수에 저장하고 imgdata 변수에 src 태그 정보만 가져옴
+    img = item.find("img", {"class": None})
+    imgdata = img["src"]
     #배달비 span 태그를 delivery_price 변수에 저장
     delivery_price = item.find("span", {"class": "imageProduct_ico_delivery__OBgnG"})
     #판매자 div 태그를 delivery_price 변수에 저장
@@ -98,7 +146,7 @@ for item in product:
     
     #이후 if문을 사용해서 배달비와 판매자가 적혀있는지 안적혀있는지 검사하고 존재하지않으면 62line 주석에서 정해둔 문자열값을 입력함
     """
-    ★★★★★else문에서 읽어온 변수값을 str형식으로 형변환하는 이유★★★★★
+    ★★★★★else문에서 읽어온 변수값을 문자열로 형변환하는 이유★★★★★
     ★★★★★설명을 잘 못해서 개떡같이 써놨는데 어떻게든 이해하기바람★★★★★
     
     출력할때 형변환을 진행하면 if를 통과해 이미 문자열로 변환된 변수값을 다시 형변환하여 출력할것이다.
@@ -106,22 +154,32 @@ for item in product:
     문자열을 다시 문자열로 변환하려하면 오류가 생기기때문에
     if를 통과하든 else를 통과하든 변수는 문자열 형태로 변환시킨후
     출력할때 name, price와 다르게 .string이나 .get_text()를 붙이지않고 문자열 변수 자체를 출력하는게 맞다
-    
-    출력할때 name, price는 .string을 쓰고 delivery_price와 seller는 get_text()를 쓴 이유:
-    여긴 공부가 필요하다 어려워서 설명을봐도 이해를 못했다(delivery_price, seller에 .string쓰면 오류나서 get_text()했는데 오류안남)
     """
-    if delivery_price == None:
+    if delivery_price == None: #상품 정보(panel)에 배달비가 존재하지않으면
         delivery_price = "판매처별 상이"
-    else:
+    else: #상품정보(panel)에 배달비가 존재하면
         delivery_price = delivery_price.get_text()
-    if seller == None:
+        
+    if seller == None: #상품 정보(panel)에 판매자 이름이 명확하게 안적혀있으면
         seller = "다양한 판매자"
-    else:
+    else: #상품 정보(panel)에 판매자가 적혀있으면
         seller = seller.get_text()
     
     #랭킹, 제품명, 가격, 배달비, 판매자 순서로 출력
-    print(rank.string, "- 제품명 :", name.string, ", 가격 :", price.string, ", 배달비 :", delivery_price, ", 판매자 :", seller, "\n")
+    #print(rank.string, "- 제품명 :", name.string, ", 가격 :", price.string, ", 배달비 :", delivery_price, ", 판매자 :", seller, "\n")
+    
+    #랭킹, 제품명, 가격, 배달비, 판매자, 파일 이미지 순서로 list형식으로 data_column 변수에 저장
+    data_column = [rank.string, name.string, price.string, delivery_price, seller, imgdata]
+    #1번행이 비어있는 행에 data_column의 데이터를 전부 집어넣음
+    excel_sheet.append(data_column)
+    #path 경로에 IMG_timestr_rank.jpg 이름으로 모든 제품의 이미지를 jpg 형식으로 저장)
+    dload.save(imgdata, f'{path}\IMG_{timestr}_{rank.string}.jpg')
 
-#출력이 끝나면 10초 후 생성했던 driver 객체 제거하여 메모리 반환
-sleep(10)
+#path 경로에 CrollingTest_timestr.xlsx 이름으로 엑셀파일 저장
+excel_File.save(f'{path}\CrollingTest_{timestr}.xlsx')
+#인스턴스 해제
+excel_File.close()
+
+#출력이 끝나면 10초 후 생성했던 driver 인스턴스 해제
+#sleep(10)
 driver.quit()
