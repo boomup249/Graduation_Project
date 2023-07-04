@@ -12,7 +12,7 @@ from io import BytesIO
 import dload
 from pathlib import Path
 
-#selenium 4.6 이상부턴 크롬드라이버의 경로를 지정해줄필요가 없음
+#selenium 4.6 이상부턴 크롬드라이버의 경로를 지정해줄필요가 없음 -> 확인결과 셀레니움 최신버전은 크롬드라이버 설치안해도 사용가능
 
 #작업할 URL 설정
 URL = 'https://www.naver.com'
