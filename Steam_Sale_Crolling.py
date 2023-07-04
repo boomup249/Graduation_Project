@@ -15,7 +15,7 @@ URL = 'https://store.steampowered.com/specials/'
 options = Options()
 options.add_experimental_option("detach", True)
 
-#크롬드라이버 객체 생성 및 옵션, 크기, URL, 암시적 대기 설정
+#크롬드라이버 인스턴스 생성 및 옵션, 크기, URL, 암시적 대기 설정
 driver = webdriver.Chrome(options=options)
 driver.set_window_size(1400,1000)
 driver.get(URL)
@@ -67,18 +67,24 @@ sleep(1.5)
 driver.execute_script('window.scrollTo(0,document.body.scrollHeight)')
 sleep(1.5)
 
+#반복문으로 할인중인 게임 목록에 '더 보기' 버튼이 존재하면 해당 버튼을 누르고 없어지면 반복문을 빠져나오게 작성
+while True:
+    #현재 할인중인 상품들을 펼쳐보려면 '더 보기' 버튼을 눌러야해서 button 변수에 '더 보기' 버튼의 경로를 설정
+    button = driver.find_element(By.CSS_SELECTOR, "#SaleSection_13268 > div.partnersaledisplay_SaleSection_2NfLq.eventbbcodeparser_SaleSectionCtn_2Xrw_.SaleSectionForCustomCSS > div.saleitembrowser_SaleItemBrowserContainer_2wLns > div:nth-child(2) > div.facetedbrowse_FacetedBrowseInnerCtn_hWbTI > div > div.saleitembrowser_ShowContentsContainer_3IRkb > button")
+    #if else문 : '더 보기' 버튼이 존재하면(None 타입이 아니라 WebElement 타입이 반환되면)
+    if button != None:
+        #화면을 '더 보기' 버튼이 있는곳으로 이동시킨다
+        action.move_to_element(button).perform()
+        #'더 보기' 버튼을 클릭한다
+        button.click()
+    else: #'더 보기' 버튼이 존재하면 break로 반복문 빠져나옴
+        break
+
+
 #할인 상품전체 패널
 panel = soup.find("div", {"class": "partnersaledisplay_SaleSection_2NfLq eventbbcodeparser_SaleSectionCtn_2Xrw_ SaleSectionForCustomCSS"})
 
-#현재 할인중인 상품들을 펼쳐보려면 '더 보기' 버튼을 눌러야해서 button 변수에 '더 보기' 버튼의 경로를 설정
-while True:
-    button = driver.find_element(By.CSS_SELECTOR, "#SaleSection_13268 > div.partnersaledisplay_SaleSection_2NfLq.eventbbcodeparser_SaleSectionCtn_2Xrw_.SaleSectionForCustomCSS > div.saleitembrowser_SaleItemBrowserContainer_2wLns > div:nth-child(2) > div.facetedbrowse_FacetedBrowseInnerCtn_hWbTI > div > div.saleitembrowser_ShowContentsContainer_3IRkb > button")
-    if button != None:
-        action.move_to_element(button).perform()
-        button.click()
-        sleep(2)
-    else:
-        break
 
+#모든 작업이 완료되면 5초 대기했다가 인스턴스 해제
 sleep(5)
 driver.quit()
