@@ -1,4 +1,4 @@
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 	<head>
 		<meta charset="UTF-8">
 		<title>loco > join</title>
@@ -41,7 +41,7 @@
 						flex-direction: column;
 						justify-content: center;}
 			
-			#input {width: 1000px; /*input 공통 속성*/
+			input[type=email], input[type=password] {width: 1000px; /*input 공통 속성*/
 					height: 80px;
 					padding-left: 30px;
 					font-family: 'GmarketSansMedium';
@@ -127,7 +127,7 @@
 		
 		<div id="logo">
 			<div class="link">
-				<a href="./main.html"><img src="imgs/header/logo.png"/></a>
+				<a href="/main"><img src="imgs/header/logo.png"/></a>
 			</div>
 		</div>
 		
@@ -137,16 +137,17 @@
 				<img src="imgs/logo2.png" id="text" width="300px" height="125px"/>
 				<p id="text">welcome</p>
 			</div>
-			<form action = "./select_info.html" method = "post">
+			
+			<form action = "/join_info" method = "post">
 			<div id="writing">
 				<div class="item2">
-					<input type="email" id="input" placeholder="yuhan@yuhan.ac.kr" />
+					<input type="email" />
 				</div>
 				<div class="item3">
-					<input type="password" id="input" placeholder="비밀번호를 입력해주세요" />
+					<input type="password" id="userPwd" placeholder="비밀번호를 입력해주세요" />
 				</div>
 				<div class="item4">
-					<input type="password" id="input" placeholder="비밀번호를 다시 한 번 입력해주세요" />
+					<input type="password" id="userPwdck" placeholder="비밀번호를 다시 한 번 입력해주세요" />
 					<input type="submit" id="sub" value=""/>
 				</div>
 			</div>

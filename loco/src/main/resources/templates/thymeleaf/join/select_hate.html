@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>loco > join</title>
+		<style>
+			#content {margin-top: 100px}
+			#like {font-size: 20px; color:black}
+			#recommend {margin-top: -10px; font-size: 15px; color: #6D6D6D;}
+			#btn {margin-top: 130px; margin-right: 50px}
+			#before {margin: 10px}
+			#after {margin: 10px}
+			td {width : 150px;
+			  height: 75px;
+			  background-color: #A5A5A5;
+			  border: 1px solid #FFFFFF;}
+			  table { border-spacing: 20px; margin-top:40px}
+			body { background-color: #B5B5B5; margin: 0; padding: 0;}
+		</style>
+	</head>
+	<body>
+		<div style="text-align: center;"id="content">
+			<div id="like">
+				<p>비선호 장르가 있으신가요?</p>
+			</div>
+			<div id="recommend">
+				<p>추천에서 제외합니다. (없다면 다음 버튼 클릭)</p>
+			</div>
+			<!-- 게임 선택 목록-->
+			<table style="margin-left: auto; margin-right: auto;">
+			<tr>
+				<td><input type="checkbox" name="chk_like" value="액션">액션</input></td>
+				<td><input type="checkbox" name="chk_like" value="액션 어드벤처">액션 어드벤처</input></td>
+				<td><input type="checkbox" name="chk_like" value="생존">생존</input></td>
+				<td><input type="checkbox" name="chk_like" value="슈팅">슈팅</input></td>
+				<td><input type="checkbox" name="chk_like" value="FPS">FPS</input></td>
+			</tr>
+			<tr>
+				<td><input type="checkbox" name="chk_like" value="RPG">RPG</input></td>
+				<td><input type="checkbox" name="chk_like" value="ARPG">ARPG</input></td>
+				<td><input type="checkbox" name="chk_like" value="MMORPG">MMORPG</input></td>
+				<td><input type="checkbox" name="chk_like" value="오픈 월드">오픈 월드</input></td>
+				<td><input type="checkbox" name="chk_like" value="핵 앤 슬래쉬">핵 앤 슬래쉬</input></td>
+			</tr>
+			<tr>
+				<td><input type="checkbox" name="chk_like" value="어드벤처">어드벤처</input></td>
+				<td><input type="checkbox" name="chk_like" value="스포츠">스포츠</input></td>
+				<td><input type="checkbox" name="chk_like" value="레이싱">레이싱</input></td>
+				<td><input type="checkbox" name="chk_like" value="캐주얼">캐주얼</input></td>
+				<td><input type="checkbox" name="chk_like" value="퍼즐">퍼즐</input></td>
+			</tr>
+		</table>
+		</div>
+		
+		<!-- 이전/다음 버튼-->
+		<div style="text-align: right;" id="btn">
+			<a id=before href="/join_like"><img src="imgs/btn/before.png"/></a>
+			<a id=after href="/join_end"><img src="imgs/btn/after.png"/></a>
+		</div>
+	</body>
+</html>
