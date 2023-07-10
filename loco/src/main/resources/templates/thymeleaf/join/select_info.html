@@ -108,9 +108,17 @@
 		</div>
 		
 		<!-- 이전/다음 버튼-->
-		<div style="text-align: right;"id="btn">
-			<a id=before href="join_pwd"><img src="imgs/btn/before.png"/></a>
-			<a id=after href="/join_like"><img src="imgs/btn/after.png"/></a>
+		<div style="text-align: right;" id="btn">
+			<form action="join_pwd.html" method="get">
+				<button type="submit" style="border: none; background: none; padding: 0; margin: 0; cursor: pointer;">
+					<img src="imgs/btn/before.png" alt="이전">
+				</button>
+			</form>
+			<form action="select_like.html" method="get">
+				<button type="submit" style="border: none; background: none; padding: 0; margin: 0; cursor: pointer;">
+					<img src="imgs/btn/after.png" alt="다음">
+				</button>
+			</form>
 		</div>
 	</body>
 </html>
