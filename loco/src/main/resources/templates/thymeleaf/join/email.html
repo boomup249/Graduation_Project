@@ -119,12 +119,16 @@
 			<div class="item1">
 				<img src="imgs/logo2.png" width="300px" height="125px"/>
 			</div>
-			<form action = "/join_pwd" method = "post">
+			
+			<form action ="#" th:action="@{/join_pwd}"
+				th:object="${userDTO}"
+				method = "post">
 			<div class="item2">
-				<input type="email" id="userEmail" placeholder="이메일을 입력하여 시작하세요" required />
+				<input type="email" th:field="*{userEmail}" placeholder="이메일을 입력하여 시작하세요" required />
 				<input type="submit" id="sub" value=""/>
 			</div>
 			</form>
+			
 			<!-- 이미지 링크 -->
 			<div class="item3">
 				<a href="/main">비회원으로 시작하기</a>

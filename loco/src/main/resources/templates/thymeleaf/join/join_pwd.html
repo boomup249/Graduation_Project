@@ -138,16 +138,21 @@
 				<p id="text">welcome</p>
 			</div>
 			
-			<form action = "/join_info" method = "post">
+			<form action ="#" th:action="@{/register}"
+				th:object="${userDTO}"
+				method = "post">
 			<div id="writing">
 				<div class="item2">
-					<input type="email" />
+					<input type="email"
+						 th:value="${userDTO.getUserEmail()}"
+						 th:field="*{userEmail}"
+						 required/>
 				</div>
 				<div class="item3">
-					<input type="password" id="userPwd" placeholder="비밀번호를 입력해주세요" />
+					<input type="password" th:field="*{userPwd}" placeholder="비밀번호를 입력해주세요" required/>
 				</div>
 				<div class="item4">
-					<input type="password" id="userPwdck" placeholder="비밀번호를 다시 한 번 입력해주세요" />
+					<input type="password" th:field="*{userPwdck}" placeholder="비밀번호를 다시 한 번 입력해주세요" required/>
 					<input type="submit" id="sub" value=""/>
 				</div>
 			</div>

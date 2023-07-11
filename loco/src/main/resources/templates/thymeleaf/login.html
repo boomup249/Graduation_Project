@@ -42,7 +42,7 @@
 						flex-direction: column;
 						justify-content: center;}
 			
-			#input {width: 450px; /*input 공통 속성*/
+			input[type=email], input[type=password] {width: 450px; /*input 공통 속성*/
 					height: 70px;
 					padding-left: 15px;
 					font-family: 'GmarketSansMedium';
@@ -155,17 +155,23 @@
 				<p id="text1">로그인</p>
 			</div>
 			
+			<form action ="#" th:action="@{/main}"
+				th:object="${userDTO}"
+				method = "post">
+				
 			<div class="item2">
-				<input type="email" id="input" placeholder="email" />
+				<input type="email" th:field="*{userEmail}" placeholder="email" />
 			</div>
 			
 			<div class="item3">
-				<input type="password" id="input" placeholder="비밀번호" />
+				<input type="password" th:field="*{userPwd}" placeholder="비밀번호" />
 			</div>
 			
 			<div class="item4">
 				<input type="submit" id="sub" value="로그인" />
 			</div>
+			
+			</form>
 			
 			<div class="item5">
 					<p id="text2">회원이 아니신가요?</p>
