@@ -4,6 +4,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.common.exceptions import NoSuchElementException
 from bs4 import BeautifulSoup
 import openpyxl
 from pathlib import Path
@@ -11,6 +12,13 @@ from io import BytesIO
 import dload
 from time import sleep
 from datetime import datetime
+
+#'더보기' 버튼을 계속 눌러서 게임 정보를 전부 불러온후 다시 button을 find_element로 찾으려하면 None이 반환되지않고 오류가떠서 함수로 찾는것을 추가
+def find_element_button(driver):
+    try:
+        return driver.find_element(By.CSS_SELECTOR, "#SaleSection_13268 > div.partnersaledisplay_SaleSection_2NfLq.eventbbcodeparser_SaleSectionCtn_2Xrw_.SaleSectionForCustomCSS > div.saleitembrowser_SaleItemBrowserContainer_2wLns > div:nth-child(2) > div.facetedbrowse_FacetedBrowseInnerCtn_hWbTI > div > div.saleitembrowser_ShowContentsContainer_3IRkb > button")
+    except NoSuchElementException as _:
+        return None
 
 #현재시간 변수에 저장(파일경로와 파일이름에 현재시간을 넣기위해)
 time = datetime.now()
@@ -67,13 +75,11 @@ sleep(1.5)
 #반복문으로 할인중인 게임 목록에 '더 보기' 버튼이 존재하면 해당 버튼을 누르고 없어지면 반복문을 빠져나오게 작성
 while True:
     #현재 할인중인 상품들을 펼쳐보려면 '더 보기' 버튼을 눌러야해서 button 변수에 '더 보기' 버튼의 경로를 설정
-    button = driver.find_element(By.CSS_SELECTOR, "#SaleSection_13268 > div.partnersaledisplay_SaleSection_2NfLq.eventbbcodeparser_SaleSectionCtn_2Xrw_.SaleSectionForCustomCSS > div.saleitembrowser_SaleItemBrowserContainer_2wLns > div:nth-child(2) > div.facetedbrowse_FacetedBrowseInnerCtn_hWbTI > div > div.saleitembrowser_ShowContentsContainer_3IRkb > button")
+    button = find_element_button(driver)
     #if else문 : '더 보기' 버튼이 존재하면(None 타입이 아니라 WebElement 타입이 반환되면)
     if button != None:
-        #화면을 '더 보기' 버튼이 있는곳으로 이동시킨다
-        action.move_to_element(button).perform()
-        #'더 보기' 버튼을 클릭한다
-        button.click()
+        #화면을 '더 보기' 버튼이 있는곳으로 이동시킨 후 버튼을 클릭한다
+        action.move_to_element(button).click().perform()
     else: #'더 보기' 버튼이 존재하지않으면 break로 반복문 빠져나옴
         break
 
@@ -104,10 +110,18 @@ for item in gamelist:
     saleprice = item.find("div", class_="salepreviewwidgets_StoreSalePriceBox_Wh0L8")
     saleper = item.find("div", class_="salepreviewwidgets_StoreSaleDiscountBox_2fpFv")
     img = item.find("img", class_="salepreviewwidgets_CapsuleImage_cODQh")
+    
+    #게임은 할인하는데 확장팩이 할인안하는 경우 price와 saleper가 안적혀있어서 if문 작성
     imgdata = img["src"]
+    if price == None:
+        price = "할인 X"
+        saleper = "할인 X"
+    else:
+        price = price.text
+        saleper = saleper.text
 
     #액셀에 데이터 집어넣기, 이미지 저장
-    data_column = [i, title.text, price.text, saleprice.text, saleper.text, imgdata]
+    data_column = [i, title.text, price, saleprice.text, saleper, imgdata]
     excel_sheet.append(data_column)
     dload.save(imgdata, f'{path}\IMG_{i}.jpg')
     i += 1
