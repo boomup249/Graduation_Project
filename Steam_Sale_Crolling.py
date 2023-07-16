@@ -48,8 +48,8 @@ soup = BeautifulSoup(html, 'html.parser')
 steam_language = soup.find("span", {"class": "pulldown global_action_link"})
 
 if steam_language.string != "언어":
-    driver.find_element_by_css(driver, "#language_pulldown").click()
-    driver.find_element_by_css(driver, "#language_dropdown > div > a:nth-child(4)").click()
+    driver.find_element(By.CSS_SELECTOR, "#language_pulldown").click()
+    driver.find_element(By.CSS_SELECTOR, "#language_dropdown > div > a:nth-child(4)").click()
 sleep(5)
 
 
