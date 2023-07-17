@@ -1,19 +1,32 @@
-package com.yuhan.loco.dto;
+package com.yuhan.loco.user;
 
 import java.sql.Date;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
+
+
 public class UserDTO {
 	//
+	@Size(max = 99)
+	@Email
 	private String userEmail;
+	
+	@Size(max = 15)
 	private String userPwd;
+	
 	private String userPwdck;
 	
+	/*
 	private String userGender;
 	private Date userBirth;
 	
 	private String userLike;
 	private String userHate;
+	*/
 	
+
 	//getter setter
 	public String getUserEmail() {
 		return userEmail;
@@ -33,6 +46,8 @@ public class UserDTO {
 	public void setUserPwdck(String userPwdck) {
 		this.userPwdck = userPwdck;
 	}
+	
+	/*
 	public String getUserGender() {
 		return userGender;
 	}
@@ -57,18 +72,6 @@ public class UserDTO {
 	public void setUserHate(String userHate) {
 		this.userHate = userHate;
 	}
+	*/
 	
-	//toString
-	@Override
-	public String toString() {
-		return "UserDTO [userEmail=" + userEmail + ", userPwd=" + userPwd + ", userGender="
-				+ userGender + ", userBirth=" + userBirth + ", userLike=" + userLike + ", userHate=" + userHate + "]";
-	}
-	
-	
-	
-	
-	
-	
-
 }

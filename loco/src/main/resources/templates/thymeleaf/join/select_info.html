@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 	<head>
 		<meta charset="utf-8">
 		<title>loco > join</title>
@@ -33,6 +33,22 @@
 	</head>
 	
 	<body>
+		<form action ="#"
+				th:object="${userDTO}"
+				method = "post">
+				
+		<!-- (email이랑 비번) 안보이게 넘기기 -->
+		<input type="hidden"
+			th:value="${userDTO.getUserEmail()}"
+			th:field="*{userEmail}"
+			required/>
+			
+		<input type="hidden"
+			th:value="${userDTO.getUserPwd()}"
+			th:field="*{userPwd}"
+			required/>
+		<!-- -->
+		
 		<div style="text-align: center;"id="content">
 			<div id="birth">
 				<p>생일을 알려주세요!</p>
@@ -45,6 +61,7 @@
 			<select name="year" id="year" title="년도" class="custom-select" style="text-align: center;width:130px;height:30px;"></select>
 			<select name="month" id="month" title="월" class="custom-select" style="text-align: center;width:130px;height:30px;"></select>
 			<select name="day" id="day" title="일" class="custom-select" style="text-align: center;width:130px;height:30px;"></select>
+			
 			<script>
 			  $(document).ready(function () {
 			    setDateBox();
@@ -94,6 +111,7 @@
 				  }
 				});
 			  }
+			  
 			</script>
 		
 			<div id="gender">
@@ -109,16 +127,15 @@
 		
 		<!-- 이전/다음 버튼-->
 		<div style="text-align: right;" id="btn">
-			<form action="/join_pwd" method="get">
-				<button type="submit" style="border: none; background: none; padding: 0; margin: 0; cursor: pointer;">
+				<button onclick="action='/join_pwd'; submit();"
+					style="border: none; background: none; padding: 0; margin: 0; cursor: pointer;">
 					<img src="imgs/btn/before.png" alt="이전">
 				</button>
-			</form>
-			<form action="/register" method="post">
-				<button type="submit" style="border: none; background: none; padding: 0; margin: 0; cursor: pointer;">
+				<button onclick="action='/join_like'; submit();" style="border: none; background: none; padding: 0; margin: 0; cursor: pointer;">
 					<img src="imgs/btn/after.png" alt="다음">
 				</button>
-			</form>
 		</div>
+		
+		</form>
 	</body>
 </html>

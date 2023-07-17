@@ -56,12 +56,24 @@
 					height: 80px;
 					border: solid 3px #005982; border-radius: 8px; }
 					
-			#text {float: left; margin-left: 25px;}
-			p {font-family: 'DOSPilgiMedium';
+			.item1 img, .item1 p {float: left; margin-left: 25px;}
+			#text{font-family: 'DOSPilgiMedium';
 					font-size: 25pt;
 					color: #474747;}
 						
 			.item4 input {float: left; margin-left: 25px;}
+			
+			/*에러*/
+			#error{
+				font-family: 'GmarketSansMedium';
+				font-size: 15pt;
+				color: red;
+				/*위치*/
+				position: relative;
+				left: 50%;
+				margin-left: -565px;
+				
+			}
 			
 			/*위치 잡기*/
 			.item1 {width: 536px; height: 150px;
@@ -134,28 +146,38 @@
 		<div id="content">
 			
 			<div class="item1">
-				<img src="imgs/logo2.png" id="text" width="300px" height="125px"/>
+				<img src="imgs/logo2.png" width="300px" height="125px"/>
 				<p id="text">welcome</p>
 			</div>
 			
-			<form action ="#" th:action="@{/register}"
+			<form action ="#" th:action="@{/join_info}"
 				th:object="${userDTO}"
 				method = "post">
+				
 			<div id="writing">
 				<div class="item2">
 					<input type="email"
 						 th:value="${userDTO.getUserEmail()}"
 						 th:field="*{userEmail}"
-						 required/>
+						 placeholder="이메일을 입력해주세요" required/>
 				</div>
+				
 				<div class="item3">
-					<input type="password" th:field="*{userPwd}" placeholder="비밀번호를 입력해주세요" required/>
+					<input type="password"
+						th:field="*{userPwd}" 
+						placeholder="비밀번호를 입력해주세요" required/>
 				</div>
+				
 				<div class="item4">
-					<input type="password" th:field="*{userPwdck}" placeholder="비밀번호를 다시 한 번 입력해주세요" required/>
+					<input type="password" 
+						th:field="*{userPwdck}"
+						placeholder="비밀번호를 다시 한 번 입력해주세요" required/>
 					<input type="submit" id="sub" value=""/>
 				</div>
+				
+				<a th:if="${#fields.hasErrors('userPwdck')}" th:errors="*{userPwdck}" id="error"></a>
 			</div>
+			
 			</form>
 			
 		</div>
