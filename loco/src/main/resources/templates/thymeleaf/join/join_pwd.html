@@ -126,7 +126,7 @@
 					background-size: cover;
 					background-position: center;
 					background-repeat: no-repeat;
-					opacity: 0.6;
+					opacity: 0.4;
 					}
 			
 			body { background-color: #fff;
@@ -136,6 +136,7 @@
 	
 	<body>
 		<div id="b_img"></div><!-- 배경 이미지 불투명도 조절해서 넣기 -->
+		<script src="js/backgroundImage.js"></script>
 		
 		<div id="logo">
 			<div class="link">
@@ -165,8 +166,10 @@
 				<div class="item3">
 					<input type="password"
 						th:field="*{userPwd}" 
-						placeholder="비밀번호를 입력해주세요" required/>
+						placeholder="비밀번호를 입력해주세요(15자리 이하)" required/>
 				</div>
+				
+				<a th:if="${#fields.hasErrors('userPwd')}" th:errors="*{userPwd}" id="error"></a>
 				
 				<div class="item4">
 					<input type="password" 

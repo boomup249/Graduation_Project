@@ -9,11 +9,10 @@ import jakarta.validation.constraints.Size;
 
 public class UserDTO {
 	//
-	@Size(max = 99)
 	@Email
 	private String userEmail;
 	
-	@Size(max = 15)
+	//@Size(max = 15)
 	private String userPwd;
 	
 	private String userPwdck;

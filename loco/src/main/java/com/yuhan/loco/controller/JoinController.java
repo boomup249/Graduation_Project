@@ -1,17 +1,18 @@
 package com.yuhan.loco.controller;
 
+import java.util.Random;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.yuhan.loco.game.GameDTO;
+import com.yuhan.loco.game.GameService;
 import com.yuhan.loco.user.UserDTO;
 import com.yuhan.loco.user.UserService;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
 //회원가입 과정 관련 컨트롤러
@@ -106,6 +107,11 @@ public class JoinController {
 		if (!userDTO.getUserPwd().equals(userDTO.getUserPwdck())) {
 			bindingResult.rejectValue("userPwdck", "passwordInCorrect", "패스워드가 일치하지 않습니다.");
 			}
+		
+		//비밀번호가 15자리 초과하면
+		if(userDTO.getUserPwd().length() > 15) {
+			bindingResult.rejectValue("userPwd", "passwordLengthOver", "15자리를 초과하였습니다.");
+		}
 		
 		//error
 		if(bindingResult.hasErrors()) { return "/join/join_pwd"; }

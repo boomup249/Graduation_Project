@@ -79,11 +79,12 @@
 					width: 100%;
 					height: 100%;
 					/*이미지 디비에서 주소값 받아서 url에 넣기(아래는 예시)*/
-					background-image: url("https://cdn.cloudflare.steamstatic.com/steam/apps/1172620/header.jpg?t=1682374543");
+					/*기본 이미지 설정해놓고 html에서 th:style줘서 바꾸기*/
+					background-image: url("https://cdn.cloudflare.steamstatic.com/steam/apps/413150/header.jpg?t=1666917466");
 					background-size: cover;
 					background-position: center;
 					background-repeat: no-repeat;
-					opacity: 0.6;
+					opacity: 0.4;
 					}
 			
 			body { background-color: #fff;
@@ -92,7 +93,10 @@
 	</head>
 	
 	<body>
+		<!-- 이미지 링크 넣기 -->
 		<div id="b_img"></div><!-- 배경 이미지 불투명도 조절해서 넣기 -->
+		<script src="js/backgroundImage.js"></script>
+		
 		<div id="header">
 			<div class="btn">
 				<!-- 이미지 링크 -->
