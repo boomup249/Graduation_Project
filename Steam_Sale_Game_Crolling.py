@@ -17,7 +17,9 @@ class Crolling_Steam_Sale_Game(Crolling_Game_Info):
         
     #데이터 읽어와서 저장하는 함수
     def Data_Crolling(self):
-
+        self.Steam_Set_Language()
+        sleep(5)
+        self.Check_Mouse_Scroll()
         self.Open_Excel()
 
         while True:

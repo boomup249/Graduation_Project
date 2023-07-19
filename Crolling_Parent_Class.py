@@ -33,7 +33,7 @@ class Crolling_Game_Info:
         self.URL = url
 
     #스팀 언어 설정 함수
-    def Set_Language(self):
+    def Steam_Set_Language(self):
         html = self.driver.page_source
         soup = BeautifulSoup(html, "html.parser")
 
@@ -77,9 +77,6 @@ class Crolling_Game_Info:
         self.driver.get(self.URL)
         self.action = ActionChains(self.driver)
 
-        self.Set_Language()
-        sleep(5)
-        self.Check_Mouse_Scroll()
         self.Data_Crolling()
         self.driver.quit()
         print("크롤링 완료")
