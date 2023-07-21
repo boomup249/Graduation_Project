@@ -16,6 +16,13 @@
             crossorigin="anonymous"></script>
 
     <style>
+		/*폰트*/
+			@font-face {
+						    font-family: 'GmarketSansMedium';
+						    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
+						    font-weight: normal;
+						    font-style: normal;
+						}
 
         #content {margin-top: 150px;}
         #birth {font-size: 20px; color:black}
@@ -38,6 +45,14 @@
             text-align: center; /* 텍스트 가운데 정렬 */
             font-size: 16px; /* 텍스트 크기 조절 */
         }
+        
+        /*error 스타일*/
+        #error a {
+			font-family: 'GmarketSansMedium';
+			font-size: 15pt;
+			color: red;
+		}
+		#error {margin-top: 15px;}
 
     </style>
 </head>
@@ -71,6 +86,11 @@
                th:value="${#dates.format(#dates.createNow(),'yyyy-MM-dd')}"
                th:max="${#dates.format(#dates.createNow(),'yyyy-MM-dd')}"
                min="1910-01-01" max="2023-12-31">
+        <!-- 에러 -->
+        <div id="error" th:if="${#fields.hasErrors('userBirth')}">
+			<a>생일을 선택해주세요.</a>
+		</div>
+        <!-- 에러 end -->
 
         <div id="gender">
             <p>성별을 선택해주세요.</p>
@@ -81,6 +101,11 @@
         <!-- 성별 선택 -->
         <label><input type="radio" name="chk_gender" value="man" th:field="*{userGender}" th:checked="${userDTO.userGender == 'man'}">남자</label>
         <label><input type="radio" name="chk_gender" value="women" th:field="*{userGender}" th:checked="${userDTO.userGender == 'women'}">여자</label>
+        <!-- 에러 -->
+        <div id="error">
+			<a th:if="${#fields.hasErrors('userGender')}" th:errors="*{userGender}" id="error"></a>
+		</div>
+        
     </div>
 
     <!-- 이전/다음 버튼-->

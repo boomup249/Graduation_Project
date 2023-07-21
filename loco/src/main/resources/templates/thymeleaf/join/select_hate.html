@@ -34,8 +34,13 @@
 			th:field="*{userPwd}"
 			required/>
 			
-		<!-- 나머지 만들어죠~ -->
-		<!-- -->
+		<!-- (생일/성별) 안보이게 넘기기 -->
+		<input type="hidden"
+		       name="userBirth" 
+		       th:value="${#dates.format(userDTO.getUserBirth(), 'yyyy-MM-dd')}" th:field="*{userBirth}"/>
+		<input type="hidden"
+		       name="userGender" 
+		       th:value="${userDTO.getUserGender()}" th:field="*{userGender}"/>
 		
 		<div style="text-align: center;"id="content">
 			<div id="like">

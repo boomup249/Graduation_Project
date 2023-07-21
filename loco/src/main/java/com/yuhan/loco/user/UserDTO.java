@@ -1,5 +1,6 @@
 package com.yuhan.loco.user;
 
+
 import java.sql.Date;
 
 import jakarta.validation.constraints.Email;
@@ -17,10 +18,11 @@ public class UserDTO {
 	
 	private String userPwdck;
 	
-	/*
+
 	private String userGender;
 	private Date userBirth;
-	
+	//private Date userBirth = new Date(0000, 00, 00);
+	/*
 	private String userLike;
 	private String userHate;
 	*/
@@ -46,7 +48,6 @@ public class UserDTO {
 		this.userPwdck = userPwdck;
 	}
 	
-	/*
 	public String getUserGender() {
 		return userGender;
 	}
@@ -59,6 +60,8 @@ public class UserDTO {
 	public void setUserBirth(Date userBirth) {
 		this.userBirth = userBirth;
 	}
+	
+	/*
 	public String getUserLike() {
 		return userLike;
 	}

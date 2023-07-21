@@ -1,15 +1,11 @@
 package com.yuhan.loco.controller;
 
-import java.util.Random;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import com.yuhan.loco.game.GameDTO;
-import com.yuhan.loco.game.GameService;
 import com.yuhan.loco.user.UserDTO;
 import com.yuhan.loco.user.UserService;
 
@@ -36,17 +32,16 @@ import jakarta.validation.Valid;
  * */
 
 /*To do: 
- * 1. [select*.html 관련] 코드들 (예상)thymeleaf 이용해서 userDTO.get~() 하면 register에서 받아올 수 있게 만들기: 현재 코드는 타임리프 적용 가능할 경우 상정하고 짬
+ * <완료 (birth, gender), 진행중(like, hate)> 1. [select*.html 관련] 코드들 (예상)thymeleaf 이용해서 userDTO.get~() 하면 register에서 받아올 수 있게 만들기: 현재 코드는 타임리프 적용 가능할 경우 상정하고 짬
  * 
  * 	-> 앞 과정(pwd)은 라디오버튼, 콤보박스, 체크박스 등이 없어서 thymeleaf가 필드로 쉽게 적용되고 넘어감, 그래서 이 부분은 타임리프가 적용 가능한지 아직 확인 못함
  * 		-> 안될 경우 다른 방법으로 세션에 넣을 수 있도록
  * 
  * 	+) 체크박스 선호 5개 이하로 막고, 선호에서 선택된 부분 비선호에서 선택 안되도록
  * 
- * <완료(email, pwd)> 2. [complete.html]때 thymeleaf userDTO 값 정리해서 db로 쏘기
+ * <완료(email, pwd, birth, gender)> 2. [complete.html]때 thymeleaf userDTO 값 정리해서 db로 쏘기
  * 
- * <진행중>3. 가입 순서가 올바르게 적용되도록 유저가 임의로 주소 치고 들어올 경우를 막아야 함(ex. main에서 갑자기 /join_info 치고 들어오면 앞에 정보 못 받고 가입처리(예외(오류) 처리 -> 다시 메인으로),
- * 		/join_end 바로 치면 userDTO에 값이 없음)
+ * <수정 및 완료> 3. 그냥 get 페이지를 만들지 않으면 해결됨 -> post로 받으려면 순서를 지키게 되기 때문
  * 
  * 4. 스프링 시큐리티 활용(비밀번호 암호화 등)
  * <완료>5. [join_pwd.html] 비밀번호 확인이랑 같은지 검증 + 세부 조건 걸기
@@ -56,6 +51,7 @@ import jakarta.validation.Valid;
 @Controller
 public class JoinController {
 	//전역
+	String page = "";
 	private final UserService userService;
 	
 	public JoinController(UserService userService) {
@@ -66,12 +62,15 @@ public class JoinController {
 	 * 각 폼에 invisible로 이전 정보 칸을 만듦
 	 * 	ex. select_info.html에 이메일과 비밀번호칸을 invisible로 만들어서 이전 값과 함께 select_like.html로 thymeleaf post로 넘김
 	 * 마지막 complete.html까지 이런식으로 넘겨서 complete에서 정보 정리해서 db로 넘기기
+	 * 
+	 * 이전 버튼과 다음 버튼 모두 post mapping, 이전과 다음 버튼을 구분하기 위해 page를 전역 변수로 사용하여 실행 코드를 다르게 줌
 	 */
 	
 	//연결
 	//main
 	@GetMapping("/main")
 	public String Main() {
+		page = "main";
 		return "/main";
 	}
 	@PostMapping("/main") //아직 미정&미완성
@@ -83,84 +82,107 @@ public class JoinController {
 	@GetMapping("join")
 	public String joinEmail(Model model) {
 		model.addAttribute("userDTO", new UserDTO());
+		page = "email";
 		return "/join/email";
 	}
 	
 	//※아래부터는 이전 값을 받아와야해서 post가 필요
 	//join_pwd
 	@PostMapping("join_pwd")
-	public String joinPwd(UserDTO userDTO, Model model) {
+	public String joinPwd(@Valid UserDTO userDTO, BindingResult bindingResult, Model model) {
 		//join에서 받은 이메일은 이 페이지에서 수정 가능하므로 검증x + html로 required와 속성 지정해놓음
-		System.out.println("------pwd------");
-		System.out.println(userDTO.getUserEmail());
+		
+		if(page.equals("info")) { //이전 버튼으로 넘어온 경우 초기화
+			
+			if(bindingResult.hasFieldErrors("userBirh")) { //info에서 birth 안 선택하고 넘기면 에러 발생
+				userDTO.setUserBirth(null);
+			}
+			
+			//이전 정보 일부 초기화
+			userDTO.setUserBirth(null);
+			userDTO.setUserGender(null);
+			userDTO.setUserPwd(null); //pwd는 초기화하지 않으면 pwdck에서 에러 발생, + 지우고 입력 번거로움
+		}
+		
+		page = "pwd";
 		return "/join/join_pwd";
 	}
-	@GetMapping("join_pwd")//오류로 막고 메인으로
-	public String errorPwd(UserDTO userDTO, Model model) {
+	@GetMapping("join_pwd")
+	public String getPwd(@Valid UserDTO userDTO, BindingResult bindingResult, Model model) {
+		page = "pwd";
 		return "/join/join_pwd";
 	}
 	
 	//join_info
 	@PostMapping("join_info")
-	public String joinInfo(@Valid UserDTO userDTO, BindingResult bindingResult, Model model) {		
-		//비밀번호가 틀리면
-		if (!userDTO.getUserPwd().equals(userDTO.getUserPwdck())) {
-			bindingResult.rejectValue("userPwdck", "passwordInCorrect", "패스워드가 일치하지 않습니다.");
-			}
+	public String joinInfo(@Valid UserDTO userDTO, BindingResult bindingResult, Model model) {	
 		
-		//비밀번호가 15자리 초과하면
-		if(userDTO.getUserPwd().length() > 15) {
-			bindingResult.rejectValue("userPwd", "passwordLengthOver", "15자리를 초과하였습니다.");
+		if(page.equals("pwd")) {
+			
+			//비밀번호가 틀리면
+			if (!userDTO.getUserPwd().equals(userDTO.getUserPwdck())) {
+				bindingResult.rejectValue("userPwdck", "passwordInCorrect", "패스워드가 일치하지 않습니다.");
+				}
+			
+			//비밀번호가 15자리 초과하면
+			if(userDTO.getUserPwd().length() > 15) {
+				bindingResult.rejectValue("userPwd", "passwordLengthOver", "15자리를 초과하였습니다.");
+			}
+			
+			//error
+			if(bindingResult.hasErrors()) { return "/join/join_pwd"; }
+			
+			
 		}
 		
-		//error
-		if(bindingResult.hasErrors()) { return "/join/join_pwd"; }
+		page = "info";
 		
-		System.out.println("------info------");
-		System.out.println(userDTO.getUserEmail());
-		System.out.println(userDTO.getUserPwd());
-		
-		return "/join/select_info";
-	}
-	@GetMapping("join_info")//오류로 막고 메인으로
-	public String errorInfo(UserDTO userDTO, Model model) {
 		return "/join/select_info";
 	}
 	
 	//join_like
 	@PostMapping("join_like")
-	public String joinLike(UserDTO userDTO, Model model) {
-		System.out.println("------like------");
-		System.out.println(userDTO.getUserEmail());
-		System.out.println(userDTO.getUserPwd());
-		return "/join/select_like";
-	}
-	@GetMapping("join_like")//오류로 막고 메인으로
-	public String errorLike(UserDTO userDTO, Model model) {
+	public String joinLike(@Valid UserDTO userDTO, BindingResult bindingResult, Model model) {
+		
+		if(page.equals("info")) {
+			//gender 미선택 후 넘김
+			if(userDTO.getUserGender() == null) {
+				bindingResult.rejectValue("userGender", "genderIsNull", "성별은 필수 선택입니다.");
+			}
+			
+			//birth 미선택 후 넘기면 어차피 haserror 뜸 -> 형식 안 맞아서
+			
+			//error
+			if(bindingResult.hasErrors()) { return "/join/select_info"; }
+			
+		}
+		
+		page = "like";
 		return "/join/select_like";
 	}
 	
 	//join_hate
 	@PostMapping("join_hate")
 	public String joinHate(UserDTO userDTO, Model model) {
-		System.out.println("------hate------");
-		System.out.println(userDTO.getUserEmail());
-		System.out.println(userDTO.getUserPwd());
+		page = "hate";
 		return "/join/select_hate";
 	}
-	@GetMapping("join_hate")//오류로 막고 메인으로
-	public String errorHate(UserDTO userDTO, Model model) {
-		return "/join/select_hate";
-	}
-	//
-	
 	
 	//join_end
 	@PostMapping("join_end")
 	public String joinEnd(@Valid UserDTO userDTO, BindingResult bindingResult, Model model) {
+		//db에 맞게 고치기
+		if(userDTO.getUserGender().equals("women")) {
+			userDTO.setUserGender("여자");
+		} else if(userDTO.getUserGender().equals("man")) {
+			userDTO.setUserGender("남자");
+		}
+		
 		System.out.println("------end------");
 		System.out.println(userDTO.getUserEmail());
 		System.out.println(userDTO.getUserPwd());
+		System.out.println(userDTO.getUserBirth());
+		System.out.println(userDTO.getUserGender());
 		
 		//dto에 필수 값이 빠진 경우 메인으로 다시 보내기
 		//error
@@ -169,18 +191,16 @@ public class JoinController {
 		}
 		
 		//dto값 db로 넘기기
-		userService.create(userDTO.getUserEmail(), userDTO.getUserPwd());
+		userService.create(userDTO.getUserEmail(), userDTO.getUserPwd(), userDTO.getUserBirth(), userDTO.getUserGender());
 		
-		return "/join/complete";
-	}
-	@GetMapping("join_end")//오류로 막고 메인으로
-	public String errorEnd(UserDTO userDTO, Model model) {
+		page = "end";
 		return "/join/complete";
 	}
 	
 	//login
 	@GetMapping("/login")
 	public String login(UserDTO userDTO, Model model) {
+		page = "login";
 		return "/login";
 	}
 	
