@@ -7,7 +7,7 @@
 			#content {margin-top: 100px}
 			#like {font-size: 20px; color:black}
 			#recommend {margin-top: -10px; font-size: 15px; color: #6D6D6D;}
-			#btn {margin-top: 130px; margin-right: 50px}
+			#btn {margin-top: 170px; margin-right: 50px}
 			#before {margin: 10px}
 			#after {margin: 10px}
 			td {width : 150px;
@@ -34,8 +34,13 @@
 			th:field="*{userPwd}"
 			required/>
 			
-		<!-- 나머지 만들어죠~ -->
-		<!-- -->
+		<!-- (생일/성별) 안보이게 넘기기 -->
+		<input  
+		       name="userBirth" 
+		       th:value="${#dates.format(userDTO.getUserBirth(), 'yyyy-MM-dd')}" th:field="*{userBirth}"/>
+		<input 
+		       name="userGender" 
+		       th:value="${userDTO.getUserGender()}" th:field="*{userGender}"/>
 				
 		<div style="text-align: center;"id="content">
 			<div id="like">
