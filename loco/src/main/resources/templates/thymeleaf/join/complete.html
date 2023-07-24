@@ -85,6 +85,37 @@
 	</head>
 	
 	<body>
+		<form action ="#"
+				th:object="${userDTO}"
+				method = "post">
+				
+		<!-- 안보이게 넘기기 (email, pwd, birth, gender, like, hate) -->
+		<input 
+			th:value="${userDTO.getUserEmail()}"
+			th:field="*{userEmail}"
+			required/>
+			
+		<input 
+			th:value="${userDTO.getUserPwd()}"
+			th:field="*{userPwd}"
+			required/>
+			
+		<input 
+		       name="userBirth" 
+		       th:value="${#dates.format(userDTO.getUserBirth(), 'yyyy-MM-dd')}" th:field="*{userBirth}"/>
+		       
+		<input 
+		       name="userGender" 
+		       th:value="${userDTO.getUserGender()}" th:field="*{userGender}"/>
+		
+		<input 
+		       name="userLike" 
+		       th:value="${userDTO.getUserLike()}" th:field="*{userLike}"/>
+		       
+		<input 
+		       name="userHate" 
+		       th:value="${userDTO.getUserHate()}" th:field="*{userHate}"/>
+		       
 		<div id="b_img"></div><!-- 배경 이미지 불투명도 조절해서 넣기 -->
 		<script src="js/backgroundImage.js"></script>
 		
@@ -102,6 +133,7 @@
 				<a href="/login">로그인 하러가기 -></a>
 			</div>
 		</div>
+		
 		
 	</body>
 </html>
