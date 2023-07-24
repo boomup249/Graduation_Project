@@ -93,26 +93,5 @@
 		</div>
 		
 		</form>
-		<script>
-    	<!-- 체크박스 3개 선택하면 비활성화 -->
-		    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-		
-		    checkboxes.forEach(checkbox => {
-		        checkbox.addEventListener('change', () => {
-		            const checkedCount = document.querySelectorAll('input[type="checkbox"]:checked').length;
-		            if (checkedCount >= 3) {
-		                checkboxes.forEach(cb => {
-		                    if (!cb.checked) {
-		                        cb.disabled = true;
-		                    }
-		                });
-		            } else {
-		                checkboxes.forEach(cb => {
-		                    cb.disabled = false;
-		                });
-		            }
-		        });
-		    });
-		</script>
 	</body>
 </html>
