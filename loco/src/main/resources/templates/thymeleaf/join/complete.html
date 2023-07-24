@@ -90,29 +90,29 @@
 				method = "post">
 				
 		<!-- 안보이게 넘기기 (email, pwd, birth, gender, like, hate) -->
-		<input 
+		<input type="hidden"
 			th:value="${userDTO.getUserEmail()}"
 			th:field="*{userEmail}"
 			required/>
 			
-		<input 
+		<input type="hidden"
 			th:value="${userDTO.getUserPwd()}"
 			th:field="*{userPwd}"
 			required/>
 			
-		<input 
+		<input type="hidden"
 		       name="userBirth" 
 		       th:value="${#dates.format(userDTO.getUserBirth(), 'yyyy-MM-dd')}" th:field="*{userBirth}"/>
 		       
-		<input 
+		<input type="hidden"
 		       name="userGender" 
 		       th:value="${userDTO.getUserGender()}" th:field="*{userGender}"/>
 		
-		<input 
+		<input type="hidden"
 		       name="userLike" 
 		       th:value="${userDTO.getUserLike()}" th:field="*{userLike}"/>
 		       
-		<input 
+		<input type="hidden"
 		       name="userHate" 
 		       th:value="${userDTO.getUserHate()}" th:field="*{userHate}"/>
 		       
