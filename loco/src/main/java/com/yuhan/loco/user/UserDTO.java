@@ -21,11 +21,10 @@ public class UserDTO {
 
 	private String userGender;
 	private Date userBirth;
-	//private Date userBirth = new Date(0000, 00, 00);
-	/*
+	
 	private String userLike;
 	private String userHate;
-	*/
+	
 	
 
 	//getter setter
@@ -61,7 +60,7 @@ public class UserDTO {
 		this.userBirth = userBirth;
 	}
 	
-	/*
+	
 	public String getUserLike() {
 		return userLike;
 	}
@@ -74,6 +73,5 @@ public class UserDTO {
 	public void setUserHate(String userHate) {
 		this.userHate = userHate;
 	}
-	*/
-	
+
 }

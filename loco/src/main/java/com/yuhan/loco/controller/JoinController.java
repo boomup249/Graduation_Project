@@ -32,7 +32,7 @@ import jakarta.validation.Valid;
  * */
 
 /*To do: 
- * <완료 (birth, gender), 진행중(like, hate)> 1. [select*.html 관련] 코드들 (예상)thymeleaf 이용해서 userDTO.get~() 하면 register에서 받아올 수 있게 만들기: 현재 코드는 타임리프 적용 가능할 경우 상정하고 짬
+ * <완료> 1. [select*.html 관련] 코드들 (예상)thymeleaf 이용해서 userDTO.get~() 하면 받아올 수 있게 만들기: 현재 코드는 타임리프 적용 가능할 경우 상정하고 짬
  * 
  * 	-> 앞 과정(pwd)은 라디오버튼, 콤보박스, 체크박스 등이 없어서 thymeleaf가 필드로 쉽게 적용되고 넘어감, 그래서 이 부분은 타임리프가 적용 가능한지 아직 확인 못함
  * 		-> 안될 경우 다른 방법으로 세션에 넣을 수 있도록
