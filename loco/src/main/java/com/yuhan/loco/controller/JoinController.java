@@ -39,9 +39,9 @@ import jakarta.validation.Valid;
  * 
  * 	+) 체크박스 선호 5개 이하로 막고, 선호에서 선택된 부분 비선호에서 선택 안되도록
  * 
- * <완료(email, pwd, birth, gender)> 2. [complete.html]때 thymeleaf userDTO 값 정리해서 db로 쏘기
+ * <완료> 2. [complete.html]때 thymeleaf userDTO 값 정리해서 db로 쏘기
  * 
- * <수정 및 완료> 3. 그냥 get 페이지를 만들지 않으면 해결됨 -> post로 받으려면 순서를 지키게 되기 때문
+ * <완료> 3. 그냥 get 페이지를 만들지 않으면 해결됨 -> post로 받으려면 순서를 지키게 되기 때문
  * 
  * 4. 스프링 시큐리티 활용(비밀번호 암호화 등)
  * <완료>5. [join_pwd.html] 비밀번호 확인이랑 같은지 검증 + 세부 조건 걸기
@@ -172,7 +172,7 @@ public class JoinController {
 	@PostMapping("join_end")
 	public String joinEnd(@Valid UserDTO userDTO, BindingResult bindingResult, Model model) {
 		//db에 맞게 고치기
-		if(userDTO.getUserGender().equals("women")) {
+		if(userDTO.getUserGender().equals("women")) { //성별
 			userDTO.setUserGender("여자");
 		} else if(userDTO.getUserGender().equals("man")) {
 			userDTO.setUserGender("남자");
@@ -191,7 +191,9 @@ public class JoinController {
 		}
 		
 		//dto값 db로 넘기기
-		userService.create(userDTO.getUserEmail(), userDTO.getUserPwd(), userDTO.getUserBirth(), userDTO.getUserGender());
+		userService.create(userDTO.getUserEmail(), userDTO.getUserPwd(), 
+				userDTO.getUserBirth(), userDTO.getUserGender(), 
+				userDTO.getUserLike(), userDTO.getUserHate());
 		
 		page = "end";
 		return "/join/complete";
