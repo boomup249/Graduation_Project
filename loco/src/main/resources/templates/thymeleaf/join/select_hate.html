@@ -23,7 +23,7 @@
 				th:object="${userDTO}"
 				method = "post">
 				
-		<!-- 안보이게 넘기기 (email, pwd, birth, gender) -->
+		<!-- 안보이게 넘기기 (email, pwd, birth, gender, like) -->
 		<input type="hidden"
 			th:value="${userDTO.getUserEmail()}"
 			th:field="*{userEmail}"
@@ -34,16 +34,21 @@
 			th:field="*{userPwd}"
 			required/>
 			
-		<!-- (생일/성별) 안보이게 넘기기 -->
 		<input type="hidden"
 		       name="userBirth" 
 		       th:value="${#dates.format(userDTO.getUserBirth(), 'yyyy-MM-dd')}" th:field="*{userBirth}"/>
+		       
 		<input type="hidden"
 		       name="userGender" 
 		       th:value="${userDTO.getUserGender()}" th:field="*{userGender}"/>
 		
+		<input type="hidden"
+		       name="userLike" 
+		       th:value="${userDTO.getUserLike()}" th:field="*{userLike}"/>
+		       
+		<!-- 비선호 장르 선택 -->
 		<div style="text-align: center;"id="content">
-			<div id="like">
+			<div id="hate">
 				<p>비선호 장르가 있으신가요?</p>
 			</div>
 			<div id="recommend">
@@ -52,25 +57,25 @@
 			<!-- 게임 선택 목록-->
 			<table style="margin-left: auto; margin-right: auto;">
 			<tr>
-				<td><input type="checkbox" name="chk_like" value="액션">액션</input></td>
-				<td><input type="checkbox" name="chk_like" value="액션 어드벤처">액션 어드벤처</input></td>
-				<td><input type="checkbox" name="chk_like" value="생존">생존</input></td>
-				<td><input type="checkbox" name="chk_like" value="슈팅">슈팅</input></td>
-				<td><input type="checkbox" name="chk_like" value="FPS">FPS</input></td>
+				<td><input type="checkbox" name="chk_hate" value="action" th:field="*{userHate}" th:checked="${userDTO.userHate == 'action'}">액션</input></td>
+				<td><input type="checkbox" name="chk_hate" value="action adventure" th:field="*{userHate}" th:checked="${userDTO.userHate == 'action adventure'}">액션 어드벤처</input></td>
+				<td><input type="checkbox" name="chk_hate" value="survival" th:field="*{userHate}" th:checked="${userDTO.userHate == 'survival'}">생존</input></td>
+				<td><input type="checkbox" name="chk_hate" value="shooting" th:field="*{userHate}" th:checked="${userDTO.userHate == 'shooting'}">슈팅</input></td>
+				<td><input type="checkbox" name="chk_hate" value="FPS" th:field="*{userHate}" th:checked="${userDTO.userHate == 'FPS'}">FPS</input></td>
 			</tr>
 			<tr>
-				<td><input type="checkbox" name="chk_like" value="RPG">RPG</input></td>
-				<td><input type="checkbox" name="chk_like" value="ARPG">ARPG</input></td>
-				<td><input type="checkbox" name="chk_like" value="MMORPG">MMORPG</input></td>
-				<td><input type="checkbox" name="chk_like" value="오픈 월드">오픈 월드</input></td>
-				<td><input type="checkbox" name="chk_like" value="핵 앤 슬래쉬">핵 앤 슬래쉬</input></td>
+				<td><input type="checkbox" name="chk_hate" value="RPG" th:field="*{userHate}" th:checked="${userDTO.userHate == 'RPG'}">RPG</input></td>
+				<td><input type="checkbox" name="chk_hate" value="ARPG" th:field="*{userHate}" th:checked="${userDTO.userHate == 'ARPG'}">ARPG</input></td>
+				<td><input type="checkbox" name="chk_hate" value="MMORPG" th:field="*{userHate}" th:checked="${userDTO.userHate == 'MMORPG'}">MMORPG</input></td>
+				<td><input type="checkbox" name="chk_hate" value="open world" th:field="*{userHate}" th:checked="${userDTO.userHate == 'open world'}">오픈 월드</input></td>
+				<td><input type="checkbox" name="chk_hate" value="hack and slash" th:field="*{userHate}" th:checked="${userDTO.userHate == 'hack and slash'}">핵 앤 슬래시</input></td>
 			</tr>
 			<tr>
-				<td><input type="checkbox" name="chk_like" value="어드벤처">어드벤처</input></td>
-				<td><input type="checkbox" name="chk_like" value="스포츠">스포츠</input></td>
-				<td><input type="checkbox" name="chk_like" value="레이싱">레이싱</input></td>
-				<td><input type="checkbox" name="chk_like" value="캐주얼">캐주얼</input></td>
-				<td><input type="checkbox" name="chk_like" value="퍼즐">퍼즐</input></td>
+				<td><input type="checkbox" name="chk_hate" value="adventure" th:field="*{userHate}" th:checked="${userDTO.userHate == 'adventure'}">어드벤처</input></td>
+				<td><input type="checkbox" name="chk_hate" value="sports" th:field="*{userHate}" th:checked="${userDTO.userHate == 'sports'}">스포츠</input></td>
+				<td><input type="checkbox" name="chk_hate" value="racing" th:field="*{userHate}" th:checked="${userDTO.userHate == 'racing'}">레이싱</input></td>
+				<td><input type="checkbox" name="chk_hate" value="casual" th:field="*{userHate}" th:checked="${userDTO.userHate == 'casual'}">캐주얼</input></td>
+				<td><input type="checkbox" name="chk_hate" value="puzzle" th:field="*{userHate}" th:checked="${userDTO.userHate == 'puzzle'}">퍼즐</input></td>
 			</tr>
 		</table>
 		</div>
@@ -89,7 +94,7 @@
 		
 		</form>
 		<script>
-    		<!-- 체크박스 3개 선택하면 비활성화-->
+    	<!-- 체크박스 3개 선택하면 비활성화 -->
 		    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
 		
 		    checkboxes.forEach(checkbox => {
