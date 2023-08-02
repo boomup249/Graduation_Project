@@ -9,15 +9,18 @@ from bs4 import BeautifulSoup
 import openpyxl
 from pathlib import Path
 from io import BytesIO
-import dload
 from time import sleep
 from datetime import datetime
 
 class Crolling_Game_Info:
     #생성자 __init__
-    def __init__(self, path):
-        self.path = path
-        Path(path).mkdir(parents=True, exist_ok=True)
+    def __init__(self):
+        #데이터 저장 경로에 현재시간 넣기위해 time, timestr 변수 선언
+        time = datetime.now()
+        timestr = time.strftime("%Y%m%d_%H%M")
+
+        self.path = f'D:\Python\Study\Data_Crolling\{timestr}'
+        Path(self.path).mkdir(parents=True, exist_ok=True)
 
         self.options = Options()
         self.options.add_experimental_option("detach", True)
@@ -44,16 +47,22 @@ class Crolling_Game_Info:
             self.driver.find_element(By.XPATH, '//*[@id="language_dropdown"]/div/a[4]').click()
 
     #마우스 스크롤 내리는 함수
-    def Check_Mouse_Scroll(self):
-        for _ in range(0, 5):
+    def Check_Mouse_Scroll_Scroll_Down(self, number):
+        for _ in range(0, number):
             self.driver.execute_script('window.scrollTo(0,document.body.scrollHeight)')
+
+    def Check_Mouse_Scroll_Send_Keys(self, number):
+        page = self.driver.find_element(By.TAG_NAME, "body")
+        for _ in range(0,number):
+            page.send_keys(Keys.PAGE_DOWN)
+            sleep(0.25)
 
     #액셀 인스턴스 생성 함수    
     def Open_Excel(self):
         self.excel_File = openpyxl.Workbook()
         self.excel_sheet = self.excel_File.active
 
-        row_column = ["순위", "게임명", "정가", "할인가", "할인율", "이미지 링크"]
+        row_column = ["순위", "게임명", "정가", "할인가", "할인율", "파일 이미지"]
         self.excel_sheet.append(row_column)
 
     #액셀 저장 후 인스턴스 제거 함수

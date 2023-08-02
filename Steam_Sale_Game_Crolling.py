@@ -2,7 +2,6 @@ import Crolling_Parent_Class
 from Crolling_Parent_Class import *
 
 class Crolling_Steam_Sale_Game(Crolling_Game_Info):
-
     #더 보기 버튼 찾아서 리턴하는 함수
     def find_element_by_css(self, driver, css):
         try:
@@ -12,14 +11,14 @@ class Crolling_Steam_Sale_Game(Crolling_Game_Info):
     
     #액셀 저장 후 인스턴스 제거 함수
     def Close_Excel(self):
-        self.excel_File.save(f'{self.path}\Crolling_Steam_Sale_Game.xlsx')
+        self.excel_File.save(f'{self.path}\Steam_Sale_Game_Crolling.xlsx')
         self.excel_File.close()
         
     #데이터 읽어와서 저장하는 함수
     def Data_Crolling(self):
         self.Steam_Set_Language()
         sleep(5)
-        self.Check_Mouse_Scroll()
+        self.Check_Mouse_Scroll_Scroll_Down(1)
         self.Open_Excel()
 
         while True:
@@ -39,9 +38,9 @@ class Crolling_Steam_Sale_Game(Crolling_Game_Info):
 
         rank = 1
         for item in gamelist:
-            title = item.find("div", class_="salepreviewwidgets_StoreSaleWidgetTitle_3jI46 StoreSaleWidgetTitle")
+            title = item.find("div", class_="salepreviewwidgets_StoreSaleWidgetTitle_3jI46 StoreSaleWidgetTitle").text
             price = item.find("div", class_="salepreviewwidgets_StoreOriginalPrice_1EKGZ")
-            saleprice = item.find("div", class_="salepreviewwidgets_StoreSalePriceBox_Wh0L8")
+            saleprice = item.find("div", class_="salepreviewwidgets_StoreSalePriceBox_Wh0L8").text
             saleper = item.find("div", class_="salepreviewwidgets_StoreSaleDiscountBox_2fpFv")
             img = item.find("img", class_="salepreviewwidgets_CapsuleImage_cODQh")
             
@@ -53,9 +52,8 @@ class Crolling_Steam_Sale_Game(Crolling_Game_Info):
                 price = price.text
                 saleper = saleper.text
 
-            data_column = [rank, title.text, price, saleprice.text, saleper, imgdata]
+            data_column = [rank, title, price, saleprice, saleper, imgdata]
             self.excel_sheet.append(data_column)
-            dload.save(imgdata, f"{self.path}\IMG_{rank}.jpg")
             rank += 1
 
         self.Close_Excel()

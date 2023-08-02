@@ -2,12 +2,6 @@ import Crolling_Parent_Class
 from Crolling_Parent_Class import *
 
 class Crolling_Epic_Top_Seller_Game(Crolling_Game_Info):
-    #마우스 스크롤 내리는 함수
-    def Check_Mouse_Scroll(self):
-        for _ in range(0,20):
-            page = self.driver.find_element(By.TAG_NAME, "body")
-            page.send_keys(Keys.PAGE_DOWN)
-
     #액셀 인스턴스 생성 함수
     def Open_Excel(self):
         self.excel_File = openpyxl.Workbook()
@@ -18,13 +12,13 @@ class Crolling_Epic_Top_Seller_Game(Crolling_Game_Info):
 
     #액셀 저장 후 인스턴스 제거 함수
     def Close_Excel(self):
-        self.excel_File.save(f'{self.path}\Crolling_Epic_Top_Seller_Game.xlsx')
+        self.excel_File.save(f'{self.path}\Epic_Top_Seller_Game_Crolling.xlsx')
         self.excel_File.close()
         
     #데이터 읽어와서 저장하는 함수
     def Data_Crolling(self):
         sleep(5)
-        self.Check_Mouse_Scroll()
+        self.Check_Mouse_Scroll_Send_Keys(20)
         self.Open_Excel()
 
         html = self.driver.page_source
@@ -46,7 +40,6 @@ class Crolling_Epic_Top_Seller_Game(Crolling_Game_Info):
 
             data_column = [rank, title.text, price.text, imgdata]
             self.excel_sheet.append(data_column)
-            dload.save(imgdata, f'{self.path}\IMG_{rank}.jpg')
             rank += 1
 
         self.Close_Excel()

@@ -8,43 +8,45 @@ import EpicGames_Best_Playing_Crolling
 from EpicGames_Best_Playing_Crolling import *
 import EpicGames_Top_Seller_Crolling
 from EpicGames_Top_Seller_Crolling import *
+import Nintendo_Sale_Crolling
+from Nintendo_Sale_Crolling import *
+import Playstation_Sale_Crolling
+from Playstation_Sale_Crolling import *
 
-#데이터 저장 경로에 현재시간 넣기위해 time, timestr 변수 선언
-time = datetime.now()
-timestr = time.strftime("%Y%m%d_%H%M")
+Steam_Best_Popular = Crolling_Steam_Best_Popular_Game()
+Steam_Best_Playing = Crolling_Steam_Best_Playing_Game()
+Steam_Sale = Crolling_Steam_Sale_Game()
+Epic_Best_Playing = Crolling_Epic_Best_Playing_Game()
+Epic_Top_Seller = Crolling_Epic_Top_Seller_Game()
+Nintendo_Sale = Crolling_Nintendo_Sale_Game()
+Playstation_Sale = Crolling_Playstation_Sale_Game()
 
-Best_Popular_Game_Path = f'D:\Python\Study\Data_Crolling\{timestr}\Steam_Best_Popular_Game'
-Best_Popular_Game = Crolling_Steam_Best_Popular_Game(Best_Popular_Game_Path)
-Best_Popular_Game.Set_URL("https://store.steampowered.com/charts/topselling")
-Best_Popular_Game.Start_Crolling()
-del Best_Popular_Game
+Steam_Best_Popular.Set_URL("https://store.steampowered.com/charts/topselling")
+Steam_Best_Popular.Start_Crolling()
+del Steam_Best_Popular
 
-Best_Playing_Game_Path = f'D:\Python\Study\Data_Crolling\{timestr}\Steam_Best_Playing_Game'
-Best_Playing_Game = Crolling_Steam_Best_Playing_Game(Best_Playing_Game_Path)
-Best_Playing_Game.Set_URL("https://store.steampowered.com/charts/mostplayed/")
-Best_Playing_Game.Start_Crolling()
-del Best_Playing_Game
+Steam_Best_Playing.Set_URL("https://store.steampowered.com/charts/mostplayed/")
+Steam_Best_Playing.Start_Crolling()
+del Steam_Best_Playing
 
-Epic_Best_Playing_Path = f'D:\Python\Study\Data_Crolling\{timestr}\Epic_Best_Playing_Game'
-Epic_Best_Playing = Crolling_Epic_Best_Playing_Game(Epic_Best_Playing_Path)
+"""
+Steam_Sale.Set_URL("https://store.steampowered.com/specials/")
+Steam_Sale.Start_Crolling()
+del Steam_Sale
+"""
+
 Epic_Best_Playing.Set_URL('https://store.epicgames.com/ko/collection/most-played')
 Epic_Best_Playing.Start_Crolling()
 del Epic_Best_Playing
 
-Epic_Top_Seller_Path = f'D:\Python\Study\Data_Crolling\{timestr}\Epic_Top_Seller_Game'
-Epic_Top_Seller = Crolling_Epic_Top_Seller_Game(Epic_Top_Seller_Path)
 Epic_Top_Seller.Set_URL('https://store.epicgames.com/ko/collection/top-sellers')
 Epic_Top_Seller.Start_Crolling()
 del Epic_Top_Seller
 
-"""
-#세일게임 데이터 저장 경로 설정
-Sale_Game_Path = f'D:\Python\Study\Data_Crolling\{timestr}\Steam_Sale_Game'
-#세일게임 크롤링 인스턴스 생성
-Sale_Game = Crolling_Steam_Sale_Game(Sale_Game_Path)
-#객체에 URL 설정하고 실행
-Sale_Game.Set_URL("https://store.steampowered.com/specials/")
-Sale_Game.Start_Crolling()
-#인스턴스 해제
-del Sale_Game
-"""
+Nintendo_Sale.Set_URL('https://store.nintendo.co.kr/games/sale')
+Nintendo_Sale.Start_Crolling()
+del Nintendo_Sale
+
+Playstation_Sale.Set_URL('https://store.playstation.com/ko-kr/pages/deals')
+Playstation_Sale.Start_Crolling()
+del Playstation_Sale

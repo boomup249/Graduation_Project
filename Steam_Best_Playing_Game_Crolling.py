@@ -12,14 +12,14 @@ class Crolling_Steam_Best_Playing_Game(Crolling_Game_Info):
 
     #액셀 저장 후 인스턴스 제거 함수
     def Close_Excel(self):
-        self.excel_File.save(f'{self.path}\Crolling_Steam_Best_Playing_Game.xlsx')
+        self.excel_File.save(f'{self.path}\Steam_Best_Playing_Game_Crolling.xlsx')
         self.excel_File.close()
         
     #데이터 읽어와서 저장하는 함수
     def Data_Crolling(self):
         self.Steam_Set_Language()
         sleep(5)
-        self.Check_Mouse_Scroll()
+        self.Check_Mouse_Scroll_Scroll_Down(1)
         self.Open_Excel()
 
         html = self.driver.page_source
@@ -30,13 +30,13 @@ class Crolling_Steam_Best_Playing_Game(Crolling_Game_Info):
 
         rank = 1
         for item in gamelist:
-            title = item.select_one('div.weeklytopsellers_GameName_1n_4-')
+            title = item.select_one('div.weeklytopsellers_GameName_1n_4-').text
             saleprice = item.select_one('div.salepreviewwidgets_StoreSalePriceBox_Wh0L8')
             price = item.select_one('div.salepreviewwidgets_StoreOriginalPrice_1EKGZ')
             saleper = item.select_one('div.salepreviewwidgets_StoreSaleDiscountBox_2fpFv')
             img = item.select_one('img.weeklytopsellers_CapsuleArt_2dODJ')
-            now_player = item.select_one('td.weeklytopsellers_ConcurrentCell_3L0CD')
-            today_player = item.select_one('td.weeklytopsellers_PeakInGameCell_yJB7D')
+            now_player = item.select_one('td.weeklytopsellers_ConcurrentCell_3L0CD').text
+            today_player = item.select_one('td.weeklytopsellers_PeakInGameCell_yJB7D').text
 
             if img != None:
                 imgdata = img["src"]
@@ -61,9 +61,8 @@ class Crolling_Steam_Best_Playing_Game(Crolling_Game_Info):
                 saleprice = "무료"
                 saleper = "무료"
 
-            data_column = [rank, title.text, price, saleprice, saleper, now_player.text, today_player.text, imgdata]
+            data_column = [rank, title, price, saleprice, saleper, now_player, today_player, imgdata]
             self.excel_sheet.append(data_column)
-            dload.save(imgdata, f'{self.path}\IMG_{rank}.jpg')
             rank += 1
 
         self.Close_Excel()
