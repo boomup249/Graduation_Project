@@ -1,7 +1,7 @@
-import Crolling_Parent_Class
-from Crolling_Parent_Class import *
+import Crawling_Parent_Class
+from Crawling_Parent_Class import *
 
-class Crolling_Steam_Sale_Game(Crolling_Game_Info):
+class Crawling_Steam_Sale_Game(Crawling_Game_Info):
     #더 보기 버튼 찾아서 리턴하는 함수
     def find_element_by_css(self, driver, css):
         try:
@@ -15,7 +15,7 @@ class Crolling_Steam_Sale_Game(Crolling_Game_Info):
         self.excel_File.close()
         
     #데이터 읽어와서 저장하는 함수
-    def Data_Crolling(self):
+    def Data_Crawling(self):
         self.Steam_Set_Language()
         sleep(5)
         self.Check_Mouse_Scroll_Scroll_Down(1)

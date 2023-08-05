@@ -1,14 +1,22 @@
-import Crolling_Parent_Class
-from Crolling_Parent_Class import *
+import Crawling_Parent_Class
+from Crawling_Parent_Class import *
 
-class Crolling_Steam_Best_Popular_Game(Crolling_Game_Info):
+class Crawling_Steam_Best_Playing_Game(Crawling_Game_Info):
+    #액셀 인스턴스 생성 함수
+    def Open_Excel(self):
+        self.excel_File = openpyxl.Workbook()
+        self.excel_sheet = self.excel_File.active
+
+        row_column = ["순위", "게임명", "정가", "할인가", "할인율", "현재 플레이어", "오늘 최다 동시접속자 수", "이미지 링크"]
+        self.excel_sheet.append(row_column)
+
     #액셀 저장 후 인스턴스 제거 함수
     def Close_Excel(self):
-        self.excel_File.save(f'{self.path}\Steam_Best_Popular_Game_Crolling.xlsx')
+        self.excel_File.save(f'{self.path}\Steam_Best_Playing_Game_Crolling.xlsx')
         self.excel_File.close()
         
     #데이터 읽어와서 저장하는 함수
-    def Data_Crolling(self):
+    def Data_Crawling(self):
         self.Steam_Set_Language()
         sleep(5)
         self.Check_Mouse_Scroll_Scroll_Down(1)
@@ -27,6 +35,8 @@ class Crolling_Steam_Best_Popular_Game(Crolling_Game_Info):
             price = item.select_one('div.salepreviewwidgets_StoreOriginalPrice_1EKGZ')
             saleper = item.select_one('div.salepreviewwidgets_StoreSaleDiscountBox_2fpFv')
             img = item.select_one('img.weeklytopsellers_CapsuleArt_2dODJ')
+            now_player = item.select_one('td.weeklytopsellers_ConcurrentCell_3L0CD').text
+            today_player = item.select_one('td.weeklytopsellers_PeakInGameCell_yJB7D').text
 
             if img != None:
                 imgdata = img["src"]
@@ -51,7 +61,7 @@ class Crolling_Steam_Best_Popular_Game(Crolling_Game_Info):
                 saleprice = "무료"
                 saleper = "무료"
 
-            data_column = [rank, title, price, saleprice, saleper, imgdata]
+            data_column = [rank, title, price, saleprice, saleper, now_player, today_player, imgdata]
             self.excel_sheet.append(data_column)
             rank += 1
 

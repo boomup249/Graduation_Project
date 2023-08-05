@@ -1,14 +1,14 @@
-import Crolling_Parent_Class
-from Crolling_Parent_Class import *
+import Crawling_Parent_Class
+from Crawling_Parent_Class import *
 
-class Crolling_Playstation_Sale_Game(Crolling_Game_Info):
+class Crawling_Playstation_Sale_Game(Crawling_Game_Info):
     #액셀 저장 후 인스턴스 제거 함수
     def Close_Excel(self):
         self.excel_File.save(f'{self.path}\Playstation_Sale_Game_Crolling.xlsx')
         self.excel_File.close()
 
     #데이터 읽어와서 저장하는 함수
-    def Data_Crolling(self):
+    def Data_Crawling(self):
         sleep(5)
         self.driver.find_element(By.XPATH, "//*[@id='main']/div/div[3]/section/div/ul/li[3]/a").click()
         sleep(2)

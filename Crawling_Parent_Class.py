@@ -8,11 +8,10 @@ from selenium.common.exceptions import NoSuchElementException
 from bs4 import BeautifulSoup
 import openpyxl
 from pathlib import Path
-from io import BytesIO
 from time import sleep
 from datetime import datetime
 
-class Crolling_Game_Info:
+class Crawling_Game_Info:
     #생성자 __init__
     def __init__(self):
         #데이터 저장 경로에 현재시간 넣기위해 time, timestr 변수 선언
@@ -72,20 +71,20 @@ class Crolling_Game_Info:
         self.excel_File.close()
         
     #데이터 읽어와서 저장하는 함수
-    def Data_Crolling(self):
+    def Data_Crawling(self):
 
         self.Open_Excel()
         #오버라이딩으로 데이터 읽어와야함
         self.Close_Excel()
 
     #크롤링 시작 함수
-    def Start_Crolling(self):
+    def Start_Crawling(self):
         self.driver = webdriver.Chrome(options=self.options)
         self.driver.set_window_size(1400,1000)
         self.driver.implicitly_wait(10)
         self.driver.get(self.URL)
         self.action = ActionChains(self.driver)
 
-        self.Data_Crolling()
+        self.Data_Crawling()
         self.driver.quit()
         print("크롤링 완료")

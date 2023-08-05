@@ -1,7 +1,7 @@
-import Crolling_Parent_Class
-from Crolling_Parent_Class import *
+import Crawling_Parent_Class
+from Crawling_Parent_Class import *
 
-class Crolling_Nintendo_Sale_Game(Crolling_Game_Info):
+class Crawling_Nintendo_Sale_Game(Crawling_Game_Info):
     #액셀 인스턴스 생성 함수
     def Open_Excel(self):
         self.excel_File = openpyxl.Workbook()
@@ -16,7 +16,7 @@ class Crolling_Nintendo_Sale_Game(Crolling_Game_Info):
         self.excel_File.close()
 
     #데이터 읽어와서 저장하는 함수
-    def Data_Crolling(self):
+    def Data_Crawling(self):
         sleep(5)
         self.driver.find_element(By.CLASS_NAME, 'popup-close').click()
         sleep(2)
