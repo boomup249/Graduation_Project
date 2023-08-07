@@ -15,7 +15,7 @@ public class UserService {
 	public UserDB create(String email, String pwd, Date birth, String gender, String like, String hate) {
 		UserDB user = new UserDB();
 		
-		user.setID(email);
+		user.setEMAIL(email);
 		user.setPWD(pwd);
 		user.setBIRTH(birth);
 		user.setGENDER(gender);
@@ -150,7 +150,7 @@ public class UserService {
 		}
 		
 		System.out.println("----repository----");
-		System.out.println(user.getID());
+		System.out.println(user.getEMAIL());
 		System.out.println(user.getPWD());
 		System.out.println(user.getBIRTH());
 		System.out.println(user.getGENDER());
@@ -175,4 +175,30 @@ public class UserService {
 		
 		return user;
 	}
+	
+	//이메일 아이디 중복확인 메서드
+	public boolean existIdOrEmail(String id) {
+		boolean ck;
+		
+		if (id.contains("@")) {
+			ck = this.userRepository.existsByEMAIL(id);
+		} else {
+			ck = this.userRepository.existsByID(id);
+		}
+		return ck;
+	}
+	
+	//유저 정보가 디비와 일치하는 지 확인하는 메서드
+	public boolean existUser(String id, String pwd) {
+		boolean ck;
+		
+		if (id.contains("@")) {
+			ck = this.userRepository.existsByEMAILAndPWD(id, pwd);
+		} else {
+			ck = this.userRepository.existsByIDAndPWD(id, pwd);
+		}
+		
+		return ck;
+	}
+	
 }

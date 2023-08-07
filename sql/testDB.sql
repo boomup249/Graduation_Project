@@ -1,7 +1,8 @@
 USE member;
 
 create table test (
-	id VARCHAR(255) NOT NULL,
+	email VARCHAR(255) NOT NULL,
+    id VARCHAR(255),
 	pwd VARCHAR(16) NOT NULL,
 	birth DATE,
 	gender VARCHAR(3),
@@ -22,5 +23,5 @@ create table test (
     casual TINYINT,
     puzzle TINYINT,
     
-	PRIMARY KEY(id)
+	PRIMARY KEY(email)
 )

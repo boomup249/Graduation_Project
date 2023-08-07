@@ -1,4 +1,4 @@
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 	<head>
 		<meta charset="UTF-8">
 		<title>loco > login</title>
@@ -42,7 +42,7 @@
 						flex-direction: column;
 						justify-content: center;}
 			
-			input[type=email], input[type=password] {width: 450px; /*input 공통 속성*/
+			input[type=text], input[type=password] {width: 450px; /*input 공통 속성*/
 					height: 70px;
 					padding-left: 15px;
 					font-family: 'GmarketSansMedium';
@@ -117,6 +117,18 @@
 					justify-content: center;
 					align-items: center;}
 					
+			/*error 스타일*/
+	        #error a {
+				font-family: 'GmarketSansMedium';
+				font-size: 15pt;
+				color: red;
+			}
+			#error {
+					/*위치*/
+					position: relative;
+					left: 50%;
+					margin-left: -350px;
+					}
 			
 			/* 배경 이미지 body 부분 꽉차게*/	
 			#b_img {z-index: 1;
@@ -156,16 +168,24 @@
 				<p id="text1">로그인</p>
 			</div>
 			
-			<form action ="#" th:action="@{/main}"
+			<form action ="#" th:action="@{/login}"
 				th:object="${userDTO}"
 				method = "post">
 				
 			<div class="item2">
-				<input type="email" th:field="*{userEmail}" placeholder="email" />
+				<input type="text" th:field="*{userId}" placeholder="이메일 혹은 아이디를 입력하세요." required/>
+			</div>
+			<!-- 에러 -->
+	        <div id="error">
+				<a th:if="${#fields.hasErrors('userId')}" th:errors="*{userId}" id="error"></a>
 			</div>
 			
 			<div class="item3">
-				<input type="password" th:field="*{userPwd}" placeholder="비밀번호" />
+				<input type="password" th:field="*{userPwd}" placeholder="비밀번호를 입력하세요." required/>
+			</div>
+			<!-- 에러 -->
+	        <div id="error">
+				<a th:if="${#fields.hasErrors('userPwd')}" th:errors="*{userPwd}" id="error"></a>
 			</div>
 			
 			<div class="item4">

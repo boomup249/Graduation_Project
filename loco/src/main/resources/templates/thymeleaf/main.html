@@ -104,7 +104,9 @@
 					<a href="/main"><img src="imgs/header/logo.png"/></a>
 				</div>
 				<div class="right"> <!-- 오른쪽 정렬은 순서 반대로 넣기-->
-					<a href="/login"><img src="imgs/header/login.png"/></a>
+					<a th:if="${session.user == null}" href="/login">
+						<img src="imgs/header/login.png"/>
+					</a>
 					<a href=""><img src="imgs/header/news.png"/></a>
 					<a href=""><img src="imgs/header/BBS.png"/></a>
 					<a href=""><img src="imgs/header/PC.png"/></a>

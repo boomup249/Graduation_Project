@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import com.yuhan.loco.user.UserDTO;
 import com.yuhan.loco.user.UserService;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
 //회원가입 과정 관련 컨트롤러
@@ -45,7 +47,7 @@ import jakarta.validation.Valid;
  * 
  * 4. 스프링 시큐리티 활용(비밀번호 암호화 등)
  * <완료>5. [join_pwd.html] 비밀번호 확인이랑 같은지 검증 + 세부 조건 걸기
- * 6. 로그인 관련
+ * <진행중 (session 생성 완료)>6. 로그인 관련
  * */
 
 @Controller
@@ -71,10 +73,6 @@ public class JoinController {
 	@GetMapping("/main")
 	public String Main() {
 		page = "main";
-		return "/main";
-	}
-	@PostMapping("/main") //아직 미정&미완성
-	public String loginMain() {
 		return "/main";
 	}
 	
@@ -200,10 +198,42 @@ public class JoinController {
 	}
 	
 	//login
+	//로그인 페이지
 	@GetMapping("/login")
-	public String login(UserDTO userDTO, Model model) {
+	public String loginPage(UserDTO userDTO, Model model) {
 		page = "login";
 		return "/login";
+	}
+	//처리
+	@PostMapping("/login")
+	public String login(@Valid UserDTO userDTO, BindingResult bindingResult, Model model, HttpSession session) {
+		//아이디 or 이메일 입력 필드는 userdto의 userId 활용 -> userEmail을 사용하면 제약 걸림(@)
+		//입력 칸을 채우지 않았을 경우
+		if(userDTO.getUserId() == null) { //아이디 or 이메일이 null
+			bindingResult.rejectValue("userId", "idIsNull", "이메일이나 아이디값을 입력해주세요.");
+		}
+		if(userDTO.getUserPwd() == null) { //비번 null
+			bindingResult.rejectValue("userPwd", "PwdIsNull", "비밀번호를 입력해주세요.");
+		}
+		
+		//디비에 값이 없을 경우
+		boolean ck;
+		ck = userService.existUser(userDTO.getUserId(), userDTO.getUserPwd());
+		if(ck == false) {
+			System.out.println("로그인 실패");
+			bindingResult.rejectValue("userPwd", "UserIsNotExist", "아이디 혹은 비밀번호가 잘못되었습니다."); //정확히 pwd에 일어난 에러는 아니지만 위치상 여기에 처리
+		}
+		
+		//에러가 있으면 로그인 화면으로 넘기기
+		if(bindingResult.hasErrors()) { return "/login"; }
+		else { //에러가 없음 -> 디비에도 값이 있음
+			//세션 생성
+			session.setAttribute("user", userDTO.getUserId());
+			//메인으로 리다이렉트
+			System.out.println("로그인 성공");
+			return "redirect:/main";
+		}
+		
 	}
 	
 	

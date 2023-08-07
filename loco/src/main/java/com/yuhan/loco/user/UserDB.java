@@ -10,6 +10,7 @@ import jakarta.persistence.Table;
 @Table(name = "test")
 public class UserDB {
 	@Id
+	private String EMAIL;
 	private String ID;
 	
 	private String PWD;
@@ -37,12 +38,20 @@ public class UserDB {
 	
 	//getter setter
 	//user_info
+	public String getEMAIL() {
+		return EMAIL;
+	}
+	public void setEMAIL(String email) {
+		this.EMAIL = email;
+	}
+	
 	public String getID() {
 		return ID;
 	}
 	public void setID(String iD) {
 		ID = iD;
 	}
+	
 	public String getPWD() {
 		return PWD;
 	}
