@@ -83,6 +83,14 @@ public class JoinController {
 		page = "email";
 		return "/join/email";
 	}
+
+	//join_id
+		@GetMapping("join_id")
+		public String joinId(Model model) {
+			model.addAttribute("userDTO", new UserDTO());
+			page = "id";
+			return "/join/id";
+		}
 	
 	//※아래부터는 이전 값을 받아와야해서 post가 필요
 	//join_pwd
