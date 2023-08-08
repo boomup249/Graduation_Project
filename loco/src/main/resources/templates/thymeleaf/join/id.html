@@ -1,0 +1,164 @@
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+		<title>loco > email</title>
+		<style>
+			/*폰트*/
+			@font-face {
+						    font-family: 'GmarketSansMedium';
+						    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
+						    font-weight: normal;
+						    font-style: normal;
+						}
+						
+			/*css 속성*/
+			/*logo*/
+			#logo {z-index: 3; /* logo가 b_img보다 위에 배치되어야 함*/
+					position: absolute;
+					top: 0px;
+					left: 0px;
+					width: 100%; height: 50px; /*logo 담을 가상 헤더 header 100px 고정 -> 50 + 25 + 25*/ 
+					padding-top: 25px; padding-bottom: 25px;}
+			.link img {height: 50px;} /*로고 이미지*/
+			.link a {float: left; margin-left: 25px;} /*왼쪽 정렬, 마진 25px*/
+			
+			
+			/*내용*/
+			#content {z-index: 2;
+						position: relative;
+						top: 0px;
+						left: 0px;
+						width: 100%; height: 100%;
+						/*자식 수직 중앙 정렬*/
+						display: flex;
+						flex-direction: column;
+						justify-content: center;}
+			
+			input[type=email] {width: 1000px;
+					height: 80px;
+					padding-left: 30px;
+					font-family: 'GmarketSansMedium';
+					font-size: 20pt;
+					border: solid 5px #000; border-radius: 8px;}
+								
+			#sub {background-image: url('imgs/next.png');
+					background-size: cover;
+					background-position: center;
+					background-repeat: no-repeat;
+					width: 80px;
+					height: 80px;
+					border: solid 3px #005982; border-radius: 8px; }
+			
+			.item3 p {font-family: 'GmarketSansMedium';
+						font-size: 15pt;
+						color: blue}
+						
+			.item4 p {font-family: 'GmarketSansMedium';
+						font-size: 15pt;
+						color: red}
+			
+			.item5 p {font-family: 'GmarketSansMedium';
+						font-size: 15pt;
+						color: red}
+						
+			.item2 input {float: left; margin-left: 25px;}
+			
+			/*위치 잡기*/
+			.item1 {width: 400px; height: 125px;
+					position: relative;
+					left: 50%;
+					margin-left: -625px; /*content에 수평 중앙 정렬 > 가로축: item2에 맞추기*/
+					margin-bottom: 25px;
+					/*자식 중앙정렬*/
+					display: flex;
+					justify-content: center;
+					align-items: center; }
+			
+			.item2 {width: 1200px; height: 100px;
+					position: relative;
+					left: 50%;
+					margin-left: -625px; /*content에 수직/수평 중앙 정렬(left -25px(margin))*/
+					margin-bottom: 50px;
+					/*자식 중앙정렬*/
+					display: flex;
+					justify-content: center;
+					align-items: center; }
+					
+			.item3 {width: 600px; height: 50px;
+					position: relative;
+					margin-top: -50px;
+					margin-left: 130px; 
+					}
+					
+			.item4 {width: 600px; height: 50px;
+					position: relative;
+					margin-top: -50px;
+					margin-left: 130px; 
+					}
+					
+			.item5 {width: 600px; height: 50px;
+					position: relative;
+					margin-top: -50px;
+					margin-left: 130px; 
+					}
+			
+			
+			/* 배경 이미지 body 부분 꽉차게*/	
+			#b_img {z-index: 1;
+					position: absolute;
+					top: 0px;
+					left: 0px;
+					width: 100%;
+					height: 100%;
+					/*이미지 디비에서 주소값 받아서 url에 넣기(아래는 예시)*/
+					background-image: url("https://cdn.cloudflare.steamstatic.com/steam/apps/1172620/header.jpg?t=1682374543");
+					background-size: cover;
+					background-position: center;
+					background-repeat: no-repeat;
+					opacity: 0.4;
+					}
+			
+			body { background-color: #fff;
+					margin: 0; padding: 0;}
+		</style>
+	</head>
+	
+	<body>
+		<div id="b_img"></div><!-- 배경 이미지 불투명도 조절해서 넣기 -->
+		<script src="js/backgroundImage.js"></script>
+		
+		<div id="logo">
+			<div class="link">
+				<a href="/main"><img src="imgs/header/logo.png"/></a>
+			</div>
+		</div>
+		
+		<div id="content">
+			<div class="item1">
+				<img src="imgs/logo2.png" width="300px" height="125px"/>
+			</div>
+			
+			<form action ="#" th:action="@{/join_email}"
+				th:object="${userDTO}"
+				method = "post">
+			<div class="item2">
+				<input type="email" th:field="*{userEmail}" placeholder="아이디를 입력하세요" required />
+				<input type="submit" id="sub" value=""/>
+			</div>
+			
+			<!--각 상황에 맞게 적용 되도록 구성-->
+			<div class="item3">
+				<p>중복확인이 완료되었습니다.</p> 
+			</div>
+			<div class="item4">
+				<p>중복확인을 진행해주세요.</p> 
+			</div>
+			<div class="item5">
+				<p>이미 존재하는 아이디입니다.</p> 
+			</div>
+			</form>
+	
+		</div>
+		
+	</body>
+</html>
