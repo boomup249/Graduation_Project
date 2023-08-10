@@ -12,10 +12,11 @@ public class UserService {
         this.userRepository = userRepository;
     }
 	
-	public UserDB create(String email, String pwd, Date birth, String gender, String like, String hate) {
+	public UserDB create(String email, String id, String pwd, Date birth, String gender, String like, String hate) {
 		UserDB user = new UserDB();
 		
 		user.setEMAIL(email);
+		user.setID(id);
 		user.setPWD(pwd);
 		user.setBIRTH(birth);
 		user.setGENDER(gender);

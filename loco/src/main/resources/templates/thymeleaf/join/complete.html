@@ -2,15 +2,12 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>loco > join</title>
+		
+		<!-- 외부 css -->
+		<link rel="stylesheet" href="css/font.css"> <!-- 폰트 css -->
+		<link rel="stylesheet" href="css/background_image.css"> <!-- b_img css -->
+		
 		<style>
-			/*폰트*/
-			@font-face {
-						    font-family: 'GmarketSansMedium';
-						    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
-						    font-weight: normal;
-						    font-style: normal;
-						}
-						
 			/*css 속성*/
 			/*logo*/
 			#logo {z-index: 3; /* logo가 b_img보다 위에 배치되어야 함*/
@@ -62,22 +59,6 @@
 					display: flex;
 					justify-content: center;
 					align-items: center; }
-			
-			
-			/* 배경 이미지 body 부분 꽉차게*/	
-			#b_img {z-index: 1;
-					position: absolute;
-					top: 0px;
-					left: 0px;
-					width: 100%;
-					height: 100%;
-					/*이미지 디비에서 주소값 받아서 url에 넣기(아래는 예시)*/
-					background-image: url("https://cdn.cloudflare.steamstatic.com/steam/apps/1172620/header.jpg?t=1682374543");
-					background-size: cover;
-					background-position: center;
-					background-repeat: no-repeat;
-					opacity: 0.4;
-					}
 			
 			body { background-color: #fff;
 					margin: 0; padding: 0;}

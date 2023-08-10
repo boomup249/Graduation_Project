@@ -1,0 +1,24 @@
+@charset "UTF-8";
+
+/*폰트*/
+			@font-face {
+						    font-family: 'GmarketSansMedium';
+						    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
+						    font-weight: normal;
+						    font-style: normal;
+						}
+						
+			@font-face {
+						    font-family: 'Cafe24ClassicType-Regular';
+						    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2210-2@1.0/Cafe24ClassicType-Regular.woff2') format('woff2');
+						    font-weight: normal;
+						    font-style: normal;
+						}
+			
+						
+			@font-face {
+						    font-family: 'DOSPilgiMedium';
+						    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2304-2@1.0/DOSPilgiMedium.woff2') format('woff2');
+						    font-weight: normal;
+						    font-style: normal;
+						}

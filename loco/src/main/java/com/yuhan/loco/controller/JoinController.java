@@ -83,10 +83,31 @@ public class JoinController {
 		page = "email";
 		return "/join/email";
 	}
+	@PostMapping("email_ck") //이메일이 디비에 있는지 확인
+	public String emailCheck(UserDTO userDTO, Model model, HttpSession session) {
+		page = "email_ck";
+		
+		boolean ck;
+		ck = userService.existIdOrEmail(userDTO.getUserEmail()); //이메일이 디비에 있는지 확인
+		
+		if(ck) { //이메일이 디비에 있다면
+			session.setAttribute("LoginEmail", userDTO.getUserEmail()); //세션에 이메일값 넣어서 넘기기
+			return "redirect:/login"; //로그인 화면으로 넘기기
+		} else { //이메일이 디비에 없다면 -> 새로운 가입
+			session.setAttribute("JoinEmail", userDTO.getUserEmail()); //세션에 이메일값 넣어서 넘기기
+			return "redirect:/email_verify";
+		}
+	}
+	
+	//email_verify
+	@GetMapping("email_verify")
+	public String emailVerify(UserDTO userDTO, Model model) {
+		return "/join/email_vf";
+	}
 
 	//join_id
 		@GetMapping("join_id")
-		public String joinId(Model model) {
+		public String joinId(UserDTO userDTO, Model model) {
 			model.addAttribute("userDTO", new UserDTO());
 			page = "id";
 			return "/join/id";
@@ -96,7 +117,14 @@ public class JoinController {
 	//join_pwd
 	@PostMapping("join_pwd")
 	public String joinPwd(@Valid UserDTO userDTO, BindingResult bindingResult, Model model) {
-		//join에서 받은 이메일은 이 페이지에서 수정 가능하므로 검증x + html로 required와 속성 지정해놓음
+		if(page.equals("id")) {
+			//아이디 중복 확인
+			if(userService.existIdOrEmail(userDTO.getUserId())) {
+				bindingResult.rejectValue("userId", "IdDuplicate", "아이디 중복");
+			}
+			//
+			if(bindingResult.hasErrors()) { return "/join/id"; }
+		}
 		
 		if(page.equals("info")) { //이전 버튼으로 넘어온 경우 초기화
 			
@@ -186,6 +214,7 @@ public class JoinController {
 		
 		System.out.println("------end------");
 		System.out.println(userDTO.getUserEmail());
+		System.out.println(userDTO.getUserId());
 		System.out.println(userDTO.getUserPwd());
 		System.out.println(userDTO.getUserBirth());
 		System.out.println(userDTO.getUserGender());
@@ -197,7 +226,7 @@ public class JoinController {
 		}
 		
 		//dto값 db로 넘기기
-		userService.create(userDTO.getUserEmail(), userDTO.getUserPwd(), 
+		userService.create(userDTO.getUserEmail(), userDTO.getUserId(), userDTO.getUserPwd(), 
 				userDTO.getUserBirth(), userDTO.getUserGender(), 
 				userDTO.getUserLike(), userDTO.getUserHate());
 		
@@ -208,7 +237,18 @@ public class JoinController {
 	//login
 	//로그인 페이지
 	@GetMapping("/login")
-	public String loginPage(UserDTO userDTO, Model model) {
+	public String loginPage(UserDTO userDTO, Model model, HttpServletRequest req) {
+		//이메일에서 넘어온 세션(LoginEmail) 있는 지 확인
+		if(req.getSession(false) != null) { //세션이 있는가
+			HttpSession session = req.getSession(false);
+			if(session.getAttribute("LoginEmail") == null) { //로그인 이메일 세션이 적용된게 아닐경우
+				//로그인 유저 세션으로 온 경우 -> 
+				//조인 이메일 세션으로 온 경우 ->
+				} else { //로그인 이메일 세션으로 온 경우 ★
+					userDTO.setUserId((String)session.getAttribute("LoginEmail")); //아이디 창에 넣기
+					session.removeAttribute("LoginEmail"); //세션 삭제
+					}
+			}
 		page = "login";
 		return "/login";
 	}

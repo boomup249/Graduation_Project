@@ -23,11 +23,16 @@
 				th:object="${userDTO}"
 				method = "post">
 				
-		<!-- 안보이게 넘기기 (email, pwd, birth, gender) -->
+		<!-- 안보이게 넘기기 (email, id, pwd, birth, gender) -->
 		<input type="hidden"
 			th:value="${userDTO.getUserEmail()}"
 			th:field="*{userEmail}"
 			required/>
+			
+		<input type="hidden"
+           th:value="${userDTO.getUserId()}"
+           th:field="*{userId}"
+           required/>
 			
 		<input type="hidden"
 			th:value="${userDTO.getUserPwd()}"

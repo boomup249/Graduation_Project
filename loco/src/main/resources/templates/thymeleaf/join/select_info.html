@@ -62,10 +62,15 @@
       th:object="${userDTO}"
       method = "post">
 
-    <!-- (email이랑 비번) 안보이게 넘기기 -->
+    <!-- (email, id, 비번) 안보이게 넘기기 -->
     <input type="hidden"
            th:value="${userDTO.getUserEmail()}"
            th:field="*{userEmail}"
+           required/>
+           
+    <input type="hidden"
+           th:value="${userDTO.getUserId()}"
+           th:field="*{userId}"
            required/>
 
     <input type="hidden"
