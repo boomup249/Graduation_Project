@@ -112,7 +112,7 @@
 					<ul class="dropdown">
 						<li><a href="#">SUB_MENU</a></li>
 						<li><a href="#">SUB_MENU2</a></li>
-						<li><a href="#">SUB_MENU3</a></li>
+						<li><a href="/logout">로그아웃</a></li>
 					</ul>
 				</li>
 			</ul>
@@ -127,9 +127,14 @@
 			<div class="item2">
 				<img src="imgs/header/logo.png" width="350px"/>
 			</div>
+			
 			<!-- 이미지 링크 -->
-			<div class="item3">
+			<div th:if="${session.user == null}" class="item3"><!-- 세션(user)가 없으면 -->
 				<a href="/join"><img src="imgs/main/down.png" width="100px"/></a>
+			</div>
+			
+			<div th:if="${session.user != null}" class="item3"><!-- 세션(user)가 있으면(로그인 상태) -->
+				<a href="#"><img src="imgs/main/down.png" width="100px"/></a>
 			</div>
 		</div>
 		

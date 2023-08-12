@@ -5,6 +5,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.yuhan.loco.user.UserDTO;
 import com.yuhan.loco.user.UserService;
@@ -84,47 +86,49 @@ public class JoinController {
 		return "/join/email";
 	}
 	@PostMapping("email_ck") //이메일이 디비에 있는지 확인
-	public String emailCheck(UserDTO userDTO, Model model, HttpSession session) {
+	public String emailCheck(UserDTO userDTO, Model model) {
 		page = "email_ck";
 		
 		boolean ck;
 		ck = userService.existIdOrEmail(userDTO.getUserEmail()); //이메일이 디비에 있는지 확인
 		
+		//get매핑으로 param 넘겨버리기
 		if(ck) { //이메일이 디비에 있다면
-			session.setAttribute("LoginEmail", userDTO.getUserEmail()); //세션에 이메일값 넣어서 넘기기
-			return "redirect:/login"; //로그인 화면으로 넘기기
+			return "redirect:/login?ad=" + userDTO.getUserEmail(); //로그인 화면으로 넘기기
 		} else { //이메일이 디비에 없다면 -> 새로운 가입
-			session.setAttribute("JoinEmail", userDTO.getUserEmail()); //세션에 이메일값 넣어서 넘기기
-			return "redirect:/email_verify";
+			//★이때 인증번호 보내기 구현
+			return "redirect:/email_verify?ad=" + userDTO.getUserEmail();
 		}
 	}
 	
 	//email_verify
 	@GetMapping("email_verify")
-	public String emailVerify(UserDTO userDTO, Model model) {
+	public String emailVerify(UserDTO userDTO, @RequestParam(value="ad"/*, defaultValue = "" <단계를 안 거친 경우 못 들어오게>*/) String email, Model model) {
+		userDTO.setUserEmail(email);
 		return "/join/email_vf";
 	}
+	//★post 매핑으로 인증번호 확인 구현 -> 이 매핑 주소를 email_vf.html의 action으로 넣기
+	//+ 이 과정에서 다음 단계인 join_id로 email 주소를 넘겨줘야 함
+	// -> id.html에 hidden으로 이메일값 넣어주기: 칸은 만들어져 있으니 value에 넣기만하면 됨
 
 	//join_id
-		@GetMapping("join_id")
-		public String joinId(UserDTO userDTO, Model model) {
-			model.addAttribute("userDTO", new UserDTO());
-			page = "id";
-			return "/join/id";
-		}
+	@GetMapping("join_id")
+	public String joinId(UserDTO userDTO, Model model) {
+		page = "id";
+		return "/join/id";
+	}
+	@PostMapping("/check_id") //아이디 중복체크(ajax)
+	@ResponseBody
+	public boolean idCheck(@RequestParam("id") String id) {
+		boolean ck = userService.existIdOrEmail(id);
+		return ck;
+	}
 	
 	//※아래부터는 이전 값을 받아와야해서 post가 필요
 	//join_pwd
 	@PostMapping("join_pwd")
 	public String joinPwd(@Valid UserDTO userDTO, BindingResult bindingResult, Model model) {
-		if(page.equals("id")) {
-			//아이디 중복 확인
-			if(userService.existIdOrEmail(userDTO.getUserId())) {
-				bindingResult.rejectValue("userId", "IdDuplicate", "아이디 중복");
-			}
-			//
-			if(bindingResult.hasErrors()) { return "/join/id"; }
-		}
+		//아이디 중복 확인은 따로 처리
 		
 		if(page.equals("info")) { //이전 버튼으로 넘어온 경우 초기화
 			
@@ -232,56 +236,6 @@ public class JoinController {
 		
 		page = "end";
 		return "/join/complete";
-	}
-	
-	//login
-	//로그인 페이지
-	@GetMapping("/login")
-	public String loginPage(UserDTO userDTO, Model model, HttpServletRequest req) {
-		//이메일에서 넘어온 세션(LoginEmail) 있는 지 확인
-		if(req.getSession(false) != null) { //세션이 있는가
-			HttpSession session = req.getSession(false);
-			if(session.getAttribute("LoginEmail") == null) { //로그인 이메일 세션이 적용된게 아닐경우
-				//로그인 유저 세션으로 온 경우 -> 
-				//조인 이메일 세션으로 온 경우 ->
-				} else { //로그인 이메일 세션으로 온 경우 ★
-					userDTO.setUserId((String)session.getAttribute("LoginEmail")); //아이디 창에 넣기
-					session.removeAttribute("LoginEmail"); //세션 삭제
-					}
-			}
-		page = "login";
-		return "/login";
-	}
-	//처리
-	@PostMapping("/login")
-	public String login(@Valid UserDTO userDTO, BindingResult bindingResult, Model model, HttpSession session) {
-		//아이디 or 이메일 입력 필드는 userdto의 userId 활용 -> userEmail을 사용하면 제약 걸림(@)
-		//입력 칸을 채우지 않았을 경우
-		if(userDTO.getUserId() == null) { //아이디 or 이메일이 null
-			bindingResult.rejectValue("userId", "idIsNull", "이메일이나 아이디값을 입력해주세요.");
-		}
-		if(userDTO.getUserPwd() == null) { //비번 null
-			bindingResult.rejectValue("userPwd", "PwdIsNull", "비밀번호를 입력해주세요.");
-		}
-		
-		//디비에 값이 없을 경우
-		boolean ck;
-		ck = userService.existUser(userDTO.getUserId(), userDTO.getUserPwd());
-		if(ck == false) {
-			System.out.println("로그인 실패");
-			bindingResult.rejectValue("userPwd", "UserIsNotExist", "아이디 혹은 비밀번호가 잘못되었습니다."); //정확히 pwd에 일어난 에러는 아니지만 위치상 여기에 처리
-		}
-		
-		//에러가 있으면 로그인 화면으로 넘기기
-		if(bindingResult.hasErrors()) { return "/login"; }
-		else { //에러가 없음 -> 디비에도 값이 있음
-			//세션 생성
-			session.setAttribute("user", userDTO.getUserId());
-			//메인으로 리다이렉트
-			System.out.println("로그인 성공");
-			return "redirect:/main";
-		}
-		
 	}
 	
 	

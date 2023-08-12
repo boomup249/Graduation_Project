@@ -38,20 +38,20 @@
 					font-size: 20pt;
 					border: solid 5px #000; border-radius: 8px;}
 								
-			#sub {background-image: url('imgs/next.png');
+			#sub1 {
+					width: 80px;
+					border: solid 3px #005982; border-radius: 8px; }
+					
+			#sub2 {background-image: url('imgs/next.png');
 					background-size: cover;
 					background-position: center;
 					background-repeat: no-repeat;
 					width: 80px;
 					height: 80px;
 					border: solid 3px #005982; border-radius: 8px; }
-			
-			.item4 a {font-family: 'GmarketSansMedium';
-						font-size: 20pt;
-						/*font-weight: bold;*/}
 						
-			.item2 input {float: left; margin-left: 25px;}
-			.item3 input {float: left; margin-left: 25px;}
+			.item2 input, .item2 button {float: left; margin-left: 25px;}
+			.item3 input, .item3 button{float: left; margin-left: 25px;}
 			.code p {font-family: 'GmarketSansMedium';
 						font-size: 15pt;
 						color: red}
@@ -67,7 +67,7 @@
 					justify-content: center;
 					align-items: center; }
 			
-			.item2 {width: 1200px; height: 100px;
+			.item2, .item3 {width: 1200px; height: 100px;
 					position: relative;
 					left: 50%;
 					margin-left: -625px; /*content에 수직/수평 중앙 정렬(left -25px(margin))*/
@@ -77,28 +77,12 @@
 					justify-content: center;
 					align-items: center; }
 					
-			.item3 {width: 1200px; height: 100px;
-					position: relative;
-					margin-left: 6px; /*content에 수직/수평 중앙 정렬(left -25px(margin))*/
-					margin-bottom: 50px;
-					/*자식 중앙정렬*/
-					display: flex;
-					justify-content: center;
-					align-items: center; }
-					
-			.item4 {width: 600px; height: 50px;
-					position: relative;
-					left: 50%;
-					margin-left: -300px; /*가로 중앙정렬 및 위치 잡기*/
-					/*자식 중앙정렬*/
-					display: flex;
-					justify-content: center;
-					align-items: center; }
 			
 			.code {width: 600px; height: 50px;
 					position: relative;
 					margin-top: -50px;
-					margin-left: 130px; 
+					left: 50%;
+					margin-left: -565px; /*item2 시작(마진 및 빈 공간 제외)과 같은 x좌표에서 시작 -> 625 - 35 - 25*/
 					}
 			
 			body { background-color: #fff;
@@ -122,30 +106,25 @@
 			</div>
 			
 			<!--폼 액션 인증과정에 맞게 조정하기(해야 함)-->
-			<form action ="#" th:action="@{/join_id}"
+			<form action ="#"
 				th:object="${userDTO}"
 				method = "post">
 			<div class="item2">
-				<!--세션으로 이메일 값 받아오기(해야 함)-->
-				<input type="email" th:field="*{userEmail}" placeholder="이메일을 입력하여 시작하세요" th:value="session.JoinEmail" required />
-				<input type="submit" id="sub" value=""/>
+				<input type="email" th:field="*{userEmail}" placeholder="이메일을 입력하여 시작하세요" required />
+				<!--인증번호 재발송 버튼-->
+				<button onclick="action='/email_ck'; submit();" id="sub1">재전송</button>
 			</div>
-			
-			<!--인증번호 발송 부분, 화살표 버튼을 누르면 아래 텍스트와 인증번호 입력란이 나오도록 함-->
-			<!--화살표 버튼을 누른 후, 해당 화살표 버튼은 인증번호 입력란 옆으로 이동되게 함-->
 			
 			<div class="code">
 				<p>인증번호 발송이 완료되었습니다.</p> 
 			</div>
 			<div class="item3">
-				<input type="text" th:field="*{userEmail}" placeholder="인증번호를 입력해주세요." required />
+				<input type="text" placeholder="인증번호를 입력해주세요." required />
+				<!--인증번호 확인(보내기) 버튼-->
+				<button onclick="action='#'; submit();" id="sub2"></button>
 			</div>
 			</form>
 			
-			<!-- 이미지 링크 -->
-			<div class="item4">
-				<a href="/main">비회원으로 시작하기</a>
-			</div>
 		</div>
 		
 	</body>

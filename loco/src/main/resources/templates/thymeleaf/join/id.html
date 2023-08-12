@@ -45,18 +45,16 @@
 					width: 80px;
 					height: 80px;
 					border: solid 3px #005982; border-radius: 8px; }
+					
 			
-			.item3 p {font-family: 'GmarketSansMedium';
+			.msg1 p {font-family: 'GmarketSansMedium';
 						font-size: 15pt;
-						color: blue}
+						color: blue;
+						}
 						
-			.item4 p {font-family: 'GmarketSansMedium';
+			.msg2 p, .msg3 p {font-family: 'GmarketSansMedium';
 						font-size: 15pt;
-						color: red}
-			
-			.item5 p {font-family: 'GmarketSansMedium';
-						font-size: 15pt;
-						color: red}
+						color: red;}
 						
 			.item2 input {float: left; margin-left: 25px;}
 			
@@ -72,32 +70,30 @@
 					align-items: center; }
 			
 			.item2 {width: 1200px; height: 100px;
+					/*여유 공간(35) + 왼쪽 마진(25) + 텍스트 인풋(1000) + 왼쪽 마진(25) + sub 버튼(80) + 여유 공간(35)*/
 					position: relative;
 					left: 50%;
-					margin-left: -625px; /*content에 수직/수평 중앙 정렬(left -25px(margin))*/
+					margin-left: -625px; /*content에 수평 중앙 정렬(left -25px(margin))*/
 					margin-bottom: 50px;
 					/*자식 중앙정렬*/
 					display: flex;
 					justify-content: center;
 					align-items: center; }
-					
-			.item3 {width: 600px; height: 50px;
+			
+			/*헷갈릴까봐 이름 바꿨어용*/		
+			.msg1 , .msg2, .msg3 {width: 600px; height: 50px;
 					position: relative;
 					margin-top: -50px;
-					margin-left: 130px; 
-					}
+					left: 50%;
+					margin-left: -565px; /*item2 시작(마진 및 빈 공간 제외)과 같은 x좌표에서 시작 -> 625 - 35 - 25*/ 
+					} /*위치 잡기*/
 					
-			.item4 {width: 600px; height: 50px;
-					position: relative;
-					margin-top: -50px;
-					margin-left: 130px; 
-					}
 					
-			.item5 {width: 600px; height: 50px;
-					position: relative;
-					margin-top: -50px;
-					margin-left: 130px; 
-					}
+			.msg1 {display: none;}
+			.msg2 {display: none;}
+			.msg3 {display: none;}
+			#sub {visibility: hidden;}
+					
 			
 			body { background-color: #fff;
 					margin: 0; padding: 0;}
@@ -124,21 +120,36 @@
 			<form action ="#" th:action="@{/join_pwd}"
 				th:object="${userDTO}"
 				method = "post">
+				
+			<!-- (email) 안보이게 넘기기 -->	
+			<input type="hidden"
+           th:field="*{userEmail}"
+           required/>
+			
+			<!-- 아이디 실시간 중복 확인 -->	
+			<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>	
+			<script src="js/checkId.js"></script>
+			
 			<div class="item2">
-				<input type="text" th:field="*{userId}" placeholder="아이디를 입력하세요" required />
+				<input type="text" th:field="*{userId}" id="uid" 
+					oninput = "checkId()" placeholder="아이디를 입력하세요" required />
 				<input type="submit" id="sub" value=""/>
 			</div>
 			
+			
 			<!--각 상황에 맞게 적용 되도록 구성-->
-			<div class="item3">
-				<p>중복확인이 완료되었습니다.</p> 
+			<div class="msg1">
+				<p>사용가능한 아이디입니다.</p> 
 			</div>
-			<div class="item4">
-				<p>중복확인을 진행해주세요.</p> 
+			
+			<div class="msg2">
+				<p>5-15자리 이내로 입력해주세요.</p>
 			</div>
-			<div class="item5">
-				<p>이미 존재하는 아이디입니다.</p> 
+			
+			<div class="msg3">
+				<p>사용중인 아이디입니다.</p> 
 			</div>
+			
 			</form>
 	
 		</div>
