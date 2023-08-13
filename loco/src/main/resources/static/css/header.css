@@ -55,11 +55,15 @@
 			
 			/*드롭다운 메뉴 박스 설정*/
 			#header > ul > li > ul > li {
-				height: 50px;
+				height: 60px;
 				/*자식 중앙 정렬*/
 				display: flex;
 				align-items: center;
 				justify-content: center;
+			} /*드롭다운*/
+			
+			#header > ul > li > ul > li:hover {
+				background-color: lightgrey;
 			} /*드롭다운*/
 			
 			#header img {height: 50px;} /*버튼 이미지의 높이는 헤더의 50%*/
@@ -71,7 +75,7 @@
 				height: 60px;
 				border-radius: 50%;
 				/*스프링에서 디비로 받아서 이미지 url 바꿔줘야 함*/
-				background-image: url("../imgs/header/normal.jpg"); /*기본 이미지*/
+				background-image: url("../imgs/header/normal.png"); /*기본 이미지*/
 				background-size: cover;
 				background-position: center;
 				background-repeat: no-repeat;

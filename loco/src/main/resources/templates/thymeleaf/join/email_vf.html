@@ -31,17 +31,30 @@
 						flex-direction: column;
 						justify-content: center;}
 			
-			input[type=email],input[type=text] {width: 1000px;
+			input[type=email] {width: 1000px;
 					height: 80px;
 					padding-left: 30px;
 					font-family: 'GmarketSansMedium';
 					font-size: 20pt;
 					border: solid 5px #000; border-radius: 8px;}
-								
-			#sub1 {
-					width: 80px;
-					border: solid 3px #005982; border-radius: 8px; }
 					
+			input[type=text] {width: 500px;
+					height: 80px;
+					padding-left: 30px;
+					font-family: 'GmarketSansMedium';
+					font-size: 20pt;
+					border: solid 5px lightgreen; border-radius: 8px;}
+					
+					
+			/*resend 버튼*/			
+			#sub1 {width: 150px;
+					border-radius: 8px; 
+					
+					font-family: 'IAMAPLAYER';;
+					font-size: 20pt;
+					color: #000;
+					}
+			/*다음 버튼*/		
 			#sub2 {background-image: url('imgs/next.png');
 					background-size: cover;
 					background-position: center;
@@ -54,20 +67,30 @@
 			.item3 input, .item3 button{float: left; margin-left: 25px;}
 			.code p {font-family: 'GmarketSansMedium';
 						font-size: 15pt;
-						color: red}
+						color: green}
 			
 			/*위치 잡기*/
-			.item1 {width: 400px; height: 125px;
+			.item1 {width: 300px; height: 125px;
 					position: relative;
 					left: 50%;
-					margin-left: -625px; /*content에 수평 중앙 정렬 > 가로축: item2에 맞추기*/
+					margin-left: -600px; /*content에 수평 중앙 정렬 > 가로축: item2에 맞추기*/
 					margin-bottom: 25px;
 					/*자식 중앙정렬*/
 					display: flex;
 					justify-content: center;
 					align-items: center; }
 			
-			.item2, .item3 {width: 1200px; height: 100px;
+			.item2 {width: 1200px; height: 100px;
+					position: relative;
+					left: 50%;
+					margin-left: -625px; /*content에 수직/수평 중앙 정렬(left -25px(margin))*/
+					margin-bottom: 50px;
+					/*자식 중앙정렬*/
+					display: flex;
+					justify-content: center;
+					align-items: center; }
+					
+			.item3 {width: 630px; height: 100px;
 					position: relative;
 					left: 50%;
 					margin-left: -625px; /*content에 수직/수평 중앙 정렬(left -25px(margin))*/
@@ -82,7 +105,7 @@
 					position: relative;
 					margin-top: -50px;
 					left: 50%;
-					margin-left: -565px; /*item2 시작(마진 및 빈 공간 제외)과 같은 x좌표에서 시작 -> 625 - 35 - 25*/
+					margin-left: -600px; /*item2 시작(마진 및 빈 공간 제외)과 같은 x좌표에서 시작*/
 					}
 			
 			body { background-color: #fff;
@@ -112,7 +135,7 @@
 			<div class="item2">
 				<input type="email" th:field="*{userEmail}" placeholder="이메일을 입력하여 시작하세요" required />
 				<!--인증번호 재발송 버튼-->
-				<button onclick="action='/email_ck'; submit();" id="sub1">재전송</button>
+				<button onclick="action='/email_ck'; submit();" id="sub1">re-send</button>
 			</div>
 			
 			<div class="code">

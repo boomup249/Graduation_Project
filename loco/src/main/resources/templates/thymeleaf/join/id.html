@@ -31,7 +31,7 @@
 						flex-direction: column;
 						justify-content: center;}
 			
-			input[type=text] {width: 1000px;
+			input[type=text] {width: 520px;
 					height: 80px;
 					padding-left: 30px;
 					font-family: 'GmarketSansMedium';
@@ -59,21 +59,21 @@
 			.item2 input {float: left; margin-left: 25px;}
 			
 			/*위치 잡기*/
-			.item1 {width: 400px; height: 125px;
+			.item1 {width: 300px; height: 125px;
 					position: relative;
 					left: 50%;
-					margin-left: -625px; /*content에 수평 중앙 정렬 > 가로축: item2에 맞추기*/
+					margin-left: -325px; /*content에 수평 중앙 정렬 > 가로축: item2에 맞추기*/
 					margin-bottom: 25px;
 					/*자식 중앙정렬*/
 					display: flex;
 					justify-content: center;
 					align-items: center; }
 			
-			.item2 {width: 1200px; height: 100px;
-					/*여유 공간(35) + 왼쪽 마진(25) + 텍스트 인풋(1000) + 왼쪽 마진(25) + sub 버튼(80) + 여유 공간(35)*/
+			.item2 {width: 650px; height: 100px;
+					/*왼쪽 마진(25) + 텍스트 인풋(520) + 왼쪽 마진(25) + sub 버튼(80)*/
 					position: relative;
 					left: 50%;
-					margin-left: -625px; /*content에 수평 중앙 정렬(left -25px(margin))*/
+					margin-left: -350px; /*content에 수평 중앙 정렬(left -25px(margin))*/
 					margin-bottom: 50px;
 					/*자식 중앙정렬*/
 					display: flex;
@@ -85,7 +85,7 @@
 					position: relative;
 					margin-top: -50px;
 					left: 50%;
-					margin-left: -565px; /*item2 시작(마진 및 빈 공간 제외)과 같은 x좌표에서 시작 -> 625 - 35 - 25*/ 
+					margin-left: -325px; /*item2 시작(마진 및 빈 공간 제외)과 같은 x좌표에서 시작 */ 
 					} /*위치 잡기*/
 					
 					
@@ -132,7 +132,7 @@
 			
 			<div class="item2">
 				<input type="text" th:field="*{userId}" id="uid" 
-					oninput = "checkId()" placeholder="아이디를 입력하세요" required />
+					oninput = "checkId()" placeholder="아이디를 입력하세요 (5-15자리 이내)" required />
 				<input type="submit" id="sub" value=""/>
 			</div>
 			

@@ -10,6 +10,17 @@
 		
 		<style>	
 			/*css 속성*/
+			/*헤더*/
+			.dropdown {
+				font-family: 'GmarketSansMedium'; /*폰트 설정*/
+				font-size: 20px;
+			}
+			
+			.menu:hover {
+				background-color: dimgray; /*마우스 가져다대면 색 바뀜*/
+			}
+			
+			/*내용*/
 			#content {z-index: 2;
 						position: relative;
 						top: 100px;
@@ -73,7 +84,7 @@
 				<!-- 콘솔 -->
 				<li>
 					<div class="menu">
-						<a href="#"><img src="imgs/header/mobile.png"/></a>
+						<a href="#"><img src="imgs/header/console.png"/></a>
 					</div>
 				</li>
 				
@@ -110,8 +121,8 @@
 					<div class="mypage"></div>
 					<!-- 드롭다운 -->
 					<ul class="dropdown">
-						<li><a href="#">SUB_MENU</a></li>
-						<li><a href="#">SUB_MENU2</a></li>
+						<li><a href="#">내 계정</a></li>
+						<li><a href="#">프로필 설정</a></li>
 						<li><a href="/logout">로그아웃</a></li>
 					</ul>
 				</li>

@@ -145,11 +145,6 @@ public class JoinController {
 		page = "pwd";
 		return "/join/join_pwd";
 	}
-	@GetMapping("join_pwd")
-	public String getPwd(@Valid UserDTO userDTO, BindingResult bindingResult, Model model) {
-		page = "pwd";
-		return "/join/join_pwd";
-	}
 	
 	//join_info
 	@PostMapping("join_info")
