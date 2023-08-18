@@ -1,0 +1,7 @@
+INDEX VERSION 1.4+C:\Users\Ryu\Downloads\Graduation_Project-Frontend (1)\Graduation_Project-Frontend\.metadata\.plugins\org.eclipse.wst.jsdt.core\indexes
+4131624618.index
+2350763157.index
+1674413892.index
+431709344.index
+2590463452.index
+387958033.index
