@@ -123,6 +123,14 @@ public class JoinController {
 		boolean ck = userService.existIdOrEmail(id);
 		return ck;
 	}
+	//modify_info.html을 작동시키기 위한 코드(임의로 넣어놓은 거라 이후에 수정 부탁)
+	//join_modify
+		@GetMapping("join_modify")
+		public String joinModify(Model model) {
+			model.addAttribute("userDTO", new UserDTO());
+			page = "modify";
+			return "/join/modify_info";
+		}
 	
 	//※아래부터는 이전 값을 받아와야해서 post가 필요
 	//join_pwd
