@@ -13,7 +13,7 @@ public class UserDTO {
 	@Email
 	private String userEmail;
 	private String userId;
-	
+	private String userModify;
 	//@Size(max = 15)
 	private String userPwd;
 	
@@ -42,7 +42,12 @@ public class UserDTO {
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
-	
+	public String getUserModify() {
+		return userModify;
+	}
+	public void setUserModify(String userModify) {
+		this.userModify = userModify;
+	}
 	public String getUserPwd() {
 		return userPwd;
 	}
