@@ -1,7 +1,8 @@
 @charset "UTF-8";
+@import "font.css";
 
 /*header*/
-			#header {z-index: 3; /* header가 b_img보다 위에 배치되어야 함*/
+			#header {z-index: 1000; /* header가 b_img보다 위에 배치되어야 함*/
 					position: absolute;
 					top: 0px;
 					left: 0px;
@@ -19,11 +20,32 @@
 			    padding: 0;
 			}
 			
-			/*헤더의 a태그 글씨 속성*/
-			#header a {
+			/*폰트 & 꾸미기*/
+			.dropdown a {
+				font-family: 'GmarketSansMedium'; /*폰트 설정*/
+				font-size: 20px;
+				
 				text-decoration: none;
 				color:#000;
 			}
+			
+			.menu a {
+				font-family: 'GmarketSansMedium'; /*폰트 설정*/
+				font-size: 25px;
+				font-weight: bold;
+				
+				text-shadow: -2px -2px #000, 2px -2px #000, -2px 2px #000, 2px 2px #000;
+				
+				
+				text-decoration: none;
+				color:#fff;
+			}
+			
+			#header img {height: 50px;} /*버튼 이미지의 높이는 헤더의 50%*/
+			.logo_btn {margin-left: 25px;} /*왼쪽 마진 25px, 메뉴들은 마진 안주고 작업함*/
+			
+			
+			
 			
 			/*상위 메뉴*/
 			#header > ul > li {
@@ -32,6 +54,15 @@
 				height: 100px; /*헤더 높이와 같게*/
 				position:relative; /*하위 메뉴 드롭다운 시키기 위해*/
 				
+				/*자식 중앙 정렬*/
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+			
+			.menu {
+				width: 150px;
+				height: 50px;
 				/*자식 중앙 정렬*/
 				display: flex;
 				align-items: center;
@@ -66,8 +97,11 @@
 				background-color: lightgrey;
 			} /*드롭다운*/
 			
-			#header img {height: 50px;} /*버튼 이미지의 높이는 헤더의 50%*/
-			.logo_btn {margin-left: 25px;} /*왼쪽 마진 25px, 메뉴들은 마진 안주고 작업함*/
+			.menu:hover {
+				background-color: dimgray; /*마우스 가져다대면 색 바뀜*/
+			}
+			
+			
 			
 			/*마이페이지용 둥근 버튼*/
 			.mypage {
