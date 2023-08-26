@@ -29,3 +29,24 @@
 						    font-weight: normal;
 						    font-style: normal;
 						}
+						
+			@font-face {
+						    font-family: 'HS-Regular';
+						    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/HS-Regular.woff') format('woff');
+						    font-weight: normal;
+						    font-style: normal;
+						}
+						
+			@font-face {
+						    font-family: 'GangwonEdu_OTFBoldA';
+						    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/GangwonEdu_OTFBoldA.woff') format('woff');
+						    font-weight: normal;
+						    font-style: normal;
+						}
+						
+			@font-face {
+						    font-family: 'HSBombaram21-Regular';
+						    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2302@1.0/HSBombaram21-Regular.woff2') format('woff2');
+						    font-weight: normal;
+						    font-style: normal;
+						}
