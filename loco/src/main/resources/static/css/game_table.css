@@ -1,0 +1,49 @@
+@charset "UTF-8";
+
+table, th, tr, td {
+					border: 1px solid #fff;
+					border-collapse: collapse;}
+					
+			table {width: 100%;}
+			
+			tr {height: 180px;
+			position: relative; /*tr 기준으로 행 안의 요소들을 정렬하기 위해서*/}
+					
+			#bg_tb {z-index: 1; /*배경: 테이블의 행 부분에서 가장 아래에 깔리게*/
+			
+					position: absolute;
+					top: 0;
+					left: 0;
+					width: 100%;
+					height: 100%;
+					
+					/*back*/
+					background-size: cover;
+					background-position: center;
+					background-repeat: no-repeat;
+					background-color: #fff;
+					opacity: 0.6;}
+					
+			#title_tb {	z-index: 2; /* 테이블의 행에서 위에 표시되도록 */
+			
+						font-family: 'HS-Regular';
+						font-size: 50px;
+						color: #fff;
+						text-shadow: -2px -2px #000, 2px -2px #000, -2px 2px #000, 2px 2px #000; /* 글자 테두리 */
+			
+						/* tr 기준 상대 위치 */
+						position: absolute;
+						top: 25%;
+						left: 3%;}
+						
+			#genre_tb {	z-index: 2; /* 테이블의 행에서 위에 표시되도록 */
+			
+						font-family: 'GangwonEdu_OTFBoldA';
+						font-size: 30px;
+						color: #fff;
+						text-shadow: -1.5px -1.5px #000, 1.5px -1.5px #000, -1.5px 1.5px #000, 1.5px 1.5px #000; /* 글자 테두리 */
+			
+						/* tr 기준 상대 위치 */
+						position: absolute;
+						top: 60%;
+						left: 3%;}
