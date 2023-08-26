@@ -19,8 +19,66 @@
 						overflow-y: scroll; /*콘텐츠에만 스크롤이 적용되도록*/
 						}
 			
-			body { background-color: #545454;
+			body { background-color: #2b2b2b;
 					margin: 0; padding: 0;}
+					
+			#pagination ul {
+				padding: 0;
+				
+				list-style: none;
+				
+				width: 1000px;
+				
+				/*리스트 중앙정렬*/
+				position: relative;
+				left: 50%;
+				margin-left: -525px;
+				
+				/*리스트 위 아래 마진*/
+				margin-top: 40px;
+				margin-bottom: 40px;
+				
+				/*자식 중앙 정렬*/
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+			
+			#pagination > ul > li {
+				float: left;
+				margin-left: 35px;
+			}
+			
+			
+			
+			.fir_btn, .last_btn {
+				border: 2px solid #bcbcbc;
+				padding-left: 5px;
+				padding-right: 5px;
+				padding-top: 2px;
+				}
+				
+			
+			#pagination a {
+				font-family: 'GmarketSansLight';
+				font-size: 25px;
+				color: #fff;
+				text-decoration: none;
+				
+			}
+			
+			#pagination .current {
+			  font-family: 'GmarketSansBold';
+			  font-weight: bold;
+			  text-decoration: underline;
+			}
+			
+			.disabled {
+				pointer-events: none;
+				cursor: default;
+			}
+			
+					
 		</style>
 	</head>
 	
@@ -96,6 +154,49 @@
 			
 			
 			<!-- 페이징 -->
+			<div id="pagination">
+				
+				<ul>
+					
+					<li th:if="${currentPage > 1}" class="fir_btn">
+			            <a th:href="@{/pc(page=1)}">
+			            	<<
+			           	</a>
+			        </li>
+					
+			        <li th:if="${startPage >= 10}" class="pv_btn">
+			            <a th:href="@{/pc(page=${startPage - 1})}"
+			            th:classappend="${startPage > 1} ? '' : 'disabled'">
+			            	이전
+			           	</a>
+			        </li>
+			        
+			        <li th:each="pageNum : ${#numbers.sequence(startPage, endPage)}" class="page_btn">
+			            <a th:href="@{/pc(page=${pageNum})}"
+			               th:classappend="${pageNum == currentPage} ? 'current' : ''"
+			               th:text="${pageNum}">
+			               ${pageNum}
+			            </a>
+			        </li>
+			        
+			        <li th:if="${endPage < totalPage}" class="next_btn">
+			            <a th:href="@{/pc(page=${endPage + 1})}"
+			            th:classappend="${endPage < totalPage} ? '' : 'disabled'">
+			            	다음
+			            </a>
+			        </li>
+			        
+			        <li th:if="${currentPage < totalPage}" class="last_btn">
+			            <a th:href="@{/pc(page=${totalPage})}">
+			            >>
+			           	</a>
+			        </li>
+			        
+			    </ul>
+							
+			</div>
+			
+			
 		</div>
 		
 	</body>
