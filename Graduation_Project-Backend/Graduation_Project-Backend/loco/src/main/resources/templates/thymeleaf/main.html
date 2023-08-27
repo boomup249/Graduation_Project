@@ -1,4 +1,5 @@
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" 
+xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 	<head>
 		<meta charset="UTF-8">
 		<title>loco</title>
@@ -110,14 +111,17 @@
 				</li>
 				
 				<!-- 로그인 버튼-->
-				<li th:if="${session.user == null}"> <!-- 세션(user)가 없으면 -->
+				<th:block sec:authorize="isAnonymous()">
+				<li> <!-- 로그인 상태 아닐 시 -->
 					<div class="menu">
 						<a href="/login"><img src="imgs/header/login.png"/></a>
 					</div>
 				</li>
+				</th:block>
 				
 				<!-- 마이페이지 -->
-				<li th:if="${session.user != null}"> <!-- 세션(user)가 있으면 -->
+				<th:block sec:authorize="isAuthenticated()">
+				<li> <!-- 로그인 상태일때 -->
 					<div class="mypage"></div>
 					<!-- 드롭다운 -->
 					<ul class="dropdown">
@@ -126,6 +130,7 @@
 						<li><a href="/logout">로그아웃</a></li>
 					</ul>
 				</li>
+				</th:block>
 			</ul>
 			
 		</div>
@@ -140,14 +145,17 @@
 			</div>
 			
 			<!-- 이미지 링크 -->
-			<div th:if="${session.user == null}" class="item3"><!-- 세션(user)가 없으면 -->
+			<th:block sec:authorize="isAnonymous()">
+			<div class="item3"><!-- 로그인 상태 아닐 시 -->
 				<a href="/join"><img src="imgs/main/down.png" width="100px"/></a>
 			</div>
-			
-			<div th:if="${session.user != null}" class="item3"><!-- 세션(user)가 있으면(로그인 상태) -->
+			</th:block>
+			<th:block sec:authorize="isAuthenticated()">
+			<div class="item3"><!-- (로그인 상태) -->
 				<a href="#"><img src="imgs/main/down.png" width="100px"/></a>
 			</div>
+			</th:block>
 		</div>
-		
+		<!-- 현재 로그인 상태에 따른 버튼 변경 작동 안함. 수정 필요 -->
 	</body>
 </html>

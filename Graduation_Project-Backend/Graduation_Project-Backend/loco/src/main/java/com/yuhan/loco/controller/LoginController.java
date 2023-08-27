@@ -1,5 +1,9 @@
 package com.yuhan.loco.controller;
 
+
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -7,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.yuhan.loco.user.UserDB;
 import com.yuhan.loco.user.UserDTO;
 import com.yuhan.loco.user.UserService;
 
@@ -23,7 +28,13 @@ public class LoginController {
 	public LoginController(UserService userService) {
         this.userService = userService;
     }
-	
+	private boolean isAuthenticated() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if(authentication == null || authentication instanceof AnonymousAuthenticationToken) {
+			return false;
+		}
+		return authentication.isAuthenticated();
+	}
 	//연결
 	
 	//login
@@ -36,7 +47,7 @@ public class LoginController {
 	}
 	
 	@PostMapping("/login") //로그인 처리
-	public String login(@Valid UserDTO userDTO, BindingResult bindingResult, Model model, HttpSession session) {
+	public String login(BindingResult bindingResult, Model model) {
 		//아이디 or 이메일 입력 필드는 userdto의 userId 활용 -> userEmail을 사용하면 제약 걸림(@)
 		
 		//입력 칸을 채우지 않았을 경우
@@ -48,41 +59,22 @@ public class LoginController {
 			bindingResult.rejectValue("userPwd", "PwdIsNull", "비밀번호를 입력해주세요.");
 		}
 		*/
-		
-		//디비에 값이 없을 경우
-		boolean ck;
-		ck = userService.existUser(userDTO.getUserId(), userDTO.getUserPwd());
-		if(ck == false) {
-			System.out.println("로그인 실패");
-			bindingResult.rejectValue("userPwd", "UserIsNotExist", "아이디 혹은 비밀번호가 잘못되었습니다."); //정확히 pwd에 일어난 에러는 아니지만 위치상 여기에 처리
-		}
-		
-		//에러가 있으면 로그인 화면으로 넘기기
-		if(bindingResult.hasErrors()) { return "/login"; }
-		else { //에러가 없음 -> 디비에도 값이 있음
-			//세션 생성
-			session.setAttribute("user", userDTO.getUserId());
-			//메인으로 리다이렉트
+
+		if(isAuthenticated()) {
 			System.out.println("로그인 성공");
-			return "redirect:/main";
+			return "/login";		
+		}
+		System.out.println("로그인 실패");
+		bindingResult.rejectValue("userPwd", "UserIsNotExist", "아이디 혹은 비밀번호가 잘못되었습니다."); //정확히 pwd에 일어난 에러는 아니지만 위치상 여기에 처리, Security 적용하면서 작동 안함
+		return "/login";
+		/*비밀번호 암호화, 세션 부분 시큐리티로 대체 완료.
+		 * 로그인은 잘 되는 것 같은데 메인 페이지에 오류 있음. 자세한건 메인 부분 참고 바람
+		 * 로그인 실패 시 표시되던 오류 화면 전부 작동 안함. 확인 필요*/	
 		}
 		
 	}
 	
 	
-	//로그아웃
-	@GetMapping("/logout") //로그인 페이지
-	public String logout(HttpServletRequest req) {
-		HttpSession session = req.getSession(false);
-		
-		if(session == null) {
-			//세션이 생성되지 않고 로그아웃 -> 에러
-		} else { //세션이 있음
-			session.invalidate();
-		}
-		
-		return "redirect:/main";
-	}
+
 	
 	
-}

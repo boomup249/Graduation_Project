@@ -3,6 +3,7 @@ package com.yuhan.loco.user;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.util.List;
+import java.util.Optional;
 
 
 @Repository
@@ -14,4 +15,6 @@ public interface UserRepository extends JpaRepository<UserDB, String>{
 	//로그인
 	boolean existsByEMAILAndPWD(String EMAIL, String PWD);
 	boolean existsByIDAndPWD(String ID, String PWD);
+	
+	Optional<UserDB> findByID(String ID);
 }

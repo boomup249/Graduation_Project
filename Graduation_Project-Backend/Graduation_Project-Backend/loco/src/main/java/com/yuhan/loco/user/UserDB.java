@@ -22,15 +22,9 @@ public class UserDB {
 	@Id
 
 	private String ID;
-	
-	
-	
-	
 	private String EMAIL;
-
-
 	private String PWD;
-	
+	private String ROLE;
 	private Date BIRTH;
 	private String GENDER;
 	
@@ -40,7 +34,7 @@ public class UserDB {
 		return EMAIL;
 	}
 	public void setEMAIL(String email) {
-		this.EMAIL = email;
+		EMAIL = email;
 	}
 	
 	public String getID() {
@@ -55,6 +49,12 @@ public class UserDB {
 	}
 	public void setPWD(String pWD) {
 		PWD = pWD;
+	}
+	public String getROLE() {
+		return ROLE;
+	}
+	public void setROLE(String Role) {
+		ROLE = Role;
 	}
 	public Date getBIRTH() {
 		return BIRTH;
