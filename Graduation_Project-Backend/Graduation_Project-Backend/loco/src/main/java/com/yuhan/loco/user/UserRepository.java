@@ -15,6 +15,4 @@ public interface UserRepository extends JpaRepository<UserDB, String>{
 	//로그인
 	boolean existsByEMAILAndPWD(String EMAIL, String PWD);
 	boolean existsByIDAndPWD(String ID, String PWD);
-	
-	Optional<UserDB> findByID(String ID);
 }

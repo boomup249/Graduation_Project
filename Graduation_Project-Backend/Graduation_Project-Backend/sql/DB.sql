@@ -86,8 +86,7 @@ USE `member` ;
 CREATE TABLE IF NOT EXISTS `member`.`info` (
   `ID` VARCHAR(12) NOT NULL,
   `EMAIL` VARCHAR(30) NULL DEFAULT NULL,
-  `PWD` CHAR(100) NOT NULL,
-  `ROLE` VARCHAR(6) NULL DEFAULT NULL,
+  `PWD` CHAR(16) NOT NULL,
   `BIRTH` DATE NULL DEFAULT NULL,
   `GENDER` CHAR(5) NULL DEFAULT NULL,
   PRIMARY KEY (`ID`))
@@ -126,39 +125,6 @@ CREATE TABLE IF NOT EXISTS `member`.`data` (
   CONSTRAINT `ID`
     FOREIGN KEY (`ID`)
     REFERENCES `member`.`info` (`ID`)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb3;
-
-
--- -----------------------------------------------------
--- Table `member`.`gamedata_pc`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `member`.`gamedata_pc` (
-  `TITLE` VARCHAR(40) NOT NULL,
-  `DESCRIPTION` VARCHAR(200) NULL DEFAULT NULL,
-  `IMAGE` VARCHAR(100) NULL DEFAULT NULL,
-  `PRICE` INT NULL DEFAULT NULL,
-  PRIMARY KEY (`TITLE`))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb3;
-
-
--- -----------------------------------------------------
--- Table `member`.`gamedata_genre`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `member`.`gamedata_genre` (
-  `TITLE` VARCHAR(40) NOT NULL,
-  `FPS` INT NULL DEFAULT NULL,
-  `RPG` INT NULL DEFAULT NULL,
-  `STRAT` INT NULL DEFAULT NULL,
-  `RACING` INT NULL DEFAULT NULL,
-  `SIMUL` INT NULL DEFAULT NULL,
-  PRIMARY KEY (`TITLE`),
-  CONSTRAINT `PCTITLE`
-    FOREIGN KEY (`TITLE`)
-    REFERENCES `member`.`gamedata_pc` (`TITLE`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB

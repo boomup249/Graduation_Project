@@ -5,7 +5,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -20,38 +19,11 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
     @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        // 정적 리소스들이 보안필터를 거치지 않게끔
-        return (web) -> web.ignoring().requestMatchers("/css/**", "/js/**", "/imgs/**");
+    public SecurityFilterChain filterchain(HttpSecurity http) throws Exception{
+    	http
+    		.csrf().disable();
+    	return http.build();
     }
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.cors().disable()                               // cors 방지
-                .csrf().disable()                           // csrf 방지
-                .headers().frameOptions().disable();        // x frame 방어 해제
-
-        http.authorizeRequests()
-                // 페이지 권한 설정
-                .anyRequest().permitAll();
-
-        http.formLogin()
-                    .loginPage("/login")
-                    .defaultSuccessUrl("/main")
-                    .failureUrl("/login?error")
-                    .usernameParameter("userId")
-                    .passwordParameter("userPwd")
-                .and()
-                    .logout()
-                    .logoutSuccessUrl("/main")
-                    .invalidateHttpSession(true)
-                    .deleteCookies("JSESSIONID");
-
-        // status code 핸들링
-        http.exceptionHandling().accessDeniedPage("/denied");
-
-        return http.build();
-    }
 }
