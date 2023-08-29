@@ -6,7 +6,7 @@
 					position: absolute;
 					top: 0px;
 					left: 0px;
-					background-color: #545454; width: 100%; height: 100px; /*header 100px 고정 -> (버튼)50 + (상하 여백)25 * 2 */ 
+					background-color: #393E50; width: 100%; height: 100px; /*header 100px 고정 -> (버튼)50 + (상하 여백)25 * 2 */ 
 					/*자식 위치 잡기*/
 					display: flex;
 					justify-content: space-between; /*로고와 메뉴 사이 벌리기*/
@@ -98,7 +98,7 @@
 			} /*드롭다운*/
 			
 			.menu:hover {
-				background-color: dimgray; /*마우스 가져다대면 색 바뀜*/
+				background-color: slategray; /*마우스 가져다대면 색 바뀜*/
 			}
 			
 			

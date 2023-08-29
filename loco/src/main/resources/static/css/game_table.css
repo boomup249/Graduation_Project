@@ -9,12 +9,12 @@ table, th, tr, td {
 			tr {height: 180px;
 			position: relative; /*tr 기준으로 행 안의 요소들을 정렬하기 위해서*/}
 					
-			#bg_tb {z-index: 1; /*배경: 테이블의 행 부분에서 가장 아래에 깔리게*/
+			#img_tb {z-index: 1; /*게임 이미지, 왼쪽*/
 			
 					position: absolute;
-					top: 0;
-					left: 0;
-					width: 100%;
+					top: 0px;
+					left: 0px;
+					width: 400px;
 					height: 100%;
 					
 					/*back*/
@@ -27,23 +27,37 @@ table, th, tr, td {
 			#title_tb {	z-index: 2; /* 테이블의 행에서 위에 표시되도록 */
 			
 						font-family: 'HS-Regular';
-						font-size: 50px;
+						font-size: 45px;
 						color: #fff;
 						text-shadow: -2px -2px #000, 2px -2px #000, -2px 2px #000, 2px 2px #000; /* 글자 테두리 */
 			
+						width: 1000px;
+						height: 50px;
+						
+						/*자식 세로 중앙 정렬*/
+						display: flex;
+						align-items: center;
+			
 						/* tr 기준 상대 위치 */
 						position: absolute;
-						top: 25%;
-						left: 3%;}
+						top: 45px;
+						left: 425px;}
 						
 			#genre_tb {	z-index: 2; /* 테이블의 행에서 위에 표시되도록 */
 			
 						font-family: 'GangwonEdu_OTFBoldA';
-						font-size: 30px;
+						font-size: 25px;
 						color: #fff;
 						text-shadow: -1.5px -1.5px #000, 1.5px -1.5px #000, -1.5px 1.5px #000, 1.5px 1.5px #000; /* 글자 테두리 */
 			
+						width: 1000px;
+						height: 30px;
+						
+						/*자식 세로 중앙 정렬*/
+						display: flex;
+						align-items: center;
+			
 						/* tr 기준 상대 위치 */
 						position: absolute;
-						top: 60%;
-						left: 3%;}
+						top: 105px;
+						left: 425px;}

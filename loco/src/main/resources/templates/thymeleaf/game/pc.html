@@ -7,6 +7,7 @@
 		<link rel="stylesheet" href="css/font.css"> <!-- 폰트 css -->
 		<link rel="stylesheet" href="css/header.css"> <!-- 헤더 css -->
 		<link rel="stylesheet" href="css/game_table.css"> <!-- 게임 목록 css -->
+		<link rel="stylesheet" href="css/pagination.css"> <!-- 페이지네이션 css -->
 		
 		<style>	
 			/*css 속성*/
@@ -19,64 +20,8 @@
 						overflow-y: scroll; /*콘텐츠에만 스크롤이 적용되도록*/
 						}
 			
-			body { background-color: #2b2b2b;
+			body { background-color: #222831;
 					margin: 0; padding: 0;}
-					
-			#pagination ul {
-				padding: 0;
-				
-				list-style: none;
-				
-				width: 1000px;
-				
-				/*리스트 중앙정렬*/
-				position: relative;
-				left: 50%;
-				margin-left: -525px;
-				
-				/*리스트 위 아래 마진*/
-				margin-top: 40px;
-				margin-bottom: 40px;
-				
-				/*자식 중앙 정렬*/
-				display: flex;
-				align-items: center;
-				justify-content: center;
-			}
-			
-			#pagination > ul > li {
-				float: left;
-				margin-left: 35px;
-			}
-			
-			
-			
-			.fir_btn, .last_btn {
-				border: 2px solid #bcbcbc;
-				padding-left: 5px;
-				padding-right: 5px;
-				padding-top: 2px;
-				}
-				
-			
-			#pagination a {
-				font-family: 'GmarketSansLight';
-				font-size: 25px;
-				color: #fff;
-				text-decoration: none;
-				
-			}
-			
-			#pagination .current {
-			  font-family: 'GmarketSansBold';
-			  font-weight: bold;
-			  text-decoration: underline;
-			}
-			
-			.disabled {
-				pointer-events: none;
-				cursor: default;
-			}
 			
 					
 		</style>
@@ -145,7 +90,7 @@
 			<table>
 				<tr th:each = "g : ${gamePage}">
 					<td>
-						<div id="bg_tb" th:style="'background-image:url('+ ${g.gameUrl} +');'"></div>
+						<div id="img_tb" th:style="'background-image:url('+ ${g.gameUrl} +');'"></div>
 						<div id="title_tb" th:text="${g.gameName}">게임 타이틀</div>
 						<div id="genre_tb">게임 장르</div>
 					</td>
