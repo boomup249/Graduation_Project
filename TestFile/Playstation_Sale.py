@@ -1,40 +1,68 @@
 import selenium
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.common.exceptions import NoSuchElementException
 from bs4 import BeautifulSoup
-import openpyxl
-from pathlib import Path
-from io import BytesIO
-import dload
+#import openpyxl
+#from pathlib import Path
+#from io import BytesIO
+#import dload
 from time import sleep
-from datetime import datetime
+#from datetime import datetime
+import MySQLdb
+import requests
 
-time = datetime.now()
-timestr = time.strftime("%Y%m%d_%H%M")
+#DB연결
+conn = MySQLdb.connect(
+    user="crawler",
+    passwd="crawler1937",
+    host="localhost",
+    db="crawling_test"
+)
+cursor = conn.cursor()
+
+# 실행할 때마다 다른값이 나오지 않게 테이블을 제거해두기
+cursor.execute("DROP TABLE IF EXISTS ps_sale_genre")
+cursor.execute("DROP TABLE IF EXISTS ps_sale")
+
+#rank에 AUTO_INCREMENT를 사용함으로써 INSERT가 입력될때마다 자동으로 숫자를 +1 올린다
+cursor.execute('''CREATE TABLE ps_sale (
+                                           num int(6) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                                           title varchar(300) NOT NULL unique key,
+                                           price varchar(30) NOT NULL,
+                                           saleprice varchar(30),
+                                           saleper varchar(30),
+                                           description varchar(2000),
+                                           imgdata varchar(3000)
+                                           )    
+                                           ''')
+
+cursor.execute('''CREATE TABLE ps_sale_genre (
+                                           num INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+                                           title varchar(100) NOT NULL,
+                                           genre varchar(20) NOT NULL,
+                                           FOREIGN KEY(title) REFERENCES ps_sale(title)
+                                           )
+                                           ''')
 
 URL = 'https://store.playstation.com/ko-kr/pages/deals'
+gameURL = 'https://store.playstation.com/'
 
 #크롬드라이버 옵션 설정
+services = Service(executable_path=ChromeDriverManager().install())
 options = Options()
 options.add_experimental_option("detach", True)
 
 #크롬드라이버 인스턴스 생성 및 옵션, 크기, URL, 암시적 대기 설정
-driver = webdriver.Chrome(options=options)
-driver.set_window_size(1400,1000)
+driver = webdriver.Chrome(service=services, options=options)
+driver.implicitly_wait(5)
+driver.set_window_size(1400,800)
 driver.get(URL)
-driver.implicitly_wait(10)
-
-excel_File = openpyxl.Workbook()
-excel_sheet = excel_File.active
-row_column = ["순위", "게임명", "정가", "할인가", "할인율", "파일 이미지"]
-excel_sheet.append(row_column)
-
-path = f'D:\Python\Study\PlayStationSale\{timestr}'
-Path(path).mkdir(parents=True, exist_ok=True)
 
 #할인 페이지로 접속(할인페이지 url을보니 변경될수도 있을거같아서 이렇게 접속)
 driver.find_element(By.XPATH, "//*[@id='main']/div/div[3]/section/div/ul/li[3]/a").click()
@@ -47,14 +75,14 @@ soup = BeautifulSoup(html, "html.parser")
 pagebar = driver.find_element(By.CLASS_NAME, "psw-l-stack-center")
 pages = pagebar.find_elements(By.CSS_SELECTOR, 'li')
 
-#게임순위 초기값
-rank = 1
 #다음페이지 초기값(숫자)
 next_page = 2
 #마지막페이지 값(문자열)
 last_page = pages[4].text
 #마지막 게임 이름 초기값(마지막페이지에 game_list가 한개 존재할경우 그 한개를 반복해서 저장하길래 그런상황에서 break를 걸기위해 변수 하나 생성)
 last_game_title = ""
+#db에 넣을때 title이 중복되면 오류나서 중복되는 게임은 스킵하기위해 beforetitle 선언
+beforetitle = ""
 
 while True:
     #페이지가 변경됐을때 변경된 페이지를 파싱
@@ -66,6 +94,8 @@ while True:
 
     for game in game_list:
         title = game.find("span", class_="psw-t-body psw-c-t-1 psw-t-truncate-2 psw-m-b-2").text
+        if title == beforetitle:
+            continue
         #last_game_title의 값과 현재 크롤링하는 게임의 title의 값이 같으면 크롤링 종료
         if last_game_title == title:
             break
@@ -95,10 +125,39 @@ while True:
         if next_page-1 == int(last_page):
             last_game_title = title
 
-        data_column = [rank, title, price, saleprice, saleper, imgdata]
-        excel_sheet.append(data_column)
-        #dload.save(imgdata, f'{path}\IMG_{rank}.jpg')
-        rank += 1
+        game_link = game.select_one('a')
+        move = game_link["href"]
+        gamepage = gameURL + move
+
+        response = requests.get(gamepage, headers={"User-Agent": "Mozilla/5.0"})
+        new_soup = BeautifulSoup(response.text, "html.parser")
+
+        description = new_soup.find('p', class_=r'psw-c-t-2 psw-p-x-7 psw-p-y-6 psw-p-x-6@below-tablet-s psw-m-sub-x-7 psw-m-auto@below-tablet-s psw-c-bg-card-1')
+        if description != None:
+            description = description.text.strip()
+
+        try:
+            sql = 'INSERT INTO ps_sale (title, price, saleprice, saleper, description, imgdata) VALUES (%s, %s, %s, %s, %s, %s)'
+            cursor.execute(sql, (title, price, saleprice, saleper, description, imgdata))
+        except:
+            print(f"{title} DB 입력중 오류 발생(동일명 게임 존재)")
+
+        tagparent = new_soup.find("dd", {'data-qa':'gameInfo#releaseInformation#genre-value'})
+        if tagparent != None:
+            tag = tagparent.select_one("span").text.split(',')
+            tag_length = len(tag)
+            num = 0
+
+            while num < tag_length:
+                tag[num] = tag[num].strip()
+                sql = 'INSERT INTO ps_sale_genre (title, genre) VALUES (%s, %s)'
+                cursor.execute(sql, (title, tag[num]))
+                num += 1
+
+        beforetitle = title
+
+        conn.commit()
+        print(f'{next_page-1}p.{title} DB 입력 완료')
 
     #마지막페이지 크롤링 끝나면 break로 while문 빠져나옴
     if int(last_page)+1 == next_page:
@@ -115,6 +174,24 @@ while True:
             sleep(3)
             break
 
+sleep(2)
+print("크롤링 완료")
+driver.quit()
+
+"""
+excel_File = openpyxl.Workbook()
+excel_sheet = excel_File.active
+row_column = ["순위", "게임명", "정가", "할인가", "할인율", "파일 이미지"]
+excel_sheet.append(row_column)
+
+path = f'D:\Python\Study\PlayStationSale\{timestr}'
+Path(path).mkdir(parents=True, exist_ok=True)
+
+        data_column = [rank, title, price, saleprice, saleper, imgdata]
+        excel_sheet.append(data_column)
+        #dload.save(imgdata, f'{path}\IMG_{rank}.jpg')
+        rank += 1
+
 excel_File.save(f'{path}\PlayStationSale_{timestr}.xlsx')
 excel_File.close()
-driver.quit()
+"""

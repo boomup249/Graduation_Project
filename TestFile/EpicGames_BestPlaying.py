@@ -37,7 +37,6 @@ cursor = conn.cursor()
 cursor.execute("DROP TABLE IF EXISTS epic_best_playing_genre")
 cursor.execute("DROP TABLE IF EXISTS epic_best_playing")
 
-#steam_best 테이블 생성
 #rank에 AUTO_INCREMENT를 사용함으로써 INSERT가 입력될때마다 자동으로 숫자를 +1 올린다
 cursor.execute('''CREATE TABLE epic_best_playing (
                                            num int(6) NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -60,7 +59,8 @@ cursor.execute('''CREATE TABLE epic_best_playing_genre (
 
 URL = 'https://store.epicgames.com/ko/collection/most-played'
 
-subprocess.Popen(r'C:\Program Files\Google\Chrome\Application\chrome.exe --remote-debugging-port=9222 --user-data-dir="C:\chromeCookie"')
+#크롬 디버그 모드로 열기
+chrome = subprocess.Popen(r'C:\Program Files\Google\Chrome\Application\chrome.exe --remote-debugging-port=9222 --user-data-dir="C:\chromeCookie"')
 
 #크롬드라이버 옵션 설정
 services = Service(executable_path=ChromeDriverManager().install())
@@ -142,7 +142,7 @@ for item in gamelist:
         num += 1
 
     conn.commit()
-    print(f'{title} db에 입력완료')
+    print(f'{title} DB 입력 완료')
 
     #탭 종료후 원래 탭으로 이동
     driver.close()
@@ -150,6 +150,7 @@ for item in gamelist:
 
 sleep(2)
 print("크롤링 완료")
+chrome.kill()
 driver.close()
 
 """

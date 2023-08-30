@@ -53,7 +53,6 @@ cursor.execute('''CREATE TABLE steam_best_popluar_genre (
 URL = 'https://store.steampowered.com/charts/topselling'
 
 services = Service(executable_path=ChromeDriverManager().install())
-
 options = Options()
 options.add_experimental_option("detach", True)
 
@@ -167,7 +166,7 @@ for item in gamelist:
         num += 1
 
     conn.commit()
-    print(f'{title} db에 입력완료')
+    print(f'{title} DB 입력 완료')
 
     #탭 종료후 원래 탭(베스트게임 페이지)으로 이동
     #driver.close()
