@@ -8,14 +8,6 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- Schema mydb
 -- -----------------------------------------------------
 -- -----------------------------------------------------
--- Schema gamedata
--- -----------------------------------------------------
-
--- -----------------------------------------------------
--- Schema gamedata
--- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `gamedata` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
--- -----------------------------------------------------
 -- Schema member
 -- -----------------------------------------------------
 
@@ -23,61 +15,6 @@ CREATE SCHEMA IF NOT EXISTS `gamedata` DEFAULT CHARACTER SET utf8mb4 COLLATE utf
 -- Schema member
 -- -----------------------------------------------------
 CREATE SCHEMA IF NOT EXISTS `member` DEFAULT CHARACTER SET utf8mb3 ;
-USE `gamedata` ;
-
--- -----------------------------------------------------
--- Table `gamedata`.`mobile`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `gamedata`.`mobile` (
-  `TITLE` VARCHAR(40) NOT NULL,
-  `DESCRIPTION` VARCHAR(200) NULL DEFAULT NULL,
-  `IMAGE` VARCHAR(100) NULL DEFAULT NULL,
-  `PRICE` INT NULL DEFAULT NULL,
-  PRIMARY KEY (`TITLE`))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
-
-
--- -----------------------------------------------------
--- Table `gamedata`.`pc`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `gamedata`.`pc` (
-  `TITLE` VARCHAR(40) NOT NULL,
-  `DESCRIPTION` VARCHAR(200) NULL DEFAULT NULL,
-  `IMAGE` VARCHAR(100) NULL DEFAULT NULL,
-  `PRICE` INT NULL DEFAULT NULL,
-  PRIMARY KEY (`TITLE`))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
-
-
--- -----------------------------------------------------
--- Table `gamedata`.`genre`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `gamedata`.`genre` (
-  `TITLE` VARCHAR(40) NOT NULL,
-  `FPS` INT NULL DEFAULT NULL,
-  `RPG` INT NULL DEFAULT NULL,
-  `STRAT` INT NULL DEFAULT NULL,
-  `RACING` INT NULL DEFAULT NULL,
-  `SIMUL` INT NULL DEFAULT NULL,
-  PRIMARY KEY (`TITLE`),
-  CONSTRAINT `MTITLE`
-    FOREIGN KEY (`TITLE`)
-    REFERENCES `gamedata`.`mobile` (`TITLE`)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE,
-  CONSTRAINT `PCTITLE`
-    FOREIGN KEY (`TITLE`)
-    REFERENCES `gamedata`.`pc` (`TITLE`)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
-
 USE `member` ;
 
 -- -----------------------------------------------------
@@ -86,7 +23,7 @@ USE `member` ;
 CREATE TABLE IF NOT EXISTS `member`.`info` (
   `ID` VARCHAR(12) NOT NULL,
   `EMAIL` VARCHAR(30) NULL DEFAULT NULL,
-  `PWD` CHAR(16) NOT NULL,
+  `PWD` CHAR(100) NOT NULL,
   `BIRTH` DATE NULL DEFAULT NULL,
   `GENDER` CHAR(5) NULL DEFAULT NULL,
   PRIMARY KEY (`ID`))
@@ -125,6 +62,39 @@ CREATE TABLE IF NOT EXISTS `member`.`data` (
   CONSTRAINT `ID`
     FOREIGN KEY (`ID`)
     REFERENCES `member`.`info` (`ID`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb3;
+
+
+-- -----------------------------------------------------
+-- Table `member`.`gamedata_pc`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `member`.`gamedata_pc` (
+  `TITLE` VARCHAR(40) NOT NULL,
+  `DESCRIPTION` VARCHAR(200) NULL DEFAULT NULL,
+  `IMAGE` VARCHAR(100) NULL DEFAULT NULL,
+  `PRICE` INT NULL DEFAULT NULL,
+  PRIMARY KEY (`TITLE`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb3;
+
+
+-- -----------------------------------------------------
+-- Table `member`.`gamedata_genre`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `member`.`gamedata_genre` (
+  `TITLE` VARCHAR(40) NOT NULL,
+  `FPS` INT NULL DEFAULT NULL,
+  `RPG` INT NULL DEFAULT NULL,
+  `STRAT` INT NULL DEFAULT NULL,
+  `RACING` INT NULL DEFAULT NULL,
+  `SIMUL` INT NULL DEFAULT NULL,
+  PRIMARY KEY (`TITLE`),
+  CONSTRAINT `PCTITLE`
+    FOREIGN KEY (`TITLE`)
+    REFERENCES `member`.`gamedata_pc` (`TITLE`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB
