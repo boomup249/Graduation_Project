@@ -90,9 +90,43 @@
 			<table>
 				<tr th:each = "g : ${gamePage}">
 					<td>
-						<div id="img_tb" th:style="'background-image:url('+ ${g.gameUrl} +');'"></div>
-						<div id="title_tb" th:text="${g.gameName}">게임 타이틀</div>
-						<div id="genre_tb">게임 장르</div>
+						<div class="container">
+							
+							<div class="basic">
+								
+								<div id="img_tb" th:style="'background-image:url('+ ${g.gameUrl} +');'"></div>
+								
+								<div id="text_tb">
+									<div class="title_tb" th:text="${g.gameName}">게임 타이틀</div>
+									<div class="genre_tb">게임 장르</div>
+								</div>
+								
+							</div>
+							
+							<div class="additional">
+								
+								<div th:if="${g.getDcRate().equals('X') || g.getDcRate().equals('할인 X')}" 
+									id="no_dc"
+									th:text="${g.price}"><!-- 할인 x -->
+										정가
+								</div>
+								
+								<div th:if="${!(g.getDcRate().equals('X') || g.getDcRate().equals('할인 X'))}" 
+									id="dc"><!-- 할인 o -->
+										<div class="dc_rate" th:text="${g.DcRate}">할인율</div>
+										<div class="prices">
+											<div class="fir_price" th:text="${g.price}">정가</div>
+											<div class="dc_price" th:text="${g.DcPrice}">할인가</div>
+										</div>
+								</div>
+							</div>
+							
+						</div>
+						
+						
+						
+						
+						
 					</td>
 				</tr>
 			</table>

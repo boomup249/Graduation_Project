@@ -6,6 +6,11 @@ public class GameDTO {
 	private String gameName;
 	private String gameUrl;
 	
+	private String price;
+	private String DcPrice;
+	private String DcRate;
+	
+	
 	//getter setter
 	public int getRanking() {
 		return ranking;
@@ -26,12 +31,37 @@ public class GameDTO {
 		this.gameUrl = gameUrl;
 	}
 	
+	
+	public String getPrice() {
+		return price;
+	}
+	public void setPrice(String price) {
+		this.price = price;
+	}
+	public String getDcPrice() {
+		return DcPrice;
+	}
+	public void setDcPrice(String dcPrice) {
+		DcPrice = dcPrice;
+	}
+	public String getDcRate() {
+		return DcRate;
+	}
+	public void setDcRate(String dcRate) {
+		DcRate = dcRate;
+	}
+	
+	
 	//생성자
-	public GameDTO(int ranking, String gameName, String gameUrl) {
+	public GameDTO(int ranking, String gameName, String price, String dcPrice, String dcRate, String gameUrl) {
 		super();
 		this.ranking = ranking;
 		this.gameName = gameName;
 		this.gameUrl = gameUrl;
+		this.price = price;
+		DcPrice = dcPrice;
+		DcRate = dcRate;
 	}
+	
 	
 }
