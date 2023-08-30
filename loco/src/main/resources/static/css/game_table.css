@@ -10,12 +10,20 @@
 			tr {height: 180px;
 			position: relative; /*tr 기준으로 행 안의 요소들을 정렬하기 위해서*/
 			}
+			
+			td a {
+				text-decoration: none;
+			}
+			
+			td:hover {
+				background-color: dimgrey;
+			}
 				
 			
 			/*행 크게 분류*/
 			.container {
 				width: 100%;
-				height: 180px;
+				height: 180px; /*%로 바꾸면 오류남ㅠ*/
 
 				display: flex;
     			justify-content: space-between;
@@ -67,6 +75,8 @@
 				    justify-content: center;
 				    align-items: flex-start;
 					}
+					
+			
 			
 			/*text_tb 분류*/		
 			.title_tb {	z-index: 2; /* 테이블의 행에서 위에 표시되도록 */
@@ -86,8 +96,6 @@
 						margin-bottom: 10px;
 						}
 						
-			
-						
 			.genre_tb {	z-index: 2; /* 테이블의 행에서 위에 표시되도록 */
 			
 						font-family: 'GangwonEdu_OTFBoldA';
@@ -101,7 +109,6 @@
 						/*자식 세로 중앙 정렬*/
 						display: flex;
 						align-items: center;
-			
 						}
 						
 			/*additional 세부*/			

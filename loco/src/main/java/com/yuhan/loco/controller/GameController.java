@@ -83,10 +83,10 @@ public class GameController {
 				GameDTO g32 = new GameDTO(32, "소울워커", "무료 플레이", "할인 X", "할인 X", "https://cdn.cloudflare.steamstatic.com/steam/apps/1825750/capsule_231x87_koreana.jpg?t=1681854232");
 				GameDTO g33 = new GameDTO(33, "Rebellion Anthology", "₩ 452,300", "₩ 370,890", "-18%", "https://cdn.cloudflare.steamstatic.com/steam/bundles/646/y6u8ejuci6htztk5/capsule_231x87.jpg?t=1501602620");
 				GameDTO g34 = new GameDTO(34, "Human: Fall Flat", "₩ 20,500", "₩ 6,150", "-70%", "https://cdn.cloudflare.steamstatic.com/steam/apps/477160/capsule_231x87_alt_assets_1.jpg?t=1689672396");
-				GameDTO g35 = new GameDTO(35, "Remnant II", "에약 구매", "할인 X", "할인 X	", "https://cdn.cloudflare.steamstatic.com/steam/apps/1282100/capsule_231x87.jpg?t=1689706767");
+				GameDTO g35 = new GameDTO(35, "Remnant II", "예약 구매", "할인 X", "할인 X", "https://cdn.cloudflare.steamstatic.com/steam/apps/1282100/capsule_231x87.jpg?t=1689706767");
 				GameDTO g36 = new GameDTO(36, "Ember Knights", "₩ 21,500", "₩ 18,270", "-15%", "https://cdn.cloudflare.steamstatic.com/steam/apps/1135230/capsule_231x87_alt_assets_6_koreana.jpg?t=1689683633");
 				GameDTO g37 = new GameDTO(37, "V Rising", "₩ 20,500", "₩ 16,400", "-20%", "https://cdn.cloudflare.steamstatic.com/steam/apps/1604030/capsule_231x87.jpg?t=1684394834");
-				GameDTO g38 = new GameDTO(38, "AI＊Shoujo/AI＊少女", "₩ 74,400", "할인 X", "할인 X	", "https://cdn.cloudflare.steamstatic.com/steam/apps/1250650/capsule_231x87.jpg?t=1666085923");
+				GameDTO g38 = new GameDTO(38, "AI＊Shoujo/AI＊少女", "₩ 74,400", "할인 X", "할인 X", "https://cdn.cloudflare.steamstatic.com/steam/apps/1250650/capsule_231x87.jpg?t=1666085923");
 				GameDTO g39 = new GameDTO(39, "Stardew Valley", "₩ 16,000", "할인 X", "할인 X", "https://cdn.cloudflare.steamstatic.com/steam/apps/413150/capsule_231x87.jpg?t=1666917466");
 				GameDTO g40 = new GameDTO(40, "콜 오브 듀티®: 모던 워페어 II | 워존", "₩ 84,500", "할인 X", "할인 X", "https://cdn.cloudflare.steamstatic.com/steam/apps/1938090/capsule_231x87_koreana.jpg?t=1687571108");
 				
