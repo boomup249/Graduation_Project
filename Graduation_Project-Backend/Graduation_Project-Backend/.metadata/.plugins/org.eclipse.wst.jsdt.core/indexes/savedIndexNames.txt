@@ -1,8 +1,3 @@
 INDEX VERSION 1.4+C:\Users\Ryu\Desktop\GP\GP\Graduation_Project-Backend\Graduation_Project-Backend\.metadata\.plugins\org.eclipse.wst.jsdt.core\indexes
-1651594546.index
-1230567310.index
-2371988064.index
-2590463452.index
-3854272837.index
-2271706953.index
 3065440099.index
+2590463452.index
