@@ -63,15 +63,19 @@ public class UserService {
       boolean ck,ck2;
       if (id.contains("@")) {
          ck = this.userRepository.existsByEMAIL(id);
+         user = this.userRepository.findByEMAIL(id);//pwd ck 위해서 유저 받아옴
       } else {
          ck = this.userRepository.existsByID(id);
+         user = this.userRepository.findByID(id);//pwd ck 위해서 유저 받아옴
       }
       
-      if (ck=true) {
+      if (ck == true) {
          ck2 = PWDMatches(pwd);
       } else {
          ck2 = false;
       }
+      
+      user = null;
       
       return ck2;
    }
