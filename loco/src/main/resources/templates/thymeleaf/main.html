@@ -74,14 +74,14 @@
 				<!-- 콘솔 -->
 				<li>
 					<div class="menu">
-						<a href="#">CONSOLE</a>
+						<a href="/console">CONSOLE</a>
 					</div>
 				</li>
 				
 				<!-- pc -->
 				<li>
 					<div class="menu">
-						<a href="#">PC</a>
+						<a href="/pc">PC</a>
 					</div>
 				</li>
 				
@@ -135,7 +135,7 @@
 			</div>
 			
 			<div th:if="${session.user != null}" class="item3"><!-- 세션(user)가 있으면(로그인 상태) -->
-				<a href="#"><img src="imgs/main/down.png" width="100px"/></a>
+				<a href="/console"><img src="imgs/main/down.png" width="100px"/></a>
 			</div>
 		</div>
 		
