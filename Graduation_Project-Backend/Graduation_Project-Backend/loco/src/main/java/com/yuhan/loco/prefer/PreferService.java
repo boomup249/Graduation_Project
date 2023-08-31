@@ -1,15 +1,14 @@
 package com.yuhan.loco.prefer;
 
-
-
 import org.springframework.stereotype.Service;
+
 
 @Service
 public class PreferService {
-	private final PreferRepository userRepository;
+	private final PreferRepository preferRepository;
 	
-	public PreferService(PreferRepository userRepository) {
-        this.userRepository = userRepository;
+	public PreferService(PreferRepository preferRepository) {
+        this.preferRepository = preferRepository;
     }
 	
 	public PreferDB create(String id, String like, String hate) {
@@ -163,7 +162,7 @@ public class PreferService {
 		System.out.println(user.getCasual());
 		System.out.println(user.getPuzzle());
 		
-		this.userRepository.save(user);
+		this.preferRepository.save(user);
 		
 		return user;
 	}

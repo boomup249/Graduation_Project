@@ -1,14 +1,8 @@
 package com.yuhan.loco.prefer;
 
 
-
-
-import jakarta.validation.constraints.Email;
-
-
 public class PreferDTO {
 	//
-	@Email
 	private String userLike;
 	private String userHate;
 	

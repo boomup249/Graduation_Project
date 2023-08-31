@@ -13,8 +13,6 @@ import com.yuhan.loco.prefer.PreferService;
 import com.yuhan.loco.user.UserDTO;
 import com.yuhan.loco.user.UserService;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
 //회원가입 과정 관련 컨트롤러
@@ -51,7 +49,7 @@ import jakarta.validation.Valid;
  * 
  * 4. 스프링 시큐리티 활용(비밀번호 암호화 등)
  * <완료>5. [join_pwd.html] 비밀번호 확인이랑 같은지 검증 + 세부 조건 걸기
- * <진행중 (session 생성 완료)>6. 로그인 관련
+ * <완료>6. 로그인 관련
  * */
 
 @Controller
@@ -180,8 +178,9 @@ public class JoinController {
 	
 	//join_like
 	@PostMapping("join_like")
-	public String joinLike(@Valid UserDTO userDTO, @Valid PreferDTO preferDTO, BindingResult bindingResult, Model model) {
-		
+	public String joinLike(@Valid UserDTO userDTO, BindingResult bindingResult, PreferDTO preferDTO, Model model) {
+							//(인수)prefer는 필수 선택 아니라 validation 지우고 뒤로 미뤘어용! @valid랑 bindingresult랑 떨어져 있으면 오류나서 순서 고쳤습니다.  <- 유지아
+							//prefer도 필수 선택으로 바뀌면 조정 필요해요!
 		if(page.equals("info")) {
 			//gender 미선택 후 넘김
 			if(userDTO.getUserGender() == null) {
@@ -189,6 +188,9 @@ public class JoinController {
 			}
 			
 			//birth 미선택 후 넘기면 어차피 haserror 뜸 -> 형식 안 맞아서
+			if(bindingResult.hasFieldErrors("userBirh")) { //info에서 birth 안 선택하고 넘기면 에러 발생
+				userDTO.setUserBirth(null);
+			}
 			
 			//error
 			if(bindingResult.hasErrors()) { return "/join/select_info"; }
