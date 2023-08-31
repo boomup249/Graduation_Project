@@ -8,11 +8,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.yuhan.loco.prefer.PreferDTO;
+import com.yuhan.loco.prefer.PreferService;
 import com.yuhan.loco.user.UserDTO;
 import com.yuhan.loco.user.UserService;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
 //회원가입 과정 관련 컨트롤러
@@ -49,7 +49,7 @@ import jakarta.validation.Valid;
  * 
  * 4. 스프링 시큐리티 활용(비밀번호 암호화 등)
  * <완료>5. [join_pwd.html] 비밀번호 확인이랑 같은지 검증 + 세부 조건 걸기
- * <진행중 (session 생성 완료)>6. 로그인 관련
+ * <완료>6. 로그인 관련
  * */
 
 @Controller
@@ -57,9 +57,11 @@ public class JoinController {
 	//전역
 	String page = "";
 	private final UserService userService;
+	private final PreferService preferService;
 	
-	public JoinController(UserService userService) {
+	public JoinController(UserService userService, PreferService preferService) {
         this.userService = userService;
+        this.preferService = preferService;
     }
 	
 	/*<가입 정보 처리 방법(최종)>
@@ -97,7 +99,8 @@ public class JoinController {
 			return "redirect:/login?ad=" + userDTO.getUserEmail(); //로그인 화면으로 넘기기
 		} else { //이메일이 디비에 없다면 -> 새로운 가입
 			//★이때 인증번호 보내기 구현
-			return "redirect:/email_verify?ad=" + userDTO.getUserEmail();
+			//return "redirect:/email_verify?ad=" + userDTO.getUserEmail(); 인증화면 띄우기 ---- 여기서부터 하면 됨!!!!!!!!!!!!
+			return "join/id";
 		}
 	}
 	
@@ -123,14 +126,6 @@ public class JoinController {
 		boolean ck = userService.existIdOrEmail(id);
 		return ck;
 	}
-	//modify_info.html을 작동시키기 위한 코드(임의로 넣어놓은 거라 이후에 수정 부탁)
-	//join_modify
-		@GetMapping("join_modify")
-		public String joinModify(Model model) {
-			model.addAttribute("userDTO", new UserDTO());
-			page = "modify";
-			return "/join/modify_info";
-		}
 	
 	//※아래부터는 이전 값을 받아와야해서 post가 필요
 	//join_pwd
@@ -183,8 +178,9 @@ public class JoinController {
 	
 	//join_like
 	@PostMapping("join_like")
-	public String joinLike(@Valid UserDTO userDTO, BindingResult bindingResult, Model model) {
-		
+	public String joinLike(@Valid UserDTO userDTO, BindingResult bindingResult, PreferDTO preferDTO, Model model) {
+							//(인수)prefer는 필수 선택 아니라 validation 지우고 뒤로 미뤘어용! @valid랑 bindingresult랑 떨어져 있으면 오류나서 순서 고쳤습니다.  <- 유지아
+							//prefer도 필수 선택으로 바뀌면 조정 필요해요!
 		if(page.equals("info")) {
 			//gender 미선택 후 넘김
 			if(userDTO.getUserGender() == null) {
@@ -192,6 +188,9 @@ public class JoinController {
 			}
 			
 			//birth 미선택 후 넘기면 어차피 haserror 뜸 -> 형식 안 맞아서
+			if(bindingResult.hasFieldErrors("userBirh")) { //info에서 birth 안 선택하고 넘기면 에러 발생
+				userDTO.setUserBirth(null);
+			}
 			
 			//error
 			if(bindingResult.hasErrors()) { return "/join/select_info"; }
@@ -204,14 +203,14 @@ public class JoinController {
 	
 	//join_hate
 	@PostMapping("join_hate")
-	public String joinHate(UserDTO userDTO, Model model) {
+	public String joinHate(UserDTO userDTO, PreferDTO preferDTO, Model model) {
 		page = "hate";
 		return "/join/select_hate";
 	}
 	
 	//join_end
 	@PostMapping("join_end")
-	public String joinEnd(@Valid UserDTO userDTO, BindingResult bindingResult, Model model) {
+	public String joinEnd(@Valid UserDTO userDTO, @Valid PreferDTO preferDTO, BindingResult bindingResult, Model model) {
 		//db에 맞게 고치기
 		if(userDTO.getUserGender().equals("women")) { //성별
 			userDTO.setUserGender("여자");
@@ -225,17 +224,19 @@ public class JoinController {
 		System.out.println(userDTO.getUserPwd());
 		System.out.println(userDTO.getUserBirth());
 		System.out.println(userDTO.getUserGender());
+		System.out.println(preferDTO.getUserLike());
+		System.out.println(preferDTO.getUserHate());
 		
 		//dto에 필수 값이 빠진 경우 메인으로 다시 보내기
 		//error
-		if(bindingResult.hasErrors()) {
-			return "redirect:/main";
-		}
+		//if(bindingResult.hasErrors()) {
+		//	return "redirect:/main";
+		//}
 		
 		//dto값 db로 넘기기
 		userService.create(userDTO.getUserEmail(), userDTO.getUserId(), userDTO.getUserPwd(), 
-				userDTO.getUserBirth(), userDTO.getUserGender(), 
-				userDTO.getUserLike(), userDTO.getUserHate());
+				userDTO.getUserBirth(), userDTO.getUserGender());
+		preferService.create(userDTO.getUserId(), preferDTO.getUserLike(), preferDTO.getUserHate());
 		
 		page = "end";
 		return "/join/complete";

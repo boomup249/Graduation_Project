@@ -4,8 +4,6 @@ package com.yuhan.loco.user;
 import java.sql.Date;
 
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Size;
 
 
 public class UserDTO {
@@ -13,7 +11,7 @@ public class UserDTO {
 	@Email
 	private String userEmail;
 	private String userId;
-	private String userModify;
+	
 	//@Size(max = 15)
 	private String userPwd;
 	
@@ -22,9 +20,6 @@ public class UserDTO {
 
 	private String userGender;
 	private Date userBirth;
-	
-	private String userLike;
-	private String userHate;
 	
 	
 
@@ -42,12 +37,7 @@ public class UserDTO {
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
-	public String getUserModify() {
-		return userModify;
-	}
-	public void setUserModify(String userModify) {
-		this.userModify = userModify;
-	}
+	
 	public String getUserPwd() {
 		return userPwd;
 	}
@@ -72,20 +62,6 @@ public class UserDTO {
 	}
 	public void setUserBirth(Date userBirth) {
 		this.userBirth = userBirth;
-	}
-	
-	
-	public String getUserLike() {
-		return userLike;
-	}
-	public void setUserLike(String userLike) {
-		this.userLike = userLike;
-	}
-	public String getUserHate() {
-		return userHate;
-	}
-	public void setUserHate(String userHate) {
-		this.userHate = userHate;
 	}
 
 }

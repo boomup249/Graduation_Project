@@ -2,204 +2,82 @@ package com.yuhan.loco.user;
 
 import java.sql.Date;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import jakarta.transaction.Transactional;
+
 @Service
+@Transactional
 public class UserService {
-	private final UserRepository userRepository;
-	
-	public UserService(UserRepository userRepository) {
+   private final UserRepository userRepository;
+   private final PasswordEncoder passwordEncoder;
+   UserDB user = new UserDB();
+   
+   public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
-	
-	public UserDB create(String email, String id, String pwd, Date birth, String gender, String like, String hate) {
-		UserDB user = new UserDB();
-		
-		user.setEMAIL(email);
-		user.setID(id);
-		user.setPWD(pwd);
-		user.setBIRTH(birth);
-		user.setGENDER(gender);
-		
-		//장르
-		String likeGenre[] = like.split(","); //like
-		String hateGenre[] = hate.split(","); //hate
-		
-		int l_len = likeGenre.length;
-		int h_len = hateGenre.length;
-		
-		//like
-		for(int i = 0; i < l_len; i++) {
-			switch (likeGenre[i]) {
-			case "action":
-				user.setAction(true);
-				break;
-				
-			case "action adventure":
-				user.setAction_adventure(true);
-				break;
-				
-			case "survival":
-				user.setSurvival(true);
-				break;
-				
-			case "shooting":
-				user.setShooting(true);
-				break;
-				
-			case "FPS":
-				user.setFPS(true);
-				break;
-				
-			case "RPG":
-				user.setRPG(true);
-				break;
-				
-			case "ARPG":
-				user.setARPG(true);
-				break;
-				
-			case "MMORPG":
-				user.setMMORPG(true);
-				break;
-				
-			case "open world":
-				user.setOpen_world(true);
-				break;
-				
-			case "hack and slash":
-				user.setHack_and_slash(true);
-				break;
-				
-			case "adventure":
-				user.setAdventure(true);
-				break;
-				
-			case "racing":
-				user.setRacing(true);
-				break;
-				
-			case "casual":
-				user.setCasual(true);
-				break;
-				
-			case "puzzle":
-				user.setPuzzle(true);
-				break;
-			}
-		}
-		
-		//hate
-		for(int i = 0; i < h_len; i++) {
-			switch (hateGenre[i]) {
-			case "action":
-				user.setAction(false);
-				break;
-				
-			case "action adventure":
-				user.setAction_adventure(false);
-				break;
-				
-			case "survival":
-				user.setSurvival(false);
-				break;
-				
-			case "shooting":
-				user.setShooting(false);
-				break;
-				
-			case "FPS":
-				user.setFPS(false);
-				break;
-				
-			case "RPG":
-				user.setRPG(false);
-				break;
-				
-			case "ARPG":
-				user.setARPG(false);
-				break;
-				
-			case "MMORPG":
-				user.setMMORPG(false);
-				break;
-				
-			case "open world":
-				user.setOpen_world(false);
-				break;
-				
-			case "hack and slash":
-				user.setHack_and_slash(false);
-				break;
-				
-			case "adventure":
-				user.setAdventure(false);
-				break;
-				
-			case "racing":
-				user.setRacing(false);
-				break;
-				
-			case "casual":
-				user.setCasual(false);
-				break;
-				
-			case "puzzle":
-				user.setPuzzle(false);
-				break;
-			}
-		}
-		
-		System.out.println("----repository----");
-		System.out.println(user.getEMAIL());
-		System.out.println(user.getPWD());
-		System.out.println(user.getBIRTH());
-		System.out.println(user.getGENDER());
-		
-		System.out.println(user.getAction());
-		System.out.println(user.getAction_adventure());
-		System.out.println(user.getSurvival());
-		System.out.println(user.getShooting());
-		System.out.println(user.getFPS());
-		System.out.println(user.getRPG());
-		System.out.println(user.getARPG());
-		System.out.println(user.getMMORPG());
-		System.out.println(user.getOpen_world());
-		System.out.println(user.getHack_and_slash());
-		System.out.println(user.getAdventure());
-		System.out.println(user.getSports());
-		System.out.println(user.getRacing());
-		System.out.println(user.getCasual());
-		System.out.println(user.getPuzzle());
-		
-		this.userRepository.save(user);
-		
-		return user;
-	}
-	
-	//이메일 아이디 중복확인 메서드
-	public boolean existIdOrEmail(String id) {
-		boolean ck;
-		
-		if (id.contains("@")) {
-			ck = this.userRepository.existsByEMAIL(id);
-		} else {
-			ck = this.userRepository.existsByID(id);
-		}
-		return ck;
-	}
-	
-	//유저 정보가 디비와 일치하는 지 확인하는 메서드
-	public boolean existUser(String id, String pwd) {
-		boolean ck;
-		
-		if (id.contains("@")) {
-			ck = this.userRepository.existsByEMAILAndPWD(id, pwd);
-		} else {
-			ck = this.userRepository.existsByIDAndPWD(id, pwd);
-		}
-		
-		return ck;
-	}
-	
+   public String encodePWD(String pwd) {
+      String encodePWD = passwordEncoder.encode(pwd);
+      return encodePWD;
+   }
+    public boolean PWDMatches(String pwd) {
+       String encodepwd = user.getPWD();
+       boolean pwdcheck = passwordEncoder.matches(pwd, encodepwd);
+       return pwdcheck;
+    }
+   
+   public UserDB create(String email, String id, String pwd, Date birth, String gender) {
+      user.setEMAIL(email);
+      user.setID(id);
+      user.setPWD(encodePWD(pwd));
+      user.setBIRTH(birth);
+      user.setGENDER(gender);
+      
+
+      System.out.println("----repository----");
+      System.out.println(user.getEMAIL());
+      System.out.println(user.getPWD());
+      System.out.println(user.getBIRTH());
+      System.out.println(user.getGENDER());
+      
+      
+      this.userRepository.save(user);   
+      return user;
+   }
+   
+   //이메일 아이디 중복확인 메서드
+   public boolean existIdOrEmail(String id) {
+      boolean ck;
+      if (id.contains("@")) {
+         ck = this.userRepository.existsByEMAIL(id);
+      } else {
+         ck = this.userRepository.existsByID(id);
+      }
+      return ck;
+   }
+   
+   //유저 정보가 디비와 일치하는 지 확인하는 메서드
+   public boolean existUser(String id, String pwd) {
+      boolean ck,ck2;
+      if (id.contains("@")) {
+         ck = this.userRepository.existsByEMAIL(id);
+         user = this.userRepository.findByEMAIL(id);//pwd ck 위해서 유저 받아옴
+      } else {
+         ck = this.userRepository.existsByID(id);
+         user = this.userRepository.findByID(id);//pwd ck 위해서 유저 받아옴
+      }
+      
+      if (ck == true) {
+         ck2 = PWDMatches(pwd);
+      } else {
+         ck2 = false;
+      }
+      
+      user = null;
+      
+      return ck2;
+   }
+   //암호화는 한번만 실행되어야 함 (반복 호출 시 암호화 값이 달라져서 비밀번호가 달라짐. 그래서 어떤 방법으로도 DB와 일치시킬 수 없음)
 }
