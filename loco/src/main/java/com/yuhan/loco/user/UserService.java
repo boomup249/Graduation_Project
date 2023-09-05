@@ -79,5 +79,10 @@ public class UserService {
       
       return ck2;
    }
+   
+   public UserDB findUser(String id) {
+       UserDB userdb = this.userRepository.findByID(id);
+       return userdb;
+   }
    //암호화는 한번만 실행되어야 함 (반복 호출 시 암호화 값이 달라져서 비밀번호가 달라짐. 그래서 어떤 방법으로도 DB와 일치시킬 수 없음)
 }

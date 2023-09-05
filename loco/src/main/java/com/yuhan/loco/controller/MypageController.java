@@ -4,9 +4,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import com.yuhan.loco.prefer.PreferDB;
 import com.yuhan.loco.prefer.PreferService;
+import com.yuhan.loco.user.UserDB;
 import com.yuhan.loco.user.UserDTO;
 import com.yuhan.loco.user.UserService;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 //마이페이지 컨트롤러
 
@@ -39,6 +44,27 @@ public class MypageController {
 		page = "modify";
 		return "/join/modify_info";
 		}
+	
+	@GetMapping("/profile")
+    public String profile(Model model, HttpServletRequest req) {
+        String userId;
+
+        if(req.getSession(false) != null) { //로그인?
+            HttpSession session = req.getSession(false);
+            userId = (String)session.getAttribute("user");
+
+            UserDB userdb = userService.findUser(userId);
+            PreferDB preferdb = preferService.findUser(userId);
+
+            model.addAttribute("userDTO", userdb);
+            model.addAttribute("preferDTO", preferdb);
+        }
+
+        page = "profile";
+
+        return "/profile"; //여기 주소만 고쳐
+        }
+	
 	
 	
 }

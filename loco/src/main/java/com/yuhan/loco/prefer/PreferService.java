@@ -165,5 +165,13 @@ public class PreferService {
 		this.preferRepository.save(user);
 		
 		return user;
+		
+		
+	}
+	//user찾기
+
+	public PreferDB findUser(String id) { 
+	    PreferDB preferdb = this.preferRepository.findByID(id);
+	    return preferdb; 
 	}
 }

@@ -5,4 +5,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PreferRepository extends JpaRepository<PreferDB, String>{
+	PreferDB findByID(String ID);
 }
