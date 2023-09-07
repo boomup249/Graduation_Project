@@ -5,22 +5,22 @@
     <title>프로필 페이지</title>
     <link rel="stylesheet" th:href="@{/css/myaccount.css}" href="/css/myaccount.css">
 </head>
-<body>
-    <div class="container">
-        <div class="profile-card">
-            <img class="profile-image" src="프로필 이미지 URL" alt="프로필 이미지">
-            <div class="profile-info">
-                <div class="info-item">
-                    <span class="info-label">아이디:</span>
-                    <span id="username" class="info-value"
-                    th:text="${userDTO.getID()}">YourUsername</span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">비밀번호:</span>
-                    <span id="password" class="info-value">********</span>
-                </div>
-            </div>
-        </div>
-    </div>
+<body background="#222831">
+	<div id="logo">
+		<div class="link">
+			<a href="/main"><img src="imgs/header/logo.png"/></a>
+		</div>
+	</div>
+	<!-- 왼쪽 박스 -->
+	<div id="left_box">
+		<div class="imgbox">
+			<img class="img" src="/imgs/profileimg.jpg">
+		</div>
+		<span class="left_id" th:text="${userDTO.getID()}"></span>
+		<span class="left_email" th:text="${userDTO.getBIRTH()}"></span>
+		<hr style="border: 1 solid white;width: 100%;position: absolute;top: 46%;left: 0%; ">
+		<button type="button" class="left_btn1">내 계정</button>
+		<button type="button" class="left_btn2">프로필</button>
+
 </body>
-</html>
+</html>>
