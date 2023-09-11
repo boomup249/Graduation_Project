@@ -17,10 +17,35 @@
 			<img class="img" src="/imgs/profileimg.jpg">
 		</div>
 		<span class="left_id" th:text="${userDTO.getID()}"></span>
-		<span class="left_email" th:text="${userDTO.getBIRTH()}"></span>
+		<span class="left_email" th:text="${userDTO.getEMAIL()}"></span>
 		<hr style="border: 1 solid white;width: 100%;position: absolute;top: 46%;left: 0%; ">
 		<button type="button" class="left_btn1">내 계정</button>
 		<button type="button" class="left_btn2">프로필</button>
+	</div>
+	
+	<!-- 오른쪽 첫번째 박스 -->
+	<span id="right_span1">기본 정보</span>
+	<div id = "right_box1">
+		<span class="right_id" th:text="${userDTO.getID()}"></span>
+		<button type="button" class="id_btn">수정</button>
+		<hr style="border: 1 solid white; width: 100%; position: absolute;top: 30%;left: 0%;">
+		
+		<span class="right_email" th:text="${userDTO.getEMAIL()}"></span>
+		<button type="button" class="email_btn" onclick="location.href='/join/join_id'";>수정</button>
+		<hr style="border: 1 solid white; width: 100%; position: absolute;top: 60%;left: 0%;">
+		
+		<span class="right_pwd" th:text="${userDTO.getBIRTH()}"></span>
+		<button type="button" class="birth_btn">수정</button>
+	</div>
+	
+	
+	
+	<span id="right_span2">기타 설정</span>
+	<div id = "right_box2">
+		<span th:text="${preferDTO.getAction_adventure()}"></span>
+		
+	</div>
+	
 
 </body>
-</html>>
+</html>
