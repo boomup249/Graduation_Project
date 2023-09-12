@@ -1,0 +1,154 @@
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+		
+		<!-- 외부 css -->
+		<title>loco > email</title>
+		<link rel="stylesheet" href="css/font.css"> <!-- 폰트 css -->
+		<link rel="stylesheet" href="css/background_image.css"> <!-- b_img css -->
+		
+		<style>
+			/*css 속성*/
+			/*logo*/
+			#logo {z-index: 3; /* logo가 b_img보다 위에 배치되어야 함*/
+					position: absolute;
+					top: 0px;
+					left: 0px;
+					width: 100%; height: 50px; /*logo 담을 가상 헤더 header 100px 고정 -> 50 + 25 + 25*/ 
+					padding-top: 25px; padding-bottom: 25px;}
+			.link img {height: 50px;} /*로고 이미지*/
+			.link a {float: left; margin-left: 25px;} /*왼쪽 정렬, 마진 25px*/
+			
+			
+			/*내용*/
+			#content {z-index: 2;
+						position: relative;
+						top: 0px;
+						left: 0px;
+						width: 100%; height: 100%;
+						/*자식 수직 중앙 정렬*/
+						display: flex;
+						flex-direction: column;
+						justify-content: center;}
+			
+			input[type=email] {width: 1000px;
+					height: 80px;
+					padding-left: 30px;
+					font-family: 'GmarketSansMedium';
+					font-size: 20pt;
+					border: solid 5px #000; border-radius: 8px;}
+					
+			input[type=text] {width: 500px;
+					height: 80px;
+					padding-left: 30px;
+					font-family: 'GmarketSansMedium';
+					font-size: 20pt;
+					border: solid 5px lightgreen; border-radius: 8px;}
+					
+					
+			/*resend 버튼*/			
+			#sub1 {width: 150px;
+					border-radius: 8px; 
+					
+					font-family: 'IAMAPLAYER';;
+					font-size: 20pt;
+					color: #000;
+					}
+			/*다음 버튼*/		
+			#sub2 {background-image: url('imgs/next.png');
+					background-size: cover;
+					background-position: center;
+					background-repeat: no-repeat;
+					width: 80px;
+					height: 80px;
+					border: solid 3px #005982; border-radius: 8px; }
+						
+			.item2 input, .item2 button {float: left; margin-left: 25px;}
+			.item3 input, .item3 button{float: left; margin-left: 25px;}
+			.code p {font-family: 'GmarketSansMedium';
+						font-size: 15pt;
+						color: green}
+			
+			/*위치 잡기*/
+			.item1 {width: 300px; height: 125px;
+					position: relative;
+					left: 50%;
+					margin-left: -600px; /*content에 수평 중앙 정렬 > 가로축: item2에 맞추기*/
+					margin-bottom: 25px;
+					/*자식 중앙정렬*/
+					display: flex;
+					justify-content: center;
+					align-items: center; }
+			
+			.item2 {width: 1200px; height: 100px;
+					position: relative;
+					left: 50%;
+					margin-left: -625px; /*content에 수직/수평 중앙 정렬(left -25px(margin))*/
+					margin-bottom: 50px;
+					/*자식 중앙정렬*/
+					display: flex;
+					justify-content: center;
+					align-items: center; }
+					
+			.item3 {width: 630px; height: 100px;
+					position: relative;
+					left: 50%;
+					margin-left: -625px; /*content에 수직/수평 중앙 정렬(left -25px(margin))*/
+					margin-bottom: 50px;
+					/*자식 중앙정렬*/
+					display: flex;
+					justify-content: center;
+					align-items: center; }
+					
+			
+			.code {width: 600px; height: 50px;
+					position: relative;
+					margin-top: -50px;
+					left: 50%;
+					margin-left: -600px; /*item2 시작(마진 및 빈 공간 제외)과 같은 x좌표에서 시작*/
+					}
+			
+			body { background-color: grey;
+					margin: 0; padding: 0;}
+		</style>
+	</head>
+	
+	<body>
+		<div id="b_img"></div><!-- 배경 이미지 불투명도 조절해서 넣기 -->
+		<script src="js/backgroundImage.js"></script>
+		
+		<div id="logo">
+			<div class="link">
+				<a href="/main"><img src="imgs/header/logo.png"/></a>
+			</div>
+		</div>
+		
+		<div id="content">
+			<div class="item1">
+				<img src="imgs/logo2.png" width="300px" height="125px"/>
+			</div>
+			
+			<!--폼 액션 인증과정에 맞게 조정하기(해야 함)-->
+			<form action ="#"
+				th:object="${userDTO}"
+				method = "post">
+			<div class="item2">
+				<input type="email" th:field="*{userEmail}" placeholder="이메일을 입력하여 시작하세요" required />
+				<!--인증번호 재발송 버튼-->
+				<button onclick="action='/email_ck'; submit();" id="sub1">re-send</button>
+			</div>
+			
+			<div class="code">
+				<p>인증번호 발송이 완료되었습니다.</p> 
+			</div>
+			<div class="item3">
+				<input type="text" placeholder="인증번호를 입력해주세요." required />
+				<!--인증번호 확인(보내기) 버튼-->
+				<button onclick="action='#'; submit();" id="sub2"></button>
+			</div>
+			</form>
+			
+		</div>
+		
+	</body>
+</html>
