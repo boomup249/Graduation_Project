@@ -28,20 +28,20 @@ public class PreferDB {
 	@JoinColumn(name = "ID", referencedColumnName = "ID", insertable = false, updatable = false)
 	private UserDB userDB;
 	private Boolean action;
-	private Boolean action_adventure;
-	private Boolean survival;
 	private Boolean shooting;
-	private Boolean FPS;
-	private Boolean RPG;
-	private Boolean ARPG;
-	private Boolean MMORPG;
-	private Boolean open_world;
-	private Boolean hack_and_slash;
 	private Boolean adventure;
+	private Boolean fighting;
+	private Boolean roguelike;
+	private Boolean RPG;
+	private Boolean MMORPG;
+	private Boolean simulation;
 	private Boolean sports;
-	private Boolean racing;
-	private Boolean casual;
 	private Boolean puzzle;
+	private Boolean arcade;
+	private Boolean strat;
+	private Boolean horror;
+	private Boolean multi;
+	private Boolean single;
 	
 	
 	//getter setter
@@ -65,59 +65,11 @@ public class PreferDB {
 	public void setAction(Boolean action) {
 		this.action = action;
 	}
-	public Boolean getAction_adventure() {
-		return action_adventure;
-	}
-	public void setAction_adventure(Boolean action_adventure) {
-		this.action_adventure = action_adventure;
-	}
-	public Boolean getSurvival() {
-		return survival;
-	}
-	public void setSurvival(Boolean survival) {
-		this.survival = survival;
-	}
 	public Boolean getShooting() {
 		return shooting;
 	}
 	public void setShooting(Boolean shooting) {
 		this.shooting = shooting;
-	}
-	public Boolean getFPS() {
-		return FPS;
-	}
-	public void setFPS(Boolean fPS) {
-		FPS = fPS;
-	}
-	public Boolean getRPG() {
-		return RPG;
-	}
-	public void setRPG(Boolean rPG) {
-		RPG = rPG;
-	}
-	public Boolean getARPG() {
-		return ARPG;
-	}
-	public void setARPG(Boolean aRPG) {
-		ARPG = aRPG;
-	}
-	public Boolean getMMORPG() {
-		return MMORPG;
-	}
-	public void setMMORPG(Boolean mMORPG) {
-		MMORPG = mMORPG;
-	}
-	public Boolean getOpen_world() {
-		return open_world;
-	}
-	public void setOpen_world(Boolean open_world) {
-		this.open_world = open_world;
-	}
-	public Boolean getHack_and_slash() {
-		return hack_and_slash;
-	}
-	public void setHack_and_slash(Boolean hack_and_slash) {
-		this.hack_and_slash = hack_and_slash;
 	}
 	public Boolean getAdventure() {
 		return adventure;
@@ -125,23 +77,41 @@ public class PreferDB {
 	public void setAdventure(Boolean adventure) {
 		this.adventure = adventure;
 	}
+	public Boolean getFighting() {
+		return fighting;
+	}
+	public void setFighting(Boolean fighting) {
+		this.fighting = fighting;
+	}
+	public Boolean getRoguelike() {
+		return roguelike;
+	}
+	public void setRoguelike(Boolean roguelike) {
+		this.roguelike = roguelike;
+	}
+	public Boolean getRPG() {
+		return RPG;
+	}
+	public void setRPG(Boolean rPG) {
+		RPG = rPG;
+	}
+	public Boolean getMMORPG() {
+		return MMORPG;
+	}
+	public void setMMORPG(Boolean mMORPG) {
+		MMORPG = mMORPG;
+	}
+	public Boolean getSimulation() {
+		return simulation;
+	}
+	public void setSimulation(Boolean simulation) {
+		this.simulation = simulation;
+	}
 	public Boolean getSports() {
 		return sports;
 	}
 	public void setSports(Boolean sports) {
 		this.sports = sports;
-	}
-	public Boolean getRacing() {
-		return racing;
-	}
-	public void setRacing(Boolean racing) {
-		this.racing = racing;
-	}
-	public Boolean getCasual() {
-		return casual;
-	}
-	public void setCasual(Boolean casual) {
-		this.casual = casual;
 	}
 	public Boolean getPuzzle() {
 		return puzzle;
@@ -149,6 +119,37 @@ public class PreferDB {
 	public void setPuzzle(Boolean puzzle) {
 		this.puzzle = puzzle;
 	}
+	public Boolean getArcade() {
+		return arcade;
+	}
+	public void setArcade(Boolean arcade) {
+		this.arcade = arcade;
+	}
+	public Boolean getStrat() {
+		return strat;
+	}
+	public void setStrat(Boolean strat) {
+		this.strat = strat;
+	}
+	public Boolean getHorror() {
+		return horror;
+	}
+	public void setHorror(Boolean horror) {
+		this.horror = horror;
+	}
+	public Boolean getMulti() {
+		return multi;
+	}
+	public void setMulti(Boolean multi) {
+		this.multi = multi;
+	}
+	public Boolean getSingle() {
+		return single;
+	}
+	public void setSingle(Boolean single) {
+		this.single = single;
+	}
+
 	
 	
 }

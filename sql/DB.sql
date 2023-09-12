@@ -69,6 +69,19 @@ DEFAULT CHARACTER SET = utf8mb3;
 
 
 -- -----------------------------------------------------
+-- Table `member`.`gamedata_console`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `member`.`gamedata_console` (
+  `TITLE` VARCHAR(40) NOT NULL,
+  `DESCRIPTION` VARCHAR(200) NULL DEFAULT NULL,
+  `IMAGE` VARCHAR(100) NULL DEFAULT NULL,
+  `PRICE` INT NULL DEFAULT NULL,
+  PRIMARY KEY (`TITLE`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb3;
+
+
+-- -----------------------------------------------------
 -- Table `member`.`gamedata_pc`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `member`.`gamedata_pc` (
@@ -86,12 +99,25 @@ DEFAULT CHARACTER SET = utf8mb3;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `member`.`gamedata_genre` (
   `TITLE` VARCHAR(40) NOT NULL,
-  `FPS` INT NULL DEFAULT NULL,
-  `RPG` INT NULL DEFAULT NULL,
-  `STRAT` INT NULL DEFAULT NULL,
-  `RACING` INT NULL DEFAULT NULL,
-  `SIMUL` INT NULL DEFAULT NULL,
+  `action` INT NULL DEFAULT NULL,
+  `shooting` INT NULL DEFAULT NULL,
+  `adventure` INT NULL DEFAULT NULL,
+  `fighting` INT NULL DEFAULT NULL,
+  `roguelike` INT NULL DEFAULT NULL,
+  `MMORPG` INT NULL DEFAULT NULL,
+  `simulation` INT NULL DEFAULT NULL,
+  `sports` INT NULL DEFAULT NULL,
+  `puzzle` INT NULL DEFAULT NULL,
+  `arcade` INT NULL DEFAULT NULL,
+  `horror` INT NULL DEFAULT NULL,
+  `multi` INT NULL DEFAULT NULL,
+  `single` INT NULL DEFAULT NULL,
   PRIMARY KEY (`TITLE`),
+  CONSTRAINT `CONSOLE_TITLE`
+    FOREIGN KEY (`TITLE`)
+    REFERENCES `member`.`gamedata_console` (`TITLE`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `PCTITLE`
     FOREIGN KEY (`TITLE`)
     REFERENCES `member`.`gamedata_pc` (`TITLE`)
@@ -107,20 +133,20 @@ DEFAULT CHARACTER SET = utf8mb3;
 CREATE TABLE IF NOT EXISTS `member`.`prefer` (
   `ID` VARCHAR(12) NOT NULL,
   `action` TINYINT(1) NULL DEFAULT NULL,
-  `action_adventure` TINYINT(1) NULL DEFAULT NULL,
-  `survival` TINYINT(1) NULL DEFAULT NULL,
-  `shooting` TINYINT(1) NULL DEFAULT NULL,
-  `FPS` TINYINT(1) NULL DEFAULT NULL,
-  `RPG` TINYINT(1) NULL DEFAULT NULL,
-  `ARPG` TINYINT(1) NULL DEFAULT NULL,
-  `MMORPG` TINYINT(1) NULL DEFAULT NULL,
-  `open_world` TINYINT(1) NULL DEFAULT NULL,
-  `hack_and_slash` TINYINT(1) NULL DEFAULT NULL,
-  `adventure` TINYINT(1) NULL DEFAULT NULL,
-  `sports` TINYINT(1) NULL DEFAULT NULL,
-  `racing` TINYINT(1) NULL DEFAULT NULL,
-  `casual` TINYINT(1) NULL DEFAULT NULL,
-  `puzzle` TINYINT(1) NULL DEFAULT NULL,
+  `shooting` TINYINT NULL DEFAULT NULL,
+  `adventure` TINYINT NULL DEFAULT NULL,
+  `fighting` TINYINT NULL DEFAULT NULL,
+  `roguelike` TINYINT NULL DEFAULT NULL,
+  `RPG` TINYINT NULL DEFAULT NULL,
+  `MMORPG` TINYINT NULL DEFAULT NULL,
+  `simulation` TINYINT NULL DEFAULT NULL,
+  `sports` TINYINT NULL DEFAULT NULL,
+  `puzzle` TINYINT NULL DEFAULT NULL,
+  `arcade` TINYINT NULL DEFAULT NULL,
+  `strat` TINYINT NULL DEFAULT NULL,
+  `horror` TINYINT NULL DEFAULT NULL,
+  `multi` TINYINT NULL DEFAULT NULL,
+  `single` TINYINT NULL DEFAULT NULL,
   PRIMARY KEY (`ID`),
   CONSTRAINT `preferID`
     FOREIGN KEY (`ID`)

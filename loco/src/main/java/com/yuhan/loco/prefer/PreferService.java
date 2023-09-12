@@ -29,56 +29,59 @@ public class PreferService {
 				user.setAction(true);
 				break;
 				
-			case "action adventure":
-				user.setAction_adventure(true);
-				break;
-				
-			case "survival":
-				user.setSurvival(true);
-				break;
-				
 			case "shooting":
 				user.setShooting(true);
-				break;
-				
-			case "FPS":
-				user.setFPS(true);
-				break;
-				
-			case "RPG":
-				user.setRPG(true);
-				break;
-				
-			case "ARPG":
-				user.setARPG(true);
-				break;
-				
-			case "MMORPG":
-				user.setMMORPG(true);
-				break;
-				
-			case "open world":
-				user.setOpen_world(true);
-				break;
-				
-			case "hack and slash":
-				user.setHack_and_slash(true);
 				break;
 				
 			case "adventure":
 				user.setAdventure(true);
 				break;
 				
-			case "racing":
-				user.setRacing(true);
+			case "fighting":
+				user.setFighting(true);
 				break;
 				
-			case "casual":
-				user.setCasual(true);
+			case "roguelike":
+				user.setRoguelike(true);
 				break;
 				
+			case "RPG":
+				user.setRPG(true);
+				break;
+				
+			case "MMORPG":
+				user.setMMORPG(true);
+				break;
+				
+			case "simulation":
+				user.setSimulation(true);
+				break;
+				
+			case "sports":
+				user.setSports(true);
+				break;
 			case "puzzle":
 				user.setPuzzle(true);
+				break;
+				
+			case "arcade":
+				user.setArcade(true);
+				break;
+				
+			case "strat":
+				user.setStrat(true);
+				break;
+				
+			case "horror":
+				user.setHorror(true);
+				break;
+				
+			case "multi":
+				user.setMulti(true);
+				break;
+				
+			case "single":
+				user.setSingle(true);
 				break;
 			}
 		}
@@ -90,56 +93,59 @@ public class PreferService {
 				user.setAction(false);
 				break;
 				
-			case "action adventure":
-				user.setAction_adventure(false);
-				break;
-				
-			case "survival":
-				user.setSurvival(false);
-				break;
-				
 			case "shooting":
 				user.setShooting(false);
-				break;
-				
-			case "FPS":
-				user.setFPS(false);
-				break;
-				
-			case "RPG":
-				user.setRPG(false);
-				break;
-				
-			case "ARPG":
-				user.setARPG(false);
-				break;
-				
-			case "MMORPG":
-				user.setMMORPG(false);
-				break;
-				
-			case "open world":
-				user.setOpen_world(false);
-				break;
-				
-			case "hack and slash":
-				user.setHack_and_slash(false);
 				break;
 				
 			case "adventure":
 				user.setAdventure(false);
 				break;
 				
-			case "racing":
-				user.setRacing(false);
+			case "fighting":
+				user.setFighting(false);
 				break;
 				
-			case "casual":
-				user.setCasual(false);
+			case "roguelike":
+				user.setRoguelike(false);
 				break;
 				
+			case "RPG":
+				user.setRPG(false);
+				break;
+				
+			case "MMORPG":
+				user.setMMORPG(false);
+				break;
+				
+			case "simulation":
+				user.setSimulation(false);
+				break;
+				
+			case "sports":
+				user.setSports(false);
+				break;
 			case "puzzle":
 				user.setPuzzle(false);
+				break;
+				
+			case "arcade":
+				user.setArcade(false);
+				break;
+				
+			case "strat":
+				user.setStrat(false);
+				break;
+				
+			case "horror":
+				user.setHorror(false);
+				break;
+				
+			case "multi":
+				user.setMulti(false);
+				break;
+				
+			case "single":
+				user.setSingle(false);
 				break;
 			}
 		}
@@ -147,20 +153,20 @@ public class PreferService {
 		System.out.println("----repository----");
 		
 		System.out.println(user.getAction());
-		System.out.println(user.getAction_adventure());
-		System.out.println(user.getSurvival());
 		System.out.println(user.getShooting());
-		System.out.println(user.getFPS());
-		System.out.println(user.getRPG());
-		System.out.println(user.getARPG());
-		System.out.println(user.getMMORPG());
-		System.out.println(user.getOpen_world());
-		System.out.println(user.getHack_and_slash());
 		System.out.println(user.getAdventure());
+		System.out.println(user.getFighting());
+		System.out.println(user.getRoguelike());
+		System.out.println(user.getRPG());
+		System.out.println(user.getMMORPG());
+		System.out.println(user.getSimulation());
 		System.out.println(user.getSports());
-		System.out.println(user.getRacing());
-		System.out.println(user.getCasual());
 		System.out.println(user.getPuzzle());
+		System.out.println(user.getArcade());
+		System.out.println(user.getStrat());
+		System.out.println(user.getHorror());
+		System.out.println(user.getMulti());
+		System.out.println(user.getSingle());
 		
 		this.preferRepository.save(user);
 		
