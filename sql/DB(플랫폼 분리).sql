@@ -69,27 +69,75 @@ DEFAULT CHARACTER SET = utf8mb3;
 
 
 -- -----------------------------------------------------
--- Table `member`.`gamedata_console`
+-- Table `member`.`gamedata_epic`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `member`.`gamedata_console` (
-  `TITLE` VARCHAR(40) NOT NULL,
-  `DESCRIPTION` VARCHAR(200) NULL DEFAULT NULL,
-  `IMAGE` VARCHAR(100) NULL DEFAULT NULL,
-  `PRICE` INT NULL DEFAULT NULL,
-  PRIMARY KEY (`TITLE`))
+CREATE TABLE IF NOT EXISTS `member`.`gamedata_epic` (
+  `NUM` INT NOT NULL,
+  `TITLE` VARCHAR(40) NULL DEFAULT NULL,
+  `PRICE` VARCHAR(15) NULL DEFAULT NULL,
+  `SALEPRICE` VARCHAR(15) NULL DEFAULT NULL,
+  `SALEPER` VARCHAR(5) NULL DEFAULT NULL,
+  `DESCRIPTION` TEXT NULL DEFAULT NULL,
+  `IMGDATA` TEXT NULL DEFAULT NULL,
+  `GAMEIMG` TEXT NULL DEFAULT NULL,
+  PRIMARY KEY (`NUM`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb3;
 
 
 -- -----------------------------------------------------
--- Table `member`.`gamedata_pc`
+-- Table `member`.`gamedata_ps`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `member`.`gamedata_pc` (
-  `TITLE` VARCHAR(40) NOT NULL,
-  `DESCRIPTION` VARCHAR(200) NULL DEFAULT NULL,
-  `IMAGE` VARCHAR(100) NULL DEFAULT NULL,
-  `PRICE` INT NULL DEFAULT NULL,
-  PRIMARY KEY (`TITLE`))
+CREATE TABLE IF NOT EXISTS `member`.`gamedata_ps` (
+  `NUM` INT NOT NULL,
+  `TITLE` VARCHAR(40) NULL DEFAULT NULL,
+  `PLATFORM` VARCHAR(10) NULL DEFAULT NULL,
+  `PRICE` VARCHAR(15) NULL DEFAULT NULL,
+  `SALEPRICE` VARCHAR(15) NULL DEFAULT NULL,
+  `SALEPER` VARCHAR(5) NULL DEFAULT NULL,
+  `DESCRIPTION` TEXT NULL DEFAULT NULL,
+  `IMGDATA` TEXT NULL DEFAULT NULL,
+  `GAMEIMG` TEXT NULL DEFAULT NULL,
+  `URL` TEXT NULL DEFAULT NULL,
+  PRIMARY KEY (`NUM`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb3;
+
+
+-- -----------------------------------------------------
+-- Table `member`.`gamedata_steam`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `member`.`gamedata_steam` (
+  `NUM` INT NOT NULL,
+  `TITLE` VARCHAR(40) NULL DEFAULT NULL,
+  `PLATFORM` VARCHAR(10) NULL DEFAULT NULL,
+  `PRICE` VARCHAR(15) NULL DEFAULT NULL,
+  `SALEPRICE` VARCHAR(15) NULL DEFAULT NULL,
+  `SALEPER` VARCHAR(5) NULL DEFAULT NULL,
+  `DESCRIPTION` TEXT NULL DEFAULT NULL,
+  `IMGDATA` TEXT NULL DEFAULT NULL,
+  `GAMEIMG` TEXT NULL DEFAULT NULL,
+  `URL` TEXT NULL DEFAULT NULL,
+  PRIMARY KEY (`NUM`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb3;
+
+
+-- -----------------------------------------------------
+-- Table `member`.`gamedata_switch`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `member`.`gamedata_switch` (
+  `NUM` INT NOT NULL,
+  `TITLE` VARCHAR(40) NULL DEFAULT NULL,
+  `PLATFORM` VARCHAR(10) NULL DEFAULT NULL,
+  `PRICE` VARCHAR(15) NULL DEFAULT NULL,
+  `SALEPRICE` VARCHAR(15) NULL DEFAULT NULL,
+  `SALEPER` VARCHAR(5) NULL DEFAULT NULL,
+  `DESCRIPTION` TEXT NULL DEFAULT NULL,
+  `IMGDATA` TEXT NULL DEFAULT NULL,
+  `GAMEIMG` TEXT NULL DEFAULT NULL,
+  `URL` TEXT NULL DEFAULT NULL,
+  PRIMARY KEY (`NUM`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb3;
 
@@ -98,29 +146,29 @@ DEFAULT CHARACTER SET = utf8mb3;
 -- Table `member`.`gamedata_genre`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `member`.`gamedata_genre` (
-  `TITLE` VARCHAR(40) NOT NULL,
-  `action` INT NULL DEFAULT NULL,
-  `shooting` INT NULL DEFAULT NULL,
-  `adventure` INT NULL DEFAULT NULL,
-  `fighting` INT NULL DEFAULT NULL,
-  `roguelike` INT NULL DEFAULT NULL,
-  `MMORPG` INT NULL DEFAULT NULL,
-  `simulation` INT NULL DEFAULT NULL,
-  `sports` INT NULL DEFAULT NULL,
-  `puzzle` INT NULL DEFAULT NULL,
-  `arcade` INT NULL DEFAULT NULL,
-  `horror` INT NULL DEFAULT NULL,
-  `multi` INT NULL DEFAULT NULL,
-  `single` INT NULL DEFAULT NULL,
-  PRIMARY KEY (`TITLE`),
-  CONSTRAINT `CONSOLE_TITLE`
-    FOREIGN KEY (`TITLE`)
-    REFERENCES `member`.`gamedata_console` (`TITLE`)
+  `NUM` INT NOT NULL,
+  `TITLE` VARCHAR(40) NULL DEFAULT NULL,
+  `PLATFORM` VARCHAR(10) NULL DEFAULT NULL,
+  `genre` VARCHAR(30) NULL DEFAULT NULL,
+  PRIMARY KEY (`NUM`),
+  CONSTRAINT `epic_num`
+    FOREIGN KEY (`NUM`)
+    REFERENCES `member`.`gamedata_epic` (`NUM`)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
-  CONSTRAINT `PCTITLE`
-    FOREIGN KEY (`TITLE`)
-    REFERENCES `member`.`gamedata_pc` (`TITLE`)
+  CONSTRAINT `ps_num`
+    FOREIGN KEY (`NUM`)
+    REFERENCES `member`.`gamedata_ps` (`NUM`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `steam_num`
+    FOREIGN KEY (`NUM`)
+    REFERENCES `member`.`gamedata_steam` (`NUM`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `switch_num`
+    FOREIGN KEY (`NUM`)
+    REFERENCES `member`.`gamedata_switch` (`NUM`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB
