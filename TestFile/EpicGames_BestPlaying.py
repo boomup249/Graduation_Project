@@ -151,7 +151,6 @@ for item in gamelist:
 sleep(2)
 print("크롤링 완료")
 chrome.kill()
-driver.close()
 
 """
 #액셀 인스턴스 생성, 경로 지정

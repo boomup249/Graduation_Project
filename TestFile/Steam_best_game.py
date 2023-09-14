@@ -6,6 +6,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.common.exceptions import NoSuchElementException
 from bs4 import BeautifulSoup
 from time import sleep
 #from datetime import datetime
@@ -15,6 +16,12 @@ from time import sleep
 #from pathlib import Path
 import MySQLdb
 import requests
+
+def find_element_by_css(driver, css_selector):
+    try:
+        return driver.find_element(By.CSS_SELECTOR, css_selector)
+    except NoSuchElementException as _:
+        return None
 
 #DB연결
 conn = MySQLdb.connect(
@@ -38,7 +45,8 @@ cursor.execute('''CREATE TABLE steam_best_popluar (
                                            saleprice varchar(30),
                                            saleper varchar(30),
                                            description varchar(500),
-                                           imgdata varchar(3000)
+                                           imgdata varchar(3000),
+                                           gameimg varchar(3000)
                                            )
                                            ''')
 
@@ -72,6 +80,15 @@ if steam_language.get_text() != "언어":
     driver.find_element(By.XPATH, '//*[@id="language_pulldown"]').click()
     driver.find_element(By.XPATH, '//*[@id="language_dropdown"]/div/a[4]').click()
 
+sleep(1.5)
+steam_login = soup.select_one('a.global_action_link')
+
+if steam_login.text == "login":
+    driver.find_element(By.XPATH, '//*[@id="global_action_menu"]/a[2]').click()
+    driver.find_element(By.XPATH, '//*[@id="responsive_page_template_content"]/div[3]/div[1]/div/div/div/div[2]/div/form/div[1]/input').send_keys('yuhanloco')
+    driver.find_element(By.XPATH, '//*[@id="responsive_page_template_content"]/div[3]/div[1]/div/div/div/div[2]/div/form/div[2]/input').send_keys('yuhan1234')
+    driver.find_element(By.XPATH, '//*[@id="responsive_page_template_content"]/div[3]/div[1]/div/div/div/div[2]/div/form/div[4]/button').click()
+
 sleep(5)
 driver.execute_script('window.scrollTo(0,document.body.scrollHeight)')
 sleep(2) 
@@ -82,7 +99,7 @@ soup = BeautifulSoup(html, "html.parser")
 panel = soup.find('div', attrs={'data-featuretarget': 'react-root'})
 gamelist = panel.select('tr.weeklytopsellers_TableRow_2-RN6')
 
-
+mode = 0
 for item in gamelist:
     title = item.select_one('div.weeklytopsellers_GameName_1n_4-').text
     saleprice = item.select_one('div.salepreviewwidgets_StoreSalePriceBox_Wh0L8')
@@ -96,7 +113,7 @@ for item in gamelist:
     #이미지 태그가 존재하지않으면 imgdata에 다른 임시 이미지 집어넣음
     else:
         imgdata = "https://i.namu.wiki/i/j_EaOmOmU8QGpxXHpZGA75dSasZthOT5_X_nlFjUO3VwaxHuf0f5_0h0yKM8I65d9Jxwe74ynwTZRLfjSL8Yk0QCt871C6A-H-76SqzQ47QO2zGVf-6MJCITrIlds4vpPaG1fmZU3Ppyv12nf803tg.webp"
-
+    
     #정가가 None이면 if문 돌림
     if price == None:
         #saleprice 변수엔 "무료 플레이" 또는 가격 두가지 값이 들어갈수있음
@@ -119,7 +136,7 @@ for item in gamelist:
         price = price.text
         saleper = saleper.text
         saleprice = saleprice.text
-        
+
     #move 변수에 해당 게임 페이지 링크 획득
     game_link = item.select_one('a.weeklytopsellers_TopChartItem_2C5PJ')
     move = game_link["href"]
@@ -148,6 +165,26 @@ for item in gamelist:
         new_soup = BeautifulSoup(new_html, "html.parser")
         """
 
+    gameimg = new_soup.select_one('img.game_header_image_full')
+
+    if gameimg == None:
+        mode = 1
+        driver.execute_script(f'window.open(\'{move}\');')
+        driver.switch_to.window(driver.window_handles[-1])
+        if find_element_by_css(driver, '#ageYear') != None:
+            driver.find_element(By.XPATH, '//*[@id="ageYear"]').click()
+            driver.find_element(By.XPATH, '//*[@id="ageYear"]/option[88]').click()
+            driver.find_element(By.XPATH, '//*[@id="view_product_page_btn"]/span').click()
+            sleep(3)
+        new_html = driver.page_source
+        new_soup = BeautifulSoup(new_html, "html.parser")
+        gameimg = new_soup.select_one('img.game_header_image_full') 
+        if gameimg == None:
+            gameimg = new_soup.select_one('img.package_header')
+
+    if gameimg != None:
+        gameimg = gameimg["src"]
+
     description = new_soup.select_one("div.game_description_snippet")
     if description != None:
         description = description.text.strip()
@@ -156,8 +193,8 @@ for item in gamelist:
     tag_length = len(tag)
     num = 0
 
-    sql = 'INSERT INTO steam_best_popluar (title, price, saleprice, saleper, description, imgdata) VALUES (%s, %s, %s, %s, %s, %s)'
-    cursor.execute(sql, (title, price, saleprice, saleper, description, imgdata))
+    sql = 'INSERT INTO steam_best_popluar (title, price, saleprice, saleper, description, imgdata, gameimg) VALUES (%s, %s, %s, %s, %s, %s, %s)'
+    cursor.execute(sql, (title, price, saleprice, saleper, description, imgdata, gameimg))
 
     while num < tag_length:
         tag[num] = tag[num].text.strip()
@@ -169,8 +206,10 @@ for item in gamelist:
     print(f'{title} DB 입력 완료')
 
     #탭 종료후 원래 탭(베스트게임 페이지)으로 이동
-    #driver.close()
-    #driver.switch_to.window(driver.window_handles[-1])
+    if mode == 1:
+        driver.close()
+        driver.switch_to.window(driver.window_handles[-1])
+        mode = 0
 
 sleep(2)
 print("크롤링 완료")

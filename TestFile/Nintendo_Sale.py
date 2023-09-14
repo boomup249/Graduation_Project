@@ -107,8 +107,11 @@ for item in gamelist:
         print("오류 발생(403 forbidden)")
     new_soup = BeautifulSoup(response.text, "html.parser")
 
-    description = new_soup.select_one("div.value > p")
-    if description != None:
+    description = new_soup.select_one("div.game_ex")
+    if description == None:
+        description = new_soup.select_one("div.value")
+        description = description.text.strip()
+    else:
         description = description.text.strip()
 
     sql = 'INSERT INTO nintendo_sale (title, price, saleprice, description, imgdata) VALUES (%s, %s, %s, %s, %s)'
