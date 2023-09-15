@@ -75,7 +75,7 @@ public class UserService {
          ck2 = false;
       }
       
-      user = null;
+      user = new UserDB(); //초기화
       
       return ck2;
    }
