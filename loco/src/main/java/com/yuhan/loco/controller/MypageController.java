@@ -62,7 +62,7 @@ public class MypageController {
 
         page = "profile";
 
-        return "/profile"; //여기 주소만 고쳐
+        return "profile"; //여기 주소만 고쳐
         }
 	
 	

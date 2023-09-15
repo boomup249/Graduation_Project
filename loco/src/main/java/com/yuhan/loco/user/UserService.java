@@ -79,7 +79,6 @@ public class UserService {
       
       return ck2;
    }
-   
    public UserDB findUser(String id) {
        UserDB userdb = this.userRepository.findByID(id);
        return userdb;
