@@ -15,7 +15,7 @@ from bs4 import BeautifulSoup
 from time import sleep
 #from datetime import datetime
 import MySQLdb
-import subprocess
+#import subprocess
 import requests
 
 def find_element_by_css_selector(driver, css_selector):
@@ -23,6 +23,20 @@ def find_element_by_css_selector(driver, css_selector):
         return driver.find_element(By.CSS_SELECTOR, 'css_selector')
     except NoSuchElementException as e:
         return None
+
+'''
+Cloudflare를 우회하기위해서 크롬을 디버그모드로 열었었는데 다시 실행해보니 그게 막혀있길래 인터넷을 좀 찾아보니
+Cloudflare는 셀레니움으로 크롤링을 할때 url에 변동이있으면 디도스로 인식하여 인증해야지 페이지 이동이 가능해진다고한다
+그래서 생각해본게 페이지를 이동할때 아예 크롬을 껏다가 게임페이지 url로 재실행하면 어떨까해서 그렇게 실행해봤더니 인증화면이 안나온다
+시간은 좀 걸리지만 에픽게임즈는 이방법으로 진행해야 크롤링이 가능할거같다
+'''
+def driver_get(url):
+    option = Options()
+    driver = webdriver.Chrome(options=option)
+    driver.implicitly_wait(5)
+    driver.set_window_size(1400,800)
+    driver.get(url)
+    return driver
 
 #DB연결
 conn = MySQLdb.connect(
@@ -58,17 +72,20 @@ cursor.execute('''CREATE TABLE epic_best_playing_genre (
                                            ''')
 
 URL = 'https://store.epicgames.com/ko/collection/most-played'
+epicgames = 'https://store.epicgames.com'
 
 #크롬 디버그 모드로 열기
-chrome = subprocess.Popen(r'C:\Program Files\Google\Chrome\Application\chrome.exe --remote-debugging-port=9222 --user-data-dir="C:\chromeCookie"')
+#chrome = subprocess.Popen(r'C:\Program Files\Google\Chrome\Application\chrome.exe --remote-debugging-port=9222 --user-data-dir="C:\chromeCookie"')
 
 #크롬드라이버 옵션 설정
 services = Service(executable_path=ChromeDriverManager().install())
 options = Options()
-options.add_experimental_option("debuggerAddress", '127.0.0.1:9222')
+#options.add_experimental_option("debuggerAddress", '127.0.0.1:9222')
+options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.61 Safari/537.36")
 
 #크롬드라이버 인스턴스 생성 및 옵션, 크기, URL, 암시적 대기 설정
 driver = webdriver.Chrome(service=services, options=options)
+driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
 sleep(3)
 driver.implicitly_wait(5)
 driver.set_window_size(1400,800)
@@ -87,6 +104,7 @@ soup = BeautifulSoup(driver.page_source, "html.parser")
 panel = soup.select_one("section.css-zjpm9r")
 gamelist = panel.select("div.css-lrwy1y")
 
+driver.quit()
 for item in gamelist:
     title = item.find("div", class_="css-rgqwpc")
 
@@ -114,19 +132,22 @@ for item in gamelist:
     imgdata = img["src"]
 
     #move 변수에 해당 게임 페이지 링크 획득
-    game_link = item.select_one('a.css-g3jcms')
-    move = game_link["href"]
+    game_link = item.select_one('a.css-g3jcms')["href"]
+    move = epicgames+game_link
 
     #게임 페이지로 새탭에서 열기
-    driver.execute_script(f'window.open(\'{move}\');')
+    driver = driver_get(move)
+    #driver.execute_script(f'window.open(\'{move}\');')
     #새탭으로 이동
-    driver.switch_to.window(driver.window_handles[-1])
+    #driver.switch_to.window(driver.window_handles[-1])
 
     new_soup = BeautifulSoup(driver.page_source, "html.parser")
+    print(new_soup)
 
     description = new_soup.select_one("div.css-1myreog")
     if description != None:
         description = description.text.strip()
+        print(description)
     tag = new_soup.select("li.css-t8k7")
 
     tag_length = len(tag)
@@ -139,18 +160,21 @@ for item in gamelist:
         tag[num] = tag[num].text.strip()
         sql = 'INSERT INTO epic_best_playing_genre (title, genre) VALUES (%s, %s)'
         cursor.execute(sql, (title, tag[num]))
+        print(tag[num])
         num += 1
 
     conn.commit()
     print(f'{title} DB 입력 완료')
 
     #탭 종료후 원래 탭으로 이동
-    driver.close()
-    driver.switch_to.window(driver.window_handles[-1])
+    #driver.close()
+    #driver.switch_to.window(driver.window_handles[-1])
+    driver.quit()
 
 sleep(2)
 print("크롤링 완료")
-chrome.kill()
+#chrome.kill()
+#driver.quit()
 
 """
 #액셀 인스턴스 생성, 경로 지정
