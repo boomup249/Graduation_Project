@@ -19,10 +19,10 @@ import requests
 
 #DB연결
 conn = MySQLdb.connect(
-    user="crawler",
-    passwd="crawler1937",
+    user="root",
+    passwd="1937",
     host="localhost",
-    db="crawling_test"
+    db="member"
 )
 cursor = conn.cursor()
 
@@ -31,36 +31,51 @@ cursor.execute("DROP TABLE IF EXISTS ps_sale_genre")
 cursor.execute("DROP TABLE IF EXISTS ps_sale")
 
 #rank에 AUTO_INCREMENT를 사용함으로써 INSERT가 입력될때마다 자동으로 숫자를 +1 올린다
-cursor.execute('''CREATE TABLE ps_sale (
-                                           num int(6) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                                           title varchar(300) NOT NULL unique key,
-                                           price varchar(30) NOT NULL,
-                                           saleprice varchar(30),
-                                           saleper varchar(30),
-                                           description varchar(2000),
-                                           imgdata varchar(3000)
-                                           )    
-                                           ''')
+cursor.execute("DROP TABLE IF EXISTS gamedata_genre")
+cursor.execute("DROP TABLE IF EXISTS gamedata_info")
 
-cursor.execute('''CREATE TABLE ps_sale_genre (
-                                           num INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-                                           title varchar(100) NOT NULL,
-                                           genre varchar(20) NOT NULL,
-                                           FOREIGN KEY(title) REFERENCES ps_sale(title)
-                                           )
-                                           ''')
+cursor.execute('''CREATE TABLE IF NOT EXISTS gamedata_info (`NUM` INT NOT NULL AUTO_INCREMENT,
+                                                            `TITLE` VARCHAR(100) NULL DEFAULT NULL,
+                                                            `PLATFORM` VARCHAR(10) NULL DEFAULT NULL,
+                                                            `PRICE` VARCHAR(15) NULL DEFAULT NULL,
+                                                            `SALEPRICE` VARCHAR(15) NULL DEFAULT NULL,
+                                                            `SALEPER` VARCHAR(5) NULL DEFAULT NULL,
+                                                            `DESCRIPTION` TEXT NULL DEFAULT NULL,
+                                                            `IMGDATA` TEXT NULL DEFAULT NULL,
+                                                            `GAMEIMG` TEXT NULL DEFAULT NULL,
+                                                            `URL` TEXT NULL DEFAULT NULL,
+                                                            PRIMARY KEY (`NUM`),
+                                                            UNIQUE KEY (`TITLE`))
+            ''')
+
+cursor.execute('''CREATE TABLE IF NOT EXISTS gamedata_genre (`NUM` INT NOT NULL AUTO_INCREMENT,
+                                                             `TITLE` VARCHAR(100) NULL DEFAULT NULL,
+                                                             `PLATFORM` VARCHAR(10) NULL DEFAULT NULL,
+                                                             `GENRE` VARCHAR(30) NULL DEFAULT NULL,
+                                                             PRIMARY KEY (`NUM`),
+                                                             CONSTRAINT `game_title`
+                                                                FOREIGN KEY (`TITLE`)
+                                                                REFERENCES `gamedata_info` (`TITLE`)
+                                                                ON DELETE CASCADE
+                                                                ON UPDATE CASCADE)
+               ''')
 
 URL = 'https://store.playstation.com/ko-kr/pages/deals'
 gameURL = 'https://store.playstation.com/'
+platform = 'ps'
 
 #크롬드라이버 옵션 설정
 services = Service(executable_path=ChromeDriverManager().install())
 options = Options()
 options.add_experimental_option("detach", True)
+options.add_argument("disable-gpu")   # 가속 사용 x
+options.add_argument("lang=ko_KR")    # 가짜 플러그인 탑재
+options.add_argument('user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36')  # user-agent 이름 설정
+#options.add_argument("headless")
 
 #크롬드라이버 인스턴스 생성 및 옵션, 크기, URL, 암시적 대기 설정
 driver = webdriver.Chrome(service=services, options=options)
-driver.implicitly_wait(5)
+driver.implicitly_wait(10)
 driver.set_window_size(1400,800)
 driver.get(URL)
 
@@ -84,7 +99,19 @@ last_game_title = ""
 #db에 넣을때 title이 중복되면 오류나서 중복되는 게임은 스킵하기위해 beforetitle 선언
 beforetitle = ""
 
+restart = 1
+
 while True:
+    if(restart > 5):
+        new_url = driver.current_url
+        driver.quit()
+        driver = webdriver.Chrome(options=options)
+        driver.implicitly_wait(10)
+        driver.set_window_size(1400,800)
+        driver.get(new_url)
+        print("셀레니움 재실행(렉방지)")
+        restart = 1
+
     #페이지가 변경됐을때 변경된 페이지를 파싱
     html = driver.page_source
     soup = BeautifulSoup(html, "html.parser")
@@ -93,11 +120,24 @@ while True:
     game_list = panel.find_all("li", class_="psw-l-w-1/2@mobile-s psw-l-w-1/2@mobile-l psw-l-w-1/6@tablet-l psw-l-w-1/4@tablet-s psw-l-w-1/6@laptop psw-l-w-1/8@desktop psw-l-w-1/8@max")
 
     for game in game_list:
-        title = game.find("span", class_="psw-t-body psw-c-t-1 psw-t-truncate-2 psw-m-b-2").text
+        try:
+            title = game.find("span", class_="psw-t-body psw-c-t-1 psw-t-truncate-2 psw-m-b-2").text
+        except:
+            _ = 0
+            while(title == None):
+                if _ > 5:
+                    print("title 크롤링 오류 재실행할것(트래픽이 느린것으로 추정)")
+                    driver.quit()
+                    break
+                sleep(3)
+                title = game.find("span", class_="psw-t-body psw-c-t-1 psw-t-truncate-2 psw-m-b-2").text
+                _  += 1
+
         if title == beforetitle:
             continue
         #last_game_title의 값과 현재 크롤링하는 게임의 title의 값이 같으면 크롤링 종료
         if last_game_title == title:
+            print("127라인 실행")
             break
         img = game.find("img", class_="psw-fade-in psw-top-left psw-l-fit-cover")
         imgdata = img["src"]
@@ -125,43 +165,74 @@ while True:
         if next_page-1 == int(last_page):
             last_game_title = title
 
-        game_link = game.select_one('a')
-        move = game_link["href"]
-        gamepage = gameURL + move
+        game_link = game.select_one('a')["href"]
+        move = gameURL + game_link
 
-        response = requests.get(gamepage, headers={"User-Agent": "Mozilla/5.0"})
-        new_soup = BeautifulSoup(response.text, "html.parser")
+        #response = requests.get(move, headers={"User-Agent": "Mozilla/5.0"})
+        #new_soup = BeautifulSoup(response.text, "html.parser")
 
-        description = new_soup.find('p', class_=r'psw-c-t-2 psw-p-x-7 psw-p-y-6 psw-p-x-6@below-tablet-s psw-m-sub-x-7 psw-m-auto@below-tablet-s psw-c-bg-card-1')
+        driver.execute_script(f'window.open(\'{move}\');')
+        driver.switch_to.window(driver.window_handles[-1])
+        new_soup = BeautifulSoup(driver.page_source, "html.parser")
+
+        description = new_soup.find('p', attrs={'data-qa': 'mfe-game-overview#description'})
+
         if description != None:
-            description = description.text.strip()
+            description = description.text
 
         try:
-            sql = 'INSERT INTO ps_sale (title, price, saleprice, saleper, description, imgdata) VALUES (%s, %s, %s, %s, %s, %s)'
-            cursor.execute(sql, (title, price, saleprice, saleper, description, imgdata))
+            gameimg = new_soup.find('img', attrs={'data-qa': 'gameBackgroundImage#heroImage#image'})
+            if gameimg == None:
+                gameimg = new_soup.find('img', attrs={'data-qa': 'gameBackgroundImage#tileImage#image'})
+        except TypeError as e:
+            print(e)
+            _ = 0
+            while(gameimg==None):
+                if _ > 5:
+                    print("gameimg 크롤링 오류 재실행할것(트래픽이 느린것으로 추정)")
+                    driver.quit()
+                    break
+                sleep(3)
+                print("gameimg 추출중")
+                gameimg = new_soup.find('img', attrs={'data-qa': 'gameBackgroundImage#heroImage#image'})
+                if gameimg == None:
+                    gameimg = new_soup.find('img', attrs={'data-qa': 'gameBackgroundImage#tileImage#image'})
+                _ += 1
         except:
-            print(f"{title} DB 입력중 오류 발생(동일명 게임 존재)")
+            gameimg = None
 
-        tagparent = new_soup.find("dd", {'data-qa':'gameInfo#releaseInformation#genre-value'})
-        if tagparent != None:
-            tag = tagparent.select_one("span").text.split(',')
-            tag_length = len(tag)
-            num = 0
-
+        if gameimg != None:
+            gameimg = gameimg["src"]
+        
+        
+        try:
+            sql = 'INSERT INTO gamedata_info (TITLE, PLATFORM, PRICE, SALEPRICE, SALEPER, DESCRIPTION, IMGDATA, GAMEIMG, URL) VALUES (%s, %s, %s, %s, %s, %s, %s, %s ,%s)'
+            cursor.execute(sql, (title, platform, price, saleprice, saleper, description, imgdata, gameimg, move))
+            
+            tagparent = new_soup.find("dd", {'data-qa':'gameInfo#releaseInformation#genre-value'})
+            if tagparent != None:
+                tag = tagparent.select_one("span").text.split(',')
+                tag_length = len(tag)
+                num = 0
+            
             while num < tag_length:
                 tag[num] = tag[num].strip()
-                sql = 'INSERT INTO ps_sale_genre (title, genre) VALUES (%s, %s)'
-                cursor.execute(sql, (title, tag[num]))
+                sql = 'INSERT INTO gamedata_genre (TITLE, PLATFORM, GENRE) VALUES (%s, %s, %s)'
+                cursor.execute(sql, (title, platform, tag[num]))
                 num += 1
+        except:
+            print(f"{title} DB 입력중 오류 발생(동일명 게임 존재)")
 
         beforetitle = title
 
         conn.commit()
         print(f'{next_page-1}p.{title} DB 입력 완료')
+        driver.close()
+        driver.switch_to.window(driver.window_handles[-1])
 
     #마지막페이지 크롤링 끝나면 break로 while문 빠져나옴
-    if int(last_page)+1 == next_page:
-        break
+    #if int(last_page)+1 == next_page:
+    #    break
 
     #페이지 이동 실행하는 부분
     pagebar = driver.find_element(By.CLASS_NAME, "psw-l-stack-center")
@@ -171,7 +242,7 @@ while True:
         if page.text == str(next_page):
             page.click()
             next_page += 1
-            sleep(3)
+            restart += 1
             break
 
 sleep(2)

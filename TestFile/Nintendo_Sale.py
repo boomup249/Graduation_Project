@@ -17,57 +17,79 @@ from time import sleep
 import MySQLdb
 import requests
 
+def saleper_calc(price, saleprice):
+    price = int(price.strip('₩ ').replace(',', ''))
+    saleprice = int(saleprice.strip('₩ ').replace(',', ''))
+    _ = price - saleprice
+    __ = int((_ / price) * 100)
+    saleper = "-"+str(__)+"%"
+    return saleper
+
 #DB연결
 conn = MySQLdb.connect(
-    user="crawler",
-    passwd="crawler1937",
+    user="root",
+    passwd="1937",
     host="localhost",
-    db="crawling_test"
+    db="member"
 )
 cursor = conn.cursor()
 
 # 실행할 때마다 다른값이 나오지 않게 테이블을 제거해두기
-cursor.execute("DROP TABLE IF EXISTS nintendo_sale_genre")
-cursor.execute("DROP TABLE IF EXISTS nintendo_sale")
+cursor.execute("DROP TABLE IF EXISTS gamedata_genre")
+cursor.execute("DROP TABLE IF EXISTS gamedata_info")
 
 #rank에 AUTO_INCREMENT를 사용함으로써 INSERT가 입력될때마다 자동으로 숫자를 +1 올린다
-cursor.execute('''CREATE TABLE nintendo_sale (
-                                           num int(6) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                                           title varchar(300) NOT NULL UNIQUE KEY,
-                                           price varchar(30) NOT NULL,
-                                           saleprice varchar(30),
-                                           description varchar(2000),
-                                           imgdata varchar(3000)
-                                           )
-                                           ''')
+cursor.execute('''CREATE TABLE IF NOT EXISTS gamedata_info (`NUM` INT NOT NULL AUTO_INCREMENT,
+                                                            `TITLE` VARCHAR(100) NULL DEFAULT NULL,
+                                                            `PLATFORM` VARCHAR(10) NULL DEFAULT NULL,
+                                                            `PRICE` VARCHAR(15) NULL DEFAULT NULL,
+                                                            `SALEPRICE` VARCHAR(15) NULL DEFAULT NULL,
+                                                            `SALEPER` VARCHAR(5) NULL DEFAULT NULL,
+                                                            `DESCRIPTION` TEXT NULL DEFAULT NULL,
+                                                            `IMGDATA` TEXT NULL DEFAULT NULL,
+                                                            `GAMEIMG` TEXT NULL DEFAULT NULL,
+                                                            `URL` TEXT NULL DEFAULT NULL,
+                                                            PRIMARY KEY (`NUM`),
+                                                            UNIQUE KEY (`TITLE`))
+            ''')
 
-cursor.execute('''CREATE TABLE nintendo_sale_genre (
-                                           num INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-                                           title varchar(100) NOT NULL,
-                                           genre varchar(20) NOT NULL,
-                                           FOREIGN KEY(title) REFERENCES nintendo_sale(title)
-                                           )
-                                           ''')
+cursor.execute('''CREATE TABLE IF NOT EXISTS gamedata_genre (`NUM` INT NOT NULL AUTO_INCREMENT,
+                                                             `TITLE` VARCHAR(100) NULL DEFAULT NULL,
+                                                             `PLATFORM` VARCHAR(10) NULL DEFAULT NULL,
+                                                             `GENRE` VARCHAR(30) NULL DEFAULT NULL,
+                                                             PRIMARY KEY (`NUM`),
+                                                             CONSTRAINT `game_title`
+                                                                FOREIGN KEY (`TITLE`)
+                                                                REFERENCES `gamedata_info` (`TITLE`)
+                                                                ON DELETE CASCADE
+                                                                ON UPDATE CASCADE)
+               ''')
 
 URL = 'https://store.nintendo.co.kr/games/sale'
+platform = 'nintendo'
 
 #크롬드라이버 옵션 설정
 services = Service(executable_path=ChromeDriverManager().install())
 options = Options()
 options.add_experimental_option("detach", True)
+options.add_argument("disable-gpu")
+options.add_argument("lang=ko_KR")
+options.add_argument('user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36')
+options.add_argument("headless")
 
 driver = webdriver.Chrome(service=services, options=options)
 driver.implicitly_wait(5)
 driver.set_window_size(1400,800)
+driver.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument", {"source": """ Object.defineProperty(navigator, 'webdriver', { get: () => undefined }) """})
 driver.get(URL)
 
 sleep(2)
 driver.find_element(By.CLASS_NAME, 'popup-close').click()
 sleep(2)
 page = driver.find_element(By.TAG_NAME, "body")
-for _ in range(0,85):
+for _ in range(0,130):
     page.send_keys(Keys.PAGE_DOWN)
-    sleep(0.1)
+    sleep(0.3)
 
 soup = BeautifulSoup(driver.page_source, "html.parser")
 
@@ -76,11 +98,11 @@ panel = soup.select_one("div.category-product-list")
 gamelist = panel.select("div.category-product-item")
 
 i=0
-l=0
+#l=0
 for item in gamelist:
     title = item.find("a", class_="category-product-item-title-link").text.strip()
-    price = item.find("span", attrs={"data-price-type" : "finalPrice"})
-    saleprice = item.find("span", attrs={"data-price-type" : "oldPrice"})
+    price = item.find("span", attrs={"data-price-type" : "oldPrice"})
+    saleprice = item.find("span", attrs={"data-price-type" : "finalPrice"})
     img = item.find("img", class_="product-image-photo mplazyload mplazyload-transparent entered loaded")
     imgdata = img["src"]
 
@@ -88,53 +110,80 @@ for item in gamelist:
         price = item.find("span", class_="point-icon-wrapper")
         price = price.text + "포인트"
         saleprice = "포인트로 구매 가능"
+        saleper = "X"
     else:
         price = price.find("span").text
         saleprice = saleprice.find("span").text
+        saleper = saleper_calc(price, saleprice)
 
     game_link = item.select_one('a')
     move = game_link["href"]
     
+    """
     if l > 120:
         print("5분간 일시정지(403 forbidden 오류 회피를 위해)")
         sleep(300)
         print("실행")
         l=0
+    """
 
-    response = requests.get(move, headers={"User-Agent": "Mozilla/5.0"})
+    driver.execute_script(f'window.open(\'{move}\');')
+    driver.switch_to.window(driver.window_handles[-1])
+    sleep(1.5)
+    new_soup = BeautifulSoup(driver.page_source, "html.parser")
 
-    if response.status_code != 200:
-        print("오류 발생(403 forbidden)")
-    new_soup = BeautifulSoup(response.text, "html.parser")
+    error = new_soup.select_one('h1')
+    if error.text == '403 Forbidden':
+        print("5분간 일시정지(403 forbidden 오류 회피를 위해)")
+        driver.close()
+        driver.switch_to.window(driver.window_handles[-1])
+        sleep(300)
+        print("재실행")
+        driver.execute_script(f'window.open(\'{move}\');')
+        driver.switch_to.window(driver.window_handles[-1])
+        sleep(5)
+        new_soup = BeautifulSoup(driver.page_source, "html.parser")
+
 
     description = new_soup.select_one("div.game_ex")
     if description == None:
         description = new_soup.select_one("div.value")
-        description = description.text.strip()
     else:
+        description = None
+    
+    if description != None:
         description = description.text.strip()
 
-    sql = 'INSERT INTO nintendo_sale (title, price, saleprice, description, imgdata) VALUES (%s, %s, %s, %s, %s)'
-    cursor.execute(sql, (title, price, saleprice, description, imgdata))
+    gameimg = new_soup.select_one('img.fotorama__img')
+    if gameimg == None:
+        print("gameimg 오류 3초 대기후 재크롤링")
+        sleep(3)
+        new_soup = BeautifulSoup(driver.page_source, "html.parser")
+        gameimg = new_soup.select_one('img.fotorama__img')
+    gameimg = gameimg["src"]
+
+    sql = 'INSERT INTO gamedata_info (TITLE, PLATFORM, PRICE, SALEPRICE, SALEPER, DESCRIPTION, IMGDATA, GAMEIMG, URL) VALUES (%s, %s, %s, %s, %s, %s, %s, %s ,%s)'
+    cursor.execute(sql, (title, platform, price, saleprice, saleper, description, imgdata, gameimg, move))
 
     tagparent = new_soup.find("div", class_="product-attribute game_category")
     if tagparent != None:
         tag = tagparent.find("div", class_="product-attribute-val").text.split(',')
-
         tag_length = len(tag)
         num = 0
 
         while num < tag_length:
             tag[num] = tag[num].strip()
-            sql = 'INSERT INTO nintendo_sale_genre (title, genre) VALUES (%s, %s)'
-            cursor.execute(sql, (title, tag[num]))
+            sql = 'INSERT INTO gamedata_genre (TITLE, PLATFORM, GENRE) VALUES (%s, %s, %s)'
+            cursor.execute(sql, (title, platform, tag[num]))
             num += 1
     
     i+=1
-    l+=1
+    #l+=1
 
     conn.commit()
     print(f'{i}.{title} DB 입력 완료')
+    driver.close()
+    driver.switch_to.window(driver.window_handles[-1])
 
 sleep(2)
 print("크롤링 완료")

@@ -33,46 +33,54 @@ Cloudflare는 셀레니움으로 크롤링을 할때 url에 변동이있으면 �
 def driver_get(url):
     option = Options()
     driver = webdriver.Chrome(options=option)
-    driver.implicitly_wait(5)
+    driver.implicitly_wait(10)
     driver.set_window_size(1400,800)
     driver.get(url)
     return driver
 
 #DB연결
 conn = MySQLdb.connect(
-    user="crawler",
-    passwd="crawler1937",
+    user="root",
+    passwd="1937",
     host="localhost",
-    db="crawling_test"
+    db="member"
 )
 cursor = conn.cursor()
 
 # 실행할 때마다 다른값이 나오지 않게 테이블을 제거해두기
-cursor.execute("DROP TABLE IF EXISTS epic_best_playing_genre")
-cursor.execute("DROP TABLE IF EXISTS epic_best_playing")
+cursor.execute("DROP TABLE IF EXISTS gamedata_genre")
+cursor.execute("DROP TABLE IF EXISTS gamedata_info")
 
 #rank에 AUTO_INCREMENT를 사용함으로써 INSERT가 입력될때마다 자동으로 숫자를 +1 올린다
-cursor.execute('''CREATE TABLE epic_best_playing (
-                                           num int(6) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                                           title varchar(100) NOT NULL UNIQUE KEY,
-                                           price varchar(30) NOT NULL,
-                                           saleprice varchar(30),
-                                           saleper varchar(30),
-                                           description varchar(500),
-                                           imgdata varchar(3000)
-                                           )
-                                           ''')
+cursor.execute('''CREATE TABLE IF NOT EXISTS gamedata_info (`NUM` INT NOT NULL AUTO_INCREMENT,
+                                                            `TITLE` VARCHAR(100) NULL DEFAULT NULL,
+                                                            `PLATFORM` VARCHAR(10) NULL DEFAULT NULL,
+                                                            `PRICE` VARCHAR(15) NULL DEFAULT NULL,
+                                                            `SALEPRICE` VARCHAR(15) NULL DEFAULT NULL,
+                                                            `SALEPER` VARCHAR(5) NULL DEFAULT NULL,
+                                                            `DESCRIPTION` TEXT NULL DEFAULT NULL,
+                                                            `IMGDATA` TEXT NULL DEFAULT NULL,
+                                                            `GAMEIMG` TEXT NULL DEFAULT NULL,
+                                                            `URL` TEXT NULL DEFAULT NULL,
+                                                            PRIMARY KEY (`NUM`),
+                                                            UNIQUE KEY (`TITLE`))
+            ''')
 
-cursor.execute('''CREATE TABLE epic_best_playing_genre (
-                                           num INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-                                           title varchar(100) NOT NULL,
-                                           genre varchar(20) NOT NULL,
-                                           FOREIGN KEY(title) REFERENCES epic_best_playing(title)
-                                           )
-                                           ''')
+cursor.execute('''CREATE TABLE IF NOT EXISTS gamedata_genre (`NUM` INT NOT NULL AUTO_INCREMENT,
+                                                             `TITLE` VARCHAR(100) NULL DEFAULT NULL,
+                                                             `PLATFORM` VARCHAR(10) NULL DEFAULT NULL,
+                                                             `GENRE` VARCHAR(30) NULL DEFAULT NULL,
+                                                             PRIMARY KEY (`NUM`),
+                                                             CONSTRAINT `game_title`
+                                                                FOREIGN KEY (`TITLE`)
+                                                                REFERENCES `gamedata_info` (`TITLE`)
+                                                                ON DELETE CASCADE
+                                                                ON UPDATE CASCADE)
+               ''')
 
 URL = 'https://store.epicgames.com/ko/collection/most-played'
 epicgames = 'https://store.epicgames.com'
+platform = 'epicgames'
 
 #크롬 디버그 모드로 열기
 #chrome = subprocess.Popen(r'C:\Program Files\Google\Chrome\Application\chrome.exe --remote-debugging-port=9222 --user-data-dir="C:\chromeCookie"')
@@ -81,11 +89,13 @@ epicgames = 'https://store.epicgames.com'
 services = Service(executable_path=ChromeDriverManager().install())
 options = Options()
 #options.add_experimental_option("debuggerAddress", '127.0.0.1:9222')
-options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.61 Safari/537.36")
+options.add_argument("disable-gpu")   # 가속 사용 x
+options.add_argument("lang=ko_KR")    # 가짜 플러그인 탑재
+options.add_argument('user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36')  # user-agent 이름 설정
 
 #크롬드라이버 인스턴스 생성 및 옵션, 크기, URL, 암시적 대기 설정
 driver = webdriver.Chrome(service=services, options=options)
-driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
+#driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
 sleep(3)
 driver.implicitly_wait(5)
 driver.set_window_size(1400,800)
@@ -127,9 +137,6 @@ for item in gamelist:
     else:
         saleper = "X"
         saleprice = "X"
-    
-    img = item.find("img", class_="css-174g26k")
-    imgdata = img["src"]
 
     #move 변수에 해당 게임 페이지 링크 획득
     game_link = item.select_one('a.css-g3jcms')["href"]
@@ -142,24 +149,34 @@ for item in gamelist:
     #driver.switch_to.window(driver.window_handles[-1])
 
     new_soup = BeautifulSoup(driver.page_source, "html.parser")
-    print(new_soup)
 
     description = new_soup.select_one("div.css-1myreog")
     if description != None:
         description = description.text.strip()
-        print(description)
+
+    imgdata = new_soup.select_one('img.css-7i770w')["src"]
+    
+    gameimg_bar = new_soup.select_one('ul.css-elmzlf')
+    if gameimg_bar != None:
+        gameimg = gameimg_bar.select_one('div.css-1q03292 > img')["src"]
+    else:
+        gameimg = new_soup.select_one('img.css-1bbjmcj')["src"]
+
+    print(title)
+    print(gameimg)
+
     tag = new_soup.select("li.css-t8k7")
 
     tag_length = len(tag)
     num = 0
 
-    sql = 'INSERT INTO epic_best_playing (title, price, saleprice, saleper, description, imgdata) VALUES (%s, %s, %s, %s, %s, %s)'
-    cursor.execute(sql, (title, price, saleprice, saleper, description, imgdata))
+    sql = 'INSERT INTO gamedata_info (TITLE, PLATFORM, PRICE, SALEPRICE, SALEPER, DESCRIPTION, IMGDATA, GAMEIMG, URL) VALUES (%s, %s, %s, %s, %s, %s, %s, %s ,%s)'
+    cursor.execute(sql, (title, platform, price, saleprice, saleper, description, imgdata, gameimg, move))
 
     while num < tag_length:
         tag[num] = tag[num].text.strip()
-        sql = 'INSERT INTO epic_best_playing_genre (title, genre) VALUES (%s, %s)'
-        cursor.execute(sql, (title, tag[num]))
+        sql = 'INSERT INTO gamedata_genre (TITLE, PLATFORM, GENRE) VALUES (%s, %s, %s)'
+        cursor.execute(sql, (title, platform, tag[num]))
         print(tag[num])
         num += 1
 

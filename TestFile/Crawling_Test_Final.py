@@ -60,7 +60,8 @@ cursor.execute('''CREATE TABLE IF NOT EXISTS gamedata_genre (`NUM` INT NOT NULL 
 
 #driver 옵션 설정
 services = Service(executable_path=ChromeDriverManager().install())
-options = Options().add_experimental_option("detach", True)
+options = Options()
+options.add_experimental_option("detach", True)
 
 #Steam 최고 인기 게임 크롤링
 URL = 'https://store.steampowered.com/charts/topselling'
@@ -166,7 +167,6 @@ for item in gamelist:
     num = 0
 
     sql = 'INSERT INTO gamedata_info (TITLE, PLATFORM, PRICE, SALEPRICE, SALEPER, DESCRIPTION, IMGDATA, GAMEIMG, URL) VALUES (%s, %s, %s, %s, %s, %s, %s, %s ,%s)'
-    print(title, platform, price, saleprice, saleper, description, imgdata, gameimg, move)
     cursor.execute(sql, (title, platform, price, saleprice, saleper, description, imgdata, gameimg, move))
 
     while num < tag_length:
