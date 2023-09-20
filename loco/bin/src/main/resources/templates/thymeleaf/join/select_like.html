@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8">
+		<title>loco > join</title>
+		<style>
+			#content {margin-top: 100px}
+			#like {font-size: 20px; color:black}
+			#recommend {margin-top: -10px; font-size: 15px; color: #6D6D6D;}
+			#btn {margin-top: 170px; margin-right: 50px}
+			#before {margin: 10px}
+			#after {margin: 10px}
+			td {width : 150px;
+			  height: 75px;
+			  background-color: #A5A5A5;
+			  border: 1px solid #FFFFFF;}
+			  table { border-spacing: 20px; margin-top:40px}
+			body { background-color: #B5B5B5; margin: 0; padding: 0;}
+		</style>
+	</head>
+	<body>
+		<form action ="#"
+				th:object="${userDTO}"
+				method = "post">
+				
+		<!-- 안보이게 넘기기 (email, id, pwd, birth, gender) -->
+		<input type="hidden"
+			th:value="${userDTO.getUserEmail()}"
+			th:field="*{userEmail}"
+			required/>
+			
+		<input type="hidden"
+           th:value="${userDTO.getUserId()}"
+           th:field="*{userId}"
+           required/>
+			
+		<input type="hidden"
+			th:value="${userDTO.getUserPwd()}"
+			th:field="*{userPwd}"
+			required/>
+			
+		<input type="hidden"
+		       name="userBirth" 
+		       th:value="${#dates.format(userDTO.getUserBirth(), 'yyyy-MM-dd')}" th:field="*{userBirth}"/>
+		       
+		<input type="hidden"
+		       name="userGender" 
+		       th:value="${userDTO.getUserGender()}" th:field="*{userGender}"/>
+				
+		<!-- 관심 장르 선택 -->
+		<div style="text-align: center;"id="content">
+			<div id="like">
+				<p>관심 장르를 선택해주세요.</p>
+			</div>
+			<div id="recommend">
+				<p>선택한 장르를 우선으로 추천합니다.(최대 5개 선택)</p>
+			</div>
+			<!-- 게임 선택 목록-->
+			<table style="margin-left: auto; margin-right: auto;">
+			<tr>
+				<td><input type="checkbox" name="chk_like" value="action" th:object="${preferDTO}" th:field="*{userLike}" th:checked="${preferDTO.userLike == 'action'}">액션</input></td>
+				<td><input type="checkbox" name="chk_like" value="shooting" th:object="${preferDTO}" th:field="*{userLike}" th:checked="${preferDTO.userLike == 'action adventure'}">슈팅</input></td>
+				<td><input type="checkbox" name="chk_like" value="adventure" th:object="${preferDTO}" th:field="*{userLike}" th:checked="${preferDTO.userLike == 'survival'}">어드벤처</input></td>
+				<td><input type="checkbox" name="chk_like" value="fighting" th:object="${preferDTO}" th:field="*{userLike}" th:checked="${preferDTO.userLike == 'shooting'}">격투</input></td>
+				<td><input type="checkbox" name="chk_like" value="roguelike" th:object="${preferDTO}" th:field="*{userLike}" th:checked="${preferDTO.userLike == 'FPS'}">로그라이크</input></td>
+			</tr>
+			<tr>
+				<td><input type="checkbox" name="chk_like" value="RPG" th:object="${preferDTO}" th:field="*{userLike}" th:checked="${preferDTO.userLike == 'RPG'}">RPG</input></td>
+				<td><input type="checkbox" name="chk_like" value="mmorpg" th:object="${preferDTO}" th:field="*{userLike}" th:checked="${preferDTO.userLike == 'ARPG'}">MMORPG</input></td>
+				<td><input type="checkbox" name="chk_like" value="simulation" th:object="${preferDTO}" th:field="*{userLike}" th:checked="${preferDTO.userLike == 'MMORPG'}">시뮬레이션</input></td>
+				<td><input type="checkbox" name="chk_like" value="sports" th:object="${preferDTO}" th:field="*{userLike}" th:checked="${preferDTO.userLike == 'open world'}">스포츠</input></td>
+				<td><input type="checkbox" name="chk_like" value="puzzle" th:object="${preferDTO}" th:field="*{userLike}" th:checked="${preferDTO.userLike == 'hack and slash'}">퍼즐</input></td>
+			</tr>
+			<tr>
+				<td><input type="checkbox" name="chk_like" value="arcade" th:object="${preferDTO}" th:field="*{userLike}" th:checked="${preferDTO.userLike == 'adventure'}">아케이드</input></td>
+				<td><input type="checkbox" name="chk_like" value="strat" th:object="${preferDTO}" th:field="*{userLike}" th:checked="${preferDTO.userLike == 'sports'}">전략</input></td>
+				<td><input type="checkbox" name="chk_like" value="horror" th:object="${preferDTO}" th:field="*{userLike}" th:checked="${preferDTO.userLike == 'racing'}">공포</input></td>
+				<td><input type="checkbox" name="chk_like" value="multi" th:object="${preferDTO}" th:field="*{userLike}" th:checked="${preferDTO.userLike == 'casual'}">멀티플레이어</input></td>
+				<td><input type="checkbox" name="chk_like" value="single" th:object="${preferDTO}" th:field="*{userLike}" th:checked="${preferDTO.userLike == 'puzzle'}">싱글플레이어</input></td>
+			</tr>
+		</table>
+		</div>
+		
+		<!-- 이전/다음 버튼-->
+		<div style="text-align: right;" id="btn">
+				<button onclick="action='/join_info'; submit();"
+					style="border: none; background: none; padding: 0; margin: 0; cursor: pointer;">
+					<img src="imgs/btn/before.png" alt="이전">
+				</button>
+				<button onclick="action='/join_hate'; submit();"
+					style="border: none; background: none; padding: 0; margin: 0; cursor: pointer;">
+					<img src="imgs/btn/after.png" alt="다음">
+				</button>
+		</div>
+		
+		</form>
+		<script>
+    	<!-- 체크박스 5개 선택하면 비활성화-->
+		    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+		
+		    checkboxes.forEach(checkbox => {
+		        checkbox.addEventListener('change', () => {
+		            const checkedCount = document.querySelectorAll('input[type="checkbox"]:checked').length;
+		            if (checkedCount >= 5) {
+		                checkboxes.forEach(cb => {
+		                    if (!cb.checked) {
+		                        cb.disabled = true;
+		                    }
+		                });
+		            } else {
+		                checkboxes.forEach(cb => {
+		                    cb.disabled = false;
+		                });
+		            }
+		        });
+		    });
+		</script>
+	</body>
+</html>

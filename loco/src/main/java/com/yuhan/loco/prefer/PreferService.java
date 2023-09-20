@@ -26,62 +26,62 @@ public class PreferService {
 		for(int i = 0; i < l_len; i++) {
 			switch (likeGenre[i]) {
 			case "action":
-				user.setAction(true);
+				user.setAction("true");
 				break;
 				
 			case "shooting":
-				user.setShooting(true);
+				user.setShooting("true");
 				break;
 				
 			case "adventure":
-				user.setAdventure(true);
+				user.setAdventure("true");
 				break;
 				
 			case "fighting":
-				user.setFighting(true);
+				user.setFighting("true");
 				break;
 				
 			case "roguelike":
-				user.setRoguelike(true);
+				user.setRoguelike("true");
 				break;
 				
 			case "RPG":
-				user.setRPG(true);
+				user.setRPG("true");
 				break;
 				
 			case "MMORPG":
-				user.setMMORPG(true);
+				user.setMMORPG("true");
 				break;
 				
 			case "simulation":
-				user.setSimulation(true);
+				user.setSimulation("true");
 				break;
 				
 			case "sports":
-				user.setSports(true);
+				user.setSports("true");
 				break;
 			case "puzzle":
-				user.setPuzzle(true);
+				user.setPuzzle("true");
 				break;
 				
 			case "arcade":
-				user.setArcade(true);
+				user.setArcade("true");
 				break;
 				
 			case "strat":
-				user.setStrat(true);
+				user.setStrat("true");
 				break;
 				
 			case "horror":
-				user.setHorror(true);
+				user.setHorror("true");
 				break;
 				
 			case "multi":
-				user.setMulti(true);
+				user.setMulti("true");
 				break;
 				
 			case "single":
-				user.setSingle(true);
+				user.setSingle("true");
 				break;
 			}
 		}
@@ -90,62 +90,62 @@ public class PreferService {
 		for(int i = 0; i < h_len; i++) {
 			switch (hateGenre[i]) {
 			case "action":
-				user.setAction(false);
+				user.setAction("false");
 				break;
 				
 			case "shooting":
-				user.setShooting(false);
+				user.setShooting("false");
 				break;
 				
 			case "adventure":
-				user.setAdventure(false);
+				user.setAdventure("false");
 				break;
 				
 			case "fighting":
-				user.setFighting(false);
+				user.setFighting("false");
 				break;
 				
 			case "roguelike":
-				user.setRoguelike(false);
+				user.setRoguelike("false");
 				break;
 				
 			case "RPG":
-				user.setRPG(false);
+				user.setRPG("false");
 				break;
 				
 			case "MMORPG":
-				user.setMMORPG(false);
+				user.setMMORPG("false");
 				break;
 				
 			case "simulation":
-				user.setSimulation(false);
+				user.setSimulation("false");
 				break;
 				
 			case "sports":
-				user.setSports(false);
+				user.setSports("false");
 				break;
 			case "puzzle":
-				user.setPuzzle(false);
+				user.setPuzzle("false");
 				break;
 				
 			case "arcade":
-				user.setArcade(false);
+				user.setArcade("false");
 				break;
 				
 			case "strat":
-				user.setStrat(false);
+				user.setStrat("false");
 				break;
 				
 			case "horror":
-				user.setHorror(false);
+				user.setHorror("false");
 				break;
 				
 			case "multi":
-				user.setMulti(false);
+				user.setMulti("false");
 				break;
 				
 			case "single":
-				user.setSingle(false);
+				user.setSingle("false");
 				break;
 			}
 		}

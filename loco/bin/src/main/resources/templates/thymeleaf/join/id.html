@@ -1,0 +1,158 @@
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+		<title>loco > email</title>
+		
+		<!-- 외부 css -->
+		<link rel="stylesheet" href="css/font.css"> <!-- 폰트 css -->
+		<link rel="stylesheet" href="css/background_image.css"> <!-- b_img css -->
+		
+		<style>		
+			/*css 속성*/
+			/*logo*/
+			#logo {z-index: 3; /* logo가 b_img보다 위에 배치되어야 함*/
+					position: absolute;
+					top: 0px;
+					left: 0px;
+					width: 100%; height: 50px; /*logo 담을 가상 헤더 header 100px 고정 -> 50 + 25 + 25*/ 
+					padding-top: 25px; padding-bottom: 25px;}
+			.link img {height: 50px;} /*로고 이미지*/
+			.link a {float: left; margin-left: 25px;} /*왼쪽 정렬, 마진 25px*/
+			
+			
+			/*내용*/
+			#content {z-index: 2;
+						position: relative;
+						top: 0px;
+						left: 0px;
+						width: 100%; height: 100%;
+						/*자식 수직 중앙 정렬*/
+						display: flex;
+						flex-direction: column;
+						justify-content: center;}
+			
+			input[type=text] {width: 520px;
+					height: 80px;
+					padding-left: 30px;
+					font-family: 'GmarketSansMedium';
+					font-size: 20pt;
+					border: solid 5px #000; border-radius: 8px;}
+								
+			#sub {background-image: url('imgs/next.png');
+					background-size: cover;
+					background-position: center;
+					background-repeat: no-repeat;
+					width: 80px;
+					height: 80px;
+					border: solid 3px #005982; border-radius: 8px; }
+					
+			
+			.msg1 p {font-family: 'GmarketSansMedium';
+						font-size: 15pt;
+						color: blue;
+						}
+						
+			.msg2 p, .msg3 p {font-family: 'GmarketSansMedium';
+						font-size: 15pt;
+						color: red;}
+						
+			.item2 input {float: left; margin-left: 25px;}
+			
+			/*위치 잡기*/
+			.item1 {width: 300px; height: 125px;
+					position: relative;
+					left: 50%;
+					margin-left: -325px; /*content에 수평 중앙 정렬 > 가로축: item2에 맞추기*/
+					margin-bottom: 25px;
+					/*자식 중앙정렬*/
+					display: flex;
+					justify-content: center;
+					align-items: center; }
+			
+			.item2 {width: 650px; height: 100px;
+					/*왼쪽 마진(25) + 텍스트 인풋(520) + 왼쪽 마진(25) + sub 버튼(80)*/
+					position: relative;
+					left: 50%;
+					margin-left: -350px; /*content에 수평 중앙 정렬(left -25px(margin))*/
+					margin-bottom: 50px;
+					/*자식 중앙정렬*/
+					display: flex;
+					justify-content: center;
+					align-items: center; }
+			
+			/*헷갈릴까봐 이름 바꿨어용*/		
+			.msg1 , .msg2, .msg3 {width: 600px; height: 50px;
+					position: relative;
+					margin-top: -50px;
+					left: 50%;
+					margin-left: -325px; /*item2 시작(마진 및 빈 공간 제외)과 같은 x좌표에서 시작 */ 
+					} /*위치 잡기*/
+					
+					
+			.msg1 {display: none;}
+			.msg2 {display: none;}
+			.msg3 {display: none;}
+			#sub {visibility: hidden;}
+					
+			
+			body { background-color: grey;
+					margin: 0; padding: 0;}
+		</style>
+	</head>
+	
+	<body>
+		<!-- 이메일 안 보이게 받아오기 (해야함)-->
+	           
+		<div id="b_img"></div><!-- 배경 이미지 불투명도 조절해서 넣기 -->
+		<script src="js/backgroundImage.js"></script>
+		
+		<div id="logo">
+			<div class="link">
+				<a href="/main"><img src="imgs/header/logo.png"/></a>
+			</div>
+		</div>
+		
+		<div id="content">
+			<div class="item1">
+				<img src="imgs/logo2.png" width="300px" height="125px"/>
+			</div>
+			
+			<form action ="#" th:action="@{/join_pwd}"
+				th:object="${userDTO}"
+				method = "post">
+				
+			<!-- (email) 안보이게 넘기기 -->	
+			<input type="hidden"
+           th:field="*{userEmail}"
+           required/>
+			
+			<!-- 아이디 실시간 중복 확인 -->	
+			<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>	
+			<script src="js/checkId.js"></script>
+			
+			<div class="item2">
+				<input type="text" th:field="*{userId}" id="uid" 
+					oninput = "checkId()" placeholder="아이디를 입력하세요 (5-15자리 이내)" required />
+				<input type="submit" id="sub" value=""/>
+			</div>
+			
+			
+			<!--각 상황에 맞게 적용 되도록 구성-->
+			<div class="msg1">
+				<p>사용가능한 아이디입니다.</p> 
+			</div>
+			
+			<div class="msg2">
+				<p>5-15자리 이내로 입력해주세요.</p>
+			</div>
+			
+			<div class="msg3">
+				<p>사용중인 아이디입니다.</p> 
+			</div>
+			
+			</form>
+	
+		</div>
+		
+	</body>
+</html>

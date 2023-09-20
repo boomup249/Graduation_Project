@@ -1,67 +1,75 @@
 package com.yuhan.loco.game;
 
 
+import java.sql.Date;
+
+import jakarta.validation.constraints.Email;
+
+
 public class GameDTO {
-	private int ranking;
-	private String gameName;
-	private String gameUrl;
+	private int NUM;
+	public int getNUM() {
+		return NUM;
+	}
+	public void setNUM(int nUM) {
+		NUM = nUM;
+	}
+	public String getTITLE() {
+		return TITLE;
+	}
+	public void setTITLE(String tITLE) {
+		TITLE = tITLE;
+	}
+	public String getPRICE() {
+		return PRICE;
+	}
+	public void setPRICE(String pRICE) {
+		PRICE = pRICE;
+	}
+	public String getSALEPRICE() {
+		return SALEPRICE;
+	}
+	public void setSALEPRICE(String sALEPRICE) {
+		SALEPRICE = sALEPRICE;
+	}
+	public String getSALEPER() {
+		return SALEPER;
+	}
+	public void setSALEPER(String sALEPER) {
+		SALEPER = sALEPER;
+	}
+	public String getDESCRIPTION() {
+		return DESCRIPTION;
+	}
+	public void setDESCRIPTION(String dESCRIPTION) {
+		DESCRIPTION = dESCRIPTION;
+	}
+	public String getIMGDATA() {
+		return IMGDATA;
+	}
+	public void setIMGDATA(String iMGDATA) {
+		IMGDATA = iMGDATA;
+	}
+	public String getGAMEIMG() {
+		return GAMEIMG;
+	}
+	public void setGAMEIMG(String gAMEIMG) {
+		GAMEIMG = gAMEIMG;
+	}
+	public String getURL() {
+		return URL;
+	}
+	public void setURL(String uRL) {
+		URL = uRL;
+	}
+	private String TITLE;
+	private String PRICE;
+	private String SALEPRICE;
+	private String SALEPER;
+	private String DESCRIPTION;
+	private String IMGDATA;
+	private String GAMEIMG;
+	private String URL;
 	
-	private String price;
-	private String DcPrice;
-	private String DcRate;
-	
-	
-	//getter setter
-	public int getRanking() {
-		return ranking;
-	}
-	public void setRanking(int ranking) {
-		this.ranking = ranking;
-	}
-	public String getGameName() {
-		return gameName;
-	}
-	public void setGameName(String gameName) {
-		this.gameName = gameName;
-	}
-	public String getGameUrl() {
-		return gameUrl;
-	}
-	public void setGameUrl(String gameUrl) {
-		this.gameUrl = gameUrl;
-	}
-	
-	
-	public String getPrice() {
-		return price;
-	}
-	public void setPrice(String price) {
-		this.price = price;
-	}
-	public String getDcPrice() {
-		return DcPrice;
-	}
-	public void setDcPrice(String dcPrice) {
-		DcPrice = dcPrice;
-	}
-	public String getDcRate() {
-		return DcRate;
-	}
-	public void setDcRate(String dcRate) {
-		DcRate = dcRate;
-	}
-	
-	
-	//생성자
-	public GameDTO(int ranking, String gameName, String price, String dcPrice, String dcRate, String gameUrl) {
-		super();
-		this.ranking = ranking;
-		this.gameName = gameName;
-		this.gameUrl = gameUrl;
-		this.price = price;
-		DcPrice = dcPrice;
-		DcRate = dcRate;
-	}
-	
-	
+
 }

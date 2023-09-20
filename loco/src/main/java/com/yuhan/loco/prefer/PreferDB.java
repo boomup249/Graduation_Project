@@ -27,21 +27,21 @@ public class PreferDB {
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID", referencedColumnName = "ID", insertable = false, updatable = false)
 	private UserDB userDB;
-	private Boolean action;
-	private Boolean shooting;
-	private Boolean adventure;
-	private Boolean fighting;
-	private Boolean roguelike;
-	private Boolean RPG;
-	private Boolean MMORPG;
-	private Boolean simulation;
-	private Boolean sports;
-	private Boolean puzzle;
-	private Boolean arcade;
-	private Boolean strat;
-	private Boolean horror;
-	private Boolean multi;
-	private Boolean single;
+	private String action;
+	private String shooting;
+	private String adventure;
+	private String fighting;
+	private String roguelike;
+	private String RPG;
+	private String MMORPG;
+	private String simulation;
+	private String sports;
+	private String puzzle;
+	private String arcade;
+	private String strat;
+	private String horror;
+	private String multi;
+	private String single;
 	
 	
 	//getter setter
@@ -59,94 +59,94 @@ public class PreferDB {
 		this.userDB = userDB;
 		this.ID = userDB.getID();
 	}
-	public Boolean getAction() {
+	public String getAction() {
 		return action;
 	}
-	public void setAction(Boolean action) {
+	public void setAction(String action) {
 		this.action = action;
 	}
-	public Boolean getShooting() {
+	public String getShooting() {
 		return shooting;
 	}
-	public void setShooting(Boolean shooting) {
+	public void setShooting(String shooting) {
 		this.shooting = shooting;
 	}
-	public Boolean getAdventure() {
+	public String getAdventure() {
 		return adventure;
 	}
-	public void setAdventure(Boolean adventure) {
+	public void setAdventure(String adventure) {
 		this.adventure = adventure;
 	}
-	public Boolean getFighting() {
+	public String getFighting() {
 		return fighting;
 	}
-	public void setFighting(Boolean fighting) {
+	public void setFighting(String fighting) {
 		this.fighting = fighting;
 	}
-	public Boolean getRoguelike() {
+	public String getRoguelike() {
 		return roguelike;
 	}
-	public void setRoguelike(Boolean roguelike) {
+	public void setRoguelike(String roguelike) {
 		this.roguelike = roguelike;
 	}
-	public Boolean getRPG() {
+	public String getRPG() {
 		return RPG;
 	}
-	public void setRPG(Boolean rPG) {
+	public void setRPG(String rPG) {
 		RPG = rPG;
 	}
-	public Boolean getMMORPG() {
+	public String getMMORPG() {
 		return MMORPG;
 	}
-	public void setMMORPG(Boolean mMORPG) {
+	public void setMMORPG(String mMORPG) {
 		MMORPG = mMORPG;
 	}
-	public Boolean getSimulation() {
+	public String getSimulation() {
 		return simulation;
 	}
-	public void setSimulation(Boolean simulation) {
+	public void setSimulation(String simulation) {
 		this.simulation = simulation;
 	}
-	public Boolean getSports() {
+	public String getSports() {
 		return sports;
 	}
-	public void setSports(Boolean sports) {
+	public void setSports(String sports) {
 		this.sports = sports;
 	}
-	public Boolean getPuzzle() {
+	public String getPuzzle() {
 		return puzzle;
 	}
-	public void setPuzzle(Boolean puzzle) {
+	public void setPuzzle(String puzzle) {
 		this.puzzle = puzzle;
 	}
-	public Boolean getArcade() {
+	public String getArcade() {
 		return arcade;
 	}
-	public void setArcade(Boolean arcade) {
+	public void setArcade(String arcade) {
 		this.arcade = arcade;
 	}
-	public Boolean getStrat() {
+	public String getStrat() {
 		return strat;
 	}
-	public void setStrat(Boolean strat) {
+	public void setStrat(String strat) {
 		this.strat = strat;
 	}
-	public Boolean getHorror() {
+	public String getHorror() {
 		return horror;
 	}
-	public void setHorror(Boolean horror) {
+	public void setHorror(String horror) {
 		this.horror = horror;
 	}
-	public Boolean getMulti() {
+	public String getMulti() {
 		return multi;
 	}
-	public void setMulti(Boolean multi) {
+	public void setMulti(String multi) {
 		this.multi = multi;
 	}
-	public Boolean getSingle() {
+	public String getSingle() {
 		return single;
 	}
-	public void setSingle(Boolean single) {
+	public void setSingle(String single) {
 		this.single = single;
 	}
 
