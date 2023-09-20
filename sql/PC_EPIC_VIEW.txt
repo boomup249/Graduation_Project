@@ -1,0 +1,54 @@
+CREATE VIEW game_steam_epic AS
+SELECT 
+    s.num as steam_num,
+    e.num as epic_num,
+    s.title,
+    CASE 
+        WHEN s.title IS NOT NULL AND e.title IS NOT NULL THEN 'Both'
+        WHEN s.title IS NOT NULL THEN 'Steam Only'
+        WHEN e.title IS NOT NULL THEN 'Epic Only'
+        ELSE 'None' 
+    END as site_availability,
+    s.price as steam_price,
+    e.price as epic_price,
+    s.saleprice as steam_saleprice,
+    e.saleprice as epic_saleprice,
+    s.saleper as steam_saleper,
+    e.saleper as epic_saleper,
+    s.description as steam_description,
+    e.description as epic_description,
+    s.imgdata as steam_imgdata,
+    e.imgdata as epic_imgdata,
+    s.gameimg as steam_gameimg,
+    e.gameimg as epic_gameimg,
+    s.url as steam_url,
+    e.url as epic_url
+FROM gamedata_steam s
+LEFT JOIN gamedata_epic e ON s.title = e.title
+UNION
+SELECT 
+    s.num as steam_num,
+    e.num as epic_num,
+    e.title,
+    CASE
+        WHEN s.title IS NOT NULL AND e.title IS NOT NULL THEN 'Both'
+        WHEN s.title IS NOT NULL THEN 'Steam Only'
+        WHEN e.title IS NOT NULL THEN 'Epic Only'
+        ELSE 'None' 
+    END as site_availability,
+    s.price as steam_price,
+    e.price as epic_price,
+    s.saleprice as steam_saleprice,
+    e.saleprice as epic_saleprice,
+    s.saleper as steam_saleper,
+    e.saleper as epic_saleper,
+    s.description as steam_description,
+    e.description as epic_description,
+    s.imgdata as steam_imgdata,
+    e.imgdata as epic_imgdata,
+    s.gameimg as steam_gameimg,
+    e.gameimg as epic_gameimg,
+    s.url as steam_url,
+    e.url as epic_url
+FROM gamedata_steam s
+RIGHT JOIN gamedata_epic e ON s.title = e.title;
