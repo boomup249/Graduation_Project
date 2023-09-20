@@ -59,24 +59,24 @@
 			<table style="margin-left: auto; margin-right: auto;">
 			<tr>
 				<td><input type="checkbox" name="chk_like" value="action" th:object="${preferDTO}" th:field="*{userLike}" th:checked="${preferDTO.userLike == 'action'}">액션</input></td>
-				<td><input type="checkbox" name="chk_like" value="shooting" th:object="${preferDTO}" th:field="*{userLike}" th:checked="${preferDTO.userLike == 'action adventure'}">슈팅</input></td>
-				<td><input type="checkbox" name="chk_like" value="adventure" th:object="${preferDTO}" th:field="*{userLike}" th:checked="${preferDTO.userLike == 'survival'}">어드벤처</input></td>
-				<td><input type="checkbox" name="chk_like" value="fighting" th:object="${preferDTO}" th:field="*{userLike}" th:checked="${preferDTO.userLike == 'shooting'}">격투</input></td>
-				<td><input type="checkbox" name="chk_like" value="roguelike" th:object="${preferDTO}" th:field="*{userLike}" th:checked="${preferDTO.userLike == 'FPS'}">로그라이크</input></td>
+				<td><input type="checkbox" name="chk_like" value="action adventure" th:object="${preferDTO}" th:field="*{userLike}" th:checked="${preferDTO.userLike == 'action adventure'}">액션 어드벤처</input></td>
+				<td><input type="checkbox" name="chk_like" value="survival" th:object="${preferDTO}" th:field="*{userLike}" th:checked="${preferDTO.userLike == 'survival'}">생존</input></td>
+				<td><input type="checkbox" name="chk_like" value="shooting" th:object="${preferDTO}" th:field="*{userLike}" th:checked="${preferDTO.userLike == 'shooting'}">슈팅</input></td>
+				<td><input type="checkbox" name="chk_like" value="FPS" th:object="${preferDTO}" th:field="*{userLike}" th:checked="${preferDTO.userLike == 'FPS'}">FPS</input></td>
 			</tr>
 			<tr>
 				<td><input type="checkbox" name="chk_like" value="RPG" th:object="${preferDTO}" th:field="*{userLike}" th:checked="${preferDTO.userLike == 'RPG'}">RPG</input></td>
-				<td><input type="checkbox" name="chk_like" value="mmorpg" th:object="${preferDTO}" th:field="*{userLike}" th:checked="${preferDTO.userLike == 'ARPG'}">MMORPG</input></td>
-				<td><input type="checkbox" name="chk_like" value="simulation" th:object="${preferDTO}" th:field="*{userLike}" th:checked="${preferDTO.userLike == 'MMORPG'}">시뮬레이션</input></td>
-				<td><input type="checkbox" name="chk_like" value="sports" th:object="${preferDTO}" th:field="*{userLike}" th:checked="${preferDTO.userLike == 'open world'}">스포츠</input></td>
-				<td><input type="checkbox" name="chk_like" value="puzzle" th:object="${preferDTO}" th:field="*{userLike}" th:checked="${preferDTO.userLike == 'hack and slash'}">퍼즐</input></td>
+				<td><input type="checkbox" name="chk_like" value="ARPG" th:object="${preferDTO}" th:field="*{userLike}" th:checked="${preferDTO.userLike == 'ARPG'}">ARPG</input></td>
+				<td><input type="checkbox" name="chk_like" value="MMORPG" th:object="${preferDTO}" th:field="*{userLike}" th:checked="${preferDTO.userLike == 'MMORPG'}">MMORPG</input></td>
+				<td><input type="checkbox" name="chk_like" value="open world" th:object="${preferDTO}" th:field="*{userLike}" th:checked="${preferDTO.userLike == 'open world'}">오픈 월드</input></td>
+				<td><input type="checkbox" name="chk_like" value="hack and slash" th:object="${preferDTO}" th:field="*{userLike}" th:checked="${preferDTO.userLike == 'hack and slash'}">핵 앤 슬래시</input></td>
 			</tr>
 			<tr>
-				<td><input type="checkbox" name="chk_like" value="arcade" th:object="${preferDTO}" th:field="*{userLike}" th:checked="${preferDTO.userLike == 'adventure'}">아케이드</input></td>
-				<td><input type="checkbox" name="chk_like" value="strat" th:object="${preferDTO}" th:field="*{userLike}" th:checked="${preferDTO.userLike == 'sports'}">전략</input></td>
-				<td><input type="checkbox" name="chk_like" value="horror" th:object="${preferDTO}" th:field="*{userLike}" th:checked="${preferDTO.userLike == 'racing'}">공포</input></td>
-				<td><input type="checkbox" name="chk_like" value="multi" th:object="${preferDTO}" th:field="*{userLike}" th:checked="${preferDTO.userLike == 'casual'}">멀티플레이어</input></td>
-				<td><input type="checkbox" name="chk_like" value="single" th:object="${preferDTO}" th:field="*{userLike}" th:checked="${preferDTO.userLike == 'puzzle'}">싱글플레이어</input></td>
+				<td><input type="checkbox" name="chk_like" value="adventure" th:object="${preferDTO}" th:field="*{userLike}" th:checked="${preferDTO.userLike == 'adventure'}">어드벤처</input></td>
+				<td><input type="checkbox" name="chk_like" value="sports" th:object="${preferDTO}" th:field="*{userLike}" th:checked="${preferDTO.userLike == 'sports'}">스포츠</input></td>
+				<td><input type="checkbox" name="chk_like" value="racing" th:object="${preferDTO}" th:field="*{userLike}" th:checked="${preferDTO.userLike == 'racing'}">레이싱</input></td>
+				<td><input type="checkbox" name="chk_like" value="casual" th:object="${preferDTO}" th:field="*{userLike}" th:checked="${preferDTO.userLike == 'casual'}">캐주얼</input></td>
+				<td><input type="checkbox" name="chk_like" value="puzzle" th:object="${preferDTO}" th:field="*{userLike}" th:checked="${preferDTO.userLike == 'puzzle'}">퍼즐</input></td>
 			</tr>
 		</table>
 		</div>

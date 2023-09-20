@@ -59,6 +59,7 @@ public class JoinController {
 	String page = "";
 	private final UserService userService;
 	private final PreferService preferService;
+	EmailSend emailsend = new EmailSend();
 	
 	public JoinController(UserService userService, PreferService preferService) {
         this.userService = userService;
@@ -99,7 +100,6 @@ public class JoinController {
 		if(ck) { //이메일이 디비에 있다면
 			return "redirect:/login?ad=" + userDTO.getUserEmail(); //로그인 화면으로 넘기기
 		} else { //이메일이 디비에 없다면 -> 새로운 가입
-			//★이때 인증번호 보내기 구현
 			return "redirect:/email_verify?ad=" + userDTO.getUserEmail();
 		}
 	}
@@ -108,19 +108,18 @@ public class JoinController {
 	@GetMapping("email_verify")
 	public String emailVerify(UserDTO userDTO, @RequestParam(value="ad"/*, defaultValue = "" <단계를 안 거친 경우 못 들어오게>*/) String email, Model model) {
 		userDTO.setUserEmail(email);
-		
+		//email.joinEmail(userDTO.getUserEmail());
+		System.out.println("이메일 인증 요청");
 		return "/join/email_vf";
 	}
-	
 	//★post 매핑으로 인증번호 확인 구현 -> 이 매핑 주소를 email_vf.html의 action으로 넣기
 	//+ 이 과정에서 다음 단계인 join_id로 email 주소를 넘겨줘야 함
 	// -> id.html에 hidden으로 이메일값 넣어주기: 칸은 만들어져 있으니 value에 넣기만하면 됨
-	
+
 	//join_id
-	@PostMapping("join_id")
+	@GetMapping("join_id")
 	public String joinId(UserDTO userDTO, Model model) {
 		page = "id";
-		model.addAttribute("userEmail", userDTO.getUserEmail());
 		return "/join/id";
 	}
 	@PostMapping("/check_id") //아이디 중복체크(ajax)

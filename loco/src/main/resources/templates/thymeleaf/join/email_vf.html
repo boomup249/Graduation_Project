@@ -59,6 +59,7 @@
 					background-size: cover;
 					background-position: center;
 					background-repeat: no-repeat;
+					visibility: hidden;
 					width: 80px;
 					height: 80px;
 					border: solid 3px #005982; border-radius: 8px; }
@@ -108,7 +109,7 @@
 					margin-left: -600px; /*item2 시작(마진 및 빈 공간 제외)과 같은 x좌표에서 시작*/
 					}
 			
-			body { background-color: grey;
+			body { background-color: #fff;
 					margin: 0; padding: 0;}
 		</style>
 	</head>
@@ -133,22 +134,23 @@
 				th:object="${userDTO}"
 				method = "post">
 			<div class="item2">
-				<input type="email" th:field="*{userEmail}" placeholder="이메일을 입력하여 시작하세요" required />
+				<input type="email" id="useremail" th:field="*{userEmail}" placeholder="이메일을 입력하여 시작하세요" required />
 				<!--인증번호 재발송 버튼-->
-				<button onclick="action='/email_ck'; submit();" id="sub1">re-send</button>
+				<button type="button" onclick="action='/api/email_auth';" id="sub1">인증번호 전송</button>
 			</div>
 			
 			<div class="code">
-				<p>인증번호 발송이 완료되었습니다.</p> 
+				<p id="warn"></p> 
 			</div>
 			<div class="item3">
-				<input type="text" placeholder="인증번호를 입력해주세요." required />
+				<input type="text" id="mail-check-input" placeholder="인증번호를 입력해주세요." required />
 				<!--인증번호 확인(보내기) 버튼-->
-				<button onclick="action='#'; submit();" id="sub2"></button>
+				<button onclick="action='join_id'; submit();" id="sub2"></button>
 			</div>
 			</form>
 			
 		</div>
 		
+		<script src="js/email.js"></script>
 	</body>
 </html>

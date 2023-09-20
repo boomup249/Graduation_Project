@@ -1,7 +1,13 @@
 package com.yuhan.loco.user;
 
 import java.sql.Date;
+import java.util.Random;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+
+import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +19,7 @@ public class UserService {
    private final UserRepository userRepository;
    private final PasswordEncoder passwordEncoder;
    UserDB user = new UserDB();
+   
    
    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
@@ -75,13 +82,8 @@ public class UserService {
          ck2 = false;
       }
       
-      user = new UserDB(); //초기화
+      user = null;
       
       return ck2;
    }
-   public UserDB findUser(String id) {
-       UserDB userdb = this.userRepository.findByID(id);
-       return userdb;
-   }
-   //암호화는 한번만 실행되어야 함 (반복 호출 시 암호화 값이 달라져서 비밀번호가 달라짐. 그래서 어떤 방법으로도 DB와 일치시킬 수 없음)
 }

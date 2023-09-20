@@ -1,51 +1,128 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>프로필 페이지</title>
-    <link rel="stylesheet" th:href="@{/css/myaccount.css}" href="/css/myaccount.css">
-</head>
-<body background="#222831">
-	<div id="logo">
-		<div class="link">
-			<a href="/main"><img src="imgs/header/logo.png"/></a>
+<html xmlns="https://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+		<title>loco</title>
+		
+		<!--css 화면 설정 
+		헤더 - #393E50
+		백그라운드 - #222831
+		포인트 컬러(버튼): #19D3DA
+		-->
+		<style>
+			*{
+				margin: 0;
+				padding: 0;
+			}
+			.container{
+				width: 0 auto;
+				margin: 0 auto;
+			}
+			.left{
+				top:0%;
+				width: 30%;
+				height:100%;
+				float: left;
+				background-color:#393E50 ;
+			}
+			.box1{
+				width:68%; height:30%; float:right;/*레이아웃을 오른쪽에 배치*/
+				background:#393E50;
+				margin: 10px;
+			}
+			
+			.box2{
+				width:68%; height:65%; float:right;/*레이아웃을 오른쪽에 배치*/
+				background:#393E50;
+				margin:10px	
+			}
+			.imgbox{
+				width: 850px;
+			    height: 850px; 
+			    border-radius: 70%;
+			    position: relative;
+			    left: 710px;
+			    top : 300px;
+			    overflow: hidden;
+			}
+			.img{
+				width: 100%;
+			    height:100%;
+			    object-fit: cover;
+			}
+			.userid{
+				font-size: medium;
+			}
+			#btn1{
+				border:none;
+				background-color: #393E50;
+				color:ghostwhite;
+				width: 60cm;
+				height: 10cm;
+				font-size: 200px;
+				position: relative;
+				top:0px;
+				left:0px;
+			}
+			#btn1:hover{
+				color:ghostwhite;
+				background-color:#CCCCCC;
+			}
+			#box1_btn{
+				border:none;
+				background-color: white;
+				color:black;
+				font-size: 100px;
+				float: right;
+				width: 14cm;
+				height: 7cm;
+				border-radius: 20px;
+				margin-right: 20px;
+				margin-top:20px;
+			}
+			#box1_btn:hover{
+				color:black;
+				background-color: lightgrey;
+			}
+			.profile_text{
+				font-size: 100px;
+				color: white;
+				position: relative;
+				left: 710px;
+			    top : 500px;
+				
+			}
+		</style>
+	</head>
+	<body bgcolor="#222831">
+	<div class="container">
+		<div id="logo">
+			<div class="link">
+				<a href="/main"><img src="imgs/header/logo.png"/></a>
+			</div>
+		</div>
+		<div class="left" >
+			<div class="imgbox" style="background: white;">
+				<img class="img" src="/imgs/profileimg.jpg">
+			</div>
+			<span class="profile_text">요기에 이름.. </span><br>
+			<span class="profile_text">요기는 이메일..</span>
+			<hr align="left" style="border: solid 3px ghostwhite; width: 960dp; margin-top: 35%;">
+			<button id="btn1">프로필</button>
+			<button id="btn1">내 계정</button>
+		</div>
+		
+		<div class="box1" >
+			<button id = "box1_btn">수정</button>
+			<hr align="left" style="border: solid 3px ghostwhite; width: 960dp; margin-top: 6%;">
+			<button id = "box1_btn" style="margin-top: 70px;">수정</button>
+			<hr align="left" style="border: solid 3px ghostwhite; width: 960dp; margin-top: 8%;">
+			<button id = "box1_btn" style="margin-top: 60px;">수정</button>
+		</div>
+		
+		<div class="box2"></div>
 		</div>
 	</div>
-	<!-- 왼쪽 박스 -->
-	<div id="left_box">
-		<div class="imgbox">
-			<img class="img" src="/imgs/profileimg.jpg">
-		</div>
-		<span class="left_id" th:text="${userDTO.getID()}"></span>
-		<span class="left_email" th:text="${userDTO.getEMAIL()}"></span>
-		<hr style="border: 1 solid white;width: 100%;position: absolute;top: 46%;left: 0%; ">
-		<button type="button" class="left_btn1">내 계정</button>
-		<button type="button" class="left_btn2">프로필</button>
-	</div>
-	
-	<!-- 오른쪽 첫번째 박스 -->
-	<span id="right_span1">기본 정보</span>
-	<div id = "right_box1">
-		<span class="right_id" th:text="${userDTO.getID()}"></span>
-		<button type="button" class="id_btn">수정</button>
-		<hr style="border: 1 solid white; width: 100%; position: absolute;top: 30%;left: 0%;">
 		
-		<span class="right_email" th:text="${userDTO.getEMAIL()}"></span>
-		<button type="button" class="email_btn" onclick="location.href='/join/join_id'";>수정</button>
-		<hr style="border: 1 solid white; width: 100%; position: absolute;top: 60%;left: 0%;">
-		
-		<span class="right_pwd" th:text="${userDTO.getBIRTH()}"></span>
-		<button type="button" class="birth_btn">수정</button>
-	</div>
-	
-	
-	
-	<span id="right_span2">기타 설정</span>
-	<div id = "right_box2">
-		<span th:text="${preferDTO.getAction_adventure()}"></span>
-		
-	</div>
-	
+	</body>
 
-</body>
 </html>

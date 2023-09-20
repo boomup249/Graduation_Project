@@ -1,47 +1,108 @@
 package com.yuhan.loco.game;
 
-import java.sql.Date;
+import java.sql.*;
 
-import org.springframework.security.crypto.password.PasswordEncoder;
+import javax.sql.DataSource;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import jakarta.transaction.Transactional;
-
 @Service
-@Transactional
 public class GameService {
-   private final GameRepository gameRepository;
-   GameDB game = new GameDB();
-   
-   public GameService(GameRepository gameRepository) {
-        this.gameRepository = gameRepository;
-    }
-   
-   public GameDB create(String TITLE, String PRICE, String SALEPRICE, String SALEPER, String DESCRIPTION,String IMGDATA, String GAMEIMG, String URL) {
-      game.setTITLE(TITLE);
-      game.setPRICE(PRICE);
-      game.setSALEPRICE(SALEPRICE);
-      game.setSALEPER(SALEPER);
-      game.setDESCRIPTION(DESCRIPTION);
-      game.setIMGDATA(IMGDATA);
-      game.setGAMEIMG(GAMEIMG);
-      game.setURL(URL);
-      
-
-      System.out.println("----repository----");
-      System.out.println(game.getNUM());
-      System.out.println(game.getPRICE());
-      System.out.println(game.getSALEPRICE());
-      System.out.println(game.getSALEPER());
-      System.out.println(game.getDESCRIPTION());
-      System.out.println(game.getIMGDATA());
-      System.out.println(game.getGAMEIMG());
-      System.out.println(game.getURL());
-      
-      
-      this.gameRepository.save(game);   
-      return game;
-   }
-   
-  
+	//전역
+	ResultSet rs = null;
+	PreparedStatement pstmt = null;
+	Statement stmt = null;
+	
+	
+	//count
+	public int count() {
+		int cnt = 0;
+		
+		//connetion
+		Connection con = GameConnection.getCon();
+		
+		try {
+			String sql = "select count(*) from game";
+			stmt = con.createStatement();
+			rs = stmt.executeQuery(sql);
+			
+			if(rs.next()) {
+				cnt = rs.getInt(1);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(rs != null) {
+					rs.close();
+				}
+				
+				if(stmt != null) {
+					stmt.close();
+				}
+				
+				if(con != null) {
+					con.close();
+				}
+			}catch (SQLException e) {
+				System.out.println("count close할 때 문제 발생");
+			}
+		}
+		
+		System.out.println(cnt);
+		return cnt;
+	}
+	
+	//select
+	public GameDTO select(int index) {
+		GameDTO gameDTO = new GameDTO(index, null, null, null, null, null);
+		
+		//connetion
+		Connection con = GameConnection.getCon();
+		
+		try {
+			String sql = "select * from game where seq = ?";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, index);
+			
+			rs = pstmt.executeQuery();
+			
+			while (rs.next()) {
+				gameDTO.setRanking(rs.getInt("ranking"));
+				gameDTO.setGameName(rs.getString("name"));
+				gameDTO.setGameUrl(rs.getString("url"));
+				
+				//출력
+				System.out.println("----gamedto(service)----");
+				System.out.println(gameDTO.getRanking());
+				System.out.println(gameDTO.getGameName());
+				System.out.println(gameDTO.getGameUrl());
+			}
+			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(rs != null) {
+					rs.close();
+				}
+				
+				if(pstmt != null) {
+					stmt.close();
+				}
+				
+				if(con != null) {
+					con.close();
+				}
+			}catch (SQLException e) {
+				System.out.println("select close할 때 문제 발생");
+			}
+		}
+		
+		return gameDTO;
+	}
+	
 }

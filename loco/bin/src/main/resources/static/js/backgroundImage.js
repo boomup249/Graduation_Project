@@ -1,15 +1,11 @@
 //이미지 링크 배열
 var images = [
-	      "imgs/background_imgs/APEX.jpg",
-	      "imgs/background_imgs/battleground.png",
-	      "imgs/background_imgs/callofduty.jpg",
-	      "imgs/background_imgs/counterstrike.jpg",
-	      "imgs/background_imgs/destiny.jpg",
-	      "imgs/background_imgs/Halo.jpg",
-	      "imgs/background_imgs/humanfallflat.jpg",
-	      "imgs/background_imgs/mario.jpg",
-	      "imgs/background_imgs/tekken.jpg",
-	      "imgs/background_imgs/zelda.jpg"
+	      "https://cdn.cloudflare.steamstatic.com/steam/apps/578080/header.jpg?t=1689138385",//PUBG : BG
+	      "https://cdn.cloudflare.steamstatic.com/steam/apps/671860/header.jpg?t=1686877598", //BattleBit Remastered
+	      "https://cdn.cloudflare.steamstatic.com/steam/apps/1049590/header_alt_assets_3.jpg?t=1689230639", //이터널 리턴
+	      "https://cdn.cloudflare.steamstatic.com/steam/apps/1426210/header_koreana.jpg?t=1679951279", //It Takes Two
+	      "https://cdn.cloudflare.steamstatic.com/steam/apps/381210/header.jpg?t=1687878531", //Dead by Daylight
+	      "https://cdn.cloudflare.steamstatic.com/steam/apps/477160/header_alt_assets_1.jpg?t=1688117179" //Human: Fall Flat
 	      ];
 	      
 //이전 인덱스와 겹칠 경우, 다시 랜덤하기 위함

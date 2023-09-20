@@ -15,8 +15,137 @@ body {
 .link img {height: 50px;} /*로고 이미지*/
 .link a {float: left; margin-left: 25px;} /*왼쪽 정렬, 마진 25px*/
 
+/* 프로필 수정 부분 (주영 외 수정 금지!) */
+	/*내용*/
+        #content {
+			margin-left: 900px;
+		    display: flex;
+		    flex-direction: column;
+		    align-items: center;
+		    justify-content: center;
+		    height: calc(100vh - 100px); /* 헤더 높이를 제외한 높이 */
+		}
+        
+		.info p {font-family: 'GmarketSansMedium';
+					font-size: 25pt;
+					color: #FFFFFF}
+					
+        /* 입력란 */
+       input[type=email], input[type=text], input[type=password] {
+		    width: 350px;
+		    height: 40px;
+		    padding-left: 30px;
+		    font-family: 'GmarketSansMedium';
+		    font-size: 10pt;
+		    border: 1px solid #ccc;
+		    border-radius: 5px;
+		    margin-bottom: 10px; 
+			display: inline-block;
+		}
 
-/*왼쪽 박스*/
+		/* 중복확인 버튼 스타일 */
+		.edit_id {
+		    display: flex;
+		    align-items: center;
+		    margin-left: 90px;
+		}
+		
+		.edit_id input[type="text"] {
+		    width: 350px;
+		    height: 40px;
+		    padding-left: 30px;
+		    font-family: 'GmarketSansMedium';
+		    font-size: 10pt;
+		    border: 1px solid #ccc;
+		    border-radius: 5px;
+		    margin-right: 10px; /* 입력란 오른쪽 간격 조절 */
+		}
+		
+		.edit_id button#checkDuplicate {
+		    width: 80px;
+		    height: 40px;
+		    font-family: 'GmarketSansMedium';
+		    font-size: 10pt;
+		    border: none;
+		    border-radius: 5px;
+		    cursor: pointer;
+		}
+
+        /* 수정 완료 버튼 스타일 */
+        #modifyComplete {
+            width: 150px;
+            height: 40px;
+            font-family: 'GmarketSansMedium';
+            font-size: 10pt;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #19D3DA;
+            color: white;
+        }
+
+        /* 취소 버튼 스타일 */
+        #cancel {
+            width: 150px;
+            height: 40px;
+            font-family: 'GmarketSansMedium';
+            font-size: 10pt;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #A6A6A6;
+            color: white;
+        }
+        
+       /*위치 잡기*/
+       .info p {
+		   margin-bottom: 50px;
+           white-space: nowrap;
+           /*자식 중앙정렬*/
+		   display: flex;
+		   justify-content: center;
+		   align-items: center; }
+   
+       .edit_email {
+			position: relative;
+			/*자식 중앙정렬*/
+			display: flex;
+			justify-content: center;
+			align-items: center;}
+       .edit_id {
+			position: relative;
+			/*자식 중앙정렬*/
+			display: flex;
+			justify-content: center;
+			align-items: center;}
+		
+       .edit_pw {
+			position: relative;
+			/*자식 중앙정렬*/
+			display: flex;
+			justify-content: center;
+			align-items: center;}
+       .pwchk {
+			position: relative;
+			/*자식 중앙정렬*/
+			display: flex;
+			justify-content: center;
+			align-items: center;}
+		.btn-complete {
+			position: relative;
+			/*자식 중앙정렬*/
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+		
+	/* 버튼 사이 마진 조정 */
+        .btn-complete button {
+            margin: 10px;
+        }
+
+
+/* 왼쪽 박스 (혜민 외 수정 금지!) */
 #left_box{
 	width: 30%; 
 	height:100%; 
