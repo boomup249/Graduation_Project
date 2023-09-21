@@ -1,9 +1,24 @@
 @charset "UTF-8";
 
 /*폰트*/
+
+			@font-face {
+						    font-family: 'GmarketSansLight';
+						    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansLight.woff') format('woff');
+						    font-weight: normal;
+						    font-style: normal;
+						}
+
 			@font-face {
 						    font-family: 'GmarketSansMedium';
 						    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
+						    font-weight: normal;
+						    font-style: normal;
+						}
+			
+			@font-face {
+						    font-family: 'GmarketSansBold';
+						    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansBold.woff') format('woff');
 						    font-weight: normal;
 						    font-style: normal;
 						}
@@ -26,6 +41,27 @@
 			@font-face {
 						    font-family: 'IAMAPLAYER';
 						    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2307-2@1.0/IAMAPLAYER.woff2') format('woff2');
+						    font-weight: normal;
+						    font-style: normal;
+						}
+						
+			@font-face {
+						    font-family: 'HS-Regular';
+						    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/HS-Regular.woff') format('woff');
+						    font-weight: normal;
+						    font-style: normal;
+						}
+						
+			@font-face {
+						    font-family: 'GangwonEdu_OTFBoldA';
+						    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/GangwonEdu_OTFBoldA.woff') format('woff');
+						    font-weight: normal;
+						    font-style: normal;
+						}
+						
+			@font-face {
+						    font-family: 'HSBombaram21-Regular';
+						    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2302@1.0/HSBombaram21-Regular.woff2') format('woff2');
 						    font-weight: normal;
 						    font-style: normal;
 						}

@@ -27,128 +27,39 @@ public class PreferDB {
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID", referencedColumnName = "ID", insertable = false, updatable = false)
 	private UserDB userDB;
-	private String action;
-	private String shooting;
-	private String adventure;
-	private String fighting;
-	private String roguelike;
-	private String RPG;
-	private String MMORPG;
-	private String simulation;
-	private String sports;
-	private String puzzle;
-	private String arcade;
-	private String strat;
-	private String horror;
-	private String multi;
-	private String single;
+	private String love;
+	private String dislike;
 	
-	
-	//getter setter
-	//장르
 	public String getID() {
 		return ID;
 	}
-	public void setID(String id) {
-		ID = id;
+	public void setID(String iD) {
+		ID = iD;
 	}
-	public UserDB getuserDB() {
+	public UserDB getUserDB() {
 		return userDB;
 	}
-	public void setuserDB(UserDB userDB) {
+	public void setUserDB(UserDB userDB) {
+		
 		this.userDB = userDB;
 		this.ID = userDB.getID();
 	}
-	public String getAction() {
-		return action;
+	
+	public String getLove() {
+		return love;
 	}
-	public void setAction(String action) {
-		this.action = action;
+	public void setLove(String love) {
+		this.love = love;
 	}
-	public String getShooting() {
-		return shooting;
+	public String getDislike() {
+		return dislike;
 	}
-	public void setShooting(String shooting) {
-		this.shooting = shooting;
+	public void setDislike(String dislike) {
+		this.dislike = dislike;
 	}
-	public String getAdventure() {
-		return adventure;
-	}
-	public void setAdventure(String adventure) {
-		this.adventure = adventure;
-	}
-	public String getFighting() {
-		return fighting;
-	}
-	public void setFighting(String fighting) {
-		this.fighting = fighting;
-	}
-	public String getRoguelike() {
-		return roguelike;
-	}
-	public void setRoguelike(String roguelike) {
-		this.roguelike = roguelike;
-	}
-	public String getRPG() {
-		return RPG;
-	}
-	public void setRPG(String rPG) {
-		RPG = rPG;
-	}
-	public String getMMORPG() {
-		return MMORPG;
-	}
-	public void setMMORPG(String mMORPG) {
-		MMORPG = mMORPG;
-	}
-	public String getSimulation() {
-		return simulation;
-	}
-	public void setSimulation(String simulation) {
-		this.simulation = simulation;
-	}
-	public String getSports() {
-		return sports;
-	}
-	public void setSports(String sports) {
-		this.sports = sports;
-	}
-	public String getPuzzle() {
-		return puzzle;
-	}
-	public void setPuzzle(String puzzle) {
-		this.puzzle = puzzle;
-	}
-	public String getArcade() {
-		return arcade;
-	}
-	public void setArcade(String arcade) {
-		this.arcade = arcade;
-	}
-	public String getStrat() {
-		return strat;
-	}
-	public void setStrat(String strat) {
-		this.strat = strat;
-	}
-	public String getHorror() {
-		return horror;
-	}
-	public void setHorror(String horror) {
-		this.horror = horror;
-	}
-	public String getMulti() {
-		return multi;
-	}
-	public void setMulti(String multi) {
-		this.multi = multi;
-	}
-	public String getSingle() {
-		return single;
-	}
-	public void setSingle(String single) {
-		this.single = single;
-	}
+	
+	
+	
 
 	
 	

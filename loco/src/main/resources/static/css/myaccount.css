@@ -10,10 +10,11 @@ body {
 					position: absolute;
 					top: 0px;
 					left: 0px;
-					width: 100%; height: 50px; /*logo 담을 가상 헤더 header 100px 고정 -> 50 + 25 + 25*/ 
+					width: 50px; height: 50px; /*logo 담을 가상 헤더 header 100px 고정 -> 50 + 25 + 25*/ 
 					padding-top: 25px; padding-bottom: 25px;}
 .link img {height: 50px;} /*로고 이미지*/
 .link a {float: left; margin-left: 25px;} /*왼쪽 정렬, 마진 25px*/
+
 
 /* 프로필 수정 부분 (주영 외 수정 금지!) */
 	/*내용*/
@@ -98,33 +99,23 @@ body {
         }
         
        /*위치 잡기*/
-       .info p {
-		   margin-bottom: 50px;
-           white-space: nowrap;
-           /*자식 중앙정렬*/
-		   display: flex;
-		   justify-content: center;
-		   align-items: center; }
    
        .edit_email {
-			position: relative;
-			/*자식 중앙정렬*/
-			display: flex;
-			justify-content: center;
-			align-items: center;}
-       .edit_id {
-			position: relative;
-			/*자식 중앙정렬*/
-			display: flex;
-			justify-content: center;
-			align-items: center;}
+			position: absolute;
+			top: 40%;
+			left:0%;
+			background-color: #222831;
+			color: white;
+			}
+       .edit_Id {
+			position: absolute;
+			top: 5%;
+			left:0%;}
 		
        .edit_pw {
-			position: relative;
-			/*자식 중앙정렬*/
-			display: flex;
-			justify-content: center;
-			align-items: center;}
+			position: absolute;
+			top: 71%;
+			left:0%;}
        .pwchk {
 			position: relative;
 			/*자식 중앙정렬*/
@@ -138,14 +129,10 @@ body {
 			justify-content: center;
 			align-items: center;
 		}
-		
-	/* 버튼 사이 마진 조정 */
-        .btn-complete button {
-            margin: 10px;
-        }
 
 
 /* 왼쪽 박스 (혜민 외 수정 금지!) */
+
 #left_box{
 	width: 30%; 
 	height:100%; 
@@ -156,11 +143,11 @@ body {
 	left: 0%; 
 }
 .imgbox{
-	width: 200px; 
-    height: 200px;  
+	width: 150px; 
+    height: 150px;  
     border-radius: 70%; 
     position: absolute; 
-    left: 30%; 
+    left: 32%; 
     top : 12%; 
     overflow: hidden; 
 }
@@ -174,14 +161,14 @@ body {
 	color: white;
 	position: absolute;
 	top: 35%;
-	left : 30%;
+	left : 37%;
 }
 .left_email{
 	font-size: 30px;
 	color: white;
 	position: absolute;
-	top: 38%;
-	left : 30%;
+	top: 40%;
+	left : 27%;
 }
 
 /*왼쪽 계정버튼*/
@@ -191,9 +178,9 @@ body {
 	width: 100%;
 	height: 10%;
 	background-color: #393E50;
-	font-size: 45px;  
+	font-size: 40px;  
 	position: absolute; 
-	top:47%; 
+	top:52%; 
 	left:0px;
 }
 .left_btn1:hover{ 
@@ -207,9 +194,9 @@ body {
 	width: 100%;
 	height: 10%;
 	background-color: #393E50;
-	font-size: 45px;  
+	font-size: 40px;  
 	position: absolute; 
-	top:57%; 
+	top:62%; 
 	left:0px;
 }
 .left_btn2:hover{ 
@@ -219,6 +206,7 @@ body {
 
 /* right_box1 */
 #right_box1{
+	z-index: 1;
 	width: 69%; 
 	height:30%; 
 	float: right;
@@ -229,14 +217,14 @@ body {
 	margin: 0.5%;
 }
 
-/*오른쪽 박스 글자*/
+/*오른쪽 박스 span */
 #right_span1{
 	font-size: 20px;
 	color: white;
 	position: absolute;
 	top: 0%;
 	left: 30%;
-	margin: 0.5%;
+	margin-left: 0.5%;
 }
 #right_span2{
 	font-size: 20px;
@@ -244,58 +232,49 @@ body {
 	position: absolute;
 	top: 35%;
 	left: 30%;
-	margin: 0.5%;
+	margin-left: 0.5%;
 }
 
-/* right_box2 */
-#right_box2{
-	width: 69%;
-	height: 60%;
-	float: right;
-	background-color:#393E50;
-	position: absolute;
-	top: 38%;
-	left: 30%;
-	margin: 0.5%;
-}
-/*오른쪽 박스 span */
+/*오른쪽첫번째 박스 컴포넌트*/
 .right_id{
-	font-size: 50px;
+	font-size: 30px;
 	color: white;
 	float: left;
-	margin-left: 3%;
+	margin-left: 1.5%;
+	margin-top:1%;
+	
 }
 .right_email{
-	font-size: 50px;
+	font-size: 30px;
 	color: white;
 	float: left;
 	margin-left: 3%;
 	position: absolute;
 	top: 30%;
 	left: 0%;
-	margin-left: 3%;
-	margin-top: 1%;
+	margin-left: 1.5%;
+	margin-top:1.5%;
 }
 .right_pwd{
-	font-size: 50px;
+	font-size: 30px;
 	color: white;
 	float: left;
 	margin-left: 3%;
 	position: absolute;
 	top: 60%;
 	left: 0%;
-	margin-left: 3%;
-	margin-top: 1.5%;
+	margin-left: 1.5%;
+	margin-top:2%;
 }
 /* 오른쪽 수정 버튼 */
 .id_btn{
 	background-color: white;
 	border: none;
-	width: 100px;
-	height: 50px;
+	width: 80px;
+	height: 30px;
 	float: right;
 	border-radius: 20%;
-	font-size: 25px;
+	font-size: 15px;
 	margin-top: 1.5%;
 	margin-right: 3%;
 	position: absolute;
@@ -311,11 +290,11 @@ body {
 .email_btn{
 	background-color: white;
 	border: none;
-	width: 100px;
-	height: 50px;
+	width: 80px;
+	height: 30px;
 	float: right;
 	border-radius: 20%;
-	font-size: 25px;
+	font-size: 15px;
 	margin-top: 2%;
 	margin-right: 3%;
 	position: absolute;
@@ -327,14 +306,14 @@ body {
 	background-color:#CCCCCC;
 }
 
-.birth_btn{
+.pwd_btn{
 	background-color: white;
 	border: none;
-	width: 100px;
-	height: 50px;
+	width: 80px;
+	height: 30px;
 	float: right;
 	border-radius: 20%;
-	font-size: 25px;
+	font-size: 15px;
 	margin-top: 2.5%;
 	margin-right: 3%;
 	position: absolute;
@@ -342,10 +321,28 @@ body {
 	left: 90%;
 	
 }
-.birth_btn:hover{
+.pwd_btn:hover{
 	color:ghostwhite; 
 	background-color:#CCCCCC;
 }
 
 
 
+
+/* right_box2 */
+#right_box2{
+	width: 69%;
+	height: 60%;
+	float: right;
+	background-color:#393E50;
+	position: absolute;
+	top: 38%;
+	left: 30%;
+	margin: 0.5%;
+}
+.container table tr th{
+	text-align: center;
+	vertical-align: middle;
+	word-break: keep-all;
+	padding-right: 3em;
+}

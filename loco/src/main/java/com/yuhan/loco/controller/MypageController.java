@@ -66,5 +66,23 @@ public class MypageController {
         }
 	
 	
+	@GetMapping("/mypage")
+    public String Mypage(Model model, HttpServletRequest req) {
+        String userId;
+
+        if(req.getSession(false) != null) { //로그인?
+            HttpSession session = req.getSession(false);
+            userId = (String)session.getAttribute("user");
+
+            UserDB userdb = userService.findUser(userId);
+            PreferDB preferdb = preferService.findUser(userId);
+
+            model.addAttribute("userDTO", userdb);
+            model.addAttribute("preferDTO", preferdb);
+        }
+        page = "mypage";
+		return "/mypage/mypage";
+	}
+	
 	
 }
