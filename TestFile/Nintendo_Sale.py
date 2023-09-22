@@ -35,52 +35,51 @@ conn = MySQLdb.connect(
 cursor = conn.cursor()
 
 # 실행할 때마다 다른값이 나오지 않게 테이블을 제거해두기
-cursor.execute("DROP TABLE IF EXISTS gamedata_genre")
-cursor.execute("DROP TABLE IF EXISTS gamedata_info")
+cursor.execute("DROP TABLE IF EXISTS gamedata_switch_genre")
+cursor.execute("DROP TABLE IF EXISTS gamedata_switch")
 
-#rank에 AUTO_INCREMENT를 사용함으로써 INSERT가 입력될때마다 자동으로 숫자를 +1 올린다
-cursor.execute('''CREATE TABLE IF NOT EXISTS gamedata_info (`NUM` INT NOT NULL AUTO_INCREMENT,
-                                                            `TITLE` VARCHAR(100) NULL DEFAULT NULL,
-                                                            `PLATFORM` VARCHAR(10) NULL DEFAULT NULL,
-                                                            `PRICE` VARCHAR(15) NULL DEFAULT NULL,
-                                                            `SALEPRICE` VARCHAR(15) NULL DEFAULT NULL,
-                                                            `SALEPER` VARCHAR(5) NULL DEFAULT NULL,
-                                                            `DESCRIPTION` TEXT NULL DEFAULT NULL,
-                                                            `IMGDATA` TEXT NULL DEFAULT NULL,
-                                                            `GAMEIMG` TEXT NULL DEFAULT NULL,
-                                                            `URL` TEXT NULL DEFAULT NULL,
-                                                            PRIMARY KEY (`NUM`),
-                                                            UNIQUE KEY (`TITLE`))
-            ''')
+cursor.execute('''CREATE TABLE IF NOT EXISTS gamedata_switch (`NUM` INT NOT NULL AUTO_INCREMENT,
+                                                              `TITLE` VARCHAR(100) NULL DEFAULT NULL,
+                                                              `PRICE` VARCHAR(15) NULL DEFAULT NULL,
+                                                              `SALEPRICE` VARCHAR(15) NULL DEFAULT NULL,
+                                                              `SALEPER` VARCHAR(5) NULL DEFAULT NULL,
+                                                              `DESCRIPTION` TEXT NULL DEFAULT NULL,
+                                                              `IMGDATA` TEXT NULL DEFAULT NULL,
+                                                              `GAMEIMG` TEXT NULL DEFAULT NULL,
+                                                              `URL` TEXT NULL DEFAULT NULL,
+                                                              PRIMARY KEY (`NUM`),
+                                                              UNIQUE KEY (`TITLE`))
+               ''')
 
-cursor.execute('''CREATE TABLE IF NOT EXISTS gamedata_genre (`NUM` INT NOT NULL AUTO_INCREMENT,
-                                                             `TITLE` VARCHAR(100) NULL DEFAULT NULL,
-                                                             `PLATFORM` VARCHAR(10) NULL DEFAULT NULL,
-                                                             `GENRE` VARCHAR(30) NULL DEFAULT NULL,
-                                                             PRIMARY KEY (`NUM`),
-                                                             CONSTRAINT `game_title`
-                                                                FOREIGN KEY (`TITLE`)
-                                                                REFERENCES `gamedata_info` (`TITLE`)
-                                                                ON DELETE CASCADE
-                                                                ON UPDATE CASCADE)
+cursor.execute('''CREATE TABLE IF NOT EXISTS gamedata_switch_genre (`NUM` INT NOT NULL AUTO_INCREMENT,
+                                                                    `TITLE` VARCHAR(100) NULL DEFAULT NULL,
+                                                                    `GENRE` VARCHAR(30) NULL DEFAULT NULL,
+                                                                    PRIMARY KEY (`NUM`),
+                                                                    CONSTRAINT `switch_title`
+                                                                        FOREIGN KEY (`TITLE`)
+                                                                        REFERENCES `gamedata_switch` (`TITLE`)
+                                                                        ON DELETE CASCADE
+                                                                        ON UPDATE CASCADE)
                ''')
 
 URL = 'https://store.nintendo.co.kr/games/sale'
-platform = 'nintendo'
 
 #크롬드라이버 옵션 설정
 services = Service(executable_path=ChromeDriverManager().install())
 options = Options()
 options.add_experimental_option("detach", True)
+options.add_argument("headless")
 options.add_argument("disable-gpu")
 options.add_argument("lang=ko_KR")
+options.add_argument('window-size=1920x1080')
 options.add_argument('user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36')
-options.add_argument("headless")
 
 driver = webdriver.Chrome(service=services, options=options)
 driver.implicitly_wait(5)
-driver.set_window_size(1400,800)
+#driver.set_window_size(1400,800)
 driver.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument", {"source": """ Object.defineProperty(navigator, 'webdriver', { get: () => undefined }) """})
+driver.execute_script("Object.defineProperty(navigator, 'plugins', {get: function() {return[1, 2, 3, 4, 5];},});")
+driver.execute_script("Object.defineProperty(navigator, 'languages', {get: function() {return ['ko-KR', 'ko']}})")
 driver.get(URL)
 
 sleep(2)
@@ -134,10 +133,10 @@ for item in gamelist:
 
     error = new_soup.select_one('h1')
     if error.text == '403 Forbidden':
-        print("5분간 일시정지(403 forbidden 오류 회피를 위해)")
+        print("4분30초간 일시정지(403 forbidden 오류 회피를 위해)")
         driver.close()
         driver.switch_to.window(driver.window_handles[-1])
-        sleep(300)
+        sleep(270)
         print("재실행")
         driver.execute_script(f'window.open(\'{move}\');')
         driver.switch_to.window(driver.window_handles[-1])
@@ -162,8 +161,8 @@ for item in gamelist:
         gameimg = new_soup.select_one('img.fotorama__img')
     gameimg = gameimg["src"]
 
-    sql = 'INSERT INTO gamedata_info (TITLE, PLATFORM, PRICE, SALEPRICE, SALEPER, DESCRIPTION, IMGDATA, GAMEIMG, URL) VALUES (%s, %s, %s, %s, %s, %s, %s, %s ,%s)'
-    cursor.execute(sql, (title, platform, price, saleprice, saleper, description, imgdata, gameimg, move))
+    sql = 'INSERT INTO gamedata_switch (TITLE, PRICE, SALEPRICE, SALEPER, DESCRIPTION, IMGDATA, GAMEIMG, URL) VALUES (%s, %s, %s, %s, %s, %s, %s ,%s)'
+    cursor.execute(sql, (title, price, saleprice, saleper, description, imgdata, gameimg, move))
 
     tagparent = new_soup.find("div", class_="product-attribute game_category")
     if tagparent != None:
@@ -173,8 +172,8 @@ for item in gamelist:
 
         while num < tag_length:
             tag[num] = tag[num].strip()
-            sql = 'INSERT INTO gamedata_genre (TITLE, PLATFORM, GENRE) VALUES (%s, %s, %s)'
-            cursor.execute(sql, (title, platform, tag[num]))
+            sql = 'INSERT INTO gamedata_switch_genre (TITLE, GENRE) VALUES (%s, %s)'
+            cursor.execute(sql, (title, tag[num]))
             num += 1
     
     i+=1

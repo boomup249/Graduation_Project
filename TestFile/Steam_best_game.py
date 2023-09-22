@@ -165,9 +165,9 @@ for item in gamelist:
         new_soup = BeautifulSoup(new_html, "html.parser")
         """
 
-    gameimg = new_soup.select_one('img.game_header_image_full')
+    imgdata = new_soup.select_one('img.game_header_image_full')
 
-    if gameimg == None:
+    if imgdata == None:
         mode = 1
         driver.execute_script(f'window.open(\'{move}\');')
         driver.switch_to.window(driver.window_handles[-1])
@@ -178,12 +178,15 @@ for item in gamelist:
             sleep(3)
         new_html = driver.page_source
         new_soup = BeautifulSoup(new_html, "html.parser")
-        gameimg = new_soup.select_one('img.game_header_image_full') 
-        if gameimg == None:
-            gameimg = new_soup.select_one('img.package_header')
+        imgdata = new_soup.select_one('img.game_header_image_full') 
+        if imgdata == None:
+            imgdata = new_soup.select_one('img.package_header')
 
-    if gameimg != None:
-        gameimg = gameimg["src"]
+    if imgdata != None:
+        imgdata = imgdata["src"]
+
+    gameimg = new_soup.select_one('div.highlight_strip_item highlight_strip_screenshot > img')
+    gameimg = gameimg["src"]
 
     description = new_soup.select_one("div.game_description_snippet")
     if description != None:
