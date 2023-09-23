@@ -62,7 +62,7 @@ public class MypageController {
 
         page = "profile";
 
-        return "profile"; //여기 주소만 고쳐
+        return "/myaccount/profile"; //여기 주소만 고쳐
         }
 	
 	
@@ -81,7 +81,7 @@ public class MypageController {
             model.addAttribute("preferDTO", preferdb);
         }
         page = "mypage";
-		return "/mypage/mypage";
+		return "/myaccount/mypage";
 	}
 	
 	

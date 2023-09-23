@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.yuhan.loco.game.GameDTO;
-import com.yuhan.loco.game.GameService;
 import com.yuhan.loco.prefer.PreferService;
 
 import java.util.ArrayList;
