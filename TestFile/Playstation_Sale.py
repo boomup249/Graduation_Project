@@ -224,7 +224,7 @@ for roof in range(1000000):
         
         
         try:
-            sql = 'INSERT INTO gamedata_info (TITLE, PRICE, SALEPRICE, SALEPER, DESCRIPTION, IMGDATA, GAMEIMG, URL) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)'
+            sql = 'INSERT INTO gamedata_ps (TITLE, PRICE, SALEPRICE, SALEPER, DESCRIPTION, IMGDATA, GAMEIMG, URL) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)'
             cursor.execute(sql, (title, price, saleprice, saleper, description, imgdata, gameimg, move))
             
             tagparent = new_soup.find("dd", {'data-qa':'gameInfo#releaseInformation#genre-value'})
@@ -235,7 +235,7 @@ for roof in range(1000000):
             
             while num < tag_length:
                 tag[num] = tag[num].strip()
-                sql = 'INSERT INTO gamedata_genre (TITLE, GENRE) VALUES (%s, %s)'
+                sql = 'INSERT INTO gamedata_ps_genre (TITLE, GENRE) VALUES (%s, %s)'
                 cursor.execute(sql, (title, tag[num]))
                 num += 1
         except:

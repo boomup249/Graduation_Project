@@ -13,7 +13,7 @@ from bs4 import BeautifulSoup
 #from io import BytesIO
 #import dload
 from time import sleep
-#from datetime import datetime
+from datetime import datetime
 import MySQLdb
 import requests
 
@@ -23,7 +23,10 @@ def find_element_by_css(driver, css_selector):
         return driver.find_element(By.CSS_SELECTOR, css_selector)
     except NoSuchElementException as _:
         return None
-    
+
+time = datetime.now()
+timestr = time.strftime("%Y%m%d_%H%M")
+
 #DB연결
 conn = MySQLdb.connect(
     user="root",
@@ -66,20 +69,18 @@ URL = 'https://store.steampowered.com/specials/'
 
 #크롬드라이버 옵션 설정
 services = Service(executable_path=ChromeDriverManager().install())
+
 options = Options()
 options.add_experimental_option("detach", True)
-options.add_argument("headless")
-#options.add_argument("disable-gpu")
-#options.add_argument("lang=ko_KR")
-#options.add_argument('window-size=1920x1080')
-#options.add_argument('user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36')
+#options.add_argument("headless")
+options.add_argument("disable-gpu")
+options.add_argument("disable-infobars")
+options.add_argument("--disable-extensions")
+options.add_argument('user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36')
 
 driver = webdriver.Chrome(service=services, options=options)
 driver.implicitly_wait(5)
 driver.set_window_size(1400,1000)
-#driver.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument", {"source": """ Object.defineProperty(navigator, 'webdriver', { get: () => undefined }) """})
-#driver.execute_script("Object.defineProperty(navigator, 'plugins', {get: function() {return[1, 2, 3, 4, 5];},});")
-#driver.execute_script("Object.defineProperty(navigator, 'languages', {get: function() {return ['ko-KR', 'ko']}})")
 driver.get(URL)
 
 #ActionChains 사용하기위해 action 미리 지정
@@ -129,19 +130,29 @@ driver.execute_script("window.scrollTo(0,document.body.scrollHeight)")
 sleep(1.5)
 
 btn_num = 1
-
 #반복문으로 할인중인 게임 목록에 '더 보기' 버튼이 존재하면 해당 버튼을 누르고 없어지면 반복문을 빠져나오게 작성
 for _ in range(10000000000):
-    #현재 할인중인 상품들을 펼쳐보려면 '더 보기' 버튼을 눌러야해서 button 변수에 '더 보기' 버튼의 경로를 설정
-    button = find_element_by_css(driver, '#SaleSection_13268 > div.partnersaledisplay_SaleSection_2NfLq.eventbbcodeparser_SaleSectionCtn_2Xrw_.SaleSectionForCustomCSS > div.saleitembrowser_SaleItemBrowserContainer_2wLns > div:nth-child(2) > div.facetedbrowse_FacetedBrowseInnerCtn_hWbTI > div > div.saleitembrowser_ShowContentsContainer_3IRkb > button')
-    #if else문 : '더 보기' 버튼이 존재하면(None 타입이 아니라 WebElement 타입이 반환되면)
-    if button != None:
-        #화면을 '더 보기' 버튼이 있는곳으로 이동시킨 후 버튼을 클릭한다
-        action.move_to_element(button).click().perform()
-        print(btn_num, "버튼 클릭")
-        btn_num += 1
-    else: #'더 보기' 버튼이 존재하지않으면 break로 반복문 빠져나옴
-        print("버튼 전부 클릭 완료 - ", btn_num, "번 실행")
+    if btn_num < 30:
+        #현재 할인중인 상품들을 펼쳐보려면 '더 보기' 버튼을 눌러야해서 button 변수에 '더 보기' 버튼의 경로를 설정
+        button = find_element_by_css(driver, '#SaleSection_13268 > div.partnersaledisplay_SaleSection_2NfLq.eventbbcodeparser_SaleSectionCtn_2Xrw_.SaleSectionForCustomCSS > div.saleitembrowser_SaleItemBrowserContainer_2wLns > div:nth-child(2) > div.facetedbrowse_FacetedBrowseInnerCtn_hWbTI > div > div.saleitembrowser_ShowContentsContainer_3IRkb > button')
+        #if else문 : '더 보기' 버튼이 존재하면(None 타입이 아니라 WebElement 타입이 반환되면)
+        if button != None:
+            #화면을 '더 보기' 버튼이 있는곳으로 이동시킨 후 버튼을 클릭한다
+            action.move_to_element(button).click().perform()
+            print(btn_num, "버튼 클릭")
+            btn_num += 1
+        else: #'더 보기' 버튼이 존재하지않으면 break로 반복문 빠져나옴
+            print("버튼 전부 클릭 완료 - ", btn_num, "번 실행")
+            break
+    else:
+        btn_url = driver.current_url
+        driver.quit()
+        driver = webdriver.Chrome(options=options)
+        driver.implicitly_wait(5)
+        driver.set_window_size(1400,1000)
+        driver.get(btn_url)
+        btn_num = 0
+        sleep(1.5)
         break
 
 #더보기 다누르면 화면 맨아래로 내려서 동적데이터 전부 생성한후 다시 페이지 파싱
@@ -210,8 +221,10 @@ for item in gamelist:
     if imgdata != None:
         imgdata = imgdata["src"]
 
-    gameimg = new_soup.select_one('a.highlight_screenshot_link')['href']
-    print(gameimg)
+    gameimg = new_soup.select_one('a.highlight_screenshot_link')
+
+    if gameimg != None:
+        gameimg = gameimg['href']
 
     description = new_soup.select_one("div.game_description_snippet")
     if description != None:
@@ -237,8 +250,11 @@ for item in gamelist:
     driver.close()
     driver.switch_to.window(driver.window_handles[-1])
 
+time_complete = datetime.now()
+timestr_complete = time_complete.strftime("%Y%m%d_%H%M")
+
 sleep(2)
-print("크롤링 완료")
+print("크롤링 완료, 시작시간 : ", timestr, ", 완료시간 : ", timestr_complete)
 driver.quit()
 
 #모든 작업이 완료되면 5초 대기했다가 인스턴스 해제
