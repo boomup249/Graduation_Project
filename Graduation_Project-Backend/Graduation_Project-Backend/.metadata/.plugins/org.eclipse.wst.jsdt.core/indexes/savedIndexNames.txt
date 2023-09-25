@@ -1,3 +1,0 @@
-INDEX VERSION 1.4+C:\Users\Ryu\Desktop\GP\GP\Graduation_Project-Backend\Graduation_Project-Backend\.metadata\.plugins\org.eclipse.wst.jsdt.core\indexes
-3065440099.index
-2590463452.index
