@@ -27,8 +27,9 @@ import java.util.List;
 //		일단 디비 확정되면 정하기 -> 디비 크롤링 팀이랑 맞춰야 함(현재 크롤링 항목과 디비가 다름)
 
 //2023.08.26 -> dto 방식으로 초안 작업
-/*@Controller
+@Controller
 public class GameController {
+	/*
 	//전역
 	String page = "";
 	
@@ -119,8 +120,12 @@ public class GameController {
 			
 			return "/game/console";
 		}
+	*/
+	@GetMapping("/bbs")
+	public String bbs() {
+			
+			return "/game/bbs";
+		}
 	
 	
-	
-	
-}*/
+}
