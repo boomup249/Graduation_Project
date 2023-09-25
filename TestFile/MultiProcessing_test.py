@@ -42,7 +42,6 @@ def saleper_calc(price, saleprice):
 
 def Driver_Start(platform, URL):
     #크롬드라이버 옵션 설정
-    services = Service(executable_path=ChromeDriverManager().install())
     options = Options()
     options.add_experimental_option("detach", True)
     options.add_argument("headless")
@@ -51,9 +50,9 @@ def Driver_Start(platform, URL):
     options.add_argument('user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36')
 
     #크롬드라이버 인스턴스 생성 및 옵션, 크기, URL, 암시적 대기 설정
-    driver = webdriver.Chrome(service=services, options=options)
+    driver = webdriver.Chrome(options=options)
     driver.implicitly_wait(10)
-    driver.set_window_size(1400,800)
+    driver.set_window_size(1920,1080)
     driver.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument", {"source": """ Object.defineProperty(navigator, 'webdriver', { get: () => undefined }) """})
     driver.execute_script("Object.defineProperty(navigator, 'plugins', {get: function() {return[1, 2, 3, 4, 5];},});")
     driver.execute_script("Object.defineProperty(navigator, 'languages', {get: function() {return ['ko-KR', 'ko']}})")
@@ -536,9 +535,6 @@ def steam_start():
                                                                         ON DELETE CASCADE
                                                                         ON UPDATE CASCADE)
                 ''')
-    
-    #ActionChains 사용하기위해 action 미리 지정
-    
 
     btn_num = 1
     btn_check = 1
@@ -596,6 +592,12 @@ def steam_language_change(driver, soup):
         print("steam 언어설정 완료")
 
 if __name__ == "__main__":
+    services = Service(executable_path=ChromeDriverManager().install())
+    driver = webdriver.Chrome(service=services)
+    driver.get('https://www.google.com')
+    driver.quit()
+    print("Chromedriver Install 완료")
+    sleep(1)
     # 멀티프로세싱을 사용하여 각 코드 블록을 별도의 프로세스에서 실행
     process1 = multiprocessing.Process(target=nintendo_crawling)
     process2 = multiprocessing.Process(target=ps_crawling)
