@@ -70,13 +70,13 @@
  
     	.post-item {
         flex-direction: column;
-        text-align: center;
     	}
     	
     	
-    	.custom-width{
+    	.post-table{
 			width : 60%;
 			position:relative;
-			
+						
 		}
 		}
+		

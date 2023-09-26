@@ -121,11 +121,6 @@ public class GameController {
 			return "/game/console";
 		}
 	*/
-	@GetMapping("/bbs")
-	public String bbs() {
-			
-			return "/game/bbs";
-		}
-	
+
 	
 }
