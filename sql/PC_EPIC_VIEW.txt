@@ -1,54 +1,67 @@
-CREATE VIEW game_steam_epic AS
-SELECT 
-    s.num as steam_num,
-    e.num as epic_num,
-    s.title,
-    CASE 
-        WHEN s.title IS NOT NULL AND e.title IS NOT NULL THEN 'Both'
-        WHEN s.title IS NOT NULL THEN 'Steam Only'
-        WHEN e.title IS NOT NULL THEN 'Epic Only'
-        ELSE 'None' 
-    END as site_availability,
-    s.price as steam_price,
-    e.price as epic_price,
-    s.saleprice as steam_saleprice,
-    e.saleprice as epic_saleprice,
-    s.saleper as steam_saleper,
-    e.saleper as epic_saleper,
-    s.description as steam_description,
-    e.description as epic_description,
-    s.imgdata as steam_imgdata,
-    e.imgdata as epic_imgdata,
-    s.gameimg as steam_gameimg,
-    e.gameimg as epic_gameimg,
-    s.url as steam_url,
-    e.url as epic_url
-FROM gamedata_steam s
-LEFT JOIN gamedata_epic e ON s.title = e.title
-UNION
-SELECT 
-    s.num as steam_num,
-    e.num as epic_num,
-    e.title,
-    CASE
-        WHEN s.title IS NOT NULL AND e.title IS NOT NULL THEN 'Both'
-        WHEN s.title IS NOT NULL THEN 'Steam Only'
-        WHEN e.title IS NOT NULL THEN 'Epic Only'
-        ELSE 'None' 
-    END as site_availability,
-    s.price as steam_price,
-    e.price as epic_price,
-    s.saleprice as steam_saleprice,
-    e.saleprice as epic_saleprice,
-    s.saleper as steam_saleper,
-    e.saleper as epic_saleper,
-    s.description as steam_description,
-    e.description as epic_description,
-    s.imgdata as steam_imgdata,
-    e.imgdata as epic_imgdata,
-    s.gameimg as steam_gameimg,
-    e.gameimg as epic_gameimg,
-    s.url as steam_url,
-    e.url as epic_url
-FROM gamedata_steam s
-RIGHT JOIN gamedata_epic e ON s.title = e.title;
+CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = `root`@`localhost` 
+    SQL SECURITY DEFINER
+VIEW `member`.`game_steam_epic` AS
+    SELECT 
+        `s`.`NUM` AS `STEAMNUM`,
+        `e`.`NUM` AS `EPICNUM`,
+        `s`.`TITLE` AS `TITLE`,
+        (CASE
+            WHEN
+                ((`s`.`TITLE` IS NOT NULL)
+                    AND (`e`.`TITLE` IS NOT NULL))
+            THEN
+                'Both'
+            WHEN (`s`.`TITLE` IS NOT NULL) THEN 'Steam Only'
+            WHEN (`e`.`TITLE` IS NOT NULL) THEN 'Epic Only'
+            ELSE 'None'
+        END) AS `SITEAVAILABILITY`,
+        `s`.`PRICE` AS `STEAMPRICE`,
+        `e`.`PRICE` AS `EPICPRICE`,
+        `s`.`SALEPRICE` AS `STEAMSALEPRICE`,
+        `e`.`SALEPRICE` AS `EPICSALEPRICE`,
+        `s`.`SALEPER` AS `STEAMSALEPER`,
+        `e`.`SALEPER` AS `EPICSALEPER`,
+        `s`.`DESCRIPTION` AS `STEAMDESCRIPTION`,
+        `e`.`DESCRIPTION` AS `EPICDESCRIPTION`,
+        `s`.`IMGDATA` AS `STEAMIMGDATA`,
+        `e`.`IMGDATA` AS `EPICIMGDATA`,
+        `s`.`GAMEIMG` AS `STEAMGAMEIMG`,
+        `e`.`GAMEIMG` AS `EPICGAMEIMG`,
+        `s`.`URL` AS `STEAMURL`,
+        `e`.`URL` AS `EPICURL`
+    FROM
+        (`member`.`gamedata_steam` `s`
+        LEFT JOIN `member`.`gamedata_epic` `e` ON ((`s`.`TITLE` = `e`.`TITLE`))) 
+    UNION SELECT 
+        `s`.`NUM` AS `STEAMNUM`,
+        `e`.`NUM` AS `EPICNUM`,
+        `e`.`TITLE` AS `TITLE`,
+        (CASE
+            WHEN
+                ((`s`.`TITLE` IS NOT NULL)
+                    AND (`e`.`TITLE` IS NOT NULL))
+            THEN
+                'Both'
+            WHEN (`s`.`TITLE` IS NOT NULL) THEN 'Steam Only'
+            WHEN (`e`.`TITLE` IS NOT NULL) THEN 'Epic Only'
+            ELSE 'None'
+        END) AS `SITEAVAILABILITY`,
+        `s`.`PRICE` AS `STEAMPRICE`,
+        `e`.`PRICE` AS `EPICPRICE`,
+        `s`.`SALEPRICE` AS `STEAMSALEPRICE`,
+        `e`.`SALEPRICE` AS `EPICSALEPRICE`,
+        `s`.`SALEPER` AS `STEAMSALEPER`,
+        `e`.`SALEPER` AS `EPICSALEPER`,
+        `s`.`DESCRIPTION` AS `STEAMDESCRIPTION`,
+        `e`.`DESCRIPTION` AS `EPICDESCRIPTION`,
+        `s`.`IMGDATA` AS `STEAMIMGDATA`,
+        `e`.`IMGDATA` AS `EPICIMGDATA`,
+        `s`.`GAMEIMG` AS `STEAMGAMEIMG`,
+        `e`.`GAMEIMG` AS `EPICGAMEIMG`,
+        `s`.`URL` AS `STEAMURL`,
+        `e`.`URL` AS `EPICURL`
+    FROM
+        (`member`.`gamedata_epic` `e`
+        LEFT JOIN `member`.`gamedata_steam` `s` ON ((`s`.`TITLE` = `e`.`TITLE`)))
