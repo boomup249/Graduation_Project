@@ -63,7 +63,6 @@ def Driver_Start(platform, URL):
 
 def nintendo_crawling():
     platform = 'switch'
-    driver = Driver_Start(platform, 'https://store.nintendo.co.kr/games/sale')
     cursor.execute("DROP TABLE IF EXISTS gamedata_switch_genre")
     cursor.execute("DROP TABLE IF EXISTS gamedata_switch")
     cursor.execute('''CREATE TABLE IF NOT EXISTS gamedata_switch (`NUM` INT NOT NULL AUTO_INCREMENT,
@@ -89,6 +88,17 @@ def nintendo_crawling():
                                                                             ON UPDATE CASCADE)
                 ''')
     
+    driver = Driver_Start(platform, 'https://store.nintendo.co.kr/games/sale')
+
+    soup = BeautifulSoup(driver.page_source, "html.parser")
+    error = soup.select_one('h1')
+    if error.text == '403 Forbidden':
+        print("4분30초간 일시정지(403 forbidden 오류 회피를 위해)")
+        driver.quit()
+        sleep(270)
+        print("재실행")
+        driver = Driver_Start(platform, 'https://store.nintendo.co.kr/games/sale')
+
     sleep(5)
     driver.find_element(By.CLASS_NAME, 'popup-close').click()
     sleep(2)
@@ -591,6 +601,124 @@ def steam_language_change(driver, soup):
         driver.find_element(By.CSS_SELECTOR, "#language_dropdown > div > a:nth-child(4)").click()
         print("steam 언어설정 완료")
 
+def epic_crawling():
+    platform = "epicgames"
+    URL = 'https://store.epicgames.com/ko/collection/most-played'
+    epicgames = 'https://store.epicgames.com'
+    cursor.execute("DROP TABLE IF EXISTS gamedata_epic_genre")
+    cursor.execute("DROP TABLE IF EXISTS gamedata_epic")
+    #rank에 AUTO_INCREMENT를 사용함으로써 INSERT가 입력될때마다 자동으로 숫자를 +1 올린다
+    cursor.execute('''CREATE TABLE IF NOT EXISTS gamedata_epic (`NUM` INT NOT NULL AUTO_INCREMENT,
+                                                                `TITLE` VARCHAR(100) NULL DEFAULT NULL,
+                                                                `PRICE` VARCHAR(15) NULL DEFAULT NULL,
+                                                                `SALEPRICE` VARCHAR(15) NULL DEFAULT NULL,
+                                                                `SALEPER` VARCHAR(5) NULL DEFAULT NULL,
+                                                                `DESCRIPTION` TEXT NULL DEFAULT NULL,
+                                                                `IMGDATA` TEXT NULL DEFAULT NULL,
+                                                                `GAMEIMG` TEXT NULL DEFAULT NULL,
+                                                                `URL` TEXT NULL DEFAULT NULL,
+                                                                PRIMARY KEY (`NUM`),
+                                                                UNIQUE KEY (`TITLE`))
+                ''')
+
+    cursor.execute('''CREATE TABLE IF NOT EXISTS gamedata_epic_genre (`NUM` INT NOT NULL AUTO_INCREMENT,
+                                                                `TITLE` VARCHAR(100) NULL DEFAULT NULL,
+                                                                `GENRE` VARCHAR(30) NULL DEFAULT NULL,
+                                                                PRIMARY KEY (`NUM`),
+                                                                CONSTRAINT `epic_title`
+                                                                    FOREIGN KEY (`TITLE`)
+                                                                    REFERENCES `gamedata_epic` (`TITLE`)
+                                                                    ON DELETE CASCADE
+                                                                    ON UPDATE CASCADE)
+                ''')
+    driver = Driver_Start(platform, URL)
+    page = driver.find_element(By.TAG_NAME, "body")
+    for _ in range(0,20):
+        page.send_keys(Keys.PAGE_DOWN)
+        sleep(0.5)
+
+    soup = BeautifulSoup(driver.page_source, "html.parser")
+    panel = soup.select_one("section.css-zjpm9r")
+    gamelist = panel.select("div.css-lrwy1y")
+    driver.quit()
+
+    for item in gamelist:
+        title = item.find("div", class_="css-rgqwpc")
+
+        if title == None:
+            title = item.find("div",class_="css-8uhtka").text
+        else:
+            title = title.text
+
+        price = item.find("span", class_="css-119zqif")
+        if price == None:
+            price = "정보 없음"
+        else:
+            price = price.text
+        
+        saleper = item.find("div", class_="css-b0xoos")
+        if saleper != None:
+            price = item.find("div", class_="css-4jky3p").text
+            saleprice = item.find("span", class_="css-119zqif").text
+            saleper = saleper.text
+        else:
+            saleper = "X"
+            saleprice = "X"
+
+        #move 변수에 해당 게임 페이지 링크 획득
+        game_link = item.select_one('a.css-g3jcms')["href"]
+        move = epicgames+game_link
+
+        #게임 페이지로 새탭에서 열기
+        driver = Driver_Start(platform, move)
+        #driver.execute_script(f'window.open(\'{move}\');')
+        #새탭으로 이동
+        #driver.switch_to.window(driver.window_handles[-1])
+
+        new_soup = BeautifulSoup(driver.page_source, "html.parser")
+
+        description = new_soup.select_one("div.css-1myreog")
+        if description != None:
+            description = description.text.strip()
+
+        imgdata = new_soup.select_one('img.css-7i770w')["src"]
+        
+        gameimg_bar = new_soup.select_one('ul.css-elmzlf')
+        if gameimg_bar != None:
+            gameimg = gameimg_bar.select_one('div.css-1q03292 > img')["src"]
+        else:
+            gameimg = new_soup.select_one('img.css-1bbjmcj')["src"]
+
+        print(title)
+        print(gameimg)
+
+        tag = new_soup.select("li.css-t8k7")
+
+        tag_length = len(tag)
+        num = 0
+
+        sql = 'INSERT INTO gamedata_epic (TITLE, PRICE, SALEPRICE, SALEPER, DESCRIPTION, IMGDATA, GAMEIMG, URL) VALUES (%s, %s, %s, %s, %s, %s, %s ,%s)'
+        cursor.execute(sql, (title, price, saleprice, saleper, description, imgdata, gameimg, move))
+
+        while num < tag_length:
+            tag[num] = tag[num].text.strip()
+            sql = 'INSERT INTO gamedata_epic_genre (TITLE, GENRE) VALUES (%s, %s)'
+            cursor.execute(sql, (title, tag[num]))
+            num += 1
+
+        conn.commit()
+        print(f'epic - {title} DB 입력 완료')
+
+        #탭 종료후 원래 탭으로 이동
+        #driver.close()
+        #driver.switch_to.window(driver.window_handles[-1])
+        driver.quit()
+
+    newtime = datetime.now()
+    newtimestr = newtime.strftime("%Y%m%d_%H%M")
+    sleep(2)
+    print(platform, " 크롤링 완료 - 시작시간:", timestr, ", 완료시간:", newtimestr)
+
 if __name__ == "__main__":
     services = Service(executable_path=ChromeDriverManager().install())
     driver = webdriver.Chrome(service=services)
@@ -602,14 +730,39 @@ if __name__ == "__main__":
     process1 = multiprocessing.Process(target=nintendo_crawling)
     process2 = multiprocessing.Process(target=ps_crawling)
     process3 = multiprocessing.Process(target=steam_start)
+    process4 = multiprocessing.Process(target=epic_crawling)
     
     # 프로세스 시작
-    process1.start()
-    process2.start()
-    process3.start()
+    try:
+        process1.start()
+    except:
+        print("1번 프로세스 오류")
+
+    sleep(3)
+
+    try:
+        process2.start()
+    except:
+        print("2번 프로세스 오류")    
+    
+    sleep(3)
+    
+    try:
+        process3.start()
+    except:
+        print("3번 프로세스 오류")   
+    
+    sleep(3)
+     
+    try:
+        process4.start()
+    except:
+        print("4번 프로세스 오류")
     
     # 프로세스 종료 대기
     process1.join()
     process2.join()
     process3.join()
+    process4.join()
     conn.close()
+    quit()
