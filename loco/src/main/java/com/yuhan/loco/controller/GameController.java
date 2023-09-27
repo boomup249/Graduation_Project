@@ -75,16 +75,6 @@ public class GameController {
 			return "/game/pc";
 		}
 	
-	//상세(pc)
-		@GetMapping("/detail")
-		public String detail_pc() {
-			return "/game/detail";
-		}
-		
-	//console
-	
-	
-	
 	//console
 	@GetMapping("/console")
 	public String console(Model model, @RequestParam(value = "page", defaultValue = "1") int page) {
@@ -119,6 +109,15 @@ public class GameController {
 			
 			return "/game/console";
 		}
+    // PC Detail
+    @GetMapping("/pcDetail") 
+    public String detail_pc() {
+		return "/game/PcDetail";
+	}
 
-	
+    // Console Detail
+    @GetMapping("/consoleDetail") 
+    public String detail_console() {
+		return "/game/ConsoleDetail";
+	}
 }
