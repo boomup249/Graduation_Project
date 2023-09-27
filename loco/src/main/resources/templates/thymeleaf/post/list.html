@@ -29,18 +29,18 @@
             </tr>
         </thead>
         <tbody>
-            <tr class="post-item">
+            <tr th:each = "post : ${postDTO}">
                 <td>
-                    <a class="post-title-link" href="#">게시글 제목 1</a>
+                    <a class="post-title-link" href="#"><div th:text="${post.title}"></div></a>
                 </td>
                 <td>작성자 1</td>
                 <td>2023-09-25</td>
                 <td>25</td>
                 <td>12</td>
             </tr>
-            <tr class="post-item">
+            <tr th:each = "post : ${postDTO}">
                 <td>
-                    <a class="post-title-link" href="#">게시글 제목 2</a>
+                    <a class="post-title-link" href="#"><div th:text="${post.title}"></div></a>
                 </td>
                 <td>작성자 2</td>
                 <td>2023-09-26</td>

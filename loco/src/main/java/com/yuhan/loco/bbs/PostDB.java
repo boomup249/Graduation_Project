@@ -21,7 +21,7 @@ import jakarta.persistence.Table;
 public class PostDB {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	private Long id;
 	private String category;
 	private String title;
     private String writer; // 작성자
@@ -29,10 +29,11 @@ public class PostDB {
     private String comment;
     
 	
-	public int getId() {
+
+	public Long getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 	public String getCategory() {

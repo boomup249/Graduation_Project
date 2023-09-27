@@ -70,9 +70,9 @@ public class BBSController {
 		if(page == "bbs") {
 			postDTO.setCategory("bbs");
 			postDTO.setWriter(userId);
-			postDTO.setComment("");//임시, 댓글 구현 시 삭제
+			postDTO.setComment("임시 댓글");//임시, 댓글 구현 시 삭제
 		}
-		postService.create(postDTO.getCategory(), postDTO.getTitle(), postDTO.getWriter(), postDTO.getContent(), postDTO.getComment());
+		postService.create(postDTO.getId(), postDTO.getCategory(), postDTO.getTitle(), postDTO.getWriter(), postDTO.getContent(), postDTO.getComment());
 		return "/post/list";
 	}
 	@GetMapping("post_cancel")

@@ -17,7 +17,8 @@ public class PostService {
         this.Postrepository = Postrepository;
     }
    
-   public PostDB create(String category, String title, String writer, String content, String comment) {
+   public PostDB create(Long id, String category, String title, String writer, String content, String comment) {
+	  post.setId(null);
       post.setCategory(category);
       post.setTitle(title);
       post.setWriter(writer);
@@ -30,7 +31,7 @@ public class PostService {
       System.out.println(post.getWriter());
       System.out.println(post.getContent());
       System.out.println(post.getComment());
-      this.Postrepository.save(post);   
+      this.Postrepository.saveAndFlush(post);  
       return post;
    }
    

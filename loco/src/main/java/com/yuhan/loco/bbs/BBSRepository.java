@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.NoRepositoryBean;
 
 @NoRepositoryBean
@@ -14,5 +16,8 @@ public interface BBSRepository extends JpaRepository<BBSDTO, Long> {
     List<BBSDTO> findByAuthor(String author);
     List<BBSDTO> findByDateBetween(LocalDate startDate, LocalDate endDate);
     List<BBSDTO> findByTitleAndAuthor(String title, String author);
+    @Modifying
+    @Query("update bbs BBS set BBS.views = BBS.views + 1 where BBS.id = :id")
+    int updateView(Long id);
     
 }
