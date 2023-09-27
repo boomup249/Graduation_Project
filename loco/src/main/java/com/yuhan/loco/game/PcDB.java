@@ -15,33 +15,38 @@ public class PcDB {
 	private Integer EPICNUM;
 	private String TITLE;
 	private String SITEAVAILABILITY;
+	
 	private String STEAMPRICE;
 	private String EPICPRICE;
+	
 	private String STEAMSALEPRICE;
 	private String EPICSALEPRICE;
+	
 	private String STEAMSALEPER;
 	private String EPICSALEPER;
+	
 	private String STEAMDESCRIPTION;
 	private String EPICDESCRIPTION;
+	
 	private String STEAMIMGDATA;
 	private String EPICIMGDATA;
+	
 	private String STEAMGAMEIMG;
 	private String EPICGAMEIMG;
+	
 	private String STEAMURL;
 	private String EPICURL;
 	
-	
-	//getter setter
-	public int getSTEAMNUM() {
+	public Integer getSTEAMNUM() {
 		return STEAMNUM;
 	}
-	public void setSTEAMNUM(int sTEAMNUM) {
+	public void setSTEAMNUM(Integer sTEAMNUM) {
 		STEAMNUM = sTEAMNUM;
 	}
-	public int getEPICNUM() {
+	public Integer getEPICNUM() {
 		return EPICNUM;
 	}
-	public void setEPICNUM(int ePICNUM) {
+	public void setEPICNUM(Integer ePICNUM) {
 		EPICNUM = ePICNUM;
 	}
 	public String getTITLE() {
@@ -140,6 +145,12 @@ public class PcDB {
 	public void setEPICURL(String ePICURL) {
 		EPICURL = ePICURL;
 	}
+
+
+	//getter setter
+	
+	
+	
 	
 	
 	

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.yuhan.loco.game.PcDB;
+import com.yuhan.loco.game.ConsoleDB;
 import com.yuhan.loco.game.GameDTO;
 import com.yuhan.loco.game.PcRepository;
 import com.yuhan.loco.game.GameService;
@@ -43,11 +44,14 @@ public class GameController {
 	
 	//연결
 	//pc
-	/*@GetMapping("/pc")
+	
+	@GetMapping("/pc")
 	public String pc(Model model, @RequestParam(value = "page", defaultValue = "1") int page) {
 		//페이징용 page, pageable은 0부터 시작함 -> -1로 가공해주기, html에서도 가공 필요
 		page -= 1;
-			
+		
+		List<PcDB> viewData = gameService.getAllData();
+		List<GameDTO> fullList = gameService.getAllGames();
 		//페이징 리스트 받아오기
 		Page<PcDB> paging = this.gameService.getFullPcList(page);
 			
@@ -65,20 +69,21 @@ public class GameController {
 		model.addAttribute("endPage", endPage);
 		model.addAttribute("currentPage", currentPage);
 		model.addAttribute("totalPage", paging.getTotalPages());
+		model.addAttribute("viewData",viewData);
+		model.addAttribute("gameDTO",fullList);
 			
 			return "/game/pc";
-		}*/
+		}
 	
 	//상세(pc)
 		@GetMapping("/detail")
 		public String detail_pc() {
-			//gameService.a();
 			return "/game/detail";
 		}
 		
 	//console
 	
-	/*
+	
 	
 	//console
 	@GetMapping("/console")
@@ -88,13 +93,13 @@ public class GameController {
 			//페이징용 page, pageable은 0부터 시작함 -> -1로 가공해주기, html에서도 가공 필요
 			page -= 1;
 			
+			List<ConsoleDB> viewData = gameService.getAllData_1();
 			//dto리스트 전체 불러오기
-			List<GameDTO> fullList = createFullGameList();
+			List<GameDTO> fullList = gameService.getAllGames();
 			
 			// 전체 데이터 리스트에서 해당 페이지의 데이터만 추출하여 페이징
 			int pageSize = 10; //한 페이지에 나올 행 수
-			Page<GameDTO> gamePage = createPageableList(fullList, page, pageSize); //페이징 끝
-			
+			Page<ConsoleDB> gamePage = this.gameService.getFullConsoleList(page); //페이징 끝
 			//페이지네이션 정보 가공: 시작 페이지 번호, 현재 페이지 번호, 끝 페이지 번호
 			int currentPage = page + 1; //현재 페이지 번호
 			int calcEnd = (int)(Math.ceil(currentPage / 10.0) * 10); //현재 페이지를 10으로 나눈 후 올리고 10을 곱하면 끝번호가 나옴(ex. 3-> 0.3 - 1 - 10, 23-> 2.3 - 3 - 30)
@@ -109,10 +114,11 @@ public class GameController {
 			model.addAttribute("endPage", endPage);
 			model.addAttribute("currentPage", currentPage);
 			model.addAttribute("totalPage", gamePage.getTotalPages());
+			model.addAttribute("viewData",viewData);
+			model.addAttribute("gameDTO",fullList);
 			
 			return "/game/console";
 		}
-	
-	*/
-}
 
+	
+}
