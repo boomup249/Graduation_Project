@@ -760,7 +760,9 @@ def epic_crawling():
 
 if __name__ == "__main__":
     services = Service(executable_path=ChromeDriverManager().install())
-    driver = webdriver.Chrome(service=services)
+    options = Options()
+    options.add_argument("headless")
+    driver = webdriver.Chrome(service=services, options=options)
     driver.get('https://www.google.com')
     driver.quit()
     print("Chromedriver Install 완료")
@@ -811,14 +813,20 @@ if __name__ == "__main__":
         process1.start()
     except:
         print("process1 시작 오류")
+
+    sleep(3)
     try:
         process2.start()
     except:
         print("process2 시작 오류")
+
+    sleep(3)
     try:
         process3.start()
     except:
         print("process3 시작 오류")
+
+    sleep(3)
     try:
         process4.start()
     except:
