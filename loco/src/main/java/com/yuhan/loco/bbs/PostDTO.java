@@ -8,6 +8,8 @@ import javax.persistence.Id;
 
 public class PostDTO {
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int id;
     private String category;
 	private String title;
     private String writer; // 작성자

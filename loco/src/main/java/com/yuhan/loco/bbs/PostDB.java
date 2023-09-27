@@ -20,11 +20,21 @@ import jakarta.persistence.Table;
 @Table(name = "bbs_content")
 public class PostDB {
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int id;
 	private String category;
 	private String title;
     private String writer; // 작성자
     private String content;
     private String comment;
+    
+	
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
 	public String getCategory() {
 		return category;
 	}

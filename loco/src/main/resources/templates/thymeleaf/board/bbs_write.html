@@ -32,7 +32,8 @@
 </head>
 <body>
 	<form action ="#"
-				th:object="${PostDTO}"
+			th:action="@{/post_write}"
+				th:object="${postDTO}"
 				method = "post">
       <table class="post-table">
            <thead>
@@ -47,15 +48,15 @@
                <tr>
                    <th>
 					   제목 : 
-					   <input type="text" class="write_title" placeholder="제목을 입력해주세요.">
-         					<button onclick="action='/post_write'; submit();">작성</button>
+					   <input type="text" class="write_title" th:field="*{title}" placeholder="제목을 입력해주세요.">
+         					<input type="submit" id="sub" value="작성"/>
          					<button onclick="location.href='post_cancel'">취소</button>
 				   </th>         
                </tr>
            </thead>
       </table>
       <div>
-         <input type="text" class="write_content" placeholder="내용" required>
+         <input type="text" class="write_content" th:field="*{content}" placeholder="내용" required>
       </div>
       </form>
       
