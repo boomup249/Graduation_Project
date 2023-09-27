@@ -1,4 +1,4 @@
-package com.yuhan.loco.myapp;
+package com.yuhan.loco.bbs;
 
 import java.time.LocalDate;
 
@@ -8,16 +8,23 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-public class Post {
+public class BBSDTO {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String title;
+    private int id;
+
+	private String title;
     private String writer; // 작성자
     private LocalDate date; // 날짜
     private int views; // 조회수
     private int comments; // 댓글 수
     
-
+    public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
 	public String getTitle() {
 		return title;
 	}

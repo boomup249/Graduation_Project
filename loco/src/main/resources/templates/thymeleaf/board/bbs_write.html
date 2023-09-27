@@ -1,4 +1,5 @@
 <html xmlns:th="http://www.thymeleaf.org">
+	
    <head>
       <meta charset="UTF-8">
       <title>loco > bbs</title>
@@ -30,11 +31,14 @@
      </style>
 </head>
 <body>
+	<form action ="#"
+				th:object="${PostDTO}"
+				method = "post">
       <table class="post-table">
            <thead>
                <tr>
 				   <th>
-					   작성자
+					   작성자: <span th:text="${userDTO.getID()}"></span>
 					   
 				   </th>
 				  
@@ -44,8 +48,8 @@
                    <th>
 					   제목 : 
 					   <input type="text" class="write_title" placeholder="제목을 입력해주세요.">
-         					<input type="button" class="submit" style="height:30px;" value="작성" >
-         					<input type="button" class="cancel" style="height:30px;" value="취소">
+         					<button onclick="action='/post_write'; submit();">작성</button>
+         					<button onclick="location.href='post_cancel'">취소</button>
 				   </th>         
                </tr>
            </thead>
@@ -53,6 +57,7 @@
       <div>
          <input type="text" class="write_content" placeholder="내용" required>
       </div>
+      </form>
       
 </body>
 </html>
