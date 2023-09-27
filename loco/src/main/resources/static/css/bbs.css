@@ -74,6 +74,9 @@
 			 margin-top: 4.5%;
 			 border : none;
 		 }
+		 .button-container1:hover{
+			 background-color: inherit;
+		 }
 		 .button-container1 .button {
 			 height : 50%;
 		 }
@@ -85,6 +88,9 @@
 			margin-top: 4.5%;
 			border : none;
 		}
+		.button-container2:hover{
+			 background-color: inherit;
+		 }
 		.button-container2 .button {
 			 height : 50%;
 		 }

@@ -43,7 +43,7 @@ public class GameController {
 	
 	//연결
 	//pc
-	@GetMapping("/pc")
+	/*@GetMapping("/pc")
 	public String pc(Model model, @RequestParam(value = "page", defaultValue = "1") int page) {
 		//페이징용 page, pageable은 0부터 시작함 -> -1로 가공해주기, html에서도 가공 필요
 		page -= 1;
@@ -67,12 +67,12 @@ public class GameController {
 		model.addAttribute("totalPage", paging.getTotalPages());
 			
 			return "/game/pc";
-		}
+		}*/
 	
 	//상세(pc)
 		@GetMapping("/detail")
 		public String detail_pc() {
-			gameService.a();
+			//gameService.a();
 			return "/game/detail";
 		}
 		
@@ -114,10 +114,5 @@ public class GameController {
 		}
 	
 	*/
-<<<<<<< HEAD
-
-=======
-	
->>>>>>> 313fcb6980bd9d99ed5501c92679089522b5c49c
-	
 }
+
