@@ -14,6 +14,11 @@ import requests
 from time import sleep
 from datetime import datetime
 
+mode1 = 0
+mode2 = 0
+mode3 = 0
+mode4 = 0
+
 #DB연결
 conn = MySQLdb.connect(
     user="root",
@@ -206,6 +211,7 @@ def nintendo_crawling():
 
     sleep(2)
     print(platform, " 크롤링 완료 시작시간:", timestr, ", 완료시간:", newtimestr)
+    mode1 = 1
     driver.quit()
 
 def ps_crawling():
@@ -425,6 +431,7 @@ def ps_crawling():
 
     sleep(2)
     print(platform, " 크롤링 완료 - 시작시간:", timestr, ", 완료시간:", newtimestr)
+    mode2 = 1
     driver.quit()
 
 def steam_crawling(driver):
@@ -592,6 +599,7 @@ def steam_start():
             break
         driver.quit()
     driver.quit()
+    mode3 = 1
 
 def steam_language_change(driver, soup):
     #정보를 한글로 크롤링하기위해 페이지 언어 변경
@@ -603,7 +611,7 @@ def steam_language_change(driver, soup):
 
 def epic_crawling():
     platform = "epicgames"
-    URL = 'https://store.epicgames.com/ko/collection/most-played'
+    URL = 'https://store.epicgames.com/ko/'
     epicgames = 'https://store.epicgames.com'
     cursor.execute("DROP TABLE IF EXISTS gamedata_epic_genre")
     cursor.execute("DROP TABLE IF EXISTS gamedata_epic")
@@ -632,92 +640,123 @@ def epic_crawling():
                                                                     ON UPDATE CASCADE)
                 ''')
     driver = Driver_Start(platform, URL)
-    page = driver.find_element(By.TAG_NAME, "body")
-    for _ in range(0,20):
-        page.send_keys(Keys.PAGE_DOWN)
-        sleep(0.5)
-
     soup = BeautifulSoup(driver.page_source, "html.parser")
-    panel = soup.select_one("section.css-zjpm9r")
-    gamelist = panel.select("div.css-lrwy1y")
+    sale_url_find = soup.select_one('a.group-swiper-slider--title-link')["href"]
+    sale_url = epicgames + sale_url_find
+
     driver.quit()
+    driver = Driver_Start(platform, sale_url)
+    sleep(3)
 
-    for item in gamelist:
-        title = item.find("div", class_="css-rgqwpc")
+    #할인 페이지 들어오자마자 페이지바 읽어와서 마지막 페이지 값 저장
+    pages = driver.find_elements(By.CLASS_NAME, "css-12lid1g")
+    #다음페이지 초기값(숫자)
+    next_page = 2
+    #마지막페이지 값(문자열)
+    last_page = pages[6].text
+    last_game_title = "title"
 
-        if title == None:
-            title = item.find("div",class_="css-8uhtka").text
-        else:
-            title = title.text
-
-        price = item.find("span", class_="css-119zqif")
-        if price == None:
-            price = "정보 없음"
-        else:
-            price = price.text
+    for _ in range(10000000000):
+        soup = BeautifulSoup(driver.page_source, "html.parser")
+        panel = soup.select_one("section.css-zjpm9r")
+        gamelist = panel.select("li.css-lrwy1y")
         
-        saleper = item.find("div", class_="css-b0xoos")
-        if saleper != None:
-            price = item.find("div", class_="css-4jky3p").text
-            saleprice = item.find("span", class_="css-119zqif").text
-            saleper = saleper.text
-        else:
-            saleper = "X"
-            saleprice = "X"
-
-        #move 변수에 해당 게임 페이지 링크 획득
-        game_link = item.select_one('a.css-g3jcms')["href"]
-        move = epicgames+game_link
-
-        #게임 페이지로 새탭에서 열기
-        driver = Driver_Start(platform, move)
-        #driver.execute_script(f'window.open(\'{move}\');')
-        #새탭으로 이동
-        #driver.switch_to.window(driver.window_handles[-1])
-
-        new_soup = BeautifulSoup(driver.page_source, "html.parser")
-
-        description = new_soup.select_one("div.css-1myreog")
-        if description != None:
-            description = description.text.strip()
-
-        imgdata = new_soup.select_one('img.css-7i770w')["src"]
-        
-        gameimg_bar = new_soup.select_one('ul.css-elmzlf')
-        if gameimg_bar != None:
-            gameimg = gameimg_bar.select_one('div.css-1q03292 > img')["src"]
-        else:
-            gameimg = new_soup.select_one('img.css-1bbjmcj')["src"]
-
-        print(title)
-        print(gameimg)
-
-        tag = new_soup.select("li.css-t8k7")
-
-        tag_length = len(tag)
-        num = 0
-
-        sql = 'INSERT INTO gamedata_epic (TITLE, PRICE, SALEPRICE, SALEPER, DESCRIPTION, IMGDATA, GAMEIMG, URL) VALUES (%s, %s, %s, %s, %s, %s, %s ,%s)'
-        cursor.execute(sql, (title, price, saleprice, saleper, description, imgdata, gameimg, move))
-
-        while num < tag_length:
-            tag[num] = tag[num].text.strip()
-            sql = 'INSERT INTO gamedata_epic_genre (TITLE, GENRE) VALUES (%s, %s)'
-            cursor.execute(sql, (title, tag[num]))
-            num += 1
-
-        conn.commit()
-        print(f'epic - {title} DB 입력 완료')
-
-        #탭 종료후 원래 탭으로 이동
-        #driver.close()
-        #driver.switch_to.window(driver.window_handles[-1])
         driver.quit()
+        for item in gamelist:
+            title = item.find("div", class_="css-rgqwpc")
+            if title == None:
+                title = item.find("div",class_="css-8uhtka").text
+            else:
+                title = title.text
+
+            #직전 크롤링한 게임의 타이틀과 현재 크롤링중인 게임의 타이틀이 동일하면 마지막페이지라서 break
+            if last_game_title == title:
+                break
+
+            saleper = item.find("div", class_="css-b0xoos")
+            if saleper != None:
+                price = item.find("div", class_="css-4jky3p").text
+                saleprice = item.find("span", class_="css-119zqif").text
+                saleper = saleper.text
+            else:
+                saleper = "X"
+                saleprice = "X"
+
+            game_link = item.select_one('a.css-g3jcms')["href"]
+            move = epicgames+game_link
+
+            driver = Driver_Start(platform, move)
+            sleep(3)
+            new_soup = BeautifulSoup(driver.page_source, "html.parser")
+
+            try:
+                description = new_soup.select_one("div.css-1myreog")
+                if description != None:
+                    description = description.text.strip()
+            except:
+                print("게임 설명 크롤링 오류 NULL로 대체")
+
+            try:
+                imgdata = new_soup.select_one('img.css-7i770w')["src"]
+            except:
+                pass
+            
+            try:
+                gameimg_bar = new_soup.select_one('ul.css-elmzlf')
+                if gameimg_bar != None:
+                    gameimg = gameimg_bar.select_one('div.css-1q03292 > img')["src"]
+                else:
+                    gameimg = new_soup.select_one('img.css-1bbjmcj')["src"]
+            except:
+                pass
+
+            tag = new_soup.select("li.css-t8k7")
+            tag_length = len(tag)
+            num = 0
+
+            sql = 'INSERT INTO gamedata_epic (TITLE, PRICE, SALEPRICE, SALEPER, DESCRIPTION, IMGDATA, GAMEIMG, URL) VALUES (%s, %s, %s, %s, %s, %s, %s ,%s)'
+            cursor.execute(sql, (title, price, saleprice, saleper, description, imgdata, gameimg, move))
+
+            while num < tag_length:
+                tag[num] = tag[num].text.strip()
+                sql = 'INSERT INTO gamedata_epic_genre (TITLE, GENRE) VALUES (%s, %s)'
+                cursor.execute(sql, (title, tag[num]))
+                num += 1
+
+            conn.commit()
+            print(f'epic - {title} DB 입력 완료')
+            driver.quit()
+
+            #현재 페이지가 마지막 페이지면 last_game_title에 지금 크롤링중인 게임 타이틀 집어넣기
+            if next_page-1 == int(last_page):
+                last_game_title = title
+            sleep(1)
+        
+        if int(last_page)+1 == next_page:
+            break
+
+        #페이지 이동 실행하는 부분
+        sleep(1)
+        pagebar = soup.select_one('ul.css-zks4l')
+        pages = pagebar.select('a.css-1ns6940')
+        for page in pages:
+            if page.text == str(next_page):
+                move_url = page["href"]
+                move = epicgames + move_url
+                next_page += 1
+                driver.quit()
+                driver = Driver_Start(platform, move)
+                sleep(5)
+                break
 
     newtime = datetime.now()
     newtimestr = newtime.strftime("%Y%m%d_%H%M")
     sleep(2)
     print(platform, " 크롤링 완료 - 시작시간:", timestr, ", 완료시간:", newtimestr)
+
+    print("크롤링 끝 driver 종료")
+    driver.quit()
+    mode4 = 1
 
 if __name__ == "__main__":
     services = Service(executable_path=ChromeDriverManager().install())
@@ -732,6 +771,7 @@ if __name__ == "__main__":
     process3 = multiprocessing.Process(target=steam_start)
     process4 = multiprocessing.Process(target=epic_crawling)
     
+    """
     # 프로세스 시작
     try:
         process1.start()
@@ -746,23 +786,60 @@ if __name__ == "__main__":
         print("2번 프로세스 오류")    
     
     sleep(3)
-    
+    while(True):
+        sleep(600)
+        if mode1 == 1:
+            try:
+                process3.start()
+                mode3 = 1
+            except:
+                print("3번 프로세스 오류")  
+        
+        sleep(3)
+        if mode2 == 1:
+            try:
+                process4.start()
+                mode4 = 1
+            except:
+                print("4번 프로세스 오류")
+        
+        if mode3 == 1 and mode4 == 1:
+            break
+            
+    """
+    try:
+        process1.start()
+    except:
+        print("process1 시작 오류")
+    try:
+        process2.start()
+    except:
+        print("process2 시작 오류")
     try:
         process3.start()
     except:
-        print("3번 프로세스 오류")   
-    
-    sleep(3)
-     
+        print("process3 시작 오류")
     try:
         process4.start()
     except:
-        print("4번 프로세스 오류")
-    
+        print("process4 시작 오류")
+
     # 프로세스 종료 대기
-    process1.join()
-    process2.join()
-    process3.join()
-    process4.join()
+    try:
+        process1.join()
+    except:
+        pass
+    try:
+        process2.join()
+    except:
+        pass    
+    try:
+        process3.join()
+    except:
+        pass    
+    try:
+        process4.join()
+    except:
+        pass
     conn.close()
     quit()
