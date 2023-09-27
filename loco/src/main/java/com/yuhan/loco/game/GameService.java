@@ -63,13 +63,13 @@ public class GameService {
     }
 
     
-    public List<GameDTO> getAllGames_c() {
-        List<ConsoleDB> gameDBList = consoleRepository.findAll();
-        List<GameDTO> gameDTOList = gameDBList.stream()
+   public List<ConsoleDTO> getAllGames_c() {
+        List<ConsoleDB> consoleDBList = consoleRepository.findAll();
+        List<ConsoleDTO> consoleDTOList = consoleDBList.stream()
                 .map(this::convertToDTO_c)
                 .collect(Collectors.toList());
 
-        return gameDTOList;
+        return consoleDTOList;
     }
 
     
@@ -109,8 +109,8 @@ public class GameService {
         return gameDTO;
     }
 
-    private GameDTO convertToDTO_c(ConsoleDB consoleDB) {
-        GameDTO gameDTO = new GameDTO();
+    private ConsoleDTO convertToDTO_c(ConsoleDB consoleDB) {
+        ConsoleDTO consoleDTO = new ConsoleDTO();
         if (consoleDB != null) {
             String price1 = consoleDB.getPSPRICE();
             if (price1 != null)
@@ -124,23 +124,23 @@ public class GameService {
                 int price2D = Integer.parseInt(price2);
 
                 if (price1D > price2D) {
-                    gameDTO.setPRICE(consoleDB.getSWITCHPRICE());
+                    consoleDTO.setPRICE(consoleDB.getSWITCHPRICE());
                 } else if (price1D < price2D) {
-                    gameDTO.setPRICE(consoleDB.getPSPRICE());
+                    consoleDTO.setPRICE(consoleDB.getPSPRICE());
                 } else {
-                    gameDTO.setPRICE(consoleDB.getPSPRICE());
+                    consoleDTO.setPRICE(consoleDB.getPSPRICE());
                 }
             }
-            gameDTO.setNUM(consoleDB.getSWITCHNUM());
-            gameDTO.setTITLE(consoleDB.getTITLE());
-            gameDTO.setSALEPRICE(consoleDB.getPSSALEPRICE());
-            gameDTO.setSALEPER(consoleDB.getPSSALEPER());
-            gameDTO.setDESCRIPTION(consoleDB.getPSDESCRIPTION());
-            gameDTO.setIMGDATA(consoleDB.getPSIMGDATA());
-            gameDTO.setGAMEIMG(consoleDB.getPSGAMEIMG());
-            gameDTO.setURL(consoleDB.getPSURL());
+            consoleDTO.setNUM(consoleDB.getSWITCHNUM());
+            consoleDTO.setTITLE(consoleDB.getTITLE());
+            consoleDTO.setSALEPRICE(consoleDB.getPSSALEPRICE());
+            consoleDTO.setSALEPER(consoleDB.getPSSALEPER());
+            consoleDTO.setDESCRIPTION(consoleDB.getPSDESCRIPTION());
+            consoleDTO.setIMGDATA(consoleDB.getPSIMGDATA());
+            consoleDTO.setGAMEIMG(consoleDB.getPSGAMEIMG());
+            consoleDTO.setURL(consoleDB.getPSURL());
             System.out.println(consoleDB.getTITLE());
         }
-        return gameDTO;
+        return consoleDTO;
     }
 }
