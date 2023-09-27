@@ -14,7 +14,7 @@ public class ConsoleDB {
 	private Integer SWITCHNUM;
 	private Integer PSNUM;
 	private String TITLE;
-	private String SITEAVAILABILITY;
+	private String SITEAVAILABILIT;
 	
 	private String SWITCHPRICE;
 	private String PSPRICE;
@@ -54,11 +54,11 @@ public class ConsoleDB {
 	public void setTITLE(String tITLE) {
 		TITLE = tITLE;
 	}
-	public String getSITEAVAILABILITY() {
-		return SITEAVAILABILITY;
+	public String getSITEAVAILABILIT() {
+		return SITEAVAILABILIT;
 	}
-	public void setSITEAVAILABILITY(String sITEAVAILABILITY) {
-		SITEAVAILABILITY = sITEAVAILABILITY;
+	public void setSITEAVAILABILIT(String sITEAVAILABILIT) {
+		SITEAVAILABILIT = sITEAVAILABILIT;
 	}
 	public String getSWITCHPRICE() {
 		return SWITCHPRICE;
@@ -144,6 +144,11 @@ public class ConsoleDB {
 	public void setPSURL(String pSURL) {
 		PSURL = pSURL;
 	}
+	
+	
+	
+	
+	
 	
 	
 }

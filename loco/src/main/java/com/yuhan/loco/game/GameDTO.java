@@ -2,12 +2,16 @@ package com.yuhan.loco.game;
 
 
 import java.sql.Date;
+import java.util.List;
 
 import jakarta.validation.constraints.Email;
 
 
 public class GameDTO {
 	private int NUM;
+	//dto 리스트
+	private List<GameDTO> GameDTO;
+	
 	public int getNUM() {
 		return NUM;
 	}
