@@ -23,10 +23,18 @@ public class SecurityConfig {
     }
     @Bean
     public SecurityFilterChain filterchain(HttpSecurity http) throws Exception{
+<<<<<<< HEAD
     	http
     		.headers().addHeaderWriter(new XFrameOptionsHeaderWriter(XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN))
     		.and()
     		.csrf().disable();
     	return http.build();
+=======
+       http
+          .headers().addHeaderWriter(new XFrameOptionsHeaderWriter(XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN))
+          .and()
+          .csrf().disable();
+       return http.build();
+>>>>>>> 157d06568a90830c2c1242ee8775f96b0e4e35a9
     }
 }

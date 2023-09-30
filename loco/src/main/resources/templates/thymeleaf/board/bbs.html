@@ -1,0 +1,137 @@
+
+<html xmlns:th="http://www.thymeleaf.org">
+   <head>
+      <meta charset="UTF-8">
+      <title>loco > bbs</title>
+      
+      <!-- 외부 css -->
+      <link rel="stylesheet" href="css/font.css"> <!-- 폰트 css -->
+      <link rel="stylesheet" href="css/header.css"> <!-- 헤더 css -->
+      <link rel="stylesheet" href="css/bbs_table.css"> <!-- 바꿔놨어요! -->
+      <link rel="stylesheet" href="css/pagination.css"> <!-- 페이지네이션 css, 페이지네이션도 아예 똑같이 갈거 아니면 파일 새로 파주세요! -->
+      <link rel="stylesheet" href="css/bbs.css"> <!-- bbs css -->
+	
+      
+      <style>
+         body {
+		 	margin : 0;
+            padding: 0;
+         }
+         
+         #b1 {
+				width : 99.7%;
+				height : 91.5%;
+				background-color : rgb(192, 192, 192);
+				float : left;
+				margin-top: 4.6%;
+				box-sizing : border-box;
+				display : flex ;
+				position : absolute;
+				left: 0.1%;
+            
+         	}
+           
+         
+       </style>
+    
+
+</head>
+   <body>
+    
+   <!-- 헤더 -->
+      <div id="header">
+         <!-- 로고 -->
+         <div class="logo_btn"><a href="/main"><img src="imgs/header/logo.png"/></a></div>
+         
+         <!-- 메뉴 -->
+         <ul>
+            <!-- 콘솔 -->
+            <li>
+               <div class="menu">
+                  <a href="/console">CONSOLE</a>
+               </div>
+            </li>
+            
+            <!-- pc -->
+            <li>
+               <div class="menu">
+                  <a href="/pc">PC</a>
+               </div>
+            </li>
+            
+            <!-- 게시판 -->
+            <li>
+               <div class="menu">
+                  <a href="/bbs">BBS</a>
+               </div>
+            </li>
+            
+            <!-- 신작 -->
+            <li>
+               <div class="menu">
+                  <a href="#">NEWS</a>
+               </div>
+            </li>
+            
+            <!-- 로그인 버튼-->
+            <li th:if="${session.user == null}"> <!-- 세션(user)가 없으면 -->
+               <div class="menu">
+                  <a href="/login"><img src="imgs/header/login.png"/></a>
+               </div>
+            </li>
+            
+            <!-- 마이페이지 -->
+            <li th:if="${session.user != null}"> <!-- 세션(user)가 있으면 -->
+               <div class="mypage"></div>
+               <!-- 드롭다운 --> 
+               <ul class="dropdown">
+                  <li><a href="/mypage">내 계정</a></li>
+                  <li><a href="/profile">프로필 설정</a></li>
+                  <li><a href="/logout">로그아웃</a></li>
+               </ul>
+            </li>
+         </ul>
+      </div>
+      
+
+     <div id="b1">
+    <div class="line">
+        <table class="line2">
+            <tr>
+                <td class="button-container1">
+                    <!-- '최신글' 버튼 -->
+                    <button class="button latest-button" id="btn_new">최신글</button>
+                    <!-- '인기글' 버튼 -->
+                    <button class="button popular-button" id="btn_popular">인기글</button>
+                    <div class="dropdown">
+      						<button class="dropbtn"> 
+        						카테고리
+      						</button>
+      					<div class="dropdown-content">
+        					<a href="#">자유게시판</a>
+        					<a href="#">게임 공략</a>
+        					<a href="#">파티원모집</a>
+      					</div>
+    				</div>
+                    </div>
+                </td>
+                <td class="button-container2">
+                    <!-- '글쓰기' 버튼 -->
+                    <button class="button write-button" id="btn_write">글쓰기</button>
+                    <input type="text" class="search-input" placeholder="검색어를 입력하세요">
+                    <!-- 검색 버튼 -->
+                    <button class="button search-button">검색</button>
+                </td>
+            </tr>
+        </table>
+        <div class="b3">
+            <iframe src="/post" class="change_frame" width="100%" height="100%"></iframe>
+        </div>
+    </div>
+</div>
+</div>
+         
+
+<script src="js/bbs.js"></script>
+</body>
+</html>

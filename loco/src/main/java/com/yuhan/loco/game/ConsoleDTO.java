@@ -2,29 +2,16 @@ package com.yuhan.loco.game;
 
 
 import java.sql.Date;
-<<<<<<< HEAD
-=======
 import java.util.List;
->>>>>>> 157d06568a90830c2c1242ee8775f96b0e4e35a9
 
 import jakarta.validation.constraints.Email;
 
 
-public class GameDTO {
-<<<<<<< HEAD
+public class ConsoleDTO {
 	private int NUM;
-=======
+	//dto 리스트
+	private List<ConsoleDTO> ConsoleDTO;
 	
-    public String getSITEAVAILABILITY() {
-        return SITEAVAILABILITY;
-    }
-
-    public void setSITEAVAILABILITY(String SITEAVAILABILITY) {
-        this.SITEAVAILABILITY = SITEAVAILABILITY;
-    }
-    
-    private int NUM;
->>>>>>> 157d06568a90830c2c1242ee8775f96b0e4e35a9
 	public int getNUM() {
 		return NUM;
 	}
@@ -72,7 +59,6 @@ public class GameDTO {
 	}
 	public void setGAMEIMG(String gAMEIMG) {
 		GAMEIMG = gAMEIMG;
-<<<<<<< HEAD
 	}
 	public String getURL() {
 		return URL;
@@ -80,20 +66,6 @@ public class GameDTO {
 	public void setURL(String uRL) {
 		URL = uRL;
 	}
-=======
-	}	
-	
-	public String getURL() {
-		return URL;
-	}
-
-	public void setURL(String uRL) {
-		URL = uRL;
-	}
-
-
-	private String SITEAVAILABILITY;
->>>>>>> 157d06568a90830c2c1242ee8775f96b0e4e35a9
 	private String TITLE;
 	private String PRICE;
 	private String SALEPRICE;

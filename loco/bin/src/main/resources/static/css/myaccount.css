@@ -15,6 +15,10 @@ body {
 .link img {height: 50px;} /*로고 이미지*/
 .link a {float: left; margin-left: 25px;} /*왼쪽 정렬, 마진 25px*/
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 157d06568a90830c2c1242ee8775f96b0e4e35a9
 /* 프로필 수정 부분 (주영 외 수정 금지!) */
 	/*내용*/
         #content {
@@ -43,6 +47,7 @@ body {
 			display: inline-block;
 		}
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 /* 프로필 수정 부분 (주영 외 수정 금지!) */
 	/*내용*/
@@ -74,6 +79,8 @@ body {
 
 =======
 >>>>>>> origin/Frontend
+=======
+>>>>>>> 157d06568a90830c2c1242ee8775f96b0e4e35a9
 		/* 중복확인 버튼 스타일 */
 		.edit_id {
 		    display: flex;
@@ -130,6 +137,9 @@ body {
         
        /*위치 잡기*/
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 157d06568a90830c2c1242ee8775f96b0e4e35a9
    
        .edit_email {
 			position: absolute;
@@ -147,6 +157,7 @@ body {
 			position: absolute;
 			top: 71%;
 			left:0%;}
+<<<<<<< HEAD
 =======
        .info p {
 		   margin-bottom: 50px;
@@ -176,6 +187,8 @@ body {
 			justify-content: center;
 			align-items: center;}
 >>>>>>> origin/Frontend
+=======
+>>>>>>> 157d06568a90830c2c1242ee8775f96b0e4e35a9
        .pwchk {
 			position: relative;
 			/*자식 중앙정렬*/
@@ -190,10 +203,14 @@ body {
 			align-items: center;
 		}
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 157d06568a90830c2c1242ee8775f96b0e4e35a9
 
 
 /* 왼쪽 박스 (혜민 외 수정 금지!) */
 
+<<<<<<< HEAD
 =======
 		
 	/* 버튼 사이 마진 조정 */
@@ -204,6 +221,8 @@ body {
 
 /* 왼쪽 박스 (혜민 외 수정 금지!) */
 >>>>>>> origin/Frontend
+=======
+>>>>>>> 157d06568a90830c2c1242ee8775f96b0e4e35a9
 #left_box{
 	width: 30%; 
 	height:100%; 
