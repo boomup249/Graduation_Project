@@ -24,7 +24,8 @@ conn = MySQLdb.connect(
     user="root",
     passwd="1937",
     host="localhost",
-    db="member"
+    db="member",
+    charset='utf8'
 )
 cursor = conn.cursor()
 
@@ -166,14 +167,18 @@ def nintendo_crawling():
             new_soup = BeautifulSoup(driver.page_source, "html.parser")
 
 
-        description = new_soup.select_one("div.game_ex")
-        if description == None:
-            description = new_soup.select_one("div.value")
+        descript = new_soup.select_one("div.game_ex")
+        description = ""
+        if descript == None:
+            descript = new_soup.select_one("div.value")
         else:
-            description = None
+            descript = None
         
-        if description != None:
-            description = description.text.strip()
+        if descript != None:
+            descript = descript.text.strip()
+            for char in descript:
+                if char.isalnum() or char.isspace():
+                    description += char
 
         gameimg = new_soup.select_one('img.fotorama__img')
         if gameimg == None:
@@ -354,8 +359,12 @@ def ps_crawling():
 
             description = new_soup.find('p', attrs={'data-qa': 'mfe-game-overview#description'})
 
-            if description != None:
-                description = description.text
+            if descript != None:
+                descript = descript.text.strip()
+                description = ""
+                for char in descript:
+                    if char.isalnum() or char.isspace():
+                        description += char
 
             try:
                 gameimg = new_soup.find('img', attrs={'data-qa': 'gameBackgroundImage#heroImage#image'})
@@ -500,9 +509,14 @@ def steam_crawling(driver):
         if gameimg != None:
             gameimg = gameimg['href']
 
-        description = new_soup.select_one("div.game_description_snippet")
-        if description != None:
-            description = description.text.strip()
+        descript = new_soup.select_one("div.game_description_snippet")
+        description = ""
+        if descript != None:
+            descript = descript.text.strip()
+            for char in descript:
+                if char.isalnum() or char.isspace():
+                    description += char
+
         tag = new_soup.select("a.app_tag")
         
         tag_length = len(tag)
@@ -689,9 +703,13 @@ def epic_crawling():
                 continue
 
             try:
-                description = new_soup.select_one("div.css-1myreog")
-                if description != None:
-                    description = description.text.strip()
+                descript = new_soup.select_one("div.css-1myreog")
+                description = ""
+                if descript != None:
+                    descript = descript.text.strip()
+                    for char in descript:
+                        if char.isalnum() or char.isspace():
+                            description += char
             except:
                 print("게임 설명 크롤링 오류 NULL로 대체")
 
@@ -771,7 +789,7 @@ if __name__ == "__main__":
     process2 = multiprocessing.Process(target=ps_crawling)
     process3 = multiprocessing.Process(target=steam_start)
     process4 = multiprocessing.Process(target=epic_crawling)
-
+    """
     try:
         process1.start()
     except:
@@ -790,6 +808,7 @@ if __name__ == "__main__":
         print("process3 시작 오류")
 
     sleep(3)
+    """
     try:
         process4.start()
     except:
