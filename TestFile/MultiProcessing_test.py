@@ -611,7 +611,7 @@ def steam_language_change(driver, soup):
 
 def epic_crawling():
     platform = "epicgames"
-    URL = 'https://store.epicgames.com/ko/'
+    URL = 'https://store.epicgames.com/ko/browse'
     epicgames = 'https://store.epicgames.com'
     cursor.execute("DROP TABLE IF EXISTS gamedata_epic_genre")
     cursor.execute("DROP TABLE IF EXISTS gamedata_epic")
@@ -641,11 +641,6 @@ def epic_crawling():
                 ''')
     driver = Driver_Start(platform, URL)
     soup = BeautifulSoup(driver.page_source, "html.parser")
-    sale_url_find = soup.select_one('a.group-swiper-slider--title-link')["href"]
-    sale_url = epicgames + sale_url_find
-
-    driver.quit()
-    driver = Driver_Start(platform, sale_url)
     sleep(3)
 
     #할인 페이지 들어오자마자 페이지바 읽어와서 마지막 페이지 값 저장
@@ -663,6 +658,14 @@ def epic_crawling():
         
         driver.quit()
         for item in gamelist:
+            saleper = item.find("div", class_="css-b0xoos")
+            if saleper == None:
+                continue
+            else:
+                price = item.find("div", class_="css-4jky3p").text
+                saleprice = item.find("span", class_="css-119zqif").text
+                saleper = saleper.text
+
             title = item.find("div", class_="css-rgqwpc")
             if title == None:
                 title = item.find("div",class_="css-8uhtka").text
@@ -673,21 +676,17 @@ def epic_crawling():
             if last_game_title == title:
                 break
 
-            saleper = item.find("div", class_="css-b0xoos")
-            if saleper != None:
-                price = item.find("div", class_="css-4jky3p").text
-                saleprice = item.find("span", class_="css-119zqif").text
-                saleper = saleper.text
-            else:
-                saleper = "X"
-                saleprice = "X"
-
             game_link = item.select_one('a.css-g3jcms')["href"]
             move = epicgames+game_link
+            print(f'{title}로 이동')
 
             driver = Driver_Start(platform, move)
             sleep(3)
             new_soup = BeautifulSoup(driver.page_source, "html.parser")
+
+            if new_soup.select_one('h1.css-1gty6cv') != None:
+                driver.quit()
+                continue
 
             try:
                 description = new_soup.select_one("div.css-1myreog")
@@ -772,43 +771,7 @@ if __name__ == "__main__":
     process2 = multiprocessing.Process(target=ps_crawling)
     process3 = multiprocessing.Process(target=steam_start)
     process4 = multiprocessing.Process(target=epic_crawling)
-    
-    """
-    # 프로세스 시작
-    try:
-        process1.start()
-    except:
-        print("1번 프로세스 오류")
 
-    sleep(3)
-
-    try:
-        process2.start()
-    except:
-        print("2번 프로세스 오류")    
-    
-    sleep(3)
-    while(True):
-        sleep(600)
-        if mode1 == 1:
-            try:
-                process3.start()
-                mode3 = 1
-            except:
-                print("3번 프로세스 오류")  
-        
-        sleep(3)
-        if mode2 == 1:
-            try:
-                process4.start()
-                mode4 = 1
-            except:
-                print("4번 프로세스 오류")
-        
-        if mode3 == 1 and mode4 == 1:
-            break
-            
-    """
     try:
         process1.start()
     except:
