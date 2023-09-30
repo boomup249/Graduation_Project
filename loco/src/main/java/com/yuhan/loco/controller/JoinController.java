@@ -75,7 +75,7 @@ public class JoinController {
 	
 	//연결
 	//main
-	@GetMapping("/main")
+	@GetMapping("main")
 	public String Main() {
 		page = "main";
 		return "/main";

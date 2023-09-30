@@ -9,71 +9,6 @@
       <link rel="stylesheet" href="css/game_table.css"> <!-- 게임 목록 css -->
       <link rel="stylesheet" href="css/pagination.css"> <!-- 페이지네이션 css -->
       
-      	<!-- JavaScript 코드 -->
-	<script>
-    // JavaScript로 버튼 클릭 이벤트를 처리
-    document.addEventListener("DOMContentLoaded", function () {
-        // 버튼 요소들을 선택
-        var buttons = document.querySelectorAll(".button");
-        var buttonContainers = document.querySelectorAll("td.button-container1, td.button-container2");
-
-        // 버튼 클릭 이벤트 핸들러
-        function handleButtonClick() {
-            // 모든 버튼에서 active-button 클래스 제거
-            buttons.forEach(function (button) {
-                button.classList.remove("active-button");
-            });
-
-            // 현재 클릭한 버튼에 active-button 클래스 추가
-            this.classList.add("active-button");
-        }
-
-        // 각 버튼에 클릭 이벤트 리스너 등록
-        buttons.forEach(function (button) {
-            button.addEventListener("click", handleButtonClick);
-        });
-
-        // 버튼 컨테이너 중 하나만 활성화하도록 처리
-        buttonContainers.forEach(function (container) {
-            container.addEventListener("click", function () {
-                // 모든 버튼 컨테이너에서 active-button 클래스 제거
-                buttonContainers.forEach(function (buttonContainer) {
-                    buttonContainer.classList.remove("active-button");
-                });
-
-                // 현재 클릭한 컨테이너에 active-button 클래스 추가
-                container.classList.add("active-button");
-            });
-        });
-    });
-  
-
-
-    	// 페이지가 로드될 때 실행
-        document.addEventListener("DOMContentLoaded", function () {
-            // 다른 HTML 파일을 로드하는 함수
-            function loadOtherHTML() {
-                // Ajax 요청을 생성합니다.
-                var xhr = new XMLHttpRequest();
-                xhr.open("GET", "board.html", true);
-
-                // 요청이 완료되면 실행되는 콜백 함수
-                xhr.onload = function () {
-                    if (xhr.status === 200) {
-                        // 요청이 성공하면 응답 내용을 content-placeholder에 삽입합니다.
-                        document.getElementById("content-placeholder").innerHTML = xhr.responseText;
-                    }
-                };
-
-                // 요청을 보냅니다.
-                xhr.send();
-            }
-
-            // 페이지가 로드될 때 다른 HTML 파일을 로드합니다.
-            loadOtherHTML();
-        });
-	</script>
-      
       <style>
          body {
             margin : 0;
@@ -303,57 +238,36 @@
             </li>
          </ul>
       </div>
-      
 
       <div id="b1">
-  		<div class="b2">
-			<tr>
-        		<td class="button-container3">
-          			<!-- '공지사항' 버튼 -->
-          			<button class="button transparent-button">공지사항</button>	
-        		</td>
-        		<td class="button-container4">
-          			<!-- '자유게시판' 버튼 -->
-          			<button class="button transparent-button">자유게시판</button>
-        		</td>
-        		<td class="button-container4">
-          			<!-- '게임공략' 버튼 -->
-          			<button class="button transparent-button">게임공략</button>
-        		</td>
-        		<td class="button-container4">
-          			<!-- '파티원' 버튼 -->
-          			<button class="button transparent-button">파티원</button>
-        		</td>
-      		</tr>  	  
-		</div>
   		<div class="line">
     		<table class="line2">
       		<tr>
         		<td class="button-container1">
           			<!-- '최신글' 버튼 -->
-          			<button class="button latest-button">최신글</button>
+          			<button class="button latest-button" id="btn_new">최신글</button>
           			<!-- '인기글' 버튼 -->
-          			<button class="button popular-button">인기글</button>		
+          			<button class="button popular-button" id="btn_popular">인기글</button>		
         		</td>
         		<td class="button-container2">
           			<!-- '글쓰기' 버튼 -->
-          			<button class="button write-button">글쓰기</button>
-          			
+          			<button type="button" class="button write-button" id="btn_write">글쓰기</button>
+
           			<input type="text" class="search-input" placeholder="검색어를 입력하세요">
-    
+
     				<!-- 검색 버튼 -->
     				<button class="button search-button">검색</button>
         		</td>
       		</tr>
     		</table>
     		<div class="b3">
-				
-				
+				<iframe src="/post" class="change_frame" width="100%" height="100%"></iframe>
 			</div>
   		</div>
-		</div>
+	</div>
          
 
 
+	<script src="js/bbs.js"></script>
 </body>
 </html>
