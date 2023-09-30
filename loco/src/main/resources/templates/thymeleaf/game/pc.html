@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <html xmlns:th="http://www.thymeleaf.org">
 	<head>
 		<meta charset="UTF-8">
@@ -10,186 +9,8 @@
 		<link rel="stylesheet" href="css/game_table.css"> <!-- 게임 목록 css -->
 		<link rel="stylesheet" href="css/pagination.css"> <!-- 페이지네이션 css -->
 		
-		<style>	
-			/*css 속성*/
-			/*내용*/
-			#content { 
-						position: relative;
-						top: 100px;
-						left: 0px; /*헤더 아래부터*/
-						width: 100%; height: calc(100% - 100px)/*화면 - 헤더*/;
-						overflow-y: scroll; /*콘텐츠에만 스크롤이 적용되도록*/
-						}
-			
-			body { background-color: #222831;
-					margin: 0; padding: 0;}
-			
-					
-		</style>
-	</head>
-	
-	<body>
-		<!-- 헤더 -->
-		<div id="header">
-			<!-- 로고 -->
-			<div class="logo_btn"><a href="/main"><img src="imgs/header/logo.png"/></a></div>
-			
-			<!-- 메뉴 -->
-			<ul>
-				<!-- 콘솔 -->
-				<li>
-					<div class="menu">
-						<a href="/console">CONSOLE</a>
-					</div>
-				</li>
-				
-				<!-- pc -->
-				<li>
-					<div class="menu">
-						<a href="/pc">PC</a>
-					</div>
-				</li>
-				
-				<!-- 게시판 -->
-				<li>
-					<div class="menu">
-						<a href="#">BBS</a>
-					</div>
-				</li>
-				
-				<!-- 신작 -->
-				<li>
-					<div class="menu">
-						<a href="#">NEWS</a>
-					</div>
-				</li>
-				
-				<!-- 로그인 버튼-->
-				<li th:if="${session.user == null}"> <!-- 세션(user)가 없으면 -->
-					<div class="menu">
-						<a href="/login"><img src="imgs/header/login.png"/></a>
-					</div>
-				</li>
-				
-				<!-- 마이페이지 -->
-				<li th:if="${session.user != null}"> <!-- 세션(user)가 있으면 -->
-					<div class="mypage"></div>
-					<!-- 드롭다운 -->
-					<ul class="dropdown">
-						<li><a href="#">내 계정</a></li>
-						<li><a href="#">프로필 설정</a></li>
-						<li><a href="/logout">로그아웃</a></li>
-					</ul>
-				</li>
-			</ul>
-			
-		</div>
-		
-		<!-- 콘텐츠 -->
-		<div id="content">
-			<!-- 테이블 -->
-			<table>
-				<tr th:each = "g : ${gamePage}">
-					<td>
-						<a href="#">
-							
-							<div class="container">
-							
-								<div class="basic">
-									
-									<div id="img_tb" th:style="'background-image:url('+ ${g.gameUrl} +');'"></div>
-									
-									<div id="text_tb">
-										<div class="title_tb" th:text="${g.gameName}">게임 타이틀</div>
-										<div class="genre_tb">게임 장르</div>
-									</div>
-									
-								</div>
-								
-								<div class="additional">
-									
-									<div th:if="${g.getDcRate().equals('X') || g.getDcRate().equals('할인 X')}" 
-										id="no_dc"
-										th:text="${g.price}"><!-- 할인 x -->
-											정가
-									</div>
-									
-									<div th:if="${!(g.getDcRate().equals('X') || g.getDcRate().equals('할인 X'))}" 
-										id="dc"><!-- 할인 o -->
-											<div class="dc_rate" th:text="${g.DcRate}">할인율</div>
-											<div class="prices">
-												<div class="fir_price" th:text="${g.price}">정가</div>
-												<div class="dc_price" th:text="${g.DcPrice}">할인가</div>
-											</div>
-									</div>
-								</div>
-								
-							</div>
-							
-						</a>
-					</td>
-				</tr>
-			</table>
-			
-			
-			<!-- 페이징 -->
-			<div id="pagination">
-				
-				<ul>
-					
-					<li th:if="${currentPage > 1}" class="fir_btn">
-			            <a th:href="@{/pc(page=1)}">
-			            	<<
-			           	</a>
-			        </li>
-					
-			        <li th:if="${startPage >= 10}" class="pv_btn">
-			            <a th:href="@{/pc(page=${startPage - 1})}"
-			            th:classappend="${startPage > 1} ? '' : 'disabled'">
-			            	이전
-			           	</a>
-			        </li>
-			        
-			        <li th:each="pageNum : ${#numbers.sequence(startPage, endPage)}" class="page_btn">
-			            <a th:href="@{/pc(page=${pageNum})}"
-			               th:classappend="${pageNum == currentPage} ? 'current' : ''"
-			               th:text="${pageNum}">
-			               ${pageNum}
-			            </a>
-			        </li>
-			        
-			        <li th:if="${endPage < totalPage}" class="next_btn">
-			            <a th:href="@{/pc(page=${endPage + 1})}"
-			            th:classappend="${endPage < totalPage} ? '' : 'disabled'">
-			            	다음
-			            </a>
-			        </li>
-			        
-			        <li th:if="${currentPage < totalPage}" class="last_btn">
-			            <a th:href="@{/pc(page=${totalPage})}">
-			            >>
-			           	</a>
-			        </li>
-			        
-			    </ul>
-							
-			</div>
-			
-			
-		</div>
-		
-	</body>
-=======
-<html xmlns:th="http://www.thymeleaf.org">
-	<head>
-		<meta charset="UTF-8">
-		<title>loco > pc</title>
-		
-		<!-- 외부 css -->
-		<link rel="stylesheet" href="css/font.css"> <!-- 폰트 css -->
-		<link rel="stylesheet" href="css/header.css"> <!-- 헤더 css -->
-		<link rel="stylesheet" href="css/game_table.css"> <!-- 게임 목록 css -->
-		<link rel="stylesheet" href="css/pagination.css"> <!-- 페이지네이션 css -->
+		<!-- 외부 js -->
+		<script src="js/longTitle.js"></script>
 		
 		<style>	
 			/*css 속성*/
@@ -273,7 +94,7 @@
 				<tr th:each="game : ${gamePage.content}">
 					<td>
 						<!-- 게임 누르면 링크연결  -->
-						<a th:href="@{'/pcDetail/' + ${game.KEY}}">
+						<a href="#">
 							<!-- steam only -->
 							<div th:if="${game.SITEAVAILABILITY eq 'Steam Only'}" class="container">
 							
@@ -282,30 +103,40 @@
 									<div id="img_tb" th:style="'background-image:url('+ ${game.STEAMIMGDATA} +');'"></div>
 									
 									<div id="text_tb">
-										<div class="title_tb" th:text="${game.TITLE}">게임 타이틀</div>
+										<div class="title_tb" th:text="${game.TITLE}" data-original-text="" >게임 타이틀</div>
 										<div class="genre_tb">게임 장르</div>
 									</div>
 									
 								</div>
 								
 								<div class="additional">
-									<!-- 변동 있을 시 바꾸기 -->
-									<!-- 09.29기준 steam = '할인 X' -->
-									<!-- 할인 x --><!-- 크롤링시 할인율이 없을 때 price에 값이 있는지, sale price에 값이 있는지에 따라 고치기 -->
-									<div th:if="${game.STEAMSALEPER.equals('할인 X') || game.STEAMSALEPER == null}" 
-									id="no_dc" th:text="${game.STEAMPRICE}">
-											정가
+									<!-- -->
+									<div class="site_logos">
+										<img src="imgs/other_logo/white/steam/steam_logo_white.png">
 									</div>
 									
-									<!-- 할인 o -->
-									<div th:if="${!(game.STEAMSALEPER.equals('할인 X') || game.STEAMSALEPER == null)}"
-									id="dc">
-											<div class="dc_rate" th:text="${game.STEAMSALEPER}">할인율</div>
-											<div class="prices">
-												<div class="fir_price" th:text="${game.STEAMPRICE}">정가</div>
-												<div class="dc_price" th:text="${game.STEAMSALEPRICE}">할인가</div>
-											</div>
+									<div class="price_info">
+										
+										<!-- 변동 있을 시 바꾸기 -->
+										<!-- 09.29기준 steam = '할인 X' -->
+										<!-- 할인 x --><!-- 크롤링시 할인율이 없을 때 price에 값이 있는지, sale price에 값이 있는지에 따라 고치기 -->
+										<div th:if="${game.STEAMSALEPER.equals('할인 X') || game.STEAMSALEPER == null}" 
+										id="no_dc" th:text="${game.STEAMSALEPRICE}">
+												정가
+										</div>
+										
+										<!-- 할인 o -->
+										<div th:if="${!(game.STEAMSALEPER.equals('할인 X') || game.STEAMSALEPER == null)}"
+										id="dc">
+												<div class="dc_rate" th:text="${game.STEAMSALEPER}">할인율</div>
+												<div class="prices">
+													<div class="fir_price" th:text="${game.STEAMPRICE}">정가</div>
+													<div class="dc_price" th:text="${game.STEAMSALEPRICE}">할인가</div>
+												</div>
+										</div>
+										
 									</div>
+									
 								</div>
 								
 							</div>
@@ -320,97 +151,25 @@
 									<div id="img_tb" th:style="'background-image:url('+ ${game.EPICIMGDATA} +');'"></div>
 									
 									<div id="text_tb">
-										<div class="title_tb" th:text="${game.TITLE}">게임 타이틀</div>
+										<div class="title_tb" th:text="${game.TITLE}" data-original-text="">게임 타이틀</div>
 										<div class="genre_tb">게임 장르</div>
 									</div>
 									
 								</div>
 								
 								<div class="additional">
-									<!-- 변동 있을 시 바꾸기 -->
-									<!-- 09.29기준 epic = 'X' -->
-									<!-- 할인 x --><!-- 크롤링시 할인율이 없을 때 price에 값이 있는지, sale price에 값이 있는지에 따라 고치기 -->
-									<div th:if="${game.EPICSALEPER.equals('X') || game.EPICSALEPER == null}" 
-									id="no_dc" th:text="${game.EPICPRICE}">
-											정가
+									<!-- -->
+									<div class="site_logos">
+										<img src="imgs/other_logo/white/epic/EpicGames_White2.png">
 									</div>
 									
-									<!-- 할인 o -->
-									<div th:if="${!(game.EPICSALEPER.equals('X') || game.EPICSALEPER == null)}"
-									id="dc">
-											<div class="dc_rate" th:text="${game.EPICSALEPER}">할인율</div>
-											<div class="prices">
-												<div class="fir_price" th:text="${game.EPICPRICE}">정가</div>
-												<div class="dc_price" th:text="${game.EPICSALEPRICE}">할인가</div>
-											</div>
-									</div>
-								</div>
-								
-							</div>
-							
-							
-							
-							<!-- Both --><!-- min_check() 써서 수정 -->
-							<div th:if="${game.SITEAVAILABILITY eq 'Both'}" class="container">
-								
-								<!-- min_check == steam -->
-								<div th:if="" class="container">
-								
-									<div class="basic">
-										<!-- 이미지 url 넣기 -->
-										<div id="img_tb" th:style="'background-image:url('+ ${game.STEAMIMGDATA} +');'"></div>
+									<div class="price_info">
 										
-										<div id="text_tb">
-											<div class="title_tb" th:text="${game.TITLE}">게임 타이틀</div>
-											<div class="genre_tb">게임 장르</div>
-										</div>
-										
-									</div>
-									
-									<div class="additional">
-										<!-- 변동 있을 시 바꾸기 -->
-										<!-- 09.29기준 steam = '할인 X' -->
-										<!-- 할인 x --><!-- 크롤링시 할인율이 없을 때 price에 값이 있는지, sale price에 값이 있는지에 따라 고치기 -->
-										<div th:if="${game.STEAMSALEPER.equals('할인 X') || game.STEAMSALEPER == null}" 
-										id="no_dc" th:text="${game.STEAMPRICE}">
-												정가
-										</div>
-										
-										<!-- 할인 o -->
-										<div th:if="${!(game.STEAMSALEPER.equals('할인 X') || game.STEAMSALEPER == null)}"
-										id="dc">
-												<div class="dc_rate" th:text="${game.STEAMSALEPER}">할인율</div>
-												<div class="prices">
-													<div class="fir_price" th:text="${game.STEAMPRICE}">정가</div>
-													<div class="dc_price" th:text="${game.STEAMSALEPRICE}">할인가</div>
-												</div>
-										</div>
-									</div>
-									
-								</div>
-								
-								
-								
-								<!-- min_check == epic -->
-								<div th:if="" class="container">
-								
-									<div class="basic">
-										<!-- 이미지 url 넣기 -->
-										<div id="img_tb" th:style="'background-image:url('+ ${game.EPICIMGDATA} +');'"></div>
-										
-										<div id="text_tb">
-											<div class="title_tb" th:text="${game.TITLE}">게임 타이틀</div>
-											<div class="genre_tb">게임 장르</div>
-										</div>
-										
-									</div>
-									
-									<div class="additional">
 										<!-- 변동 있을 시 바꾸기 -->
 										<!-- 09.29기준 epic = 'X' -->
 										<!-- 할인 x --><!-- 크롤링시 할인율이 없을 때 price에 값이 있는지, sale price에 값이 있는지에 따라 고치기 -->
 										<div th:if="${game.EPICSALEPER.equals('X') || game.EPICSALEPER == null}" 
-										id="no_dc" th:text="${game.EPICPRICE}">
+										id="no_dc" th:text="${game.EPICSALEPRICE}">
 												정가
 										</div>
 										
@@ -423,6 +182,113 @@
 													<div class="dc_price" th:text="${game.EPICSALEPRICE}">할인가</div>
 												</div>
 										</div>
+										
+									</div>
+									
+									
+								</div>
+								
+							</div>
+							
+							
+							
+							<!-- Both --><!-- min_check() 써서 수정 -->
+							<div th:if="${game.SITEAVAILABILITY eq 'Both'}" class="container">
+								
+								<!-- min_check == steam -->
+								<div th:if="${gameService.min_check(game.STEAMSALEPRICE, game.EPICSALEPRICE) eq 's'}" class="container">
+								
+									<div class="basic">
+										<!-- 이미지 url 넣기 -->
+										<div id="img_tb" th:style="'background-image:url('+ ${game.STEAMIMGDATA} +');'"></div>
+										
+										<div id="text_tb">
+											<div class="title_tb" th:text="${game.TITLE}" data-original-text="">게임 타이틀</div>
+											<div class="genre_tb">게임 장르</div>
+										</div>
+										
+									</div>
+									
+									<div class="additional">
+										<!-- -->
+										<div class="site_logos">
+											<img src="imgs/other_logo/white/steam/steam_logo_white.png">
+											<img src="imgs/other_logo/white/epic/EpicGames_White2.png">
+										</div>
+										
+										<div class="price_info">
+											
+											<!-- 변동 있을 시 바꾸기 -->
+											<!-- 09.29기준 steam = '할인 X' -->
+											<!-- 할인 x --><!-- 크롤링시 할인율이 없을 때 price에 값이 있는지, sale price에 값이 있는지에 따라 고치기 -->
+											<div th:if="${game.STEAMSALEPER.equals('할인 X') || game.STEAMSALEPER == null}" 
+											id="no_dc" th:text="${game.STEAMSALEPRICE}">
+													정가
+											</div>
+											
+											<!-- 할인 o -->
+											<div th:if="${!(game.STEAMSALEPER.equals('할인 X') || game.STEAMSALEPER == null)}"
+											id="dc">
+													<div class="dc_rate" th:text="${game.STEAMSALEPER}">할인율</div>
+													<div class="prices">
+														<div class="fir_price" th:text="${game.STEAMPRICE}">정가</div>
+														<div class="dc_price" th:text="${game.STEAMSALEPRICE}">할인가</div>
+													</div>
+											</div>
+											
+										</div>
+										
+										
+									</div>
+									
+								</div>
+								
+								
+								
+								<!-- min_check == epic -->
+								<div th:if="${gameService.min_check(game.STEAMSALEPRICE, game.EPICSALEPRICE) eq 'e'}" class="container">
+								
+									<div class="basic">
+										<!-- 이미지 url 넣기 -->
+										<div id="img_tb" th:style="'background-image:url('+ ${game.EPICIMGDATA} +');'"></div>
+										
+										<div id="text_tb">
+											<div class="title_tb" th:text="${game.TITLE}" data-original-text="">게임 타이틀</div>
+											<div class="genre_tb">게임 장르</div>
+										</div>
+										
+									</div>
+									
+									<div class="additional">
+										<!-- -->
+										<div class="site_logos">
+											<img src="imgs/other_logo/white/steam/steam_logo_white.png">
+											<img src="imgs/other_logo/white/epic/EpicGames_White2.png">
+										</div>
+										
+										<div class="price_info">
+											
+											<!-- 변동 있을 시 바꾸기 -->
+											<!-- 09.29기준 epic = 'X' -->
+											<!-- 할인 x --><!-- 크롤링시 할인율이 없을 때 price에 값이 있는지, sale price에 값이 있는지에 따라 고치기 -->
+											<div th:if="${game.EPICSALEPER.equals('X') || game.EPICSALEPER == null}" 
+											id="no_dc" th:text="${game.EPICSALEPRICE}">
+													정가
+											</div>
+											
+											<!-- 할인 o -->
+											<div th:if="${!(game.EPICSALEPER.equals('X') || game.EPICSALEPER == null)}"
+											id="dc">
+													<div class="dc_rate" th:text="${game.EPICSALEPER}">할인율</div>
+													<div class="prices">
+														<div class="fir_price" th:text="${game.EPICPRICE}">정가</div>
+														<div class="dc_price" th:text="${game.EPICSALEPRICE}">할인가</div>
+													</div>
+											</div>
+											
+										</div>
+										
+										
 									</div>
 									
 								</div>
@@ -485,5 +351,4 @@
 		</div>
 		
 	</body>
->>>>>>> 157d06568a90830c2c1242ee8775f96b0e4e35a9
 </html>

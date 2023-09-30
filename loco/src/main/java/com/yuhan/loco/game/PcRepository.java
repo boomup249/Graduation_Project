@@ -10,8 +10,7 @@ import java.util.UUID;
 
 @Repository
 public interface PcRepository extends JpaRepository<PcDB, String>{
-    List<PcDB> findBySITEAVAILABILITY(String SITEAVAILABILITY); //테스트용
-    
-    Page<PcDB> findAll(Pageable pageable); //다 받아오기
-    PcDB findByKEY(String key); // key에 해당하는 PC 게임 정보 가져오기
+	List<PcDB> findBySITEAVAILABILITY(String SITEAVAILABILITY); //테스트용
+	
+	Page<PcDB> findAll(Pageable pageable); //다 받아오기
 }

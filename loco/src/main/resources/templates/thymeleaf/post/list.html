@@ -3,10 +3,7 @@
     <meta charset="UTF-8">
     <title>게시판</title>
     
-<<<<<<< HEAD
-=======
     <link rel="stylesheet" href="css/list.css"> <!-- 게시판 css -->
->>>>>>> 157d06568a90830c2c1242ee8775f96b0e4e35a9
     <style>
 		/* 게시판 컨테이너 */
 		.board-container {
@@ -15,72 +12,6 @@
     		padding: 20px;
 		}
 
-<<<<<<< HEAD
-		/* 게시글 목록 테이블 */
-		.post-table {
-    		width: 100%;
-    		
-		}
-
-		.post-table th, .post-table td {
-    	padding: 10px;
-    	text-align: left;
-    	border-bottom: 1px solid #ddd;
-		}
-
-		.post-table th {
-    	background-color: #f2f2f2;
-		}
-
-		/* 게시글 목록 아이템 */
-		.post-item {
-    	
-    	justify-content: space-between;
-    	align-items: center;
-    	padding: 10px;
-    	border-bottom: 1px solid #ddd;
-		}
-		
-		/* 게시글 목록 아이템 내 제목 스타일 변경 */
-.post-item .post-title-link {
-    text-decoration: none;
-    color: #333;
-    max-width: 200px; /* 최대 너비를 조정 (원하는 크기로 변경 가능) */
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis; /* 넘칠 경우 ...으로 표시 */
-}
-
-
-		.post-item:hover {
-    	background-color: #f5f5f5;
-		}
-
-		/* 게시글 제목 링크 */
-		.post-title-link {
-    	text-decoration: none;
-    	color: #333;
-		}
-
-		/* 반응형 디자인 */
-		@media (max-width: 768px) {
-    	.board-container {
-        padding: 10px;
-    	}
-
-    	.post-table th, .post-table td {
-        	padding: 5px;
-    	}
-
-    	.post-item {
-        	flex-direction: column;
-        text-align: center;
-    	}
-}
-		
-
-=======
->>>>>>> 157d06568a90830c2c1242ee8775f96b0e4e35a9
 		
 	</style>
 </head>
@@ -90,27 +21,6 @@
     <table class="post-table">
         <thead>
             <tr>
-<<<<<<< HEAD
-                <th>제목</th>
-                <th>작성자</th>
-                <th>날짜</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr class="post-item">
-                <td>
-                    <a class="post-title-link" href="#">게시글 제목 1</a>
-                </td>
-                <td>작성자 1</td>
-                <td>2023-09-25</td>
-            </tr>
-            <tr class="post-item">
-                <td>
-                    <a class="post-title-link" href="#">게시글 제목 2</a>
-                </td>
-                <td>작성자 2</td>
-                <td>2023-09-26</td>
-=======
                 <th class="custom-width" style="width:60%;">제목</th>
                 <th>작성자</th>
                 <th>날짜</th>
@@ -136,7 +46,6 @@
                 <td>2023-09-26</td>
                 <td>33</td>
                 <td>26</td>
->>>>>>> 157d06568a90830c2c1242ee8775f96b0e4e35a9
             </tr>
             <!-- 추가적인 게시글 아이템들을 동적으로 생성하거나 서버에서 데이터를 가져와서 출력하세요. -->
         </tbody>

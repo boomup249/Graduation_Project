@@ -109,11 +109,7 @@
 				height: 60px;
 				border-radius: 50%;
 				/*스프링에서 디비로 받아서 이미지 url 바꿔줘야 함*/
-<<<<<<< HEAD
 				background-image: url("../imgs/header/normal.png"); /*기본 이미지*/
-=======
-				background-image: url("/imgs/header/normal.png"); /*기본 이미지*/
->>>>>>> 157d06568a90830c2c1242ee8775f96b0e4e35a9
 				background-size: cover;
 				background-position: center;
 				background-repeat: no-repeat;
