@@ -1,0 +1,67 @@
+CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = `root`@`localhost` 
+    SQL SECURITY DEFINER
+VIEW `game_switch_ps` AS
+    SELECT 
+        `p`.`NUM` AS `psnum`,
+        `s`.`NUM` AS `switchnum`,
+        `p`.`TITLE` AS `title`,
+        (CASE
+            WHEN
+                ((`p`.`TITLE` IS NOT NULL)
+                    AND (`s`.`TITLE` IS NOT NULL))
+            THEN
+                'Both'
+            WHEN (`p`.`TITLE` IS NOT NULL) THEN 'PS Only'
+            WHEN (`s`.`TITLE` IS NOT NULL) THEN 'Switch Only'
+            ELSE 'None'
+        END) AS `siteavailability`,
+        `p`.`PRICE` AS `psprice`,
+        `s`.`PRICE` AS `switchprice`,
+        `p`.`SALEPRICE` AS `pssaleprice`,
+        `s`.`SALEPRICE` AS `switchsaleprice`,
+        `p`.`SALEPER` AS `pssaleper`,
+        `s`.`SALEPER` AS `switchsaleper`,
+        `p`.`DESCRIPTION` AS `psdescription`,
+        `s`.`DESCRIPTION` AS `switchdescription`,
+        `p`.`IMGDATA` AS `psimgdata`,
+        `s`.`IMGDATA` AS `switchimgdata`,
+        `p`.`GAMEIMG` AS `psgameimg`,
+        `s`.`GAMEIMG` AS `switchgameimg`,
+        `p`.`URL` AS `psurl`,
+        `s`.`URL` AS `switchurl`
+    FROM
+        (`gamedata_ps` `p`
+        LEFT JOIN `gamedata_switch` `s` ON ((`p`.`TITLE` = `s`.`TITLE`))) 
+    UNION SELECT 
+        `p`.`NUM` AS `psnum`,
+        `s`.`NUM` AS `switchnum`,
+        `p`.`TITLE` AS `title`,
+        (CASE
+            WHEN
+                ((`p`.`TITLE` IS NOT NULL)
+                    AND (`s`.`TITLE` IS NOT NULL))
+            THEN
+                'Both'
+            WHEN (`p`.`TITLE` IS NOT NULL) THEN 'PS Only'
+            WHEN (`s`.`TITLE` IS NOT NULL) THEN 'Switch Only'
+            ELSE 'None'
+        END) AS `siteavailability`,
+        `p`.`PRICE` AS `psprice`,
+        `s`.`PRICE` AS `switchprice`,
+        `p`.`SALEPRICE` AS `pssaleprice`,
+        `s`.`SALEPRICE` AS `switchsaleprice`,
+        `p`.`SALEPER` AS `pssaleper`,
+        `s`.`SALEPER` AS `switchsaleper`,
+        `p`.`DESCRIPTION` AS `psdescription`,
+        `s`.`DESCRIPTION` AS `switchdescription`,
+        `p`.`IMGDATA` AS `psimgdata`,
+        `s`.`IMGDATA` AS `switchimgdata`,
+        `p`.`GAMEIMG` AS `psgameimg`,
+        `s`.`GAMEIMG` AS `switchgameimg`,
+        `p`.`URL` AS `psurl`,
+        `s`.`URL` AS `switchurl`
+    FROM
+        (`gamedata_ps` `p`
+        LEFT JOIN `gamedata_switch` `s` ON ((`p`.`TITLE` = `s`.`TITLE`)))

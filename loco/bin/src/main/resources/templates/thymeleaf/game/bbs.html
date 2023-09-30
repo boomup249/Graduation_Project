@@ -1,0 +1,359 @@
+<html xmlns:th="http://www.thymeleaf.org">
+   <head>
+      <meta charset="UTF-8">
+      <title>loco > pc</title>
+      
+      <!-- 외부 css -->
+      <link rel="stylesheet" href="css/font.css"> <!-- 폰트 css -->
+      <link rel="stylesheet" href="css/header.css"> <!-- 헤더 css -->
+      <link rel="stylesheet" href="css/game_table.css"> <!-- 게임 목록 css -->
+      <link rel="stylesheet" href="css/pagination.css"> <!-- 페이지네이션 css -->
+      
+      	<!-- JavaScript 코드 -->
+	<script>
+    // JavaScript로 버튼 클릭 이벤트를 처리
+    document.addEventListener("DOMContentLoaded", function () {
+        // 버튼 요소들을 선택
+        var buttons = document.querySelectorAll(".button");
+        var buttonContainers = document.querySelectorAll("td.button-container1, td.button-container2");
+
+        // 버튼 클릭 이벤트 핸들러
+        function handleButtonClick() {
+            // 모든 버튼에서 active-button 클래스 제거
+            buttons.forEach(function (button) {
+                button.classList.remove("active-button");
+            });
+
+            // 현재 클릭한 버튼에 active-button 클래스 추가
+            this.classList.add("active-button");
+        }
+
+        // 각 버튼에 클릭 이벤트 리스너 등록
+        buttons.forEach(function (button) {
+            button.addEventListener("click", handleButtonClick);
+        });
+
+        // 버튼 컨테이너 중 하나만 활성화하도록 처리
+        buttonContainers.forEach(function (container) {
+            container.addEventListener("click", function () {
+                // 모든 버튼 컨테이너에서 active-button 클래스 제거
+                buttonContainers.forEach(function (buttonContainer) {
+                    buttonContainer.classList.remove("active-button");
+                });
+
+                // 현재 클릭한 컨테이너에 active-button 클래스 추가
+                container.classList.add("active-button");
+            });
+        });
+    });
+  
+
+
+    	// 페이지가 로드될 때 실행
+        document.addEventListener("DOMContentLoaded", function () {
+            // 다른 HTML 파일을 로드하는 함수
+            function loadOtherHTML() {
+                // Ajax 요청을 생성합니다.
+                var xhr = new XMLHttpRequest();
+                xhr.open("GET", "board.html", true);
+
+                // 요청이 완료되면 실행되는 콜백 함수
+                xhr.onload = function () {
+                    if (xhr.status === 200) {
+                        // 요청이 성공하면 응답 내용을 content-placeholder에 삽입합니다.
+                        document.getElementById("content-placeholder").innerHTML = xhr.responseText;
+                    }
+                };
+
+                // 요청을 보냅니다.
+                xhr.send();
+            }
+
+            // 페이지가 로드될 때 다른 HTML 파일을 로드합니다.
+            loadOtherHTML();
+        });
+	</script>
+      
+      <style>
+         body {
+            margin : 0;
+            padding:0;
+         }
+         
+         #b1 {
+				width : 99.7%;
+				height : 91.5%;
+				border : 1px solid black;
+				background-color : rgb(192, 192, 192);
+				float : left;
+				margin-top: 4.6%;
+				box-sizing : border-box;
+				display : flex ;
+				
+				position : absolute;
+				left: 0.1%;
+            
+         	}
+         .b2 {
+				width : 20%;
+				height : 99.7%;
+				background-color : rgb(18, 28, 31);
+				float : left;
+				margin : 1px;
+				box-sizing : border-box;	
+				z-index : 1;
+				position : absolute;
+				left: 0.1%;
+            	display: flex;
+    			flex-direction: column; /* 세로로 정렬을 위한 설정 */
+    			justify-content: flex-start; /* 상단 정렬 */
+    			align-items: center; /* 가운데 정렬 */
+         	}
+         
+         .line {
+             width: 79%;
+             height: 99.7%;
+             border : 1px solid  rgb(192, 192, 192);
+             top: 0.1%;
+             left: 21%;
+             position: relative;
+             z-index : 1;
+         	}
+         	
+         .line2 {
+			 width : 98%;
+			 height : 1%;
+			 border : 1px solid blue;
+			 top : 1%;
+			 left : 1%;
+			 position : relative;
+			 z-index : 1;
+			 text-align: center;
+		 }
+
+      	.b3 {
+        	width: 98.1%;
+    		height: 82%;
+    		background-color: rgb(255, 255, 255);
+    		margin-top : 1%;
+    		margin-right : 1%;
+    		margin-left: 1%;
+    		box-sizing: border-box; 			
+    		position: relative;
+    		z-index : 1;
+      	}
+      	
+      	.button {
+    		width: 15%; /* 버튼 너비 조절 */
+    		height: 100%; /* 버튼 높이 조절 */
+    		color: white; /* 버튼 글자색 지정 */
+    		border-radius: 5px; /* 버튼 모서리 둥글게 만들기 */
+			font-size : 20px;
+    		margin: 1px; /* 버튼 간격 조절 */
+    		cursor: pointer; /* 마우스 커서를 포인터로 변경하여 클릭 가능한 상태로 표시 */
+    		transition: background-color 0.3s ease;
+		}
+
+		.latest-button {
+    		background-color: lightslategray;; /* 최신글 버튼 배경색 */
+		}
+
+		.popular-button {
+    		background-color: lightslategray;; /* 인기글 버튼 배경색 */
+		}
+        .write-button {
+            background-color: lightslategray;
+            margin :0 10px;
+        }
+         	
+         
+		.button:hover {
+  			background-color:lightgray; /* Change the background color on hover */
+  			
+		}
+		/* 활성화된 버튼 스타일 */
+		.button.active-button {
+    		background-color: lightgray; /* 활성화된 상태의 배경 색상 */
+    		color: white; /* 활성화된 상태의 텍스트 색상 */
+		}
+		
+		td.button-container1 {
+			 width : 49%;
+			 height : 38%;
+			 display : inline-block;
+			 text-align : left;
+			 margin-top: 3%;
+		 }
+		 
+		td.button-container2{
+			width : 49%;
+			height : 38%;
+			display : inline-block;
+			text-align: right;
+			margin-top: 3%;
+		}
+		
+		/* 투명한 버튼 스타일 */
+		.transparent-button {
+    	width: 100%; /* 버튼 너비 100% */
+    	height: 10%; /* 버튼 높이 100% */
+    	background-color: transparent; /* 배경 색상 투명 */
+    	border: none; /* 테두리 없음 */
+    	color: white; /* 버튼 텍스트 색상 */
+    	cursor: pointer; /* 마우스 커서를 포인터로 변경하여 클릭 가능한 상태로 표시 */
+    	transition: background-color 0.3s ease;
+    	margin-top : 10%;
+    	font-size : 20px;
+    	
+		}
+
+		.transparent-button:hover {
+    		background-color: lightgray; /* 마우스 호버 시 배경 색상 변경 */
+		}	
+		
+		/* 검색창 스타일 */
+		.search-input {
+    		width: 70%; /* 검색창 너비 조절 */
+    		height: 100%; /* 검색창 높이 조절 */
+    		padding: 5px; /* 안쪽 여백 설정 */
+    		border: 1px solid #ccc; /* 테두리 설정 */
+    		border-radius: 5px; /* 모서리 둥글게 만들기 */
+    		margin: 0 1px; /* 검색창과 버튼 사이 여백 설정 */
+		}
+
+		/* 검색 버튼 스타일 */
+		.search-button {
+    		width: 8%; /* 검색 버튼 너비 조절 */
+    		height: 100%; /* 검색 버튼 높이 조절 */
+    		background-color: lightslategray; /* 배경색 설정 */
+    		color: white; /* 텍스트 색상 설정 */
+    		border: none; /* 테두리 없음 */
+    		border-radius: 5px; /* 모서리 둥글게 만들기 */
+    		cursor: pointer; /* 마우스 커서를 포인터로 변경하여 클릭 가능한 상태로 표시 */
+    		transition: background-color 0.3s ease;
+    		
+		}
+
+
+		/* 검색 버튼 호버 시 배경색 변경 */
+			.search-button:hover {
+    		background-color: lightgray;
+		}
+
+         
+         
+         
+       </style>
+    
+
+</head>
+   <body>
+    
+   <!-- 헤더 -->
+      <div id="header">
+         <!-- 로고 -->
+         <div class="logo_btn"><a href="/main"><img src="imgs/header/logo.png"/></a></div>
+         
+         <!-- 메뉴 -->
+         <ul>
+            <!-- 콘솔 -->
+            <li>
+               <div class="menu">
+                  <a href="/console">CONSOLE</a>
+               </div>
+            </li>
+            
+            <!-- pc -->
+            <li>
+               <div class="menu">
+                  <a href="/pc">PC</a>
+               </div>
+            </li>
+            
+            <!-- 게시판 -->
+            <li>
+               <div class="menu">
+                  <a href="/bbs">BBS</a>
+               </div>
+            </li>
+            
+            <!-- 신작 -->
+            <li>
+               <div class="menu">
+                  <a href="#">NEWS</a>
+               </div>
+            </li>
+            
+            <!-- 로그인 버튼-->
+            <li th:if="${session.user == null}"> <!-- 세션(user)가 없으면 -->
+               <div class="menu">
+                  <a href="/login"><img src="imgs/header/login.png"/></a>
+               </div>
+            </li>
+            
+            <!-- 마이페이지 -->
+            <li th:if="${session.user != null}"> <!-- 세션(user)가 있으면 -->
+               <div class="mypage"></div>
+               <!-- 드롭다운 -->
+               <ul class="dropdown">
+                  <li><a href="#">내 계정</a></li>
+                  <li><a href="#">프로필 설정</a></li>
+                  <li><a href="/logout">로그아웃</a></li>
+               </ul>
+            </li>
+         </ul>
+      </div>
+      
+
+      <div id="b1">
+  		<div class="b2">
+			<tr>
+        		<td class="button-container3">
+          			<!-- '공지사항' 버튼 -->
+          			<button class="button transparent-button">공지사항</button>	
+        		</td>
+        		<td class="button-container4">
+          			<!-- '자유게시판' 버튼 -->
+          			<button class="button transparent-button">자유게시판</button>
+        		</td>
+        		<td class="button-container4">
+          			<!-- '게임공략' 버튼 -->
+          			<button class="button transparent-button">게임공략</button>
+        		</td>
+        		<td class="button-container4">
+          			<!-- '파티원' 버튼 -->
+          			<button class="button transparent-button">파티원</button>
+        		</td>
+      		</tr>  	  
+		</div>
+  		<div class="line">
+    		<table class="line2">
+      		<tr>
+        		<td class="button-container1">
+          			<!-- '최신글' 버튼 -->
+          			<button class="button latest-button">최신글</button>
+          			<!-- '인기글' 버튼 -->
+          			<button class="button popular-button">인기글</button>		
+        		</td>
+        		<td class="button-container2">
+          			<!-- '글쓰기' 버튼 -->
+          			<button class="button write-button">글쓰기</button>
+          			
+          			<input type="text" class="search-input" placeholder="검색어를 입력하세요">
+    
+    				<!-- 검색 버튼 -->
+    				<button class="button search-button">검색</button>
+        		</td>
+      		</tr>
+    		</table>
+    		<div class="b3">
+				
+				
+			</div>
+  		</div>
+		</div>
+         
+
+
+</body>
+</html>
