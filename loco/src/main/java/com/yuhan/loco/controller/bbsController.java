@@ -27,11 +27,11 @@ import java.util.List;
 //게시판 컨트롤러
 
 @Controller
-public class BBSController {
+public class bbsController {
 	String page = "";
 	private final PostService postService;
 	private final UserService userService;
-	public BBSController(PostService postService, UserService userService) {
+	public bbsController(PostService postService, UserService userService) {
 		this.postService = postService;
 		this.userService = userService;
 	}
