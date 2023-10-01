@@ -24,12 +24,25 @@ public class GameService {
 
     
     //함수
-    public void findPcSITE() {
+    
+    //(테스트용) 사이트 어빌리티 both인 항목 찾기, 쓸거면 형태 고치기(return)
+    public void findPcSITEeqBoth() {
         List<PcDB> a = pcRepository.findBySITEAVAILABILITY("Both");
-        System.out.println(a);
     }
     
-    //함수
+    /*
+    public void findConsoleSITE() {
+        List<ConsoleDB> a = consoleRepository.findBySiteavailabilty("Both");
+        System.out.println(a);
+    }
+	*/
+    
+    //key값으로 해당하는 레코드 db 객체로 받아오기
+    public PcDB getPcByKey(String key) {
+        return pcRepository.findByKEY(key);
+    }
+    
+    //pc 최저가 사이트 찾기 함수
   	public String min_check(String steam_salePrice, String epic_salePrice) {
   		//SITEAVAILABILITY = Both일때 활용
   		//230928기준 steam = '할인 X', epic = 'X'로 표기
@@ -84,19 +97,13 @@ public class GameService {
   		return min;
   	}
 
-    //
+    //pc 페이지 객체로 findall
     public Page<PcDB> getFullPcList(int page) {
         Pageable pageable = PageRequest.of(page, 20);
         return this.pcRepository.findAll(pageable);
     }
-
     
-    /*
-    public void findConsoleSITE() {
-        List<ConsoleDB> a = consoleRepository.findBySiteavailabilty("Both");
-        System.out.println(a);
-    }
-	*/
+    //console 페이지 객체로 findall
     public Page<ConsoleDB> getFullConsoleList(int page) {
         Pageable pageable = PageRequest.of(page, 20);
         return this.consoleRepository.findAll(pageable);
@@ -111,6 +118,8 @@ public class GameService {
     }
 
     
+    //
+    	//dto 방식 사용때 활용
     public List<GameDTO> getAllGames() {
         List<PcDB> gameDBList = pcRepository.findAll();
         List<GameDTO> gameDTOList = gameDBList.stream()
@@ -201,4 +210,46 @@ public class GameService {
         }
         return consoleDTO;
     }
+    
+    //
+    public GameDTO createToDTO(String key, PcDB pcDB) {
+        GameDTO gameDTO = new GameDTO();
+        if (key != null) {
+            PcDB selectedPcGame = pcRepository.findByKEY(key);
+            if (selectedPcGame != null) {
+
+             // TITLE 설정
+                gameDTO.setTITLE(selectedPcGame.getTITLE());
+                gameDTO.setSITEAVAILABILITY(pcDB.getSITEAVAILABILITY());
+     
+                if ("Steam Only".equalsIgnoreCase(pcDB.getSITEAVAILABILITY())) {
+                    gameDTO.setIMGDATA(pcDB.getSTEAMIMGDATA());
+                    gameDTO.setGAMEIMG(pcDB.getSTEAMGAMEIMG());
+                    gameDTO.setDESCRIPTION(pcDB.getSTEAMDESCRIPTION());
+                    gameDTO.setURL(pcDB.getSTEAMURL());
+                    System.out.println(pcDB.getSTEAMURL());
+                }
+                else if("Epic Only".equalsIgnoreCase(pcDB.getSITEAVAILABILITY())) {
+                    gameDTO.setIMGDATA(pcDB.getEPICIMGDATA());
+                    gameDTO.setGAMEIMG(pcDB.getEPICGAMEIMG());
+                    gameDTO.setDESCRIPTION(pcDB.getEPICDESCRIPTION());
+                    gameDTO.setURL(pcDB.getEPICURL());
+                }
+                else if("Both".equalsIgnoreCase(pcDB.getSITEAVAILABILITY())) {
+                    gameDTO.setIMGDATA(pcDB.getSTEAMIMGDATA());
+                    gameDTO.setGAMEIMG(pcDB.getSTEAMGAMEIMG());
+                    gameDTO.setDESCRIPTION(pcDB.getSTEAMDESCRIPTION());
+                    gameDTO.setURL(pcDB.getSTEAMURL());
+                    gameDTO.setURL(pcDB.getEPICURL());
+                }             
+                return gameDTO;
+            }
+        }
+        return gameDTO;
+    }
+    
+    	//dto 방식 사용때 활용 end
+    //
+    
+    
 }

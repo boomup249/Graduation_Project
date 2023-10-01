@@ -6,6 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.yuhan.loco.game.PcDB;
@@ -126,10 +127,18 @@ public class GameController {
 			
 			return "/game/console";
 		}
+	
     // PC Detail
-    @GetMapping("/pcDetail") 
-    public String detail_pc() {
-		return "/game/PcDetail";
+	@GetMapping("/pcDetail/{key}") 
+	public String detail_pc(@PathVariable String key, Model model) {
+	    // 여기에서 PC 게임 정보를 가져와서 모델에 추가
+	    PcDB pcGameDetail = gameService.getPcByKey(key); // key에 해당하는 PC 게임 정보 가져오기
+	    GameDTO pcGameDTO = gameService.createToDTO(key, pcGameDetail); // DTO로 변환
+	    List<PcDB> pcDB = gameService.getAllData();
+	    model.addAttribute("pcGameDTO", pcGameDTO);
+	    model.addAttribute("pcDB", pcDB);
+	   
+	    return "/game/PcDetail";
 	}
 
     // Console Detail

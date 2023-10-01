@@ -8,10 +8,15 @@ import jakarta.validation.constraints.Email;
 
 
 public class GameDTO {
-	private int NUM;
-	//dto 리스트
-	private List<GameDTO> GameDTO;
-	
+	public String getSITEAVAILABILITY() {
+        return SITEAVAILABILITY;
+    }
+
+    public void setSITEAVAILABILITY(String SITEAVAILABILITY) {
+        this.SITEAVAILABILITY = SITEAVAILABILITY;
+    }
+    
+    private int NUM;
 	public int getNUM() {
 		return NUM;
 	}
@@ -59,13 +64,18 @@ public class GameDTO {
 	}
 	public void setGAMEIMG(String gAMEIMG) {
 		GAMEIMG = gAMEIMG;
-	}
+	}	
+	
 	public String getURL() {
 		return URL;
 	}
+
 	public void setURL(String uRL) {
 		URL = uRL;
 	}
+
+
+	private String SITEAVAILABILITY;
 	private String TITLE;
 	private String PRICE;
 	private String SALEPRICE;

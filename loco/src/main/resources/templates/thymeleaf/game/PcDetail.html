@@ -1,14 +1,14 @@
-<html xmlns:th="http://www.thymeleaf.org" xmlns:game="http://www.yuhan.loco/game">
+<html xmlns:th="http://www.thymeleaf.org">
 	<head>
 		<meta charset="UTF-8">
 		<title>loco > PCdetail</title>
 		
 		<!-- 외부 css -->
-		<link rel="stylesheet" href="css/font.css"> <!-- 폰트 css -->
-		<link rel="stylesheet" href="css/header.css"> <!-- 헤더 css -->
+		<link rel="stylesheet" href="/css/font.css"> <!-- 폰트 css -->
+		<link rel="stylesheet" href="/css/header.css"> <!-- 헤더 css -->
 		
 		<!-- 외부 js -->
-		<script src="js/tagsMore.js"></script>
+		<script src="/js/tagsMore.js"></script>
 		
 		<style>	
 			/*css 속성*/
@@ -69,7 +69,7 @@
 			{
 				width: 880px;
 				height: 495px;
-				background-color: aquamarine;
+				background-color: #393e46; /*배경색에 하얀색 10프로 추가*/
 				border: #000 solid 1px;
 				
 				/*본인(?) 정렬*/
@@ -332,13 +332,20 @@
 				margin-top: 10px;			
 			}	
 		</style>
+		
+		<script th:inline="javascript">
+        function redirectToUrl(url) {
+            window.location.href = url; // URL로 리다이렉션
+        }
+    	</script>
+		
 	</head>
 	
 	<body>
 	<!-- 헤더 -->
 		<div id="header">
 			<!-- 로고 -->
-			<div class="logo_btn"><a href="/main"><img src="imgs/header/logo.png"/></a></div>
+			<div class="logo_btn"><a href="/main"><img src="/imgs/header/logo.png"/></a></div>
 			
 			<!-- 메뉴 -->
 			<ul>
@@ -373,7 +380,7 @@
 				<!-- 로그인 버튼-->
 				<li th:if="${session.user == null}"> <!-- 세션(user)가 없으면 -->
 					<div class="menu">
-						<a href="/login"><img src="imgs/header/login.png"/></a>
+						<a href="/login"><img src="/imgs/header/login.png"/></a>
 					</div>
 				</li>
 				
@@ -398,10 +405,10 @@
 		<div class="up_box">
 			
 			<div class="left_up_box">
-				<div id="title">기본 제목</div>
+				<div id="title" th:text="${pcGameDTO.TITLE}">기본 제목</div>
 				
 				<div id="img_box">
-					<img src="https://cdn.akamai.steamstatic.com/steam/apps/578080/ss_1564a5c49d7fa5328c2c1fc71f369bdb39edb58f.1920x1080.jpg?t=1694608943" />
+					<img th:src="${pcGameDTO.GAMEIMG}" />
 				</div>
 				
 			</div>
@@ -409,15 +416,13 @@
 			<div class="right_up_box">
 				
 				<div id="thumbnail">
-					<img src="https://cdn.cloudflare.steamstatic.com/steam/apps/578080/header.jpg?t=1691654148" />
+					<img th:src="${pcGameDTO.IMGDATA}" />
 					<!-- <img src="https://cdn1.epicgames.com/epic/offer/RDR2PC1227_Epic Games_860x1148-860x1148-b4c2210ee0c3c3b843a8de399bfe7f5c.jpg?h=480&quality=medium&resize=1&w=360" /> -->
 					<!-- <img src="https://image.api.playstation.com/vulcan/ap/rnd/202009/3021/B2aUYFC0qUAkNnjbTHRyhrg3.png?w=440" /> -->
 				</div>
 				
 				<div id="des">
-					<p>
-						PUBG: BATTLEGROUNDS를 무료로 플레이 하세요. 다양한 전장에서 전략적 위치를 선점하고 무기와 장비를 확보해 최후의 1인이 되기 위한 생존의 사투를 펼칩니다. 친구들과 함께 팀을 만들어 배틀로얄 건플레이 장르의 선구자인 PUBG: BATTLEGROUNDS만이 선사하는 긴장감 넘치는 경험을 위해 도전하세요. 
-					</p>
+					<p th:text="${pcGameDTO.DESCRIPTION}">게임 설명이 없습니다.</p>
 				</div>
 				
 			</div>
@@ -440,15 +445,37 @@
 					판매 사이트
 				</div>
 				
-				<div class="price_info"><!-- steam -->
-					
+				<div class="price_info" th:if="${pcGameDTO.SITEAVAILABILITY == 'Both'}"><!-- Both -->
 					<div class="site_logo">
-						<img src="imgs/other_logo/white/steam/steam_logo_white.png" />
+						<img src="/imgs/other_logo/white/steam/steam_logo_white.png" />
 						<!-- 저작권 -->
 					</div>
 					
-					<a id="goto_btn" href="#">
-						<img src="imgs/btn/goto.png" />
+					<a id="goto_btn" th:href="@{${pcGameDTO.URL}}">
+						<img src="/imgs/btn/goto.png" />
+					</a>
+					
+					<div 
+						id="no_dc"
+						><!-- 할인 x -->
+							정가
+					</div>
+									
+					<div 
+						id="dc"><!-- 할인 o -->
+							<div class="dc_rate">할인율</div>
+							<div class="prices">
+								<div class="fir_price">정가</div>
+								<div class="dc_price">할인가</div>
+							</div>
+					</div>	
+					<div class="site_logo">
+						<img src="/imgs/other_logo/white/epic/EpicGames_White2.png" />
+						<!-- 저작권 -->
+					</div>
+					
+					<a id="goto_btn" th:href="@{${pcGameDTO.URL}}">
+						<img src="/imgs/btn/goto.png" />
 					</a>
 					
 					<div 
@@ -468,16 +495,15 @@
 					
 				</div>
 				
-				
-				<div class="price_info"><!-- epic -->
+				<div class="price_info" th:if="${pcGameDTO.SITEAVAILABILITY == 'Steam Only'}"><!-- steam -->
 					
 					<div class="site_logo">
-						<img src="imgs/other_logo/white/epic/EpicGames_White2.png" />
+						<img src="/imgs/other_logo/white/steam/steam_logo_white.png" />
 						<!-- 저작권 -->
 					</div>
 					
-					<a id="goto_btn" href="#">
-						<img src="imgs/btn/goto.png" />
+					<a id="goto_btn" th:href="@{${pcGameDTO.URL}}">
+						<img src="/imgs/btn/goto.png" />
 					</a>
 					
 					<div 
@@ -496,17 +522,16 @@
 					</div>			
 					
 				</div>
-				
-				
-				<div class="price_info"><!-- playstation -->
+			
+				<div class="price_info" th:if="${pcGameDTO.SITEAVAILABILITY == 'Epic Only'}"><!-- epic -->
 					
 					<div class="site_logo">
-						<img src="imgs/other_logo/white/playstation/PlayStation_logo_white.png" />
+						<img src="/imgs/other_logo/white/epic/EpicGames_White2.png" />
 						<!-- 저작권 -->
 					</div>
 					
-					<a id="goto_btn" href="#">
-						<img src="imgs/btn/goto.png" />
+					<a id="goto_btn" th:href="@{${pcGameDTO.URL}}">
+						<img src="/imgs/btn/goto.png" />
 					</a>
 					
 					<div 
@@ -525,35 +550,6 @@
 					</div>			
 					
 				</div>
-				
-				<div class="price_info"><!-- nintendo -->
-					
-					<div class="site_logo">
-						<img src="imgs/other_logo/normal/Nintendo.png" />
-						<!-- 저작권 -->
-					</div>
-					
-					<a id="goto_btn" href="#">
-						<img src="imgs/btn/goto.png" />
-					</a>
-					
-					<div 
-						id="no_dc"
-						><!-- 할인 x -->
-							정가
-					</div>
-									
-					<div 
-						id="dc"><!-- 할인 o -->
-							<div class="dc_rate">할인율</div>
-							<div class="prices">
-								<div class="fir_price">정가</div>
-								<div class="dc_price">할인가</div>
-							</div>
-					</div>			
-					
-				</div>
-				
 				
 				<!-- info_box end -->
 			</div>

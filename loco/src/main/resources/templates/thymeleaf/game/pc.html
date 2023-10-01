@@ -94,7 +94,7 @@
 				<tr th:each="game : ${gamePage.content}">
 					<td>
 						<!-- 게임 누르면 링크연결  -->
-						<a href="#">
+						<a th:href="@{'/pcDetail/' + ${game.KEY}}">
 							<!-- steam only -->
 							<div th:if="${game.SITEAVAILABILITY eq 'Steam Only'}" class="container">
 							
