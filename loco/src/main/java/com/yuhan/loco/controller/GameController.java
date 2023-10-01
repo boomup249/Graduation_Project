@@ -131,13 +131,12 @@ public class GameController {
     // PC Detail
 	@GetMapping("/pcDetail/{key}") 
 	public String detail_pc(@PathVariable String key, Model model) {
-	    // 여기에서 PC 게임 정보를 가져와서 모델에 추가
 	    PcDB pcGameDetail = gameService.getPcByKey(key); // key에 해당하는 PC 게임 정보 가져오기
-	    GameDTO pcGameDTO = gameService.createToDTO(key, pcGameDetail); // DTO로 변환
+	    GameDTO pcGameDTO = gameService.createToDTO(key, pcGameDetail);
+	    
 	    List<PcDB> pcDB = gameService.getAllData();
 	    model.addAttribute("pcGameDTO", pcGameDTO);
-	    model.addAttribute("pcDB", pcDB);
-	   
+	    model.addAttribute("pcGameDetail", pcGameDetail);
 	    return "/game/PcDetail";
 	}
 
