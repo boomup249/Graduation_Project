@@ -63,7 +63,7 @@
 					background-size: cover;
 					background-position: center;
 					background-repeat: no-repeat;
-					background-color: #fff;
+					background-color: #393e46; /*배경색에 하얀색 10프로 추가*/
 					opacity: 0.6;}
 					
 			#text_tb {z-index: 2; /*게임 식별 글(제목, 장르)*/
