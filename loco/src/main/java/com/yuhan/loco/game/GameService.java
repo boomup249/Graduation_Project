@@ -214,12 +214,14 @@ public class GameService {
     //
     public GameDTO createToDTO(String key, PcDB pcDB) {
         GameDTO gameDTO = new GameDTO();
+	//게임 판별
         if (key != null) {
             PcDB selectedPcGame = pcRepository.findByKEY(key);
             if (selectedPcGame != null) {
 
-             // TITLE 설정
+             	// TITLE 설정
                 gameDTO.setTITLE(selectedPcGame.getTITLE());
+		// STEAM or EPIC 구분
                 gameDTO.setSITEAVAILABILITY(pcDB.getSITEAVAILABILITY());
      
                 if ("Steam Only".equalsIgnoreCase(pcDB.getSITEAVAILABILITY())) {
@@ -227,7 +229,6 @@ public class GameService {
                     gameDTO.setGAMEIMG(pcDB.getSTEAMGAMEIMG());
                     gameDTO.setDESCRIPTION(pcDB.getSTEAMDESCRIPTION());
                     gameDTO.setURL(pcDB.getSTEAMURL());
-                    System.out.println(pcDB.getSTEAMURL());
                 }
                 else if("Epic Only".equalsIgnoreCase(pcDB.getSITEAVAILABILITY())) {
                     gameDTO.setIMGDATA(pcDB.getEPICIMGDATA());
