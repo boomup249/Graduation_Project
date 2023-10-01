@@ -13,21 +13,13 @@ import MySQLdb
 import requests
 from time import sleep
 from datetime import datetime
+from pathlib import Path
+import openpyxl
 
 mode1 = 0
 mode2 = 0
 mode3 = 0
 mode4 = 0
-
-#DB연결
-conn = MySQLdb.connect(
-    user="root",
-    passwd="1937",
-    host="localhost",
-    db="member",
-    charset='utf8'
-)
-cursor = conn.cursor()
 
 time = datetime.now()
 timestr = time.strftime("%Y%m%d_%H%M")
@@ -68,31 +60,21 @@ def Driver_Start(platform, URL):
     return driver
 
 def nintendo_crawling():
+    num_game = 1
+    num_genre = 1
     platform = 'switch'
-    cursor.execute("DROP TABLE IF EXISTS gamedata_switch_genre")
-    cursor.execute("DROP TABLE IF EXISTS gamedata_switch")
-    cursor.execute('''CREATE TABLE IF NOT EXISTS gamedata_switch (`NUM` INT NOT NULL AUTO_INCREMENT,
-                                                                `TITLE` VARCHAR(100) NULL DEFAULT NULL,
-                                                                `PRICE` VARCHAR(15) NULL DEFAULT NULL,
-                                                                `SALEPRICE` VARCHAR(15) NULL DEFAULT NULL,
-                                                                `SALEPER` VARCHAR(5) NULL DEFAULT NULL,
-                                                                `DESCRIPTION` TEXT NULL DEFAULT NULL,
-                                                                `IMGDATA` TEXT NULL DEFAULT NULL,
-                                                                `GAMEIMG` TEXT NULL DEFAULT NULL,
-                                                                `URL` TEXT NULL DEFAULT NULL,
-                                                                PRIMARY KEY (`NUM`),
-                                                                UNIQUE KEY (`TITLE`))
-                ''')
-    cursor.execute('''CREATE TABLE IF NOT EXISTS gamedata_switch_genre (`NUM` INT NOT NULL AUTO_INCREMENT,
-                                                                        `TITLE` VARCHAR(100) NULL DEFAULT NULL,
-                                                                        `GENRE` VARCHAR(30) NULL DEFAULT NULL,
-                                                                        PRIMARY KEY (`NUM`),
-                                                                        CONSTRAINT `switch_title`
-                                                                            FOREIGN KEY (`TITLE`)
-                                                                            REFERENCES `gamedata_switch` (`TITLE`)
-                                                                            ON DELETE CASCADE
-                                                                            ON UPDATE CASCADE)
-                ''')
+    excel_gamedata = openpyxl.Workbook()
+    excel_gamedata_sheet = excel_gamedata.active
+    gamedata_row_column = ["NUM", "TITLE", "PRICE", "SALEPRICE", "SALEPER", "DESCRIPTION", "IMGDATA", "GAMEIMG", "URL"]
+    excel_gamedata_sheet.append(gamedata_row_column)
+
+    excel_gamegenre = openpyxl.Workbook()
+    excel_gamegenre_sheet = excel_gamegenre.active
+    gamegenre_row_column = ["NUM", "TITLE", "GENRE"]
+    excel_gamegenre_sheet.append(gamegenre_row_column)
+
+    path = f'C:\Crawling_Excel_File\{timestr}'
+    Path(path).mkdir(parents=True, exist_ok=True)
     
     driver = Driver_Start(platform, 'https://store.nintendo.co.kr/games/sale')
 
@@ -140,14 +122,6 @@ def nintendo_crawling():
 
         game_link = item.select_one('a')
         move = game_link["href"]
-        
-        """
-        if l > 120:
-            print("5분간 일시정지(403 forbidden 오류 회피를 위해)")
-            sleep(300)
-            print("실행")
-            l=0
-        """
 
         driver.execute_script(f'window.open(\'{move}\');')
         driver.switch_to.window(driver.window_handles[-1])
@@ -188,8 +162,8 @@ def nintendo_crawling():
             gameimg = new_soup.select_one('img.fotorama__img')
         gameimg = gameimg["src"]
 
-        sql = 'INSERT INTO gamedata_switch (TITLE, PRICE, SALEPRICE, SALEPER, DESCRIPTION, IMGDATA, GAMEIMG, URL) VALUES (%s, %s, %s, %s, %s, %s, %s ,%s)'
-        cursor.execute(sql, (title, price, saleprice, saleper, description, imgdata, gameimg, move))
+        gamedata_column = [num_game, title, price, saleprice, saleper, description, imgdata, gameimg, move]
+        excel_gamedata_sheet.append(gamedata_column)
 
         tagparent = new_soup.find("div", class_="product-attribute game_category")
         if tagparent != None:
@@ -199,15 +173,16 @@ def nintendo_crawling():
 
             while num < tag_length:
                 tag[num] = tag[num].strip()
-                sql = 'INSERT INTO gamedata_switch_genre (TITLE, GENRE) VALUES (%s, %s)'
-                cursor.execute(sql, (title, tag[num]))
+                gamegenre_column = [num_genre, title, tag[num]]
+                excel_gamegenre_sheet.append(gamegenre_column)
                 num += 1
+                num_genre += 1
         
         i+=1
         #l+=1
 
-        conn.commit()
-        print(f'switch - {i}.{title} DB 입력 완료')
+        print(f'switch - {i}.{title} 입력 완료')
+        num_game += 1
         driver.close()
         driver.switch_to.window(driver.window_handles[-1])
 
@@ -215,6 +190,10 @@ def nintendo_crawling():
     newtimestr = newtime.strftime("%Y%m%d_%H%M")
 
     sleep(2)
+    excel_gamedata.save(f'{path}\Switch_Crawling.xlsx')
+    excel_gamegenre.save(f'{path}\Switch_Genre_Crawling.xlsx')
+    excel_gamedata.close()
+    excel_gamegenre.close()
     print(platform, " 크롤링 완료 시작시간:", timestr, ", 완료시간:", newtimestr)
     mode1 = 1
     driver.quit()
@@ -222,31 +201,24 @@ def nintendo_crawling():
 def ps_crawling():
     platform = 'ps'
     gameURL = 'https://store.playstation.com/'
+    num_game = 1
+    num_genre = 1
+    platform = 'switch'
+    excel_gamedata = openpyxl.Workbook()
+    excel_gamedata_sheet = excel_gamedata.active
+    gamedata_row_column = ["NUM", "TITLE", "PRICE", "SALEPRICE", "SALEPER", "DESCRIPTION", "IMGDATA", "GAMEIMG", "URL"]
+    excel_gamedata_sheet.append(gamedata_row_column)
+
+    excel_gamegenre = openpyxl.Workbook()
+    excel_gamegenre_sheet = excel_gamegenre.active
+    gamegenre_row_column = ["NUM", "TITLE", "GENRE"]
+    excel_gamegenre_sheet.append(gamegenre_row_column)
+
+    path = f'C:\Crawling_Excel_File\{timestr}'
+    Path(path).mkdir(parents=True, exist_ok=True)
+
     driver = Driver_Start(platform, 'https://store.playstation.com/ko-kr/pages/deals')
-    cursor.execute("DROP TABLE IF EXISTS gamedata_ps_genre")
-    cursor.execute("DROP TABLE IF EXISTS gamedata_ps")
-    cursor.execute('''CREATE TABLE IF NOT EXISTS gamedata_ps (`NUM` INT NOT NULL AUTO_INCREMENT,
-                                                            `TITLE` VARCHAR(100) NULL DEFAULT NULL,
-                                                            `PRICE` VARCHAR(15) NULL DEFAULT NULL,
-                                                            `SALEPRICE` VARCHAR(15) NULL DEFAULT NULL,
-                                                            `SALEPER` VARCHAR(5) NULL DEFAULT NULL,
-                                                            `DESCRIPTION` TEXT NULL DEFAULT NULL,
-                                                            `IMGDATA` TEXT NULL DEFAULT NULL,
-                                                            `GAMEIMG` TEXT NULL DEFAULT NULL,
-                                                            `URL` TEXT NULL DEFAULT NULL,
-                                                            PRIMARY KEY (`NUM`),
-                                                            UNIQUE KEY (`TITLE`))
-                ''')
-    cursor.execute('''CREATE TABLE IF NOT EXISTS gamedata_ps_genre (`NUM` INT NOT NULL AUTO_INCREMENT,
-                                                                    `TITLE` VARCHAR(100) NULL DEFAULT NULL,
-                                                                    `genre` VARCHAR(30) NULL DEFAULT NULL,
-                                                                    PRIMARY KEY (`NUM`),
-                                                                    CONSTRAINT `ps_title`
-                                                                        FOREIGN KEY (`TITLE`)
-                                                                        REFERENCES `gamedata_ps` (`TITLE`)
-                                                                        ON DELETE CASCADE
-                                                                        ON UPDATE CASCADE)
-                ''')
+
     sleep(2)
     driver.find_element(By.XPATH, "//*[@id='main']/div/div[3]/section/div/ul/li[3]/a").click()
     sleep(2)
@@ -392,28 +364,26 @@ def ps_crawling():
             
             sleep(0.5)
             
-            try:
-                sql = 'INSERT INTO gamedata_ps (TITLE, PRICE, SALEPRICE, SALEPER, DESCRIPTION, IMGDATA, GAMEIMG, URL) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)'
-                cursor.execute(sql, (title, price, saleprice, saleper, description, imgdata, gameimg, move))
-                
-                tagparent = new_soup.find("dd", {'data-qa':'gameInfo#releaseInformation#genre-value'})
-                if tagparent != None:
-                    tag = tagparent.select_one("span").text.split(',')
-                    tag_length = len(tag)
-                    num = 0
-                
-                while num < tag_length:
-                    tag[num] = tag[num].strip()
-                    sql = 'INSERT INTO gamedata_ps_genre (TITLE, GENRE) VALUES (%s, %s)'
-                    cursor.execute(sql, (title, tag[num]))
-                    num += 1
-            except:
-                print(f"{title} DB 입력중 오류 발생(동일명 게임 존재)")
+            gamedata_column = [num_game, title, price, saleprice, saleper, description, imgdata, gameimg, move]
+            excel_gamedata_sheet.append(gamedata_column)
+            
+            tagparent = new_soup.find("dd", {'data-qa':'gameInfo#releaseInformation#genre-value'})
+            if tagparent != None:
+                tag = tagparent.select_one("span").text.split(',')
+                tag_length = len(tag)
+                num = 0
+            
+            while num < tag_length:
+                tag[num] = tag[num].strip()
+                gamegenre_column = [num_genre, title, tag[num]]
+                excel_gamegenre_sheet.append(gamegenre_column)
+                num_genre += 1
+                num += 1
 
             beforetitle = title
 
-            conn.commit()
-            print(f'ps - {next_page-1}p.{title} DB 입력 완료')
+            print(f'ps - {next_page-1}p.{title} 입력 완료')
+            num_game += 1
             driver.close()
             driver.switch_to.window(driver.window_handles[-1])
 
@@ -438,12 +408,19 @@ def ps_crawling():
     newtime = datetime.now()
     newtimestr = newtime.strftime("%Y%m%d_%H%M")
 
+    excel_gamedata.save(f'{path}\PS_Crawling.xlsx')
+    excel_gamegenre.save(f'{path}\PS_Genre_Crawling.xlsx')
+    excel_gamedata.close()
+    excel_gamegenre.close()
+
     sleep(2)
     print(platform, " 크롤링 완료 - 시작시간:", timestr, ", 완료시간:", newtimestr)
     mode2 = 1
     driver.quit()
 
-def steam_crawling(driver):
+def steam_crawling(driver, excel_gamedata_sheet, excel_gamegenre_sheet):
+    num_game = 1
+    num_genre = 1
     driver.execute_script("window.scrollTo(0,document.body.scrollHeight)")
     html = driver.page_source
     soup = BeautifulSoup(html, "html.parser")
@@ -522,19 +499,20 @@ def steam_crawling(driver):
         tag_length = len(tag)
         num = 0
 
-        sql = 'INSERT INTO gamedata_steam (title, price, saleprice, saleper, description, imgdata, gameimg, url) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)'
-        cursor.execute(sql, (title, price, saleprice, saleper, description, imgdata, gameimg, move))
+        gamedata_column = [num_game, title, price, saleprice, saleper, description, imgdata, gameimg, move]
+        excel_gamedata_sheet.append(gamedata_column)
 
         while num < tag_length:
             tag[num] = tag[num].text.strip()
-            sql = 'INSERT INTO gamedata_steam_genre (title, genre) VALUES (%s, %s)'
-            cursor.execute(sql, (title, tag[num]))
+            gamegenre_column = [num_genre, title, tag[num]]
+            excel_gamegenre_sheet.append(gamegenre_column)
+            num_genre += 1
             num += 1
 
-        conn.commit()
-        print(f'steam - {title} DB 입력 완료')
+        print(f'steam - {title} 입력 완료')
 
         #탭 종료후 원래 탭(베스트게임 페이지)으로 이동
+        num_game += 1
         driver.close()
         driver.switch_to.window(driver.window_handles[-1])
 
@@ -542,30 +520,19 @@ def steam_crawling(driver):
 def steam_start():
     platform = 'steam'
     url = 'https://store.steampowered.com/specials/'
-    cursor.execute("DROP TABLE IF EXISTS gamedata_steam_genre")
-    cursor.execute("DROP TABLE IF EXISTS gamedata_steam")
-    cursor.execute('''CREATE TABLE IF NOT EXISTS gamedata_steam (`NUM` INT NOT NULL AUTO_INCREMENT,
-                                                                `TITLE` VARCHAR(100) NULL DEFAULT NULL,
-                                                                `PRICE` VARCHAR(15) NULL DEFAULT NULL,
-                                                                `SALEPRICE` VARCHAR(15) NULL DEFAULT NULL,
-                                                                `SALEPER` VARCHAR(5) NULL DEFAULT NULL,
-                                                                `DESCRIPTION` TEXT NULL DEFAULT NULL,
-                                                                `IMGDATA` TEXT NULL DEFAULT NULL,
-                                                                `GAMEIMG` TEXT NULL DEFAULT NULL,
-                                                                `URL` TEXT NULL DEFAULT NULL,
-                                                                PRIMARY KEY (`NUM`),
-                                                                UNIQUE KEY (`TITLE`))
-                ''')
-    cursor.execute('''CREATE TABLE IF NOT EXISTS gamedata_steam_genre (`NUM` INT NOT NULL AUTO_INCREMENT,
-                                                                    `TITLE` VARCHAR(100) NULL DEFAULT NULL,
-                                                                    `genre` VARCHAR(30) NULL DEFAULT NULL,
-                                                                    PRIMARY KEY (`NUM`),
-                                                                    CONSTRAINT `steam_title`
-                                                                        FOREIGN KEY (`TITLE`)
-                                                                        REFERENCES `gamedata_steam` (`TITLE`)
-                                                                        ON DELETE CASCADE
-                                                                        ON UPDATE CASCADE)
-                ''')
+    platform = 'switch'
+    excel_gamedata = openpyxl.Workbook()
+    excel_gamedata_sheet = excel_gamedata.active
+    gamedata_row_column = ["NUM", "TITLE", "PRICE", "SALEPRICE", "SALEPER", "DESCRIPTION", "IMGDATA", "GAMEIMG", "URL"]
+    excel_gamedata_sheet.append(gamedata_row_column)
+
+    excel_gamegenre = openpyxl.Workbook()
+    excel_gamegenre_sheet = excel_gamegenre.active
+    gamegenre_row_column = ["NUM", "TITLE", "GENRE"]
+    excel_gamegenre_sheet.append(gamegenre_row_column)
+
+    path = f'C:\Crawling_Excel_File\{timestr}'
+    Path(path).mkdir(parents=True, exist_ok=True)
 
     btn_num = 1
     btn_check = 1
@@ -595,11 +562,11 @@ def steam_start():
                         btn_check += 1
                     else: #'더 보기' 버튼이 존재하지않으면 break로 반복문 빠져나옴
                         print("버튼 전부 클릭 완료 - ", btn_check, "번 실행")
-                        steam_crawling(driver)
+                        steam_crawling(driver, excel_gamedata_sheet, excel_gamegenre_sheet)
                         mode = 1
                         break
                 else:
-                    steam_crawling(driver)
+                    steam_crawling(driver, excel_gamedata_sheet, excel_gamegenre_sheet)
                     action.move_to_element(button).click().perform()
                     sleep(1.5)
                     url = driver.current_url
@@ -612,6 +579,11 @@ def steam_start():
             print(platform, " 크롤링 완료 - 시작시간:", timestr, ", 완료시간:", newtimestr)
             break
         driver.quit()
+
+    excel_gamedata.save(f'{path}\Steam_Crawling.xlsx')
+    excel_gamegenre.save(f'{path}\Steam_Genre_Crawling.xlsx')
+    excel_gamedata.close()
+    excel_gamegenre.close()
     driver.quit()
     mode3 = 1
 
@@ -627,32 +599,23 @@ def epic_crawling():
     platform = "epicgames"
     URL = 'https://store.epicgames.com/ko/browse'
     epicgames = 'https://store.epicgames.com'
-    cursor.execute("DROP TABLE IF EXISTS gamedata_epic_genre")
-    cursor.execute("DROP TABLE IF EXISTS gamedata_epic")
-    #rank에 AUTO_INCREMENT를 사용함으로써 INSERT가 입력될때마다 자동으로 숫자를 +1 올린다
-    cursor.execute('''CREATE TABLE IF NOT EXISTS gamedata_epic (`NUM` INT NOT NULL AUTO_INCREMENT,
-                                                                `TITLE` VARCHAR(100) NULL DEFAULT NULL,
-                                                                `PRICE` VARCHAR(15) NULL DEFAULT NULL,
-                                                                `SALEPRICE` VARCHAR(15) NULL DEFAULT NULL,
-                                                                `SALEPER` VARCHAR(5) NULL DEFAULT NULL,
-                                                                `DESCRIPTION` TEXT NULL DEFAULT NULL,
-                                                                `IMGDATA` TEXT NULL DEFAULT NULL,
-                                                                `GAMEIMG` TEXT NULL DEFAULT NULL,
-                                                                `URL` TEXT NULL DEFAULT NULL,
-                                                                PRIMARY KEY (`NUM`),
-                                                                UNIQUE KEY (`TITLE`))
-                ''')
+    
+    num_game = 1
+    num_genre = 1
+    platform = 'switch'
+    excel_gamedata = openpyxl.Workbook()
+    excel_gamedata_sheet = excel_gamedata.active
+    gamedata_row_column = ["NUM", "TITLE", "PRICE", "SALEPRICE", "SALEPER", "DESCRIPTION", "IMGDATA", "GAMEIMG", "URL"]
+    excel_gamedata_sheet.append(gamedata_row_column)
 
-    cursor.execute('''CREATE TABLE IF NOT EXISTS gamedata_epic_genre (`NUM` INT NOT NULL AUTO_INCREMENT,
-                                                                `TITLE` VARCHAR(100) NULL DEFAULT NULL,
-                                                                `GENRE` VARCHAR(30) NULL DEFAULT NULL,
-                                                                PRIMARY KEY (`NUM`),
-                                                                CONSTRAINT `epic_title`
-                                                                    FOREIGN KEY (`TITLE`)
-                                                                    REFERENCES `gamedata_epic` (`TITLE`)
-                                                                    ON DELETE CASCADE
-                                                                    ON UPDATE CASCADE)
-                ''')
+    excel_gamegenre = openpyxl.Workbook()
+    excel_gamegenre_sheet = excel_gamegenre.active
+    gamegenre_row_column = ["NUM", "TITLE", "GENRE"]
+    excel_gamegenre_sheet.append(gamegenre_row_column)
+
+    path = f'C:\Crawling_Excel_File\{timestr}'
+    Path(path).mkdir(parents=True, exist_ok=True)
+
     driver = Driver_Start(platform, URL)
     soup = BeautifulSoup(driver.page_source, "html.parser")
     sleep(3)
@@ -731,17 +694,18 @@ def epic_crawling():
             tag_length = len(tag)
             num = 0
 
-            sql = 'INSERT INTO gamedata_epic (TITLE, PRICE, SALEPRICE, SALEPER, DESCRIPTION, IMGDATA, GAMEIMG, URL) VALUES (%s, %s, %s, %s, %s, %s, %s ,%s)'
-            cursor.execute(sql, (title, price, saleprice, saleper, description, imgdata, gameimg, move))
+            gamedata_column = [num_game, title, price, saleprice, saleper, description, imgdata, gameimg, move]
+            excel_gamedata_sheet.append(gamedata_column)
 
             while num < tag_length:
                 tag[num] = tag[num].text.strip()
-                sql = 'INSERT INTO gamedata_epic_genre (TITLE, GENRE) VALUES (%s, %s)'
-                cursor.execute(sql, (title, tag[num]))
+                gamegenre_column = [num_genre, title, tag[num]]
+                excel_gamegenre_sheet.append(gamegenre_column)
+                num_genre += 1
                 num += 1
 
-            conn.commit()
-            print(f'epic - {title} DB 입력 완료')
+            print(f'epic - {title} 입력 완료')
+            num_game += 1
             driver.quit()
 
             #현재 페이지가 마지막 페이지면 last_game_title에 지금 크롤링중인 게임 타이틀 집어넣기
@@ -771,6 +735,11 @@ def epic_crawling():
     sleep(2)
     print(platform, " 크롤링 완료 - 시작시간:", timestr, ", 완료시간:", newtimestr)
 
+    excel_gamedata.save(f'{path}\Epic_Crawling.xlsx')
+    excel_gamegenre.save(f'{path}\Epic_Genre_Crawling.xlsx')
+    excel_gamedata.close()
+    excel_gamegenre.close()
+
     print("크롤링 끝 driver 종료")
     driver.quit()
     mode4 = 1
@@ -789,7 +758,7 @@ if __name__ == "__main__":
     process2 = multiprocessing.Process(target=ps_crawling)
     process3 = multiprocessing.Process(target=steam_start)
     process4 = multiprocessing.Process(target=epic_crawling)
-    """
+
     try:
         process1.start()
     except:
@@ -808,7 +777,7 @@ if __name__ == "__main__":
         print("process3 시작 오류")
 
     sleep(3)
-    """
+
     try:
         process4.start()
     except:
@@ -831,5 +800,4 @@ if __name__ == "__main__":
         process4.join()
     except:
         pass
-    conn.close()
     quit()
