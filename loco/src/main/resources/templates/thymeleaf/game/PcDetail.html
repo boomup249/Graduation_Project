@@ -9,6 +9,7 @@
 		
 		<!-- 외부 js -->
 		<script src="/js/tagsMore.js"></script>
+		<script src="/js/longTitle.js"></script>
 		
 		<style>	
 			/*css 속성*/
@@ -43,19 +44,25 @@
 			/*상단 왼쪽 박스*/		
 			.left_up_box 
 			{
+				display: inline-block;
 				width: 1000px;
+				/*
 				height: 600px;
+				*/
 				background-color: #2d333c;
 			}
 					
-			#title {
+			.title_tb {
+				z-index: 5;
 				font-family: 'Ramche';
-				font-size: 35px;
+				font-size: 25px;
+				
+				cursor: pointer; /*올리면 커서 모양 바뀌게*/
 				
 				width: 900px;
 				height: 35px;
 				
-				overflow-x: hidden; /*글자 수 width 넘기면 숨기기*/
+				/*overflow-x: hidden;*/ /*글자 수 width 넘기면 숨기기*/
 				
 				/*본인(?) 정렬*/
 				margin: 0 auto;
@@ -75,6 +82,7 @@
 				/*본인(?) 정렬*/
 				margin: 0 auto;
 				margin-top: 20px;
+				margin-bottom: 20px;
 			}
 			
 			#img_box img 
@@ -405,7 +413,7 @@
 		<div class="up_box">
 			
 			<div class="left_up_box">
-				<div id="title" th:text="${pcGameDTO.TITLE}">기본 제목</div>
+				<div class="title_tb" th:text="${pcGameDTO.TITLE}">기본 제목</div>
 				
 				<div id="img_box">
 					<img th:src="${pcGameDTO.GAMEIMG}" />
