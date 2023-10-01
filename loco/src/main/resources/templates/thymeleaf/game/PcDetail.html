@@ -56,7 +56,7 @@
 				z-index: 5;
 				font-family: 'Ramche';
 				font-size: 25px;
-				
+
 				cursor: pointer; /*올리면 커서 모양 바뀌게*/
 				
 				width: 900px;
@@ -76,7 +76,7 @@
 			{
 				width: 880px;
 				height: 495px;
-				background-color: #393e46; /*배경색에 하얀색 10프로 추가*/
+				background-color: aquamarine;
 				border: #000 solid 1px;
 				
 				/*본인(?) 정렬*/
@@ -346,7 +346,7 @@
             window.location.href = url; // URL로 리다이렉션
         }
     	</script>
-		
+    
 	</head>
 	
 	<body>
@@ -408,7 +408,7 @@
 	<!--여기까지 헤더-->
 		
 	<!-- 콘텐츠 -->
-	<div id="content">
+	<div id="content" >
 		
 		<div class="up_box">
 			
@@ -416,7 +416,7 @@
 				<div class="title_tb" th:text="${pcGameDTO.TITLE}">기본 제목</div>
 				
 				<div id="img_box">
-					<img th:src="${pcGameDTO.GAMEIMG}" />
+					<img th:src="${pcGameDTO.IMGDATA}" />
 				</div>
 				
 			</div>
@@ -424,7 +424,7 @@
 			<div class="right_up_box">
 				
 				<div id="thumbnail">
-					<img th:src="${pcGameDTO.IMGDATA}" />
+					<img th:src="${pcGameDTO.GAMEIMG}" />
 					<!-- <img src="https://cdn1.epicgames.com/epic/offer/RDR2PC1227_Epic Games_860x1148-860x1148-b4c2210ee0c3c3b843a8de399bfe7f5c.jpg?h=480&quality=medium&resize=1&w=360" /> -->
 					<!-- <img src="https://image.api.playstation.com/vulcan/ap/rnd/202009/3021/B2aUYFC0qUAkNnjbTHRyhrg3.png?w=440" /> -->
 				</div>
@@ -443,7 +443,7 @@
 		<div class="mid_box">
 			
 			
-			<div class="info_box">
+			<div class="info_box" >
 				<!-- th:if로 나타날 항목 조정
 						 steam only, epic only, pc both
 						 nintendo, ps -->
@@ -455,6 +455,7 @@
 				
 				<div class="price_info" th:if="${pcGameDTO.SITEAVAILABILITY == 'Both'}"><!-- Both -->
 					<div class="site_logo">
+						<!--STEAM 부분-->
 						<img src="/imgs/other_logo/white/steam/steam_logo_white.png" />
 						<!-- 저작권 -->
 					</div>
@@ -463,21 +464,21 @@
 						<img src="/imgs/btn/goto.png" />
 					</a>
 					
-					<div 
-						id="no_dc"
-						><!-- 할인 x -->
+					<div th:if="${pcGameDetail.STEAMSALEPER.equals('할인 X') || pcGameDetail.STEAMSALEPER == null}" 
+						 id="no_dc" th:text="${pcGameDetail.STEAMPRICE}"><!-- 할인 x -->
 							정가
 					</div>
 									
-					<div 
-						id="dc"><!-- 할인 o -->
-							<div class="dc_rate">할인율</div>
-							<div class="prices">
-								<div class="fir_price">정가</div>
-								<div class="dc_price">할인가</div>
+					<div th:if="${!(pcGameDetail.STEAMSALEPER.equals('할인 X') || pcGameDetail.STEAMSALEPER == null)}"
+						 id="dc"><!-- 할인 o -->
+							<div class="dc_rate" th:text="${pcGameDetail.STEAMSALEPER}">할인율</div>
+							<div class="prices" >
+								<div class="fir_price" th:text="${pcGameDetail.STEAMPRICE}">정가</div>
+								<div class="dc_price" th:text="${pcGameDetail.STEAMSALEPRICE}">할인가</div>
 							</div>
 					</div>	
-					<div class="site_logo">
+					<div class="site_logo"> 
+						<!--EPIC 부분-->
 						<img src="/imgs/other_logo/white/epic/EpicGames_White2.png" />
 						<!-- 저작권 -->
 					</div>
@@ -486,18 +487,17 @@
 						<img src="/imgs/btn/goto.png" />
 					</a>
 					
-					<div 
-						id="no_dc"
-						><!-- 할인 x -->
+					<div th:if="${pcGameDetail.EPICSALEPER.equals('X') || pcGameDetail.EPICSALEPER == null}" 
+						 id="no_dc" th:text="${pcGameDetail.EPICPRICE}"><!-- 할인 x -->
 							정가
 					</div>
 									
-					<div 
-						id="dc"><!-- 할인 o -->
-							<div class="dc_rate">할인율</div>
+					<div th:if="${!(pcGameDetail.EPICSALEPER.equals('X') || pcGameDetail.EPICSALEPER == null)}"
+						 id="dc"><!-- 할인 o -->
+							<div class="dc_rate" th:text="${pcGameDetail.EPICSALEPER}">할인율</div>
 							<div class="prices">
-								<div class="fir_price">정가</div>
-								<div class="dc_price">할인가</div>
+								<div class="fir_price" th:text="${pcGameDetail.EPICPRICE}">정가</div>
+								<div class="dc_price" th:text="${pcGameDetail.EPICSALEPRICE}">할인가</div>
 							</div>
 					</div>			
 					
@@ -510,25 +510,23 @@
 						<!-- 저작권 -->
 					</div>
 					
-					<a id="goto_btn" th:href="@{${pcGameDTO.URL}}">
+					<<a id="goto_btn" th:href="@{${pcGameDTO.URL}}">
 						<img src="/imgs/btn/goto.png" />
 					</a>
 					
-					<div 
-						id="no_dc"
-						><!-- 할인 x -->
+					<div th:if="${pcGameDetail.STEAMSALEPER.equals('할인 X') || pcGameDetail.STEAMSALEPER == null}" 
+						 id="no_dc" th:text="${pcGameDetail.STEAMPRICE}"><!-- 할인 x -->
 							정가
 					</div>
 									
-					<div 
-						id="dc"><!-- 할인 o -->
-							<div class="dc_rate">할인율</div>
-							<div class="prices">
-								<div class="fir_price">정가</div>
-								<div class="dc_price">할인가</div>
+					<div th:if="${!(pcGameDetail.STEAMSALEPER.equals('할인 X') || pcGameDetail.STEAMSALEPER == null)}"
+						 id="dc"><!-- 할인 o -->
+							<div class="dc_rate" th:text="${pcGameDetail.STEAMSALEPER}">할인율</div>
+							<div class="prices" >
+								<div class="fir_price" th:text="${pcGameDetail.STEAMPRICE}">정가</div>
+								<div class="dc_price" th:text="${pcGameDetail.STEAMSALEPRICE}">할인가</div>
 							</div>
-					</div>			
-					
+					</div>	
 				</div>
 			
 				<div class="price_info" th:if="${pcGameDTO.SITEAVAILABILITY == 'Epic Only'}"><!-- epic -->
@@ -542,18 +540,17 @@
 						<img src="/imgs/btn/goto.png" />
 					</a>
 					
-					<div 
-						id="no_dc"
-						><!-- 할인 x -->
+					<div th:if="${pcGameDetail.EPICSALEPER.equals('X') || pcGameDetail.EPICSALEPER == null}" 
+						 id="no_dc" th:text="${pcGameDetail.EPICPRICE}"><!-- 할인 x -->
 							정가
 					</div>
 									
-					<div 
-						id="dc"><!-- 할인 o -->
-							<div class="dc_rate">할인율</div>
+					<div th:if="${!(pcGameDetail.EPICSALEPER.equals('X') || pcGameDetail.EPICSALEPER == null)}"
+						 id="dc"><!-- 할인 o -->
+							<div class="dc_rate" th:text="${pcGameDetail.EPICSALEPER}">할인율</div>
 							<div class="prices">
-								<div class="fir_price">정가</div>
-								<div class="dc_price">할인가</div>
+								<div class="fir_price" th:text="${pcGameDetail.EPICPRICE}">정가</div>
+								<div class="dc_price" th:text="${pcGameDetail.EPICSALEPRICE}">할인가</div>
 							</div>
 					</div>			
 					
