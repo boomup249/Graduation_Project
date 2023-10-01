@@ -76,7 +76,7 @@
 			{
 				width: 880px;
 				height: 495px;
-				background-color: aquamarine;
+				background-color: #393e46; /*배경색에 하얀색 10프로 추가*/
 				border: #000 solid 1px;
 				
 				/*본인(?) 정렬*/
@@ -416,7 +416,7 @@
 				<div class="title_tb" th:text="${pcGameDTO.TITLE}">기본 제목</div>
 				
 				<div id="img_box">
-					<img th:src="${pcGameDTO.IMGDATA}" />
+					<img th:src="${pcGameDTO.GAMEIMG}" />
 				</div>
 				
 			</div>
@@ -424,7 +424,7 @@
 			<div class="right_up_box">
 				
 				<div id="thumbnail">
-					<img th:src="${pcGameDTO.GAMEIMG}" />
+					<img th:src="${pcGameDTO.IMGDATA}" />
 					<!-- <img src="https://cdn1.epicgames.com/epic/offer/RDR2PC1227_Epic Games_860x1148-860x1148-b4c2210ee0c3c3b843a8de399bfe7f5c.jpg?h=480&quality=medium&resize=1&w=360" /> -->
 					<!-- <img src="https://image.api.playstation.com/vulcan/ap/rnd/202009/3021/B2aUYFC0qUAkNnjbTHRyhrg3.png?w=440" /> -->
 				</div>
