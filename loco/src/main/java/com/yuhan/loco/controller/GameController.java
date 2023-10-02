@@ -6,6 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.yuhan.loco.game.PcDB;
@@ -30,6 +31,25 @@ import java.util.List;
 //		일단 디비 확정되면 정하기 -> 디비 크롤링 팀이랑 맞춰야 함(현재 크롤링 항목과 디비가 다름)
 
 //2023.08.26 -> dto 방식으로 초안 작업
+//2023.09.28 -> view 방식 + 페이징으로 작업
+	//2안 선택 이유: 데이터가 방대해서 dto에 최대한 넣지 않아야 함, 정렬이 간소화된만큼 db 차원에서 해결 가능
+		//정렬 로직:
+		//인기순: 크롤링에서 인기순으로 받아오므로 num순임(steam_num or epic_num), steam, epic 필터를 걸면 각각 보여주고, 안 걸면 그냥 디비에 있는 순서대로 보여주면 됨
+		//할인순: saleper 기준으로 정렬하면 됨, steam, epic 필터를 걸면 각각 보여주고, 안 걸면 steam_saleper 기준으로 보여주면 됨
+		//추천순: 교수님과 면담할때 확정이 안된 부분(아예 이걸 빼는 걸 얘기하심, 하지만 회원가입의 의미가 없어져서 들어가야 함)
+			//1안) 그냥 선호 선택한 장르만 죄다 select해다가 보여주기 -> 로직 간편, but 추천의 의미가 잘 안보일 수 있음, Page<db> 사용 가능(즉, 데이터가 많아도 과부하 x)
+			//2안) 선호 선택한 장르 3-4개씩 뽑아서 보여주기 -> 로직 다소 불편, but 추천의 의미가 잘 나타남, dto를 얘만 써야 함(하지만 3-4개씩이면 규모가 작아서 상관없음. 선호 장르로 다 선택해도 60개이므로)
+
+		//카테고리 로직:
+		//장르 뷰 연결해서 repository에 select title from (view 이름) where genre = ? 수행하는 함수 만들기 -> title을 list(a)로 받아옴
+		//게임 정보 들어있는 뷰(현재 game_steam_epic) repository에 아래와 같은 함수를 만듦(필요에 따라 변경 가능, 예시)
+			//Page<PcDB> findByTitleIn(List<String> titles, Pageable pageable);
+		//이러면 서비스에서 findByTitleIn의 인수로 list(a)와 pageable을 넣어주면 됨.
+
+		//사이트 필터링 로직:
+		//steam이면 SITEAVAILABILITY가 steam only, both인 항목 select
+		//epic이면 epic only, both인 항목 select
+		
 @Controller
 public class GameController {
 	//전역
@@ -42,18 +62,17 @@ public class GameController {
         this.gameService = gameService;
     }
 	
+	
 	//연결
 	//pc
-	
 	@GetMapping("/pc")
 	public String pc(Model model, @RequestParam(value = "page", defaultValue = "1") int page) {
 		//페이징용 page, pageable은 0부터 시작함 -> -1로 가공해주기, html에서도 가공 필요
 		page -= 1;
 		
-		List<PcDB> viewData = gameService.getAllData();
-		List<GameDTO> fullList = gameService.getAllGames();
 		//페이징 리스트 받아오기
 		Page<PcDB> paging = this.gameService.getFullPcList(page);
+		System.out.println(paging.getTotalElements());
 			
 		//페이지네이션 정보 가공: 시작 페이지 번호, 현재 페이지 번호, 끝 페이지 번호
 		int currentPage = page + 1; //현재 페이지 번호
@@ -69,10 +88,9 @@ public class GameController {
 		model.addAttribute("endPage", endPage);
 		model.addAttribute("currentPage", currentPage);
 		model.addAttribute("totalPage", paging.getTotalPages());
-		model.addAttribute("viewData",viewData);
-		model.addAttribute("gameDTO",fullList);
+		model.addAttribute("gameService", gameService);
 			
-			return "/game/pc";
+		return "/game/pc";
 		}
 	
 	//console
@@ -109,10 +127,17 @@ public class GameController {
 			
 			return "/game/console";
 		}
+	
     // PC Detail
-    @GetMapping("/pcDetail") 
-    public String detail_pc() {
-		return "/game/PcDetail";
+	@GetMapping("/pcDetail/{key}") 
+	public String detail_pc(@PathVariable String key, Model model) {
+	    PcDB pcGameDetail = gameService.getPcByKey(key); // key에 해당하는 PC 게임 정보 가져오기
+	    GameDTO pcGameDTO = gameService.createToDTO(key, pcGameDetail);
+	    
+	    List<PcDB> pcDB = gameService.getAllData();
+	    model.addAttribute("pcGameDTO", pcGameDTO);
+	    model.addAttribute("pcGameDetail", pcGameDetail);
+	    return "/game/PcDetail";
 	}
 
     // Console Detail

@@ -4,6 +4,9 @@ CREATE
     SQL SECURITY DEFINER
 VIEW `member`.`game_steam_epic` AS
     SELECT 
+        CONCAT_WS('_',
+                IFNULL(`s`.`NUM`, ''),
+                IFNULL(`e`.`NUM`, '')) AS `KEY`,
         `s`.`NUM` AS `STEAMNUM`,
         `e`.`NUM` AS `EPICNUM`,
         `s`.`TITLE` AS `TITLE`,
@@ -35,6 +38,9 @@ VIEW `member`.`game_steam_epic` AS
         (`member`.`gamedata_steam` `s`
         LEFT JOIN `member`.`gamedata_epic` `e` ON ((`s`.`TITLE` = `e`.`TITLE`))) 
     UNION SELECT 
+        CONCAT_WS('_',
+                IFNULL(`s`.`NUM`, ''),
+                IFNULL(`e`.`NUM`, '')) AS `KEY`,
         `s`.`NUM` AS `STEAMNUM`,
         `e`.`NUM` AS `EPICNUM`,
         `e`.`TITLE` AS `TITLE`,

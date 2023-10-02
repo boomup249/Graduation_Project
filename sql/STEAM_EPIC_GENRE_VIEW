@@ -1,0 +1,49 @@
+CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = `root`@`localhost` 
+    SQL SECURITY DEFINER
+VIEW `gamedata_steam_epic_genre` AS
+    SELECT 
+        `eg`.`TITLE` AS `EPICTITLE`,
+        `eg`.`GENRE` AS `EPICGENRE`,
+        NULL AS `STEAMTITLE`,
+        NULL AS `STEAMGENRE`
+    FROM
+        `gamedata_epic_genre` `eg`
+    WHERE
+        (`eg`.`GENRE` IN ('액션' , 'RPG',
+            '슈팅',
+            '전략',
+            '어드벤쳐',
+            '시뮬레이션',
+            '스포츠',
+            '로그라이크',
+            '퍼즐',
+            '격투',
+            '아케이드',
+            '공포',
+            '싱글 플레이',
+            '멀티 플레이',
+            'MMORPG')) 
+    UNION SELECT 
+        NULL AS EPICTITLE,
+        NULL AS EPICGENRE,
+        `sg`.TITLE AS STEAMTITLE,
+        sg.genre AS STEAMGENRE
+    FROM
+        gamedata_steam_genre sg
+    WHERE
+        (sg.genre IN ('액션' , 'RPG',
+            '슈팅',
+            '전략',
+            '어드벤쳐',
+            '시뮬레이션',
+            '스포츠',
+            '로그라이크',
+            '퍼즐',
+            '격투',
+            '아케이드',
+            '공포',
+            '싱글 플레이',
+            '멀티 플레이',
+            'MMORPG'))

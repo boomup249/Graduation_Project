@@ -6,11 +6,13 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+
 @Entity
 @Immutable
 @Table(name = "game_steam_epic")
 public class PcDB {
 	@Id
+	private String KEY;
 	private Integer STEAMNUM;
 	private Integer EPICNUM;
 	private String TITLE;
@@ -37,6 +39,14 @@ public class PcDB {
 	private String STEAMURL;
 	private String EPICURL;
 	
+	
+	//getter setter
+	public String getKEY() {
+		return KEY;
+	}
+	public void setKEY(String kEY) {
+		KEY = kEY;
+	}
 	public Integer getSTEAMNUM() {
 		return STEAMNUM;
 	}
@@ -145,13 +155,6 @@ public class PcDB {
 	public void setEPICURL(String ePICURL) {
 		EPICURL = ePICURL;
 	}
-
-
-	//getter setter
-	
-	
-	
-	
 	
 	
 }

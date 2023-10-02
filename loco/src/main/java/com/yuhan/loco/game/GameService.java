@@ -13,25 +13,22 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class GameService {
+	//전역
     private final PcRepository pcRepository;
     private final ConsoleRepository consoleRepository;
 
-    @Autowired
     public GameService(PcRepository pcRepository, ConsoleRepository consoleRepository) {
         this.pcRepository = pcRepository;
         this.consoleRepository = consoleRepository;
     }
 
-    public void findPcSITE() {
+    
+    //함수
+    
+    //(테스트용) 사이트 어빌리티 both인 항목 찾기, 쓸거면 형태 고치기(return)
+    public void findPcSITEeqBoth() {
         List<PcDB> a = pcRepository.findBySITEAVAILABILITY("Both");
-        System.out.println(a);
     }
-
-    public Page<PcDB> getFullPcList(int page) {
-        Pageable pageable = PageRequest.of(page, 20);
-        return this.pcRepository.findAll(pageable);
-    }
-
     
     /*
     public void findConsoleSITE() {
@@ -39,6 +36,74 @@ public class GameService {
         System.out.println(a);
     }
 	*/
+    
+    //key값으로 해당하는 레코드 db 객체로 받아오기
+    public PcDB getPcByKey(String key) {
+        return pcRepository.findByKEY(key);
+    }
+    
+    //pc 최저가 사이트 찾기 함수
+  	public String min_check(String steam_salePrice, String epic_salePrice) {
+  		//SITEAVAILABILITY = Both일때 활용
+  		//230928기준 steam = '할인 X', epic = 'X'로 표기
+  			//230929, 할인율이 없을 시 세일가 탭에 긁어온다고 생각하겠음
+  		//크롤링 방법보고 수정해서 쓰기, html 파일에서 thymeleaf로 불러와서 쓰면됨
+  			//최저가가 스팀이면 스팀으로 활성화, 최저가가 에픽이면 에픽으로 활성화
+  			//pc.html 171번째 줄 주석 <!-- Both --> 부분에 min_check 쓸 부분 표시해 놓음, 활성화만 하면 됨
+  		
+  		String min = null;
+  		int s_price = 0; int e_price = 0;
+  		
+  		//(원) 붙어 있으면 없애기
+  		if(steam_salePrice != null) {
+  			steam_salePrice = steam_salePrice.replaceAll("[₩,\\s]+", "");
+  		}
+  		if(epic_salePrice != null) {
+  			epic_salePrice = epic_salePrice.replaceAll("[₩,\\s]+", "");
+  		}
+  		
+  		System.out.println("s_s: " + steam_salePrice);
+  		System.out.println("e_s: " + epic_salePrice);
+  		
+  		if(steam_salePrice != null && epic_salePrice != null
+  				&& !steam_salePrice.equals("할인X") && !epic_salePrice.equals("X")) //값이 정상인 경우
+  		{
+  			s_price = Integer.parseInt(steam_salePrice);
+  			e_price = Integer.parseInt(epic_salePrice);
+  			
+  			System.out.println("s_i: " + s_price);
+  			System.out.println("e_i: " + e_price);
+  			
+  			//
+  			if(s_price > e_price) {
+  				min = "e";
+  			} else { //같아도 s
+  				min = "s";
+  			}
+  		} else { //값이 정상이 아닌 경우
+  			//둘 다인 경우
+  			if ((steam_salePrice == null || steam_salePrice.equals("할인X")) 
+  					&& (epic_salePrice == null || epic_salePrice.equals("X"))) {
+  				min = "s";//
+  			}
+  			else if(steam_salePrice == null || steam_salePrice.equals("할인X")) { //스팀값이 이상한 경우
+  				min = "e";
+  			}
+  			else { //에픽값이 이상한 경우
+  				min = "s";
+  			}
+  		}
+  		
+  		return min;
+  	}
+
+    //pc 페이지 객체로 findall
+    public Page<PcDB> getFullPcList(int page) {
+        Pageable pageable = PageRequest.of(page, 20);
+        return this.pcRepository.findAll(pageable);
+    }
+    
+    //console 페이지 객체로 findall
     public Page<ConsoleDB> getFullConsoleList(int page) {
         Pageable pageable = PageRequest.of(page, 20);
         return this.consoleRepository.findAll(pageable);
@@ -53,6 +118,8 @@ public class GameService {
     }
 
     
+    //
+    	//dto 방식 사용때 활용
     public List<GameDTO> getAllGames() {
         List<PcDB> gameDBList = pcRepository.findAll();
         List<GameDTO> gameDTOList = gameDBList.stream()
@@ -143,4 +210,45 @@ public class GameService {
         }
         return consoleDTO;
     }
+    
+    //
+    public GameDTO createToDTO(String key, PcDB pcDB) {
+        GameDTO gameDTO = new GameDTO();
+	//게임 판별
+        if (key != null) {
+            PcDB selectedPcGame = pcRepository.findByKEY(key);
+            if (selectedPcGame != null) {
+
+             	// TITLE 설정
+                gameDTO.setTITLE(selectedPcGame.getTITLE());
+		// STEAM or EPIC 구분
+                gameDTO.setSITEAVAILABILITY(pcDB.getSITEAVAILABILITY());
+     
+                if ("Steam Only".equalsIgnoreCase(pcDB.getSITEAVAILABILITY())) {
+                    gameDTO.setIMGDATA(pcDB.getSTEAMIMGDATA());
+                    gameDTO.setGAMEIMG(pcDB.getSTEAMGAMEIMG());
+                    gameDTO.setDESCRIPTION(pcDB.getSTEAMDESCRIPTION());
+                    gameDTO.setURL(pcDB.getSTEAMURL());
+                }
+                else if("Epic Only".equalsIgnoreCase(pcDB.getSITEAVAILABILITY())) {
+                    gameDTO.setIMGDATA(pcDB.getEPICIMGDATA());
+                    gameDTO.setGAMEIMG(pcDB.getEPICGAMEIMG());
+                    gameDTO.setDESCRIPTION(pcDB.getEPICDESCRIPTION());
+                    gameDTO.setURL(pcDB.getEPICURL());
+                }
+                else if("Both".equalsIgnoreCase(pcDB.getSITEAVAILABILITY())) {
+                    gameDTO.setIMGDATA(pcDB.getSTEAMIMGDATA());
+                    gameDTO.setGAMEIMG(pcDB.getSTEAMGAMEIMG());
+                    gameDTO.setDESCRIPTION(pcDB.getSTEAMDESCRIPTION());
+                }             
+                return gameDTO;
+            }
+        }
+        return gameDTO;
+    }
+    
+    	//dto 방식 사용때 활용 end
+    //
+    
+    
 }
