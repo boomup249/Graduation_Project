@@ -10,32 +10,36 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import ch.qos.logback.core.recovery.ResilientSyslogOutputStream;
+
 
 @Service
 public class GameService {
-	//전역
     private final PcRepository pcRepository;
     private final ConsoleRepository consoleRepository;
 
+    @Autowired
     public GameService(PcRepository pcRepository, ConsoleRepository consoleRepository) {
         this.pcRepository = pcRepository;
         this.consoleRepository = consoleRepository;
     }
-
-    
-    //함수
     
     //(테스트용) 사이트 어빌리티 both인 항목 찾기, 쓸거면 형태 고치기(return)
     public void findPcSITEeqBoth() {
         List<PcDB> a = pcRepository.findBySITEAVAILABILITY("Both");
     }
+
+    //pc 페이지 객체로 findall
+    public Page<PcDB> getFullPcList(int page) {
+        Pageable pageable = PageRequest.of(page, 20);
+        return this.pcRepository.findAll(pageable);
+    }
+
     
-    /*
     public void findConsoleSITE() {
-        List<ConsoleDB> a = consoleRepository.findBySiteavailabilty("Both");
+        List<ConsoleDB> a = consoleRepository.findBySITEAVAILABILITY("Both");
         System.out.println(a);
     }
-	*/
     
     //key값으로 해당하는 레코드 db 객체로 받아오기
     public PcDB getPcByKey(String key) {
@@ -96,30 +100,25 @@ public class GameService {
   		
   		return min;
   	}
-
-    //pc 페이지 객체로 findall
-    public Page<PcDB> getFullPcList(int page) {
-        Pageable pageable = PageRequest.of(page, 20);
-        return this.pcRepository.findAll(pageable);
-    }
     
+    
+    
+	
     //console 페이지 객체로 findall
     public Page<ConsoleDB> getFullConsoleList(int page) {
         Pageable pageable = PageRequest.of(page, 20);
         return this.consoleRepository.findAll(pageable);
     }
 
-    public List<PcDB> getAllData() {
+    public List<PcDB> getAllDataPC() {
         return pcRepository.findAll();
     }
 
-    public List<ConsoleDB> getAllData_1() {
+    public List<ConsoleDB> getAllDataConsole() {
         return consoleRepository.findAll();
     }
 
     
-    //
-    	//dto 방식 사용때 활용
     public List<GameDTO> getAllGames() {
         List<PcDB> gameDBList = pcRepository.findAll();
         List<GameDTO> gameDTOList = gameDBList.stream()
@@ -130,88 +129,158 @@ public class GameService {
     }
 
     
-   public List<ConsoleDTO> getAllGames_c() {
-        List<ConsoleDB> consoleDBList = consoleRepository.findAll();
-        List<ConsoleDTO> consoleDTOList = consoleDBList.stream()
+    public List<ConsoleDTO> getAllGames_c() {
+        List<ConsoleDB> gameDBList = consoleRepository.findAll();
+        List<ConsoleDTO> gameDTOList = gameDBList.stream()
                 .map(this::convertToDTO_c)
                 .collect(Collectors.toList());
 
-        return consoleDTOList;
+        return gameDTOList;
     }
-
-    
     
     private GameDTO convertToDTO(PcDB pcDB) {
         GameDTO gameDTO = new GameDTO();
         if (pcDB != null) {
+        	String site = pcDB.getSITEAVAILABILITY();
             String price1 = pcDB.getSTEAMPRICE();
-            if (price1 != null)
-                price1 = price1.replaceAll("[₩,\\s]+", "");
             String price2 = pcDB.getEPICPRICE();
-            if (price2 != null)
-                price2 = price2.replaceAll("[₩,\\s]+", "");
-
-            if (price2 != null && price1 != null) {
-                int price1D = Integer.parseInt(price1);
-                int price2D = Integer.parseInt(price2);
-
-                if (price1D > price2D) {
-                    gameDTO.setPRICE(pcDB.getEPICPRICE());
-                } else if (price1D < price2D) {
-                    gameDTO.setPRICE(pcDB.getSTEAMPRICE());
-                } else {
-                    gameDTO.setPRICE(pcDB.getSTEAMPRICE());
-                }
+            int price1D =0 ;
+            int price2D =0 ;
+            
+            if (price1 != null && price1.equals("무료")) {
+                gameDTO.setPRICE("무료");
             }
-            gameDTO.setPRICE(pcDB.getSTEAMPRICE());
-            gameDTO.setTITLE(pcDB.getTITLE());
-            gameDTO.setSALEPRICE(pcDB.getSTEAMSALEPRICE());
-            gameDTO.setSALEPER(pcDB.getSTEAMSALEPER());
-            gameDTO.setDESCRIPTION(pcDB.getSTEAMDESCRIPTION());
-            gameDTO.setIMGDATA(pcDB.getSTEAMIMGDATA());
-            gameDTO.setGAMEIMG(pcDB.getSTEAMGAMEIMG());
-            gameDTO.setURL(pcDB.getSTEAMURL());
-            System.out.println(gameDTO.getSALEPER());
+            else if(price1 != null) {
+                price1 = price1.replaceAll("[₩,\\s]+", "");
+                price1D = Integer.parseInt(price1);
+            }
+            else {
+            	gameDTO.setPRICE("X");
+            }
+            if (price2 != null && price2.equals("무료")) {
+            	gameDTO.setPRICE("무료");
+            }
+            else if(price2 != null && price2.equals("무료")) {
+            	price2 = price2.replaceAll("[₩,\\s]+", "");
+            	price2D = Integer.parseInt(price2);
+            }
+            else {
+            	gameDTO.setPRICE("X");
+            }
+
+            if(site.equals("Steam Only")) {
+                gameDTO.setTITLE(pcDB.getTITLE());
+                gameDTO.setPRICE(pcDB.getSTEAMPRICE());
+                gameDTO.setSALEPRICE(pcDB.getSTEAMSALEPRICE());
+                gameDTO.setSALEPER(pcDB.getSTEAMSALEPER());
+                gameDTO.setDESCRIPTION(pcDB.getSTEAMDESCRIPTION());
+                gameDTO.setIMGDATA(pcDB.getSTEAMIMGDATA());
+                gameDTO.setGAMEIMG(pcDB.getSTEAMGAMEIMG());
+                gameDTO.setURL(pcDB.getSTEAMURL());
+            	
+            }
+            else if(site.equals("Epic Only")) {		
+                gameDTO.setTITLE(pcDB.getTITLE());
+                gameDTO.setPRICE(pcDB.getEPICPRICE());
+                gameDTO.setSALEPRICE(pcDB.getEPICSALEPRICE());
+                gameDTO.setSALEPER(pcDB.getEPICSALEPER());
+                gameDTO.setDESCRIPTION(pcDB.getEPICDESCRIPTION());
+                gameDTO.setIMGDATA(pcDB.getEPICIMGDATA());
+                gameDTO.setGAMEIMG(pcDB.getEPICGAMEIMG());
+                gameDTO.setURL(pcDB.getEPICURL());
+            }
+            else {
+            	if(price1D > price2D || price1 == null) {
+                    gameDTO.setTITLE(pcDB.getTITLE());
+                    gameDTO.setPRICE(pcDB.getEPICPRICE());
+                    gameDTO.setSALEPRICE(pcDB.getEPICSALEPRICE());
+                    gameDTO.setSALEPER(pcDB.getEPICSALEPER());
+                    gameDTO.setDESCRIPTION(pcDB.getEPICDESCRIPTION());
+                    gameDTO.setIMGDATA(pcDB.getEPICIMGDATA());
+                    gameDTO.setGAMEIMG(pcDB.getEPICGAMEIMG());
+                    gameDTO.setURL(pcDB.getEPICURL());
+            	}
+            	else {
+                    gameDTO.setTITLE(pcDB.getTITLE());
+                    gameDTO.setPRICE(pcDB.getEPICPRICE());
+                    gameDTO.setSALEPRICE(pcDB.getSTEAMSALEPRICE());
+                    gameDTO.setSALEPER(pcDB.getSTEAMSALEPER());
+                    gameDTO.setDESCRIPTION(pcDB.getSTEAMDESCRIPTION());
+                    gameDTO.setIMGDATA(pcDB.getSTEAMIMGDATA());
+                    gameDTO.setGAMEIMG(pcDB.getSTEAMGAMEIMG());
+                    gameDTO.setURL(pcDB.getSTEAMURL());
+            	}
+            }
+            
         }
         return gameDTO;
     }
+    
 
     private ConsoleDTO convertToDTO_c(ConsoleDB consoleDB) {
         ConsoleDTO consoleDTO = new ConsoleDTO();
-        if (consoleDB != null) {
-            String price1 = consoleDB.getPSPRICE();
-            if (price1 != null)
-                price1 = price1.replaceAll("[원,\\s]+", "");
-            String price2 = consoleDB.getSWITCHPRICE();
-            if (price2 != null)
-                price2 = price2.replaceAll("[원,\\s]+", "");
-
-            if (price2 != null && price1 != null) {
-                int price1D = Integer.parseInt(price1);
-                int price2D = Integer.parseInt(price2);
-
-                if (price1D > price2D) {
-                    consoleDTO.setPRICE(consoleDB.getSWITCHPRICE());
-                } else if (price1D < price2D) {
-                    consoleDTO.setPRICE(consoleDB.getPSPRICE());
-                } else {
-                    consoleDTO.setPRICE(consoleDB.getPSPRICE());
-                }
-            }
-            consoleDTO.setNUM(consoleDB.getSWITCHNUM());
-            consoleDTO.setTITLE(consoleDB.getTITLE());
-            consoleDTO.setSALEPRICE(consoleDB.getPSSALEPRICE());
-            consoleDTO.setSALEPER(consoleDB.getPSSALEPER());
-            consoleDTO.setDESCRIPTION(consoleDB.getPSDESCRIPTION());
-            consoleDTO.setIMGDATA(consoleDB.getPSIMGDATA());
-            consoleDTO.setGAMEIMG(consoleDB.getPSGAMEIMG());
-            consoleDTO.setURL(consoleDB.getPSURL());
-            System.out.println(consoleDB.getTITLE());
+        if(consoleDB != null) {
+        	String site = consoleDB.getSITEAVAILABILITY();
+        	String price1 = consoleDB.getPSPRICE();
+        	int price1D =0;
+        	int price2D =0;
+        	if(price1 != null) {
+        		price1 = price1.replaceAll("[원,\\s]+", "");
+        		price1D = Integer.parseInt(price1);
+        	}
+        	String price2 = consoleDB.getSWITCHPRICE();
+        	if(price2 != null) {
+        		price2 = price2.replaceAll("[₩,\\s]+", "");
+        		price2D = Integer.parseInt(price2);
+        	}
+        	
+        	
+        	if(site.equals("PS Only")) {
+        		consoleDTO.setPRICE(consoleDB.getPSPRICE());
+            	consoleDTO.setTITLE(consoleDB.getTITLE());
+            	consoleDTO.setSALEPER(consoleDB.getPSSALEPER());
+            	consoleDTO.setSALEPRICE(consoleDB.getPSSALEPRICE());
+            	consoleDTO.setDESCRIPTION(consoleDB.getPSDESCRIPTION());
+            	consoleDTO.setIMGDATA(consoleDB.getPSIMGDATA());
+            	consoleDTO.setGAMEIMG(consoleDB.getPSGAMEIMG());
+            	consoleDTO.setURL(consoleDB.getPSURL());
+        	}
+        	else if(site.equals("Switch Only")) {
+        		consoleDTO.setPRICE(consoleDB.getSWITCHPRICE());
+            	consoleDTO.setTITLE(consoleDB.getTITLE());
+            	consoleDTO.setSALEPER(consoleDB.getSWITCHSALEPER());
+            	consoleDTO.setSALEPRICE(consoleDB.getSWITCHSALEPRICE());
+            	consoleDTO.setDESCRIPTION(consoleDB.getSWITCHDESCRIPTION());
+            	consoleDTO.setIMGDATA(consoleDB.getSWITCHIMGDATA());
+            	consoleDTO.setGAMEIMG(consoleDB.getSWITCHGAMEIMG());
+            	consoleDTO.setURL(consoleDB.getSWITCHURL());
+        	}
+        	else {
+        		if(price1D > price2D) {
+            		consoleDTO.setPRICE(consoleDB.getSWITCHPRICE());
+                	consoleDTO.setTITLE(consoleDB.getTITLE());
+                	consoleDTO.setSALEPER(consoleDB.getSWITCHSALEPER());
+                	consoleDTO.setSALEPRICE(consoleDB.getSWITCHSALEPRICE());
+                	consoleDTO.setDESCRIPTION(consoleDB.getSWITCHDESCRIPTION());
+                	consoleDTO.setIMGDATA(consoleDB.getSWITCHIMGDATA());
+                	consoleDTO.setGAMEIMG(consoleDB.getSWITCHGAMEIMG());
+                	consoleDTO.setURL(consoleDB.getSWITCHURL());
+        		}
+        		else {
+            		consoleDTO.setPRICE(consoleDB.getPSPRICE());
+                	consoleDTO.setTITLE(consoleDB.getTITLE());
+                	consoleDTO.setSALEPER(consoleDB.getPSSALEPER());
+                	consoleDTO.setSALEPRICE(consoleDB.getPSSALEPRICE());
+                	consoleDTO.setDESCRIPTION(consoleDB.getPSDESCRIPTION());
+                	consoleDTO.setIMGDATA(consoleDB.getPSIMGDATA());
+                	consoleDTO.setGAMEIMG(consoleDB.getPSGAMEIMG());
+                	consoleDTO.setURL(consoleDB.getPSURL());
+        		}
+        	}
         }
+
         return consoleDTO;
     }
-    
-    //
     public GameDTO createToDTO(String key, PcDB pcDB) {
         GameDTO gameDTO = new GameDTO();
 	//게임 판별
@@ -246,9 +315,5 @@ public class GameService {
         }
         return gameDTO;
     }
-    
-    	//dto 방식 사용때 활용 end
-    //
-    
     
 }
