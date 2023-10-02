@@ -240,8 +240,6 @@ public class GameService {
                     gameDTO.setIMGDATA(pcDB.getSTEAMIMGDATA());
                     gameDTO.setGAMEIMG(pcDB.getSTEAMGAMEIMG());
                     gameDTO.setDESCRIPTION(pcDB.getSTEAMDESCRIPTION());
-                    gameDTO.setURL(pcDB.getSTEAMURL());
-                    gameDTO.setURL(pcDB.getEPICURL());
                 }             
                 return gameDTO;
             }
