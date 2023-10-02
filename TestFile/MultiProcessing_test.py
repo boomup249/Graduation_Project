@@ -80,6 +80,7 @@ def nintendo_crawling():
                                                                 `IMGDATA` TEXT NULL DEFAULT NULL,
                                                                 `GAMEIMG` TEXT NULL DEFAULT NULL,
                                                                 `URL` TEXT NULL DEFAULT NULL,
+                                                                `VARIA` TINYINT(1) NOT NULL DEFAULT 0,
                                                                 PRIMARY KEY (`NUM`),
                                                                 UNIQUE KEY (`TITLE`))
                 ''')
@@ -186,7 +187,9 @@ def nintendo_crawling():
             sleep(3)
             new_soup = BeautifulSoup(driver.page_source, "html.parser")
             gameimg = new_soup.select_one('img.fotorama__img')
-        gameimg = gameimg["src"]
+        
+        if gameimg != None:
+            gameimg = gameimg["src"]
 
         sql = 'INSERT INTO gamedata_switch (TITLE, PRICE, SALEPRICE, SALEPER, DESCRIPTION, IMGDATA, GAMEIMG, URL) VALUES (%s, %s, %s, %s, %s, %s, %s ,%s)'
         cursor.execute(sql, (title, price, saleprice, saleper, description, imgdata, gameimg, move))
@@ -234,6 +237,7 @@ def ps_crawling():
                                                             `IMGDATA` TEXT NULL DEFAULT NULL,
                                                             `GAMEIMG` TEXT NULL DEFAULT NULL,
                                                             `URL` TEXT NULL DEFAULT NULL,
+                                                            `VARIA` TINYINT(1) NOT NULL DEFAULT 0,
                                                             PRIMARY KEY (`NUM`),
                                                             UNIQUE KEY (`TITLE`))
                 ''')
@@ -553,6 +557,7 @@ def steam_start():
                                                                 `IMGDATA` TEXT NULL DEFAULT NULL,
                                                                 `GAMEIMG` TEXT NULL DEFAULT NULL,
                                                                 `URL` TEXT NULL DEFAULT NULL,
+                                                                `VARIA` TINYINT(1) NOT NULL DEFAULT 0,
                                                                 PRIMARY KEY (`NUM`),
                                                                 UNIQUE KEY (`TITLE`))
                 ''')
@@ -639,6 +644,7 @@ def epic_crawling():
                                                                 `IMGDATA` TEXT NULL DEFAULT NULL,
                                                                 `GAMEIMG` TEXT NULL DEFAULT NULL,
                                                                 `URL` TEXT NULL DEFAULT NULL,
+                                                                `VARIA` TINYINT(1) NOT NULL DEFAULT 0,
                                                                 PRIMARY KEY (`NUM`),
                                                                 UNIQUE KEY (`TITLE`))
                 ''')
@@ -789,6 +795,7 @@ if __name__ == "__main__":
     process2 = multiprocessing.Process(target=ps_crawling)
     process3 = multiprocessing.Process(target=steam_start)
     process4 = multiprocessing.Process(target=epic_crawling)
+
     """
     try:
         process1.start()
@@ -796,11 +803,12 @@ if __name__ == "__main__":
         print("process1 시작 오류")
 
     sleep(3)
+        """
     try:
         process2.start()
     except:
         print("process2 시작 오류")
-
+    """
     sleep(3)
     try:
         process3.start()
@@ -808,12 +816,11 @@ if __name__ == "__main__":
         print("process3 시작 오류")
 
     sleep(3)
-    """
     try:
         process4.start()
     except:
         print("process4 시작 오류")
-
+    """
     # 프로세스 종료 대기
     try:
         process1.join()

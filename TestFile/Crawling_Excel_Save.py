@@ -108,7 +108,8 @@ def nintendo_crawling():
         price = item.find("span", attrs={"data-price-type" : "oldPrice"})
         saleprice = item.find("span", attrs={"data-price-type" : "finalPrice"})
         img = item.find("img", class_="product-image-photo mplazyload mplazyload-transparent entered loaded")
-        imgdata = img["src"]
+        if img != None:
+            imgdata = img["src"]
 
         if price == None:
             price = item.find("span", class_="point-icon-wrapper")
@@ -159,8 +160,10 @@ def nintendo_crawling():
             print("gameimg 오류 3초 대기후 재크롤링")
             sleep(3)
             new_soup = BeautifulSoup(driver.page_source, "html.parser")
-            gameimg = new_soup.select_one('img.fotorama__img')
-        gameimg = gameimg["src"]
+            gameimg = new_soup.select_one('img.fotorama__img') 
+
+        if gameimg != None:
+            gameimg = gameimg["src"]
 
         gamedata_column = [num_game, title, price, saleprice, saleper, description, imgdata, gameimg, move]
         excel_gamedata_sheet.append(gamedata_column)
@@ -190,8 +193,8 @@ def nintendo_crawling():
     newtimestr = newtime.strftime("%Y%m%d_%H%M")
 
     sleep(2)
-    excel_gamedata.save(f'{path}\Switch_Crawling.xlsx')
-    excel_gamegenre.save(f'{path}\Switch_Genre_Crawling.xlsx')
+    excel_gamedata.save(f'{path}\Switch_Crawling.csv')
+    excel_gamegenre.save(f'{path}\Switch_Genre_Crawling.csv')
     excel_gamedata.close()
     excel_gamegenre.close()
     print(platform, " 크롤링 완료 시작시간:", timestr, ", 완료시간:", newtimestr)
@@ -203,7 +206,6 @@ def ps_crawling():
     gameURL = 'https://store.playstation.com/'
     num_game = 1
     num_genre = 1
-    platform = 'switch'
     excel_gamedata = openpyxl.Workbook()
     excel_gamedata_sheet = excel_gamedata.active
     gamedata_row_column = ["NUM", "TITLE", "PRICE", "SALEPRICE", "SALEPER", "DESCRIPTION", "IMGDATA", "GAMEIMG", "URL"]
@@ -306,8 +308,8 @@ def ps_crawling():
                 #-100% 할인도 적혀있지않다면 구매할수없는 게임이기에 정가, 할인가, 할인율의 값을 "구매할 수 없음"으로 설정
                 if saleper == None:
                     price = game.find("span", class_="psw-m-r-3").text
-                    saleprice = "구매할 수 없음"
-                    saleper = "구매할 수 없음"
+                    saleprice = "X"
+                    saleper = "X"
                 else:
                     saleper = saleper.text
             #saleper가 None이 아니였기때문에 price와 saleprice를 크롤링
@@ -408,8 +410,8 @@ def ps_crawling():
     newtime = datetime.now()
     newtimestr = newtime.strftime("%Y%m%d_%H%M")
 
-    excel_gamedata.save(f'{path}\PS_Crawling.xlsx')
-    excel_gamegenre.save(f'{path}\PS_Genre_Crawling.xlsx')
+    excel_gamedata.save(f'{path}\PS_Crawling.csv')
+    excel_gamegenre.save(f'{path}\PS_Genre_Crawling.csv')
     excel_gamedata.close()
     excel_gamegenre.close()
 
@@ -520,7 +522,6 @@ def steam_crawling(driver, excel_gamedata_sheet, excel_gamegenre_sheet):
 def steam_start():
     platform = 'steam'
     url = 'https://store.steampowered.com/specials/'
-    platform = 'switch'
     excel_gamedata = openpyxl.Workbook()
     excel_gamedata_sheet = excel_gamedata.active
     gamedata_row_column = ["NUM", "TITLE", "PRICE", "SALEPRICE", "SALEPER", "DESCRIPTION", "IMGDATA", "GAMEIMG", "URL"]
@@ -580,8 +581,8 @@ def steam_start():
             break
         driver.quit()
 
-    excel_gamedata.save(f'{path}\Steam_Crawling.xlsx')
-    excel_gamegenre.save(f'{path}\Steam_Genre_Crawling.xlsx')
+    excel_gamedata.save(f'{path}\Steam_Crawling.csv')
+    excel_gamegenre.save(f'{path}\Steam_Genre_Crawling.csv')
     excel_gamedata.close()
     excel_gamegenre.close()
     driver.quit()
@@ -602,7 +603,6 @@ def epic_crawling():
     
     num_game = 1
     num_genre = 1
-    platform = 'switch'
     excel_gamedata = openpyxl.Workbook()
     excel_gamedata_sheet = excel_gamedata.active
     gamedata_row_column = ["NUM", "TITLE", "PRICE", "SALEPRICE", "SALEPER", "DESCRIPTION", "IMGDATA", "GAMEIMG", "URL"]
@@ -735,8 +735,8 @@ def epic_crawling():
     sleep(2)
     print(platform, " 크롤링 완료 - 시작시간:", timestr, ", 완료시간:", newtimestr)
 
-    excel_gamedata.save(f'{path}\Epic_Crawling.xlsx')
-    excel_gamegenre.save(f'{path}\Epic_Genre_Crawling.xlsx')
+    excel_gamedata.save(f'{path}\Epic_Crawling.csv')
+    excel_gamegenre.save(f'{path}\Epic_Genre_Crawling.csv')
     excel_gamedata.close()
     excel_gamegenre.close()
 
@@ -758,7 +758,7 @@ if __name__ == "__main__":
     process2 = multiprocessing.Process(target=ps_crawling)
     process3 = multiprocessing.Process(target=steam_start)
     process4 = multiprocessing.Process(target=epic_crawling)
-
+    """
     try:
         process1.start()
     except:
@@ -771,18 +771,18 @@ if __name__ == "__main__":
         print("process2 시작 오류")
 
     sleep(3)
+    """
     try:
         process3.start()
     except:
         print("process3 시작 오류")
-
+    """
     sleep(3)
-
     try:
         process4.start()
     except:
         print("process4 시작 오류")
-
+    """
     # 프로세스 종료 대기
     try:
         process1.join()
