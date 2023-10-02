@@ -18,7 +18,6 @@ public class GameService {
     private final PcRepository pcRepository;
     private final ConsoleRepository consoleRepository;
 
-    @Autowired
     public GameService(PcRepository pcRepository, ConsoleRepository consoleRepository) {
         this.pcRepository = pcRepository;
         this.consoleRepository = consoleRepository;
@@ -29,17 +28,12 @@ public class GameService {
         List<PcDB> a = pcRepository.findBySITEAVAILABILITY("Both");
     }
 
-    //pc 페이지 객체로 findall
-    public Page<PcDB> getFullPcList(int page) {
-        Pageable pageable = PageRequest.of(page, 20);
-        return this.pcRepository.findAll(pageable);
-    }
-
-    
+    /*
     public void findConsoleSITE() {
         List<ConsoleDB> a = consoleRepository.findBySITEAVAILABILITY("Both");
         System.out.println(a);
     }
+    */
     
     //key값으로 해당하는 레코드 db 객체로 받아오기
     public PcDB getPcByKey(String key) {
@@ -102,7 +96,11 @@ public class GameService {
   	}
     
     
-    
+  	//pc 페이지 객체로 findall
+    public Page<PcDB> getFullPcList(int page) {
+        Pageable pageable = PageRequest.of(page, 20);
+        return this.pcRepository.findAll(pageable);
+    }
 	
     //console 페이지 객체로 findall
     public Page<ConsoleDB> getFullConsoleList(int page) {
@@ -119,6 +117,8 @@ public class GameService {
     }
 
     
+    //
+		//dto 방식 사용때 활용
     public List<GameDTO> getAllGames() {
         List<PcDB> gameDBList = pcRepository.findAll();
         List<GameDTO> gameDTOList = gameDBList.stream()
@@ -128,7 +128,7 @@ public class GameService {
         return gameDTOList;
     }
 
-    
+    /*
     public List<ConsoleDTO> getAllGames_c() {
         List<ConsoleDB> gameDBList = consoleRepository.findAll();
         List<ConsoleDTO> gameDTOList = gameDBList.stream()
@@ -137,6 +137,7 @@ public class GameService {
 
         return gameDTOList;
     }
+    */
     
     private GameDTO convertToDTO(PcDB pcDB) {
         GameDTO gameDTO = new GameDTO();
@@ -216,7 +217,7 @@ public class GameService {
         return gameDTO;
     }
     
-
+/*
     private ConsoleDTO convertToDTO_c(ConsoleDB consoleDB) {
         ConsoleDTO consoleDTO = new ConsoleDTO();
         if(consoleDB != null) {
@@ -281,6 +282,9 @@ public class GameService {
 
         return consoleDTO;
     }
+    */
+    
+    
     public GameDTO createToDTO(String key, PcDB pcDB) {
         GameDTO gameDTO = new GameDTO();
 	//게임 판별
@@ -315,5 +319,9 @@ public class GameService {
         }
         return gameDTO;
     }
+    
+    	//dto 방식 사용때 활용 end
+    //
+    
     
 }

@@ -8,45 +8,29 @@ import jakarta.persistence.Table;
 
 @Entity
 @Immutable
-@Table(name = "game_switch_ps")
+@Table(name = "game_switch_ps2")
 public class ConsoleDB {
 	@Id
-	private Integer SWITCHNUM;
-	private Integer PSNUM;
+	private Integer NUM;
+	
 	private String TITLE;
-	private String SITEAVAILABILIT;
+	private String SITEAVAILABILITY;
 	
-	private String SWITCHPRICE;
-	private String PSPRICE;
+	private String PRICE;
+	private String SALEPRICE;
+	private String SALEPER;
 	
-	private String SWITCHSALEPRICE;
-	private String PSSALEPRICE;
+	private String DESCRIPTION;
+	private String IMGDATA;
+	private String GAMEIMG;
+	private String URL;
 	
-	private String SWITCHSALEPER;
-	private String PSSALEPER;
-	
-	private String SWITCHDESCRIPTION;
-	private String PSDESCRIPTION;
-	
-	private String SWITCHIMGDATA;
-	private String PSIMGDATA;
-	
-	private String SWITCHGAMEIMG;
-	private String PSGAMEIMG;
-	
-	private String SWITCHURL;
-	private String PSURL;
-	public Integer getSWITCHNUM() {
-		return SWITCHNUM;
+	//getter setter
+	public Integer getNUM() {
+		return NUM;
 	}
-	public void setSWITCHNUM(Integer sWITCHNUM) {
-		SWITCHNUM = sWITCHNUM;
-	}
-	public Integer getPSNUM() {
-		return PSNUM;
-	}
-	public void setPSNUM(Integer pSNUM) {
-		PSNUM = pSNUM;
+	public void setNUM(Integer nUM) {
+		NUM = nUM;
 	}
 	public String getTITLE() {
 		return TITLE;
@@ -54,101 +38,54 @@ public class ConsoleDB {
 	public void setTITLE(String tITLE) {
 		TITLE = tITLE;
 	}
-	public String getSITEAVAILABILIT() {
-		return SITEAVAILABILIT;
+	public String getSITEAVAILABILITY() {
+		return SITEAVAILABILITY;
 	}
-	public void setSITEAVAILABILIT(String sITEAVAILABILIT) {
-		SITEAVAILABILIT = sITEAVAILABILIT;
+	public void setSITEAVAILABILITY(String sITEAVAILABILITY) {
+		SITEAVAILABILITY = sITEAVAILABILITY;
 	}
-	public String getSWITCHPRICE() {
-		return SWITCHPRICE;
+	public String getPRICE() {
+		return PRICE;
 	}
-	public void setSWITCHPRICE(String sWITCHPRICE) {
-		SWITCHPRICE = sWITCHPRICE;
+	public void setPRICE(String pRICE) {
+		PRICE = pRICE;
 	}
-	public String getPSPRICE() {
-		return PSPRICE;
+	public String getSALEPRICE() {
+		return SALEPRICE;
 	}
-	public void setPSPRICE(String pSPRICE) {
-		PSPRICE = pSPRICE;
+	public void setSALEPRICE(String sALEPRICE) {
+		SALEPRICE = sALEPRICE;
 	}
-	public String getSWITCHSALEPRICE() {
-		return SWITCHSALEPRICE;
+	public String getSALEPER() {
+		return SALEPER;
 	}
-	public void setSWITCHSALEPRICE(String sWITCHSALEPRICE) {
-		SWITCHSALEPRICE = sWITCHSALEPRICE;
+	public void setSALEPER(String sALEPER) {
+		SALEPER = sALEPER;
 	}
-	public String getPSSALEPRICE() {
-		return PSSALEPRICE;
+	public String getDESCRIPTION() {
+		return DESCRIPTION;
 	}
-	public void setPSSALEPRICE(String pSSALEPRICE) {
-		PSSALEPRICE = pSSALEPRICE;
+	public void setDESCRIPTION(String dESCRIPTION) {
+		DESCRIPTION = dESCRIPTION;
 	}
-	public String getSWITCHSALEPER() {
-		return SWITCHSALEPER;
+	public String getIMGDATA() {
+		return IMGDATA;
 	}
-	public void setSWITCHSALEPER(String sWITCHSALEPER) {
-		SWITCHSALEPER = sWITCHSALEPER;
+	public void setIMGDATA(String iMGDATA) {
+		IMGDATA = iMGDATA;
 	}
-	public String getPSSALEPER() {
-		return PSSALEPER;
+	public String getGAMEIMG() {
+		return GAMEIMG;
 	}
-	public void setPSSALEPER(String pSSALEPER) {
-		PSSALEPER = pSSALEPER;
+	public void setGAMEIMG(String gAMEIMG) {
+		GAMEIMG = gAMEIMG;
 	}
-	public String getSWITCHDESCRIPTION() {
-		return SWITCHDESCRIPTION;
+	public String getURL() {
+		return URL;
 	}
-	public void setSWITCHDESCRIPTION(String sWITCHDESCRIPTION) {
-		SWITCHDESCRIPTION = sWITCHDESCRIPTION;
+	public void setURL(String uRL) {
+		URL = uRL;
 	}
-	public String getPSDESCRIPTION() {
-		return PSDESCRIPTION;
-	}
-	public void setPSDESCRIPTION(String pSDESCRIPTION) {
-		PSDESCRIPTION = pSDESCRIPTION;
-	}
-	public String getSWITCHIMGDATA() {
-		return SWITCHIMGDATA;
-	}
-	public void setSWITCHIMGDATA(String sWITCHIMGDATA) {
-		SWITCHIMGDATA = sWITCHIMGDATA;
-	}
-	public String getPSIMGDATA() {
-		return PSIMGDATA;
-	}
-	public void setPSIMGDATA(String pSIMGDATA) {
-		PSIMGDATA = pSIMGDATA;
-	}
-	public String getSWITCHGAMEIMG() {
-		return SWITCHGAMEIMG;
-	}
-	public void setSWITCHGAMEIMG(String sWITCHGAMEIMG) {
-		SWITCHGAMEIMG = sWITCHGAMEIMG;
-	}
-	public String getPSGAMEIMG() {
-		return PSGAMEIMG;
-	}
-	public void setPSGAMEIMG(String pSGAMEIMG) {
-		PSGAMEIMG = pSGAMEIMG;
-	}
-	public String getSWITCHURL() {
-		return SWITCHURL;
-	}
-	public void setSWITCHURL(String sWITCHURL) {
-		SWITCHURL = sWITCHURL;
-	}
-	public String getPSURL() {
-		return PSURL;
-	}
-	public void setPSURL(String pSURL) {
-		PSURL = pSURL;
-	}
-	
-	
-	
-	
-	
 	
 	
 }

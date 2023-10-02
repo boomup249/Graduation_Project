@@ -2,7 +2,7 @@
 
 			/*테이블*/
 			table, th, tr, td {
-					border: none;
+					border: 1px solid #fff;
 					border-collapse: collapse;}
 					
 			table {width: 100%;}

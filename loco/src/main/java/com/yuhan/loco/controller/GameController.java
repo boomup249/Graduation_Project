@@ -96,37 +96,34 @@ public class GameController {
 	//console
 	@GetMapping("/console")
 	public String console(Model model, @RequestParam(value = "page", defaultValue = "1") int page) {
-			//(1안 기준)디비 확정되면 디비에 맞춰 바꾸기 -> 디비에서 받아와서 가공해서 dto에 차례로 넣고 dtoList 넘기기
 			
-			//페이징용 page, pageable은 0부터 시작함 -> -1로 가공해주기, html에서도 가공 필요
-			page -= 1;
-			
-			List<ConsoleDB> viewData = gameService.getAllData_1();
-			//dto리스트 전체 불러오기
-			List<GameDTO> fullList = gameService.getAllGames();
-			
-			// 전체 데이터 리스트에서 해당 페이지의 데이터만 추출하여 페이징
-			int pageSize = 10; //한 페이지에 나올 행 수
-			Page<ConsoleDB> gamePage = this.gameService.getFullConsoleList(page); //페이징 끝
-			//페이지네이션 정보 가공: 시작 페이지 번호, 현재 페이지 번호, 끝 페이지 번호
-			int currentPage = page + 1; //현재 페이지 번호
-			int calcEnd = (int)(Math.ceil(currentPage / 10.0) * 10); //현재 페이지를 10으로 나눈 후 올리고 10을 곱하면 끝번호가 나옴(ex. 3-> 0.3 - 1 - 10, 23-> 2.3 - 3 - 30)
-			int startPage = calcEnd - 9; //시작 페이지 번호
-			
-			//끝 페이지 번호 확정
-			int endPage = Math.min(calcEnd, gamePage.getTotalPages());
-			
-			//페이징 객체 model에 넣기
-			model.addAttribute("gamePage", gamePage);
-			model.addAttribute("startPage", startPage);
-			model.addAttribute("endPage", endPage);
-			model.addAttribute("currentPage", currentPage);
-			model.addAttribute("totalPage", gamePage.getTotalPages());
-			model.addAttribute("viewData",viewData);
-			model.addAttribute("gameDTO",fullList);
-			
-			return "/game/console";
-		}
+		//페이징용 page, pageable은 0부터 시작함 -> -1로 가공해주기, html에서도 가공 필요
+		page -= 1;
+				
+		//페이징 리스트 받아오기
+		Page<ConsoleDB> paging = this.gameService.getFullConsoleList(page);
+		System.out.println(paging.getTotalElements());
+					
+		//페이지네이션 정보 가공: 시작 페이지 번호, 현재 페이지 번호, 끝 페이지 번호
+		int currentPage = page + 1; //현재 페이지 번호
+		int calcEnd = (int)(Math.ceil(currentPage / 10.0) * 10); //현재 페이지를 10으로 나눈 후 올리고 10을 곱하면 끝번호가 나옴(ex. 3-> 0.3 - 1 - 10, 23-> 2.3 - 3 - 30)
+		int startPage = calcEnd - 9; //시작 페이지 번호
+					
+		//끝 페이지 번호 확정
+		int endPage = Math.min(calcEnd, paging.getTotalPages());
+					
+		//페이징 객체 model에 넣기
+		model.addAttribute("gamePage", paging);
+		model.addAttribute("startPage", startPage);
+		model.addAttribute("endPage", endPage);
+		model.addAttribute("currentPage", currentPage);
+		model.addAttribute("totalPage", paging.getTotalPages());
+		//model.addAttribute("gameService", gameService);
+				
+		
+		return "/game/console";
+	}
+	
 	
     // PC Detail
 	@GetMapping("/pcDetail/{key}") 
@@ -134,13 +131,13 @@ public class GameController {
 	    PcDB pcGameDetail = gameService.getPcByKey(key); // key에 해당하는 PC 게임 정보 가져오기
 	    GameDTO pcGameDTO = gameService.createToDTO(key, pcGameDetail);
 	    
-	    List<PcDB> pcDB = gameService.getAllData();
+	    //List<PcDB> pcDB = gameService.getAllData();
 	    model.addAttribute("pcGameDTO", pcGameDTO);
 	    model.addAttribute("pcGameDetail", pcGameDetail);
 	    return "/game/PcDetail";
 	}
 
-    // Console Detail
+    // Console Detail //얘는 key 없어서 num으로 해야해
     @GetMapping("/consoleDetail") 
     public String detail_console() {
 		return "/game/ConsoleDetail";
