@@ -1,22 +1,25 @@
-package com.yuhan.loco.bbs;
+package com.yuhan.loco.post;
 
-import java.time.LocalDate;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-
-public class PostDTO {
+@Entity
+@Table(name = "bbs_content")
+public class PostDB {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-    private String category;
+	private String category;
 	private String title;
     private String writer; // 작성자
     private String content;
     private String comment;
-    
-	
+
+
+
 	public Long getId() {
 		return id;
 	}
@@ -53,4 +56,6 @@ public class PostDTO {
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
+
+
 }

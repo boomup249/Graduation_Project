@@ -18,7 +18,7 @@ import com.yuhan.loco.user.EmailSend;
 public class apiController {
 	@Autowired
 	private EmailSend emailsend;
-	
+
 	@GetMapping(value="/email_auth", consumes = org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> emailAuth(@RequestBody HashMap<String, Object> user){
 		String username = (String) user.get("useremail");

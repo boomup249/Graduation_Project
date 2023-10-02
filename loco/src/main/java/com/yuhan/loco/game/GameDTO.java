@@ -1,12 +1,5 @@
 package com.yuhan.loco.game;
 
-
-import java.sql.Date;
-import java.util.List;
-
-import jakarta.validation.constraints.Email;
-
-
 public class GameDTO {
 	public String getSITEAVAILABILITY() {
         return SITEAVAILABILITY;
@@ -15,7 +8,7 @@ public class GameDTO {
     public void setSITEAVAILABILITY(String SITEAVAILABILITY) {
         this.SITEAVAILABILITY = SITEAVAILABILITY;
     }
-    
+
     private int NUM;
 	public int getNUM() {
 		return NUM;
@@ -64,8 +57,8 @@ public class GameDTO {
 	}
 	public void setGAMEIMG(String gAMEIMG) {
 		GAMEIMG = gAMEIMG;
-	}	
-	
+	}
+
 	public String getURL() {
 		return URL;
 	}
@@ -84,6 +77,6 @@ public class GameDTO {
 	private String IMGDATA;
 	private String GAMEIMG;
 	private String URL;
-	
+
 
 }

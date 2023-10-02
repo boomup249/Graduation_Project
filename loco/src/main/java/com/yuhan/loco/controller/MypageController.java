@@ -16,11 +16,11 @@ import jakarta.servlet.http.HttpSession;
 //마이페이지 컨트롤러
 
 /*설명:
- * 
+ *
  * */
 
-/*To do: 
- * 
+/*To do:
+ *
  * */
 
 @Controller
@@ -29,13 +29,13 @@ public class MypageController {
 	String page = "";
 	private final UserService userService;
 	private final PreferService preferService;
-	
+
 	public MypageController(UserService userService, PreferService preferService) {
         this.userService = userService;
         this.preferService = preferService;
     }
-	
-	
+
+
 	//연결
 	//join_modify < modify_info.html을 작동시키기 위한 코드(임의로 넣어놓은 거라 이후에 수정 부탁) >
 	@GetMapping("join_modify")
@@ -44,7 +44,7 @@ public class MypageController {
 		page = "modify";
 		return "/join/modify_info";
 		}
-	
+
 	@GetMapping("/profile")
     public String profile(Model model, HttpServletRequest req) {
         String userId;
@@ -64,8 +64,8 @@ public class MypageController {
 
         return "/myaccount/profile"; //여기 주소만 고쳐
         }
-	
-	
+
+
 	@GetMapping("/mypage")
     public String Mypage(Model model, HttpServletRequest req) {
         String userId;
@@ -83,6 +83,6 @@ public class MypageController {
         page = "mypage";
 		return "/myaccount/mypage";
 	}
-	
-	
+
+
 }

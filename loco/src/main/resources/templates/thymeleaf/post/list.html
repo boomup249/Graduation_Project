@@ -34,18 +34,9 @@
                     <a class="post-title-link" href="#"><div th:text="${post.title}"></div></a>
                 </td>
                 <td><div th:text="${post.writer}"></div></td>
-                <td>2023-09-25</td>
-                <td>25</td>
-                <td>12</td>
-            </tr>
-            <tr th:each = "post : ${postDTO}">
-                <td>
-                    <a class="post-title-link" href="#"><div th:text="${post.title}"></div></a>
-                </td>
-                <td><div th:text="${post.writer}"></div></td>
-                <td>2023-09-26</td>
-                <td>33</td>
-                <td>26</td>
+                <td><div th:object="${bbsDTO}" th:text="${bbsDTO.getDate()}" ></div></td>
+                <td><div th:object="${bbsDTO}" th:text="${bbsDTO.getViews()}" ></div></td>
+                <td><div th:object="${bbsDTO}" th:text="${bbsDTO.getComment()}" ></div></td>
             </tr>
             <!-- 추가적인 게시글 아이템들을 동적으로 생성하거나 서버에서 데이터를 가져와서 출력하세요. -->
         </tbody>

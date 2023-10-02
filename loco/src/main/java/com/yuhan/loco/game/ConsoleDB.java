@@ -15,25 +15,25 @@ public class ConsoleDB {
 	private Integer PSNUM;
 	private String TITLE;
 	private String SITEAVAILABILIT;
-	
+
 	private String SWITCHPRICE;
 	private String PSPRICE;
-	
+
 	private String SWITCHSALEPRICE;
 	private String PSSALEPRICE;
-	
+
 	private String SWITCHSALEPER;
 	private String PSSALEPER;
-	
+
 	private String SWITCHDESCRIPTION;
 	private String PSDESCRIPTION;
-	
+
 	private String SWITCHIMGDATA;
 	private String PSIMGDATA;
-	
+
 	private String SWITCHGAMEIMG;
 	private String PSGAMEIMG;
-	
+
 	private String SWITCHURL;
 	private String PSURL;
 	public Integer getSWITCHNUM() {
@@ -144,11 +144,11 @@ public class ConsoleDB {
 	public void setPSURL(String pSURL) {
 		PSURL = pSURL;
 	}
-	
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
+
 }

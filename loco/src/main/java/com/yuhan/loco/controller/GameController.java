@@ -1,27 +1,23 @@
 package com.yuhan.loco.controller;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.yuhan.loco.game.PcDB;
 import com.yuhan.loco.game.ConsoleDB;
 import com.yuhan.loco.game.GameDTO;
-import com.yuhan.loco.game.PcRepository;
 import com.yuhan.loco.game.GameService;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.yuhan.loco.game.PcDB;
 
 //게임 페이지 관련 컨트롤러
-//(현재) 테이블 여러개에서 정보를 join해서 불러와야 함 -> 1안) 디비별로 레포지토리 다 만들어서, dto에 정리해서 넣고 dto 활용하기 
+//(현재) 테이블 여러개에서 정보를 join해서 불러와야 함 -> 1안) 디비별로 레포지토리 다 만들어서, dto에 정리해서 넣고 dto 활용하기
 //												※단점: 페이징 처리가 빡셈, entity 및 레포지토리 다 만들어야 함, 전체 데이터를 다루게 돼서 pageable 사용 이점이 별로 없음
-//													장점(?): 어차피 2안도 정렬을 위해 불가피하게 전체 데이터를 스프링에서 처리할 가능성이 높음(먼저하냐 나중에 하냐 차이일 뿐) 
+//													장점(?): 어차피 2안도 정렬을 위해 불가피하게 전체 데이터를 스프링에서 처리할 가능성이 높음(먼저하냐 나중에 하냐 차이일 뿐)
 //											2안) mysql에서 뷰 만들어서 뷰로 레포지토리 만들어서 활용하기
 //												※단점: 스프링에서 후가공이 필요하다면 1안과 별로 차이가 없음, 디비에 뷰를 만들어야해서 수고스러움
 //													장점: entity 레포지토리 하나씩만 필요, 스프링 후가공에서 dto를 쓰지않고 정렬이 가능하다면 훨씬 깔끔한 페이징 가능
@@ -49,39 +45,39 @@ import java.util.List;
 		//사이트 필터링 로직:
 		//steam이면 SITEAVAILABILITY가 steam only, both인 항목 select
 		//epic이면 epic only, both인 항목 select
-		
+
 @Controller
 public class GameController {
 	//전역
 	String page = "";
-	
+
 	//
 	private final GameService gameService;
 
 	public GameController(GameService gameService) {
         this.gameService = gameService;
     }
-	
-	
+
+
 	//연결
 	//pc
 	@GetMapping("/pc")
 	public String pc(Model model, @RequestParam(value = "page", defaultValue = "1") int page) {
 		//페이징용 page, pageable은 0부터 시작함 -> -1로 가공해주기, html에서도 가공 필요
 		page -= 1;
-		
+
 		//페이징 리스트 받아오기
 		Page<PcDB> paging = this.gameService.getFullPcList(page);
 		System.out.println(paging.getTotalElements());
-			
+
 		//페이지네이션 정보 가공: 시작 페이지 번호, 현재 페이지 번호, 끝 페이지 번호
 		int currentPage = page + 1; //현재 페이지 번호
 		int calcEnd = (int)(Math.ceil(currentPage / 10.0) * 10); //현재 페이지를 10으로 나눈 후 올리고 10을 곱하면 끝번호가 나옴(ex. 3-> 0.3 - 1 - 10, 23-> 2.3 - 3 - 30)
 		int startPage = calcEnd - 9; //시작 페이지 번호
-			
+
 		//끝 페이지 번호 확정
 		int endPage = Math.min(calcEnd, paging.getTotalPages());
-			
+
 		//페이징 객체 model에 넣기
 		model.addAttribute("gamePage", paging);
 		model.addAttribute("startPage", startPage);
@@ -89,22 +85,22 @@ public class GameController {
 		model.addAttribute("currentPage", currentPage);
 		model.addAttribute("totalPage", paging.getTotalPages());
 		model.addAttribute("gameService", gameService);
-			
+
 		return "/game/pc";
 		}
-	
+
 	//console
 	@GetMapping("/console")
 	public String console(Model model, @RequestParam(value = "page", defaultValue = "1") int page) {
 			//(1안 기준)디비 확정되면 디비에 맞춰 바꾸기 -> 디비에서 받아와서 가공해서 dto에 차례로 넣고 dtoList 넘기기
-			
+
 			//페이징용 page, pageable은 0부터 시작함 -> -1로 가공해주기, html에서도 가공 필요
 			page -= 1;
-			
+
 			List<ConsoleDB> viewData = gameService.getAllData_1();
 			//dto리스트 전체 불러오기
 			List<GameDTO> fullList = gameService.getAllGames();
-			
+
 			// 전체 데이터 리스트에서 해당 페이지의 데이터만 추출하여 페이징
 			int pageSize = 10; //한 페이지에 나올 행 수
 			Page<ConsoleDB> gamePage = this.gameService.getFullConsoleList(page); //페이징 끝
@@ -112,10 +108,10 @@ public class GameController {
 			int currentPage = page + 1; //현재 페이지 번호
 			int calcEnd = (int)(Math.ceil(currentPage / 10.0) * 10); //현재 페이지를 10으로 나눈 후 올리고 10을 곱하면 끝번호가 나옴(ex. 3-> 0.3 - 1 - 10, 23-> 2.3 - 3 - 30)
 			int startPage = calcEnd - 9; //시작 페이지 번호
-			
+
 			//끝 페이지 번호 확정
 			int endPage = Math.min(calcEnd, gamePage.getTotalPages());
-			
+
 			//페이징 객체 model에 넣기
 			model.addAttribute("gamePage", gamePage);
 			model.addAttribute("startPage", startPage);
@@ -124,16 +120,16 @@ public class GameController {
 			model.addAttribute("totalPage", gamePage.getTotalPages());
 			model.addAttribute("viewData",viewData);
 			model.addAttribute("gameDTO",fullList);
-			
+
 			return "/game/console";
 		}
-	
+
     // PC Detail
-	@GetMapping("/pcDetail/{key}") 
+	@GetMapping("/pcDetail/{key}")
 	public String detail_pc(@PathVariable String key, Model model) {
 	    PcDB pcGameDetail = gameService.getPcByKey(key); // key에 해당하는 PC 게임 정보 가져오기
 	    GameDTO pcGameDTO = gameService.createToDTO(key, pcGameDetail);
-	    
+
 	    List<PcDB> pcDB = gameService.getAllData();
 	    model.addAttribute("pcGameDTO", pcGameDTO);
 	    model.addAttribute("pcGameDetail", pcGameDetail);
@@ -141,7 +137,7 @@ public class GameController {
 	}
 
     // Console Detail
-    @GetMapping("/consoleDetail") 
+    @GetMapping("/consoleDetail")
     public String detail_console() {
 		return "/game/ConsoleDetail";
 	}

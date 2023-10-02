@@ -19,26 +19,26 @@ import jakarta.validation.Valid;
 @Controller
 public class LoginController {
 	private final UserService userService;
-	
+
 	public LoginController(UserService userService) {
         this.userService = userService;
     }
-	
+
 	//연결
-	
+
 	//login
 	@GetMapping("/login") //로그인 페이지
 	public String loginPage(UserDTO userDTO, @RequestParam(value="ad", defaultValue = "") String email, Model model) {
 		//email 페이지에서 넘어온 경우: ad param은 이메일에서 넘어올 때 들어감, 디폴트를 null로 둬서 그냥 들어가도 오류 안남
 		userDTO.setUserId(email);
-		
+
 		return "/login";
 	}
-	
+
 	@PostMapping("/login") //로그인 처리
 	public String login(@Valid UserDTO userDTO, BindingResult bindingResult, Model model, HttpSession session) {
 		//아이디 or 이메일 입력 필드는 userdto의 userId 활용 -> userEmail을 사용하면 제약 걸림(@)
-		
+
 		//입력 칸을 채우지 않았을 경우
 		/* 어차피 html에서 required로 막혀서 보류
 		if(userDTO.getUserId() == null) { //아이디 or 이메일이 null
@@ -48,15 +48,15 @@ public class LoginController {
 			bindingResult.rejectValue("userPwd", "PwdIsNull", "비밀번호를 입력해주세요.");
 		}
 		*/
-		
+
 		//디비에 값이 없을 경우
 		boolean ck;
 		ck = userService.existUser(userDTO.getUserId(), userDTO.getUserPwd());
-		if(ck == false) {
+		if(!ck) {
 			System.out.println("로그인 실패");
 			bindingResult.rejectValue("userPwd", "UserIsNotExist", "아이디 혹은 비밀번호가 잘못되었습니다."); //정확히 pwd에 일어난 에러는 아니지만 위치상 여기에 처리
 		}
-		
+
 		//에러가 있으면 로그인 화면으로 넘기기
 		if(bindingResult.hasErrors()) { return "/login"; }
 		else { //에러가 없음 -> 디비에도 값이 있음
@@ -66,25 +66,25 @@ public class LoginController {
 			System.out.println("로그인 성공");
 			return "redirect:/main";
 		}
-		
+
 	}
-	
-	
+
+
 	//로그아웃
 	@GetMapping("/logout") //로그인 페이지
 	public String logout(HttpServletRequest req) {
 		HttpSession session = req.getSession(false);
-		
+
 		if(session == null) {
 			//세션이 생성되지 않고 로그아웃 -> 에러
 		} else { //세션이 있음
 			session.invalidate();
 		}
-		
+
 		return "redirect:/main";
 	}
-	
-	
+
+
 }
-	
-	
+
+

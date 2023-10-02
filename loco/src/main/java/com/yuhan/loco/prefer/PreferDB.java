@@ -2,25 +2,19 @@ package com.yuhan.loco.prefer;
 
 
 import com.yuhan.loco.user.UserDB;
-import com.yuhan.loco.user.UserDTO;
 
 import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Table;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.MapsId;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "prefer")
 public class PreferDB {
-	
+
 	//장르
 	@Id
 	private String ID;
@@ -29,7 +23,7 @@ public class PreferDB {
 	private UserDB userDB;
 	private String love;
 	private String dislike;
-	
+
 	public String getID() {
 		return ID;
 	}
@@ -40,11 +34,11 @@ public class PreferDB {
 		return userDB;
 	}
 	public void setUserDB(UserDB userDB) {
-		
+
 		this.userDB = userDB;
 		this.ID = userDB.getID();
 	}
-	
+
 	public String getLove() {
 		return love;
 	}
@@ -57,10 +51,10 @@ public class PreferDB {
 	public void setDislike(String dislike) {
 		this.dislike = dislike;
 	}
-	
-	
-	
 
-	
-	
+
+
+
+
+
 }

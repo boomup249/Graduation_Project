@@ -1,28 +1,24 @@
 package com.yuhan.loco.bbs;
 
-import java.time.LocalDate;
-
-import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-@Entity
 public class BBSDTO {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-
+    private Long id;
 	private String title;
     private String writer; // 작성자
-    private LocalDate date; // 날짜
-    private int views; // 조회수
-    private int comments; // 댓글 수
-    
-    public int getId() {
+    private String category;
+    private String date; // 날짜
+    private Long views; // 조회수
+    private Long comment; // 댓글 수
+
+    public Long getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 	public String getTitle() {
@@ -37,25 +33,32 @@ public class BBSDTO {
 	public void setWriter(String writer) {
 		this.writer = writer;
 	}
-	public LocalDate getDate() {
+
+	public String getCategory() {
+		return category;
+	}
+	public void setCategory(String category) {
+		this.category = category;
+	}
+	public String getDate() {
 		return date;
 	}
-	public void setDate(LocalDate date) {
+	public void setDate(String date) {
 		this.date = date;
 	}
-	public int getViews() {
+	public Long getViews() {
 		return views;
 	}
-	public void setViews(int views) {
+	public void setViews(Long views) {
 		this.views = views;
 	}
-	public int getComments() {
-		return comments;
+	public Long getComment() {
+		return comment;
 	}
-	public void setComments(int comments) {
-		this.comments = comments;
+	public void setComment(Long comment) {
+		this.comment = comment;
 	}
-    
+
     // Getter for id
-    
+
     }

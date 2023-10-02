@@ -11,17 +11,17 @@ public class UserDTO {
 	@Email
 	private String userEmail;
 	private String userId;
-	
+
 	//@Size(max = 15)
 	private String userPwd;
-	
+
 	private String userPwdck;
-	
+
 
 	private String userGender;
 	private Date userBirth;
-	
-	
+
+
 
 	//getter setter
 	public String getUserEmail() {
@@ -30,14 +30,14 @@ public class UserDTO {
 	public void setUserEmail(String userEmail) {
 		this.userEmail = userEmail;
 	}
-	
+
 	public String getUserId() {
 		return userId;
 	}
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
-	
+
 	public String getUserPwd() {
 		return userPwd;
 	}
@@ -50,7 +50,7 @@ public class UserDTO {
 	public void setUserPwdck(String userPwdck) {
 		this.userPwdck = userPwdck;
 	}
-	
+
 	public String getUserGender() {
 		return userGender;
 	}

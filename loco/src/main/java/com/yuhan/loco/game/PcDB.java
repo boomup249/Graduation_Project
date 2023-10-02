@@ -17,29 +17,29 @@ public class PcDB {
 	private Integer EPICNUM;
 	private String TITLE;
 	private String SITEAVAILABILITY;
-	
+
 	private String STEAMPRICE;
 	private String EPICPRICE;
-	
+
 	private String STEAMSALEPRICE;
 	private String EPICSALEPRICE;
-	
+
 	private String STEAMSALEPER;
 	private String EPICSALEPER;
-	
+
 	private String STEAMDESCRIPTION;
 	private String EPICDESCRIPTION;
-	
+
 	private String STEAMIMGDATA;
 	private String EPICIMGDATA;
-	
+
 	private String STEAMGAMEIMG;
 	private String EPICGAMEIMG;
-	
+
 	private String STEAMURL;
 	private String EPICURL;
-	
-	
+
+
 	//getter setter
 	public String getKEY() {
 		return KEY;
@@ -155,6 +155,6 @@ public class PcDB {
 	public void setEPICURL(String ePICURL) {
 		EPICURL = ePICURL;
 	}
-	
-	
+
+
 }

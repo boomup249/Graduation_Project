@@ -1,10 +1,8 @@
 package com.yuhan.loco.game;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -22,26 +20,26 @@ public class GameService {
         this.consoleRepository = consoleRepository;
     }
 
-    
+
     //함수
-    
+
     //(테스트용) 사이트 어빌리티 both인 항목 찾기, 쓸거면 형태 고치기(return)
     public void findPcSITEeqBoth() {
         List<PcDB> a = pcRepository.findBySITEAVAILABILITY("Both");
     }
-    
+
     /*
     public void findConsoleSITE() {
         List<ConsoleDB> a = consoleRepository.findBySiteavailabilty("Both");
         System.out.println(a);
     }
 	*/
-    
+
     //key값으로 해당하는 레코드 db 객체로 받아오기
     public PcDB getPcByKey(String key) {
         return pcRepository.findByKEY(key);
     }
-    
+
     //pc 최저가 사이트 찾기 함수
   	public String min_check(String steam_salePrice, String epic_salePrice) {
   		//SITEAVAILABILITY = Both일때 활용
@@ -50,10 +48,10 @@ public class GameService {
   		//크롤링 방법보고 수정해서 쓰기, html 파일에서 thymeleaf로 불러와서 쓰면됨
   			//최저가가 스팀이면 스팀으로 활성화, 최저가가 에픽이면 에픽으로 활성화
   			//pc.html 171번째 줄 주석 <!-- Both --> 부분에 min_check 쓸 부분 표시해 놓음, 활성화만 하면 됨
-  		
+
   		String min = null;
   		int s_price = 0; int e_price = 0;
-  		
+
   		//(원) 붙어 있으면 없애기
   		if(steam_salePrice != null) {
   			steam_salePrice = steam_salePrice.replaceAll("[₩,\\s]+", "");
@@ -61,19 +59,19 @@ public class GameService {
   		if(epic_salePrice != null) {
   			epic_salePrice = epic_salePrice.replaceAll("[₩,\\s]+", "");
   		}
-  		
+
   		System.out.println("s_s: " + steam_salePrice);
   		System.out.println("e_s: " + epic_salePrice);
-  		
+
   		if(steam_salePrice != null && epic_salePrice != null
   				&& !steam_salePrice.equals("할인X") && !epic_salePrice.equals("X")) //값이 정상인 경우
   		{
   			s_price = Integer.parseInt(steam_salePrice);
   			e_price = Integer.parseInt(epic_salePrice);
-  			
+
   			System.out.println("s_i: " + s_price);
   			System.out.println("e_i: " + e_price);
-  			
+
   			//
   			if(s_price > e_price) {
   				min = "e";
@@ -82,7 +80,7 @@ public class GameService {
   			}
   		} else { //값이 정상이 아닌 경우
   			//둘 다인 경우
-  			if ((steam_salePrice == null || steam_salePrice.equals("할인X")) 
+  			if ((steam_salePrice == null || steam_salePrice.equals("할인X"))
   					&& (epic_salePrice == null || epic_salePrice.equals("X"))) {
   				min = "s";//
   			}
@@ -93,7 +91,7 @@ public class GameService {
   				min = "s";
   			}
   		}
-  		
+
   		return min;
   	}
 
@@ -102,7 +100,7 @@ public class GameService {
         Pageable pageable = PageRequest.of(page, 20);
         return this.pcRepository.findAll(pageable);
     }
-    
+
     //console 페이지 객체로 findall
     public Page<ConsoleDB> getFullConsoleList(int page) {
         Pageable pageable = PageRequest.of(page, 20);
@@ -117,7 +115,7 @@ public class GameService {
         return consoleRepository.findAll();
     }
 
-    
+
     //
     	//dto 방식 사용때 활용
     public List<GameDTO> getAllGames() {
@@ -129,7 +127,7 @@ public class GameService {
         return gameDTOList;
     }
 
-    
+
    public List<ConsoleDTO> getAllGames_c() {
         List<ConsoleDB> consoleDBList = consoleRepository.findAll();
         List<ConsoleDTO> consoleDTOList = consoleDBList.stream()
@@ -139,8 +137,8 @@ public class GameService {
         return consoleDTOList;
     }
 
-    
-    
+
+
     private GameDTO convertToDTO(PcDB pcDB) {
         GameDTO gameDTO = new GameDTO();
         if (pcDB != null) {
@@ -210,7 +208,7 @@ public class GameService {
         }
         return consoleDTO;
     }
-    
+
     //
     public GameDTO createToDTO(String key, PcDB pcDB) {
         GameDTO gameDTO = new GameDTO();
@@ -223,7 +221,7 @@ public class GameService {
                 gameDTO.setTITLE(selectedPcGame.getTITLE());
 		// STEAM or EPIC 구분
                 gameDTO.setSITEAVAILABILITY(pcDB.getSITEAVAILABILITY());
-     
+
                 if ("Steam Only".equalsIgnoreCase(pcDB.getSITEAVAILABILITY())) {
                     gameDTO.setIMGDATA(pcDB.getSTEAMIMGDATA());
                     gameDTO.setGAMEIMG(pcDB.getSTEAMGAMEIMG());
@@ -240,15 +238,15 @@ public class GameService {
                     gameDTO.setIMGDATA(pcDB.getSTEAMIMGDATA());
                     gameDTO.setGAMEIMG(pcDB.getSTEAMGAMEIMG());
                     gameDTO.setDESCRIPTION(pcDB.getSTEAMDESCRIPTION());
-                }             
+                }
                 return gameDTO;
             }
         }
         return gameDTO;
     }
-    
+
     	//dto 방식 사용때 활용 end
     //
-    
-    
+
+
 }

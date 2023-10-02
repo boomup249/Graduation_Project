@@ -5,8 +5,8 @@ public class PreferDTO {
 	//
 	private String userLike;
 	private String userHate;
-	
-	
+
+
 
 	//getter setter
 	public String getUserLike() {

@@ -2,18 +2,8 @@ package com.yuhan.loco.user;
 
 import java.sql.Date;
 
-import com.yuhan.loco.prefer.PreferDB;
-
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -26,7 +16,7 @@ public class UserDB {
 	private String PWD;
 	private Date BIRTH;
 	private String GENDER;
-	
+
 	//getter setter
 	//user_info
 	public String getEMAIL() {
@@ -35,14 +25,14 @@ public class UserDB {
 	public void setEMAIL(String email) {
 		EMAIL = email;
 	}
-	
+
 	public String getID() {
 		return ID;
 	}
 	public void setID(String iD) {
 		ID = iD;
 	}
-	
+
 	public String getPWD() {
 		return PWD;
 	}
@@ -61,6 +51,6 @@ public class UserDB {
 	public void setGENDER(String gENDER) {
 		GENDER = gENDER;
 	}
-	
-	
+
+
 }

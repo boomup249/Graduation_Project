@@ -1,17 +1,14 @@
 package com.yuhan.loco.game;
 
 
-import java.sql.Date;
 import java.util.List;
-
-import jakarta.validation.constraints.Email;
 
 
 public class ConsoleDTO {
 	private int NUM;
 	//dto 리스트
 	private List<ConsoleDTO> ConsoleDTO;
-	
+
 	public int getNUM() {
 		return NUM;
 	}
@@ -74,6 +71,6 @@ public class ConsoleDTO {
 	private String IMGDATA;
 	private String GAMEIMG;
 	private String URL;
-	
+
 
 }
