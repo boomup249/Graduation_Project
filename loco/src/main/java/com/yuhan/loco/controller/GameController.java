@@ -95,6 +95,11 @@ public class GameController {
 		model.addAttribute("currentPage", currentPage);
 		model.addAttribute("totalPage", paging.getTotalPages());
 		model.addAttribute("gameService", gameService);
+		
+		//
+		model.addAttribute("siteF", site);
+		model.addAttribute("categoryF", category);
+		model.addAttribute("orderbyF", order);
 			
 		return "/game/pc";
 		}
@@ -129,6 +134,11 @@ public class GameController {
 		model.addAttribute("currentPage", currentPage);
 		model.addAttribute("totalPage", paging.getTotalPages());
 		//model.addAttribute("gameService", gameService);
+		
+		//
+		model.addAttribute("siteF", site);
+		model.addAttribute("categoryF", category);
+		model.addAttribute("orderbyF", order);
 				
 		
 		return "/game/console";

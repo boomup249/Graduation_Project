@@ -133,39 +133,39 @@
 				<div id="filtering">
 					<!-- 사이트 -->
 					<select id="site_filter">
-						<option value="0" selected disabled hidden>-- 사이트 --</option>
-						<option value="all">전체</option>
-						<option value="steam">스팀</option>
-						<option value="epic">에픽</option>
+						<option value="0" th:selected="${siteF == '0'}" disabled hidden>-- 사이트 --</option>
+						<option value="all" th:selected="${siteF == 'all'}">전체</option>
+						<option value="steam" th:selected="${siteF == 'steam'}">스팀</option>
+						<option value="epic" th:selected="${siteF == 'epic'}">에픽</option>
 					</select>
 					
 									
 					<!-- 카테고리 -->
 					<select id="category_filter">
-						<option value="0" selected disabled hidden>-- 카테고리 --</option>
-						<option value="all">전체</option>
-						<option value="action">액션</option>
-						<option value="shooting">슈팅</option>
-						<option value="adventure">어드벤처</option>
-						<option value="fighting">격투</option>
-						<option value="roguelike">로그라이크</option>
-						<option value="rpg">RPG</option>
-						<option value="mmorpg">MMORPG</option>
-						<option value="simulation">시뮬레이션</option>
-						<option value="sports">스포츠</option>
-						<option value="puzzle">퍼즐</option>
-						<option value="arcade">아케이드</option>
-						<option value="strategy">전략</option>
-						<option value="action">공포</option>
-						<option value="multiplayer">멀티플레이어</option>
-						<option value="singleplayer">싱글플레이어</option>
+						<option value="0" th:selected="${categoryF == '0'}" disabled hidden>-- 카테고리 --</option>
+						<option value="all" th:selected="${categoryF == 'all'}">전체</option>
+						<option value="action" th:selected="${categoryF == 'action'}">액션</option>
+						<option value="shooting" th:selected="${categoryF == 'shooting'}">슈팅</option>
+						<option value="adventure" th:selected="${categoryF == 'adventure'}">어드벤처</option>
+						<option value="fighting" th:selected="${categoryF == 'fighting'}">격투</option>
+						<option value="roguelike" th:selected="${categoryF == 'roguelike'}">로그라이크</option>
+						<option value="rpg" th:selected="${categoryF == 'rpg'}">RPG</option>
+						<option value="mmorpg" th:selected="${categoryF == 'mmorpg'}">MMORPG</option>
+						<option value="simulation" th:selected="${categoryF == 'simulation'}">시뮬레이션</option>
+						<option value="sports" th:selected="${categoryF == 'sports'}">스포츠</option>
+						<option value="puzzle" th:selected="${categoryF == 'puzzle'}">퍼즐</option>
+						<option value="arcade" th:selected="${categoryF == 'arcade'}">아케이드</option>
+						<option value="strategy" th:selected="${categoryF == 'strategy'}">전략</option>
+						<option value="horror" th:selected="${categoryF == 'horror'}">공포</option>
+						<option value="multiplayer" th:selected="${categoryF == 'multiplayer'}">멀티플레이어</option>
+						<option value="singleplayer" th:selected="${categoryF == 'singleplayer'}">싱글플레이어</option>
 					</select>
 					
 					<!-- 정렬 -->
 					<select id="order_filter">
-						<option value="popular" selected >인기순</option>
-						<option value="sale">할인순</option>
-						<option value="pick">추천순</option>
+						<option value="popular" th:selected="${orderbyF == 'popular'}">인기순</option>
+						<option value="sale" th:selected="${orderbyF == 'sale'}">할인순</option>
+						<option value="pick" th:selected="${orderbyF == 'pick'}">추천순</option>
 					</select>
 					
 				</div>
