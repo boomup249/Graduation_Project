@@ -39,6 +39,11 @@ public class GameService {
     public PcDB getPcByKey(String key) {
         return pcRepository.findByKEY(key);
     }
+
+    //num값으로 Console 받아오기
+    public ConsoleDB getCsByNum(Integer num) {
+	return consoleRepository.findByNUM(num);
+    }
     
     //pc 최저가 사이트 찾기 함수
   	public String min_check(String steam_salePrice, String epic_salePrice) {
