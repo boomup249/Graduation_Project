@@ -9,6 +9,14 @@ public class ConsoleDTO {
 	//dto 리스트
 	private List<ConsoleDTO> ConsoleDTO;
 
+	public String getSITEAVAILABILITY() {
+        	return SITEAVAILABILITY;
+	}
+	
+        public void setSITEAVAILABILITY(String SITEAVAILABILITY) {
+		this.SITEAVAILABILITY = SITEAVAILABILITY;
+        }
+
 	public int getNUM() {
 		return NUM;
 	}
@@ -63,6 +71,7 @@ public class ConsoleDTO {
 	public void setURL(String uRL) {
 		URL = uRL;
 	}
+	private String SITEAVAILABILITY;
 	private String TITLE;
 	private String PRICE;
 	private String SALEPRICE;
