@@ -25,6 +25,39 @@
 			
 			body { background-color: #222831;
 					margin: 0; padding: 0;}
+					
+			
+			/**/
+			.denote {
+				width: 100%;
+				height: 100px;
+				
+				/*자식 위치 잡기*/
+				display: flex;
+				justify-content: space-between; /*사이 벌리기*/
+				align-items: center;
+			}
+			
+			.update_time {
+				font-family: 'GmarketSansMedium';
+				font-size: 20px;
+				color: #19D3DA;
+				
+				margin-left: 20px;
+			}
+			
+			#filtering {
+				margin-right: 20px;
+			}
+			
+			#filtering select {
+				padding: 10px; /*상단부터 시계방향*/
+				
+				font-family: 'GmarketSansMedium';
+				font-size: 15px;
+				
+				margin-left: 10px;
+			}
 			
 					
 		</style>
@@ -89,6 +122,58 @@
 		
 		<!-- 콘텐츠 -->
 		<div id="content">
+			
+			<!-- 상단 정렬, 정보 -->
+			<div class="denote">
+				
+				<!-- 업데이트 일시 -->
+				<div class="update_time">마지막 업데이트: yyyy-mm-dd hh:mm:ss</div>
+				
+				<!-- 필터링 -->
+				<div id="filtering">
+					<!-- 사이트 -->
+					<select id="site_filter">
+						<option value="" selected disabled hidden>-- 사이트 --</option>
+						<option value="all">전체</option>
+						<option value="steam">스팀</option>
+						<option value="epic">에픽</option>
+					</select>
+					
+									
+					<!-- 카테고리 -->
+					<select id="category_filter">
+						<option value="" selected disabled hidden>-- 카테고리 --</option>
+						<option value="all">전체</option>
+						<option value="action">액션</option>
+						<option value="shooting">슈팅</option>
+						<option value="adventure">어드벤처</option>
+						<option value="fighting">격투</option>
+						<option value="roguelike">로그라이크</option>
+						<option value="rpg">RPG</option>
+						<option value="mmorpg">MMORPG</option>
+						<option value="simulation">시뮬레이션</option>
+						<option value="sports">스포츠</option>
+						<option value="puzzle">퍼즐</option>
+						<option value="arcade">아케이드</option>
+						<option value="strategy">전략</option>
+						<option value="action">공포</option>
+						<option value="multiplayer">멀티플레이어</option>
+						<option value="singleplayer">싱글플레이어</option>
+					</select>
+					
+					<!-- 정렬 -->
+					<select id="order_filter">
+						<option value="popular" selected >인기순</option>
+						<option value="sale">할인순</option>
+						<option value="pick">추천순</option>
+					</select>
+					
+				</div>
+				
+			</div>
+			
+			
+			
 			<!-- 테이블 -->
 			<table>
 				<tr th:each="game : ${gamePage.content}">

@@ -67,12 +67,12 @@
 						}
 						
 			@font-face {
-<<<<<<< HEAD
+
     						font-family: 'TheJamsil5Bold';
     						src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2302_01@1.0/TheJamsil5Bold.woff2') format('woff2');
     						font-weight: lighter;
     						font-style: normal;
-=======
+
 						    font-family: 'HakgyoansimWoojuR';
 						    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2307-2@1.0/HakgyoansimWoojuR.woff2') format('woff2');
 						    font-weight: normal;
@@ -91,5 +91,5 @@
 						    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2302@1.1/Dovemayo_gothic.woff2') format('woff2');
 						    font-weight: normal;
 						    font-style: normal;
->>>>>>> 313fcb6980bd9d99ed5501c92679089522b5c49c
+
 						}
