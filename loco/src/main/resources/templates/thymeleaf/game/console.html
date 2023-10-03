@@ -289,24 +289,23 @@
 			
 			<!-- 페이징 -->
 			<div id="pagination">
-				
-				<ul>
+			    <ul>
 					
-					<li th:if="${currentPage > 1}" class="fir_btn">
-			            <a th:href="@{/console(page=1)}">
-			            	<<
-			           	</a>
+			        <li th:if="${currentPage > 1}" class="fir_btn">
+			            <a href="#" onclick="changePage(1)">
+			                <<
+			            </a>
 			        </li>
-					
+			        
 			        <li th:if="${startPage >= 10}" class="pv_btn">
-			            <a th:href="@{/console(page=${startPage - 1})}"
-			            th:classappend="${startPage > 1} ? '' : 'disabled'">
-			            	이전
-			           	</a>
+			            <a href="#" th:onclick="'changePage(\'' + ${startPage - 1} + '\');'"
+			               th:classappend="${startPage > 1} ? '' : 'disabled'">
+			                이전
+			            </a>
 			        </li>
 			        
 			        <li th:each="pageNum : ${#numbers.sequence(startPage, endPage)}" class="page_btn">
-			            <a th:href="@{/console(page=${pageNum})}"
+			            <a href="#" th:onclick="'changePage(\'' + ${pageNum} + '\');'"
 			               th:classappend="${pageNum == currentPage} ? 'current' : ''"
 			               th:text="${pageNum}">
 			               ${pageNum}
@@ -314,21 +313,46 @@
 			        </li>
 			        
 			        <li th:if="${endPage < totalPage}" class="next_btn">
-			            <a th:href="@{/console(page=${endPage + 1})}"
-			            th:classappend="${endPage < totalPage} ? '' : 'disabled'">
-			            	다음
+			            <a href="#" th:onclick="'changePage(\'' + ${endPage + 1} + '\');'"
+			               th:classappend="${endPage < totalPage} ? '' : 'disabled'">
+			                다음
 			            </a>
 			        </li>
 			        
 			        <li th:if="${currentPage < totalPage}" class="last_btn">
-			            <a th:href="@{/console(page=${totalPage})}">
-			            >>
-			           	</a>
+			            <a href="#" th:onclick="'changePage(\'' + ${totalPage} + '\');'">
+			                >>
+			            </a>
 			        </li>
 			        
 			    </ul>
-							
 			</div>
+
+
+			<script>
+			    // 페이지 이동을 처리하는 함수
+			    function changePage(pageNumber) {
+							    const currentUrl = window.location.href;
+							    let updatedUrl = currentUrl;
+							
+							    // 페이지 번호가 이미 URL에 포함되어 있는지 검사
+							    if (/page=\d/.test(currentUrl)) {
+							        updatedUrl = currentUrl.replace(/page=\d+/g, 'page=' + pageNumber);
+							    } else {
+							        // URL에 다른 쿼리 문자열이 있는지 검사
+							        if (currentUrl.indexOf('?') !== -1) {
+							            updatedUrl += '&page=' + pageNumber;
+							        } else {
+							            updatedUrl += '?page=' + pageNumber;
+							        }
+							    }
+							
+							    window.location.href = updatedUrl;
+							}
+			
+			</script>
+			
+			<!-- 페이징 end -->
 			
 			
 		</div>

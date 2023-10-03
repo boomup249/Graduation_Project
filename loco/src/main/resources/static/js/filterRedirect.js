@@ -10,7 +10,7 @@ function redirect() {
     var baseUrl = currentUrl.split('?')[0]; // 현재 페이지의 기본 URl
     
     //필터 적용 url
-    var plusUrl = '?site=' + site + '&cate=' + category + '&orderby=' + order;
+    var plusUrl = '?site=' + site + '&category=' + category + '&orderby=' + order;
     var newUrl = baseUrl + plusUrl;
     
     //새로운 url 리다이렉트

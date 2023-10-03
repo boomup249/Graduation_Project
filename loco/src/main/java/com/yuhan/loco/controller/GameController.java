@@ -13,6 +13,7 @@ import com.yuhan.loco.game.PcDB;
 import com.yuhan.loco.game.ConsoleDB;
 import com.yuhan.loco.game.GameDTO;
 import com.yuhan.loco.game.PcRepository;
+
 import com.yuhan.loco.game.GameService;
 
 import java.util.ArrayList;
@@ -66,7 +67,12 @@ public class GameController {
 	//연결
 	//pc
 	@GetMapping("/pc")
-	public String pc(Model model, @RequestParam(value = "page", defaultValue = "1") int page) {
+	public String pc(Model model,
+			@RequestParam(value = "page", defaultValue = "1") int page,
+			@RequestParam(value = "site", defaultValue = "0") String site,
+			@RequestParam(value = "category", defaultValue = "0") String category,
+			@RequestParam(value = "orderby", defaultValue = "popular") String order) {
+		
 		//페이징용 page, pageable은 0부터 시작함 -> -1로 가공해주기, html에서도 가공 필요
 		page -= 1;
 		
@@ -95,7 +101,11 @@ public class GameController {
 	
 	//console
 	@GetMapping("/console")
-	public String console(Model model, @RequestParam(value = "page", defaultValue = "1") int page) {
+	public String console(Model model,
+				@RequestParam(value = "page", defaultValue = "1") int page,
+				@RequestParam(value = "site", defaultValue = "0") String site,
+				@RequestParam(value = "category", defaultValue = "0") String category,
+				@RequestParam(value = "orderby", defaultValue = "popular") String order) {
 			
 		//페이징용 page, pageable은 0부터 시작함 -> -1로 가공해주기, html에서도 가공 필요
 		page -= 1;
