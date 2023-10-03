@@ -7,8 +7,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ConsoleRepository extends JpaRepository<ConsoleDB, Long> {
-	//List<ConsoleDB> findBySiteavailabilty(String siteavailabilty); //테스트용
+	List<ConsoleDB> findBySITEAVAILABILITY(String siteAvailabilty); 
 	@Override
 	Page<ConsoleDB> findAll(Pageable pageable); //다 받아오기
-
+	ConsoleDB findByNUM(Integer num);
 }
