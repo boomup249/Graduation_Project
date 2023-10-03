@@ -94,7 +94,7 @@
 				<tr th:each="game : ${gamePage.content}">
 					<td>
 						<!-- 게임 누르면 링크연결  -->
-						<a th:href="@{'/pcDetail/' + ${game.NUM}}">
+						<a th:href="@{'/consoleDetail/' + ${game.NUM}}">
 							
 							<!-- Ps Only -->
 							<div th:if="${game.SITEAVAILABILITY eq 'Ps Only'}" class="container">
