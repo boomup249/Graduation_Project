@@ -137,9 +137,12 @@ public class GameController {
 	    return "/game/PcDetail";
 	}
 
-    // Console Detail //얘는 key 없어서 num으로 해야해
-    @GetMapping("/consoleDetail") 
-    public String detail_console() {
-		return "/game/ConsoleDetail";
+    // Console Detail
+    @GetMapping("/consoleDetail/{num}") 
+    public String detail_console(@PathVariable int num, Model model) {
+        ConsoleDB csGameDetail = gameService.getCsByNum(num);
+
+        model.addAttribute("csGameDetail", csGameDetail);
+        return "/game/ConsoleDetail";
 	}
 }
