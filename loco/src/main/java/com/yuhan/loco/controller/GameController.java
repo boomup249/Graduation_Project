@@ -17,6 +17,7 @@ import com.yuhan.loco.game.PcRepository;
 import com.yuhan.loco.game.GameService;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 //게임 페이지 관련 컨트롤러
@@ -72,6 +73,13 @@ public class GameController {
 			@RequestParam(value = "site", defaultValue = "0") String site,
 			@RequestParam(value = "category", defaultValue = "0") String category,
 			@RequestParam(value = "orderby", defaultValue = "popular") String order) {
+		//gameService.test();
+		List<String> genres = Arrays.asList("로그라이크", "전략");
+		List<String> titles = gameService.getTitleByGenre(genres);
+		
+		for (int i = 0; i < titles.size(); i++) {
+			System.out.println(titles.get(i));
+		}
 		
 		//페이징용 page, pageable은 0부터 시작함 -> -1로 가공해주기, html에서도 가공 필요
 		page -= 1;

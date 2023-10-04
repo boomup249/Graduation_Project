@@ -10,6 +10,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.yuhan.loco.game.genre.PcGenreRepository;
+
 import ch.qos.logback.core.recovery.ResilientSyslogOutputStream;
 
 
@@ -17,15 +19,30 @@ import ch.qos.logback.core.recovery.ResilientSyslogOutputStream;
 public class GameService {
     private final PcRepository pcRepository;
     private final ConsoleRepository consoleRepository;
+    private final PcGenreRepository pcGenreRepository;
 
-    public GameService(PcRepository pcRepository, ConsoleRepository consoleRepository) {
+    public GameService(PcRepository pcRepository,
+    		ConsoleRepository consoleRepository,
+    		PcGenreRepository pcGenreRepository) {
         this.pcRepository = pcRepository;
         this.consoleRepository = consoleRepository;
+        this.pcGenreRepository = pcGenreRepository;
     }
     
     //(테스트용) 사이트 어빌리티 both인 항목 찾기, 쓸거면 형태 고치기(return)
     public void findPcSITEeqBoth() {
         List<PcDB> a = pcRepository.findBySITEAVAILABILITY("Both");
+    }
+    
+    /*
+    //장르 테이블 연결 테스트
+    public void test() {
+    	System.out.println((pcGenreRepository.findByNUM(9)).getTITLE());
+    }*/
+    
+    //장르 테이블 함수 작동 테스트
+    public List<String> getTitleByGenre(List<String> genre){
+    	return pcGenreRepository.findTitlesByGenre(genre);
     }
 
     /*
