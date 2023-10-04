@@ -1,4 +1,3 @@
-import multiprocessing
 import selenium
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -23,12 +22,12 @@ conn = MySQLdb.connect(
 cursor = conn.cursor()
 
 cursor.execute("DROP TABLE IF EXISTS release_info")
-cursor.execute('''CREATE TABLE IF NOT EXISTS release_info (`NUM` INT NOT NULL AUTO_INCREMENT,
-                                                            `DATE` VARCHAR(15) NULL DEFAULT NULL,
-                                                            `TITLE` VARCHAR(100) NULL DEFAULT NULL,
+cursor.execute('''CREATE TABLE IF NOT EXISTS release_info (`DATE` VARCHAR(15) NULL DEFAULT NULL,
+                                                            `TITLE` VARCHAR(100) NOT NULL,
                                                             `PLATFORM` VARCHAR(15) NULL DEFAULT NULL,
                                                             `PRICE` VARCHAR(15) NULL DEFAULT NULL,
-                                                            PRIMARY KEY (`NUM`)
+										                    `VARIA` TINYINT(1) NULL DEFAULT '1',
+                                                            PRIMARY KEY (`TITLE`)
             )''')
 
 url = 'https://prod.danawa.com/game/index.php'
@@ -72,7 +71,7 @@ for _ in range(10000000000000):
         if platform != None:
             platform = platform.text.strip()
             if "XBOX" in platform:
-                platform == None
+                platform = None
 
         title = list.select_one('a.tit_link')
         if title != None:

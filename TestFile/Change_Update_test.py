@@ -1,4 +1,16 @@
+import selenium
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.common.exceptions import NoSuchElementException
+from bs4 import BeautifulSoup
 import MySQLdb
+import requests
+from time import sleep
 
 conn = MySQLdb.connect(
     user="root",
@@ -15,18 +27,79 @@ conn.commit()
 
 dictionary_list = []
 #1.여기서 크롤링을해서 dictionary_list로 값을 다 넣은다음에 
+url = 'https://prod.danawa.com/game/index.php'
 
-#0은 그대로, 1은 price 변경, 2는 플랫폼 다르게, 4 5는 title 다르게
-data0 = {'DATE' : '2023.10.05(목)', 'TITLE' : '소드 아트 온라인 라스트 리콜렉션 한글판 (PS5, 패키지디스크)', 'PLATFORM' : 'PS5', 'PRICE' : '66,020'}
-data1 = {'DATE' : '2023.10.05(목)', 'TITLE' : '소드 아트 온라인 라스트 리콜렉션 한글판 (PS5, 콜렉터즈에디션/패키지디스크)', 'PLATFORM' : 'PS5', 'PRICE' : '100,000'}
-data2 = {'DATE' : '2023.10.05(목)', 'TITLE' : '어쌔신 크리드: 미라지 한글판 (PS5, 패키지디스크)', 'PLATFORM' : 'Switch', 'PRICE' : '66,020'}
-data3 = {'DATE' : '2023.10.05(목)', 'TITLE' : '소드 아트 온라인', 'PLATFORM' : 'PS5', 'PRICE' : '66,020'}
-data4 = {'DATE' : '2023.10.05(목)', 'TITLE' : '액셀월드', 'PLATFORM' : 'PS5', 'PRICE' : '66,020'}
-dictionary_list.append(data0)
-dictionary_list.append(data1)
-dictionary_list.append(data2)
-dictionary_list.append(data3)
-dictionary_list.append(data4)
+services = Service(executable_path=ChromeDriverManager().install())
+
+options = Options()
+options.add_experimental_option("detach", True)
+options.add_argument("headless")
+options.add_argument("disable-gpu")
+options.add_argument("lang=ko_KR")
+options.add_argument('user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36')
+
+driver = webdriver.Chrome(options=options)
+driver.implicitly_wait(10)
+driver.set_window_size(1920,1080)
+driver.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument", {"source": """ Object.defineProperty(navigator, 'webdriver', { get: () => undefined }) """})
+driver.execute_script("Object.defineProperty(navigator, 'plugins', {get: function() {return[1, 2, 3, 4, 5];},});")
+driver.execute_script("Object.defineProperty(navigator, 'languages', {get: function() {return ['ko-KR', 'ko']}})")
+driver.get(url)
+action = ActionChains(driver)
+
+before_date = ""
+
+for _ in range(10000000000000):
+    soup = BeautifulSoup(driver.page_source, "html.parser")
+    gamelist = soup.select_one('div.upc_tbl_wrap').select('tr')
+
+    for list in gamelist:
+        date = list.select_one('td.date')
+        if date != None:
+            date = date.text.strip()
+
+        if date == "":
+            date = before_date
+
+        platform = list.select_one('td.type')
+
+        if platform != None:
+            platform = platform.text.strip()
+            if "XBOX" in platform:
+                platform = None
+
+        title = list.select_one('a.tit_link')
+        if title != None:
+            if date == None:
+                date = before_date
+            title = title.text.strip()
+
+        price = list.select_one('em.num')
+
+        if price == None:
+            price = list.select_one('span.p_txt')
+
+        if price != None:
+            price = price.text.strip()
+        
+        before_date = date
+        if date != None and platform != None and title != None and price != None:
+            data = {'DATE' : date, 'TITLE' : title, 'PLATFORM' : platform, 'PRICE' : price}
+            dictionary_list.append(data)
+
+    next_page_btn = driver.find_element(By.XPATH, '//*[@id="#nav_edge_next"]')
+    action.click(next_page_btn).perform()
+
+    sleep(3)
+
+    new_soup = BeautifulSoup(driver.page_source, "html.parser")
+    x = new_soup.select_one('p.n_txt')
+    if x != None:
+        break
+
+sleep(2)
+print("크롤링 완료")
+driver.quit()
 
 #2.여기서 딕셔너리의 title값을 하나씩 가져와서 insert나 update문으로 db 처리
 for data in dictionary_list:
@@ -41,8 +114,8 @@ for data in dictionary_list:
 
     if result is None:
         # 데이터베이스에 존재하지 않으면 INSERT
-        insert_query = "INSERT INTO release_info (DATE, TITLE, PLATFORM, PRICE, VARIA) VALUES (%s, %s, %s, %s, %s)"
-        cursor.execute(insert_query, (date, title, platform, price, int(1)))
+        insert_query = "INSERT INTO release_info (DATE, TITLE, PLATFORM, PRICE) VALUES (%s, %s, %s, %s)"
+        cursor.execute(insert_query, (date, title, platform, price))
         conn.commit()
         print(f"INSERT: {title}")
     else:
@@ -54,7 +127,10 @@ for data in dictionary_list:
             conn.commit()
             print(f"UPDATE: {title} (Price || Varia Updated)")
         else:
-            print(f"UPDATE: {title} (Price Not Changed)")
+            update_query = "UPDATE release_info SET VARIA = 1 WHERE TITLE = %s AND PLATFORM = %s"
+            cursor.execute(update_query, (title, platform))
+            conn.commit()
+            print(f"UPDATE: {title} (Price Not Changed, VARIA UPDATE)")
 
 #varia값 변경이 전부끝났으면 0은 전부 삭제
 delete_query = "DELETE FROM release_info WHERE VARIA = 0"
