@@ -2,6 +2,7 @@ package com.yuhan.loco.controller;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -35,13 +36,14 @@ public class BBSController {
 	}
 
 	@GetMapping("/post")
-	public String post(Model model, BBSDB bbsDB)
+	public String post(Model model, PostDB postDB)
 	{
-		model.addAttribute("bbsDB", bbsDB);
+		List<BBSDB> bbs = this.bbsService.search();
+		model.addAttribute("bbsDTO", bbs);
 		return "/post/list";
 	}
 	@GetMapping("/bbs_write")
-	public String write(Model model, HttpServletRequest req, BBSDB bbsDB) {
+	public String write(Model model, HttpServletRequest req, BBSDB bbsDB, PostDB postDB) {
 		String userId;
 		HttpSession session = req.getSession(false);
 
@@ -50,9 +52,11 @@ public class BBSController {
 			UserDB userdb = userService.findUser(userId);
 			model.addAttribute("userDTO", userdb);
 			model.addAttribute("postDTO", new PostDB());
-			return "/board/bbs_write";
+			System.out.println(userdb.getID());
+			return "board/bbs_write";
 		}
 		model.addAttribute("bbsDB", bbsDB);
+		model.addAttribute("postDB", postDB);
 		return "/post/list";
 	}
 
@@ -66,7 +70,7 @@ public class BBSController {
 	@PostMapping("post_write")
 	public String write(PostDTO postDTO, BBSDTO bbsDTO, UserDB userDB, Model model, HttpServletRequest req) {
 		LocalDateTime time = LocalDateTime.now();
-		String timestr = time.format(DateTimeFormatter.ofPattern("yyyy-mm-dd HH:mm:ss"));
+		String timestr = time.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 		String userId, title;
 		HttpSession session = req.getSession(false);
 		userId = (String)session.getAttribute("user");

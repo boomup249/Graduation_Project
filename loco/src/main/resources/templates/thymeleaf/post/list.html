@@ -9,7 +9,7 @@
 		.board-container {
     		max-width: 100%;
     		margin: 0 auto;
-    		padding: 20px;
+    		
 		}
 
 		
@@ -29,14 +29,14 @@
             </tr>
         </thead>
         <tbody>
-            <tr th:each = "post : ${postDTO}">
+            <tr th:each = "post : ${bbsDTO}">
                 <td>
                     <a class="post-title-link" href="#"><div th:text="${post.title}"></div></a>
                 </td>
                 <td><div th:text="${post.writer}"></div></td>
-                <td><div th:object="${bbsDTO}" th:text="${bbsDTO.getDate()}" ></div></td>
-                <td><div th:object="${bbsDTO}" th:text="${bbsDTO.getViews()}" ></div></td>
-                <td><div th:object="${bbsDTO}" th:text="${bbsDTO.getComment()}" ></div></td>
+                <td><div th:text="${post.date}" ></div></td>
+                <td><div th:text="${post.views}" ></div></td>
+                <td><div th:text="${post.comment}" ></div></td>
             </tr>
             <!-- 추가적인 게시글 아이템들을 동적으로 생성하거나 서버에서 데이터를 가져와서 출력하세요. -->
         </tbody>

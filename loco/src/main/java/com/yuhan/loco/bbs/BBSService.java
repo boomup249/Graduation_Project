@@ -1,6 +1,8 @@
 package com.yuhan.loco.bbs;
 
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
@@ -23,5 +25,8 @@ public class BBSService {
 	   bbs.setComment(comment);
 	   this.BBSrepository.saveAndFlush(bbs);
 	   return bbs;
+   }
+   public List<BBSDB> search(){
+	   return this.BBSrepository.findAll();
    }
 }

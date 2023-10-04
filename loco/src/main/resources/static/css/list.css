@@ -1,11 +1,11 @@
 @charset "UTF-8";
 /* 게시글 목록 테이블 */
 		.post-table {
-    		width: 60%;
+    		width: 80%;
     		position : relative;
     		margin-left : auto;
     		margin-right : auto;
-    		margin-top : 5%;
+    		margin-top : 2%;
     		text-align : center;
     	
 		}
@@ -16,6 +16,8 @@
     	border-bottom: 1px solid #ddd;
     	position: relative;
 		}
+		
+		
 
 		.post-table th {
     	background-color: #f2f2f2;

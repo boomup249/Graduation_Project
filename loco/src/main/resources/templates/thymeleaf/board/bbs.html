@@ -20,10 +20,10 @@
          
          #b1 {
 				width : 99.7%;
-				height : 91.5%;
+				height : 89%;
 				background-color : rgb(192, 192, 192);
 				float : left;
-				margin-top: 4.6%;
+				margin-top: 6%;
 				box-sizing : border-box;
 				display : flex ;
 				position : absolute;
@@ -33,7 +33,8 @@
            
          
        </style>
-    
+    	
+    	
 
 </head>
    <body>
@@ -95,15 +96,31 @@
       
 
      <div id="b1">
+		 <div class="b2">
+			<tr>
+        		<td class="button-container3">
+          			<!-- '공지사항' 버튼 -->
+          			<button class="button transparent-button" id="btn_notice">공지사항</button>	
+        		</td>
+        		<td class="button-container4">
+          			<!-- '자유게시판' 버튼 -->
+          			<button class="button transparent-button" id="btn_free">자유게시판</button>
+        		</td>
+        		<td class="button-container5">
+          			<!-- '게임공략' 버튼 -->
+          			<button class="button transparent-button" id="btn_guide">게임공략</button>
+        		</td>
+        		<td class="button-container6">
+          			<!-- '파티원' 버튼 -->
+          			<button class="button transparent-button" id="btn_party">파티원</button>
+        		</td>
+        	</tr>
+        </div>
     <div class="line">
         <table class="line2">
             <tr>
                 <td class="button-container1">
-                    <!-- '최신글' 버튼 -->
-                    <button class="button latest-button" id="btn_new">최신글</button>
-                    <!-- '인기글' 버튼 -->
-                    <button class="button popular-button" id="btn_popular">인기글</button>
-                    <div class="dropdown">
+               <!--<div class="dropdown">
       						<button class="dropbtn"> 
         						카테고리
       						</button>
@@ -112,12 +129,16 @@
         					<a href="#">게임 공략</a>
         					<a href="#">파티원모집</a>
       					</div>
-    				</div>
-                    </div>
+    				</div>-->
+                  
                 </td>
                 <td class="button-container2">
+					<!-- '최신글' 버튼 -->
+                    <button class="button latest-button" id="btn_new">최신글</button>
+                    <!-- '인기글' 버튼 -->
+                    <button class="button popular-button" id="btn_popular">인기글</button>
                     <!-- '글쓰기' 버튼 -->
-                    <button class="button write-button" id="btn_write">글쓰기</button>
+                    <button class="button write-button" id="btn_write" >글쓰기</button>
                     <input type="text" class="search-input" placeholder="검색어를 입력하세요">
                     <!-- 검색 버튼 -->
                     <button class="button search-button">검색</button>
@@ -127,10 +148,10 @@
         <div class="b3">
             <iframe src="/post" class="change_frame" width="100%" height="100%"></iframe>
         </div>
+    </div>  
     </div>
-</div>
-</div>
-         
+
+
 
 <script src="js/bbs.js"></script>
 </body>

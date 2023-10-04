@@ -2,6 +2,8 @@ package com.yuhan.loco.bbs;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import java.util.List;
+
 
 @Repository
 public interface BBSRepository extends JpaRepository<BBSDB, String> {
@@ -14,5 +16,5 @@ public interface BBSRepository extends JpaRepository<BBSDB, String> {
     @Modifying
     @Query("update bbs BBS set BBS.views = BBS.views + 1 where BBS.id = :id")
     int updateView(Long id);*/
-
+	List<BBSDB> findAll();
 }
