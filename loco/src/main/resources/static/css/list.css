@@ -20,6 +20,7 @@
 		
 
 		.post-table th {
+		font-family: 'GmarketSansMedium';	
     	background-color: #f2f2f2;
     	padding: 10px;
     	text-align: center;
@@ -28,22 +29,22 @@
     	/* 원하는 너비로 지정 (예: 150px) */
     	width : 1000px;
     	
-		}
+		}	
+	
 
 		/* 게시글 목록 아이템 */
-		.post-item {
-    	
+		.post-item {   	
     	justify-content: space-between;
     	align-items: center;
     	padding: 10px;
     	border-bottom: 1px solid #ddd;
+    	flex-direction: column;
 		}
 		
 
 		
 		/* 게시글 목록 아이템 내 제목 스타일 변경 */
 		.post-item .post-title-link {
-    	text-decoration: none;
     	color: #333;
     	max-width: 200px; /* 최대 너비를 조정 (원하는 크기로 변경 가능) */
     	overflow: hidden;
@@ -58,7 +59,7 @@
 		}
 
 		/* 게시글 제목 링크 */
-		.post-title-link {
+		.post-title-link {	
     	text-decoration: none;
     	color: #333;
 		}
@@ -70,15 +71,6 @@
     	}
 
  
-    	.post-item {
-        flex-direction: column;
-    	}
     	
-    	
-    	.post-table{
-			width : 60%;
-			position:relative;
-						
-		}
 		}
 		
