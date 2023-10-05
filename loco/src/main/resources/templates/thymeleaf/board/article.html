@@ -1,0 +1,61 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>게시판</title>
+    
+    <link rel="stylesheet" href="css/list.css"> <!-- 게시판 css -->
+    <style>
+		/* 게시판 컨테이너 */
+		.board-container {
+    		max-width: 100%;
+    		margin: 0 auto;
+    		
+		}
+
+		
+	</style>
+</head>
+
+<body>
+    <div class="board-container">
+    <table class="post-table">
+        <thead>
+            <tr>
+                <th>제목</th>
+                <td>
+                    <div th:object="${postDTO}" th:text="${postDTO.getTitle()}"></div>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+            	<th>내용</th>
+                <td>
+                    <div th:object="${postDTO}" th:text="${postDTO.getContent()}"></div>
+                </td>
+            </tr>
+            <tr>
+            	<th>댓글</th>
+            	<td>
+            		<div th:object="${postDTO}" th:text="${postDTO.getComment()}"></div>
+            	</td>
+            </tr>
+            <tr>
+            	<th>댓글 입력</th>
+            	<td>
+            	<form action ="#" th:action="@{/email_ck}"
+				th:object="${postDTO}"
+				method = "post">
+			<div class="item2">
+				<input type="text" th:field="*{comment}"/>
+				<input type="submit" id="sub" value=""/>
+			</div>
+			</form>
+            	</td>
+            </tr>
+            <!-- 추가적인 게시글 아이템들을 동적으로 생성하거나 서버에서 데이터를 가져와서 출력하세요. -->
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

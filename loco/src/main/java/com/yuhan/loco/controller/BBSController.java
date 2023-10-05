@@ -4,16 +4,21 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.yuhan.loco.bbs.BBSDB;
 import com.yuhan.loco.bbs.BBSDTO;
 import com.yuhan.loco.bbs.BBSService;
 import com.yuhan.loco.post.PostDB;
 import com.yuhan.loco.post.PostDTO;
+import com.yuhan.loco.post.PostRepository;
 import com.yuhan.loco.post.PostService;
 import com.yuhan.loco.user.UserDB;
 import com.yuhan.loco.user.UserService;
@@ -36,10 +41,40 @@ public class BBSController {
 	}
 
 	@GetMapping("/post")
-	public String post(Model model, PostDB postDB)
+	public String post(Model model,
+			@RequestParam(value = "page", defaultValue = "1") int page,
+			@RequestParam(value = "orderby", defaultValue = "id") String order, PostDB postDB)
 	{
-		List<BBSDB> bbs = this.bbsService.search();
+		page -= 1;
+		Page<BBSDB> bbs = this.bbsService.search(page);
+				int currentPage = page + 1;
+				int calcEnd = (int)(Math.ceil(currentPage / 10.0) * 10);
+				int startPage = calcEnd - 9;
+				int endPage = Math.min(calcEnd, bbs.getTotalPages());
 		model.addAttribute("bbsDTO", bbs);
+		model.addAttribute("startPage", startPage);
+		model.addAttribute("endPage", endPage);
+		model.addAttribute("currentPage", currentPage);
+		model.addAttribute("totalPage", bbs.getTotalPages());
+		model.addAttribute("bbsService", bbsService);
+		return "/post/list";
+	}
+	@GetMapping("/list/search")
+	public String searchres(Model model,
+			@RequestParam(value = "page", defaultValue = "1") int page,
+			@RequestParam(value = "orderby", defaultValue = "id") String order, String search, PostDB postDB) {
+		page -= 1;
+		Page<BBSDB> bbs = this.bbsService.findbytitle(search, page);
+		int currentPage = page + 1;
+		int calcEnd = (int)(Math.ceil(currentPage / 10.0) * 10);
+		int startPage = calcEnd - 9;
+		int endPage = Math.min(calcEnd, bbs.getTotalPages());
+		model.addAttribute("bbsDTO", bbs);
+		model.addAttribute("startPage", startPage);
+		model.addAttribute("endPage", endPage);
+		model.addAttribute("currentPage", currentPage);
+		model.addAttribute("totalPage", bbs.getTotalPages());
+		model.addAttribute("bbsService", bbsService);
 		return "/post/list";
 	}
 	@GetMapping("/bbs_write")
@@ -94,5 +129,13 @@ public class BBSController {
 	@GetMapping("post_cancel")
 	public String cancel() {
 		return "/post/list";
+	}
+	
+	@GetMapping("/article/{id}")
+	public String show_article(@PathVariable Long id, Model model, BBSDB bbsDB) {
+		PostDB article = postService.getByID(id);
+		bbsService.viewerup(id);
+		model.addAttribute("postDTO", article);
+		return "/board/article";
 	}
 }

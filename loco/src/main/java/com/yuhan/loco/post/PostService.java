@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.yuhan.loco.bbs.BBSDB;
+
 import jakarta.transaction.Transactional;
 
 @Service
@@ -32,5 +34,8 @@ public class PostService {
       System.out.println(post.getComment());
       this.Postrepository.saveAndFlush(post);
       return post;
+   }
+   public PostDB getByID(Long id) {
+       return Postrepository.findById(id);
    }
 }

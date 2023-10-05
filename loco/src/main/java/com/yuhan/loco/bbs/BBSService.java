@@ -1,9 +1,14 @@
 package com.yuhan.loco.bbs;
 
 
+
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
 
 import jakarta.transaction.Transactional;
 
@@ -26,7 +31,18 @@ public class BBSService {
 	   this.BBSrepository.saveAndFlush(bbs);
 	   return bbs;
    }
-   public List<BBSDB> search(){
-	   return this.BBSrepository.findAll();
+   public Page<BBSDB> search(int page){
+	   Pageable pageable = PageRequest.of(page, 5);
+	   return this.BBSrepository.findAll(pageable);
+   }
+   public List<BBSDB> searchall(){
+	   return BBSrepository.findAll();
+   }
+   public int viewerup(Long id) {
+	   return BBSrepository.updateView(id);
+   }
+   public Page<BBSDB> findbytitle(String title, int page){
+	   Pageable pageable = PageRequest.of(page, 5);
+	   return this.BBSrepository.findByTitleContaining(title, pageable);
    }
 }

@@ -134,14 +134,17 @@
                 </td>
                 <td class="button-container2">
 					<!-- '최신글' 버튼 -->
-                    <button class="button latest-button" id="btn_new">최신글</button>
+                    <button class="button latest-button" id="btn_new" th:onclick="@{/post/list, orderby=id)}">최신글</button>
                     <!-- '인기글' 버튼 -->
-                    <button class="button popular-button" id="btn_popular">인기글</button>
+                    <button class="button viewer-button" id="btn_popular" th:onclick="@{/post/list, orderby=views)}">조회수 순</button>
+                    <button class="button comment-button" id="btn_popular" th:onclick="@{/post/list, orderby=comment)}">댓글 순</button>
                     <!-- '글쓰기' 버튼 -->
                     <button class="button write-button" id="btn_write" >글쓰기</button>
-                    <input type="text" class="search-input" placeholder="검색어를 입력하세요">
+                    <form class = "search" method="get" th:action="@{'/list/search'}" th:object="${bbsDB}">
+                    <input type="text" class="search-input" name="search" placeholder="검색어를 입력하세요" th:field="*{title}">
                     <!-- 검색 버튼 -->
-                    <button class="button search-button">검색</button>
+                    <button class="button search-button" type="submit">검색</button>
+                    </form>
                 </td>
             </tr>
         </table>
