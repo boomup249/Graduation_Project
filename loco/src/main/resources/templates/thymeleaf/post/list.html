@@ -3,6 +3,7 @@
     <meta charset="UTF-8">
     <title>게시판</title>
     
+    <link rel="stylesheet" href="css/font.css"> <!-- 폰트 css -->
     <link rel="stylesheet" href="css/list.css"> <!-- 게시판 css -->
     <style>
 		/* 게시판 컨테이너 */
@@ -11,7 +12,7 @@
     		margin: 0 auto;
     		
 		}
-
+		
 		
 	</style>
 </head>
@@ -23,9 +24,9 @@
             <tr>
                 <th class="custom-width" style="width:60%;">제목</th>
                 <th>작성자</th>
-                <th>날짜</th>
                 <th>조회수</th>
                 <th>댓글</th>
+                <th>날짜</th>
             </tr>
         </thead>
         <tbody>
@@ -34,9 +35,9 @@
                     <a class="post-title-link" href="#"><div th:text="${post.title}"></div></a>
                 </td>
                 <td><div th:text="${post.writer}"></div></td>
-                <td><div th:text="${post.date}" ></div></td>
                 <td><div th:text="${post.views}" ></div></td>
                 <td><div th:text="${post.comment}" ></div></td>
+                <td><div th:text="${post.date}" ></div></td>
             </tr>
             <!-- 추가적인 게시글 아이템들을 동적으로 생성하거나 서버에서 데이터를 가져와서 출력하세요. -->
         </tbody>

@@ -22,8 +22,7 @@
 			 height : 100px;
 		 }
 		 
-		 .b2 {
-			 	font-family: 'TheJamsil5Bold';
+		 .b2 {			 	
 				width : 20%;
 				height : 99.7%;
 				background-color : rgb(18, 28, 31);
@@ -39,6 +38,7 @@
     			align-items: center; /* 가운데 정렬 */
          	}
 
+
 	 
       	.b3 {
         	width: 98%;
@@ -53,7 +53,7 @@
       	}
       	
       	.button {
-			font-family: 'TheJamsil5Bold';
+			font-family: 'GmarketSansMedium';
     		width: 15%; /* 버튼 너비 조절 */
     		height: 100%; /* 버튼 높이 조절 */
     		color: white; /* 버튼 글자색 지정 */
@@ -119,6 +119,7 @@
 		.button-container2 .button {
 			 height : 50%;
 		 }
+		 
 		
 		/* 투명한 버튼 스타일 */
 		.transparent-button {
