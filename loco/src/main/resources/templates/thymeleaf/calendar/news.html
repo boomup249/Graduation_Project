@@ -6,17 +6,59 @@
 		<!-- 외부 css -->
 		<link rel="stylesheet" href="css/font.css"> <!-- 폰트 css -->
 		<link rel="stylesheet" href="css/header.css"> <!-- 헤더 css -->
+		
+		<script src='/js/index.global.min.js'></script>
+	    <script>
+	
+	      document.addEventListener('DOMContentLoaded', function() {
+	        var calendarEl = document.getElementById('calendar');
+	        var calendar = new FullCalendar.Calendar(calendarEl, {
+	          initialView: 'dayGridMonth'
+	        });
+	        calendar.render();
+	      });
+	
+	    </script>
+	    
+	    <!--날짜 부분 텍스트 색상 변경-->
+	    <script>
+		  document.addEventListener('DOMContentLoaded', function() {
+		    var calendarText = document.querySelector('#calendar');
+		    calendarText.style.color = '#FFFFFF'; 
+		  });
+		</script>
+	    
 		<style>
 			/*css 속성*/
 			/*내용*/
 			#content { 
-						position: relative;
-						top: 100px;
-						left: 0px; /*헤더 아래부터*/
-						width: 100%; height: calc(100% - 100px)/*화면 - 헤더*/;
-						overflow-y: scroll; /*콘텐츠에만 스크롤이 적용되도록*/
-						}
-			
+				position: relative;
+				top: 100px;
+				left: 0px; /*헤더 아래부터*/
+				width: 100%; height: calc(100% - 100px)/*화면 - 헤더*/;
+				overflow-y: scroll; /*콘텐츠에만 스크롤이 적용되도록*/
+			}
+			#calendar {
+				position: absolute;
+			    top: 550%;
+			    left: 50%;
+			    transform: translate(-50%, -50%);
+			    width: 1000px; 
+			   
+			}
+			 /* 달력 전체에 배경색 적용 */
+	        .fc-daygrid {
+	            background-color: #FFFFFF;
+	        }
+	
+	        /* 날짜 부분에 배경색 제거 */
+	        .fc-daygrid-day {
+	            background-color: transparent !important;
+	        }
+	        
+	        .fc-day-today {
+			    background-color: lightyellow !important; /* 연노란색 배경 색상 */
+			 }
 			body { background-color: #222831;
 					margin: 0; padding: 0;}
 		</style>
@@ -75,5 +117,6 @@
 					</ul>
 				</li>
 			</ul>
+			<div id='calendar'></div>
 	</body>	
 </html>	

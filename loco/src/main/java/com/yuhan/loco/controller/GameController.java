@@ -174,9 +174,5 @@ public class GameController {
         return "/game/ConsoleDetail";
 	}
     
-    //News
-    @GetMapping("/news")
-    public String news() {
-        return "/game/news"; 
-    }
+ 
 }
