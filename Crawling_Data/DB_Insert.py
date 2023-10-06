@@ -40,6 +40,7 @@ cursor.execute("DROP TABLE IF EXISTS gamedata_switch")
 cursor.execute("DROP TABLE IF EXISTS gamedata_ps")
 cursor.execute("DROP TABLE IF EXISTS gamedata_steam")
 cursor.execute("DROP TABLE IF EXISTS gamedata_epic")
+cursor.execute("DROP TABLE IF EXISTS release_info;")
 
 cursor.execute('''CREATE TABLE IF NOT EXISTS gamedata_switch (`NUM` INT NOT NULL AUTO_INCREMENT,
                                                             `TITLE` VARCHAR(100) NULL DEFAULT NULL,
@@ -50,7 +51,7 @@ cursor.execute('''CREATE TABLE IF NOT EXISTS gamedata_switch (`NUM` INT NOT NULL
                                                             `IMGDATA` TEXT NULL DEFAULT NULL,
                                                             `GAMEIMG` TEXT NULL DEFAULT NULL,
                                                             `URL` TEXT NULL DEFAULT NULL,
-                                                            `VARIA` TINYINT(1) NOT NULL DEFAULT 0,
+                                                            `VARIA` TINYINT(1) NOT NULL DEFAULT 1,
                                                             PRIMARY KEY (`NUM`),
                                                             UNIQUE KEY (`TITLE`))
             ''')
@@ -65,7 +66,7 @@ cursor.execute('''CREATE TABLE IF NOT EXISTS gamedata_switch_genre (`NUM` INT NO
                                                                         ON UPDATE CASCADE)
             ''')
 cursor.execute('''CREATE TABLE IF NOT EXISTS gamedata_ps (`NUM` INT NOT NULL AUTO_INCREMENT,
-                                                        `TITLE` VARCHAR(100) NULL DEFAULT NULL,
+                                                        `TITLE` VARCHAR(200) NULL DEFAULT NULL,
                                                         `PRICE` VARCHAR(15) NULL DEFAULT NULL,
                                                         `SALEPRICE` VARCHAR(15) NULL DEFAULT NULL,
                                                         `SALEPER` VARCHAR(5) NULL DEFAULT NULL,
@@ -73,12 +74,12 @@ cursor.execute('''CREATE TABLE IF NOT EXISTS gamedata_ps (`NUM` INT NOT NULL AUT
                                                         `IMGDATA` TEXT NULL DEFAULT NULL,
                                                         `GAMEIMG` TEXT NULL DEFAULT NULL,
                                                         `URL` TEXT NULL DEFAULT NULL,
-                                                        `VARIA` TINYINT(1) NOT NULL DEFAULT 0,
+                                                        `VARIA` TINYINT(1) NOT NULL DEFAULT 1,
                                                         PRIMARY KEY (`NUM`),
                                                         UNIQUE KEY (`TITLE`))
             ''')
 cursor.execute('''CREATE TABLE IF NOT EXISTS gamedata_ps_genre (`NUM` INT NOT NULL AUTO_INCREMENT,
-                                                                `TITLE` VARCHAR(100) NULL DEFAULT NULL,
+                                                                `TITLE` VARCHAR(200) NULL DEFAULT NULL,
                                                                 `genre` VARCHAR(30) NULL DEFAULT NULL,
                                                                 PRIMARY KEY (`NUM`),
                                                                 CONSTRAINT `ps_title`
@@ -96,7 +97,7 @@ cursor.execute('''CREATE TABLE IF NOT EXISTS gamedata_steam (`NUM` INT NOT NULL 
                                                             `IMGDATA` TEXT NULL DEFAULT NULL,
                                                             `GAMEIMG` TEXT NULL DEFAULT NULL,
                                                             `URL` TEXT NULL DEFAULT NULL,
-                                                            `VARIA` TINYINT(1) NOT NULL DEFAULT 0,
+                                                            `VARIA` TINYINT(1) NOT NULL DEFAULT 1,
                                                             PRIMARY KEY (`NUM`),
                                                             UNIQUE KEY (`TITLE`))
             ''')
@@ -119,7 +120,7 @@ cursor.execute('''CREATE TABLE IF NOT EXISTS gamedata_epic (`NUM` INT NOT NULL A
                                                             `IMGDATA` TEXT NULL DEFAULT NULL,
                                                             `GAMEIMG` TEXT NULL DEFAULT NULL,
                                                             `URL` TEXT NULL DEFAULT NULL,
-                                                            `VARIA` TINYINT(1) NOT NULL DEFAULT 0,
+                                                            `VARIA` TINYINT(1) NOT NULL DEFAULT 1,
                                                             PRIMARY KEY (`NUM`),
                                                             UNIQUE KEY (`TITLE`))
             ''')
@@ -132,6 +133,13 @@ cursor.execute('''CREATE TABLE IF NOT EXISTS gamedata_epic_genre (`NUM` INT NOT 
                                                                 REFERENCES `gamedata_epic` (`TITLE`)
                                                                 ON DELETE CASCADE
                                                                 ON UPDATE CASCADE)
+            ''')
+cursor.execute('''CREATE TABLE IF NOT EXISTS release_info (`DATE` VARCHAR(15) NULL DEFAULT NULL,
+										 `TITLE` VARCHAR(100) NOT NULL,
+										 `PLATFORM` VARCHAR(15) NULL DEFAULT NULL,
+										 `PRICE` VARCHAR(15) NULL DEFAULT NULL,
+										 `VARIA` TINYINT(1) NULL DEFAULT 1,
+										 PRIMARY KEY (`TITLE`))
             ''')
 
 def insert_gamedata(platform, filename1, filename2):
@@ -170,7 +178,10 @@ def insert_gamedata(platform, filename1, filename2):
                     INSERT INTO gamedata_switch (TITLE, PRICE, SALEPRICE, SALEPER, DESCRIPTION, IMGDATA, GAMEIMG, URL)
                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
                     """
-                cursor.execute(insert_query, tuple(row))
+                try:
+                    cursor.execute(insert_query, tuple(row))
+                except Exception as e:
+                    print(f'{platform}.게임데이터 오류 - {e}')
 
         conn.commit()
         print(f"{platform} 데이터 삽입이 완료되었습니다.")
@@ -204,22 +215,53 @@ def insert_gamedata(platform, filename1, filename2):
                     INSERT INTO gamedata_switch_genre (TITLE, GENRE)
                     VALUES (%s, %s)
                     """
-                cursor.execute(insert_query, tuple(row))
+                try:
+                    cursor.execute(insert_query, tuple(row))
+                except Exception as e:
+                    #print(f'장르 : {e}')
+                    pass
 
         conn.commit()
         print(f"{platform} genre 데이터 삽입이 완료되었습니다.")
 
     except Exception as e:
-        print(f"{platform} genre 오류 발생:", e)
+        #print(f"{platform} genre 오류 발생:", e)
+        pass
+
+def insert_danawa(filename):
+    # 현재 스크립트 파일의 디렉토리 경로를 가져옵니다.
+    script_dir = os.path.dirname(__file__)
+    # 파일 이름을 포함하여 파일의 절대 경로를 생성합니다.
+    file_name = filename
+    csv_file= os.path.join(script_dir, file_name)
+
+    try:
+        with open(csv_file, 'r', encoding='utf-8') as file:
+            csv_reader = csv.reader(file)
+            next(csv_reader) # 첫번째 행은 헤더라 건너뜀
+            for row in csv_reader:
+                insert_query = """
+                INSERT INTO release_info (DATE, TITLE, PLATFORM, PRICE)
+                VALUES (%s, %s, %s, %s)
+                """
+                cursor.execute(insert_query, tuple(row))
+
+        conn.commit()
+        print("danawa 데이터 삽입이 완료되었습니다.")
+
+    except Exception as e:
+        print("danawa 오류 발생:", e)
 
 if __name__ == "__main__":
     insert_gamedata('epic', 'Epic_Crawling.csv', 'Epic_Genre_Crawling.csv')
     sleep(2)
-    #insert_gamedata('steam', 'Steam_Crawling.csv', 'Steam_Genre_Crawling.csv')
+    insert_gamedata('steam', 'Steam_Crawling.csv', 'Steam_Genre_Crawling.csv')
     sleep(2)
     insert_gamedata('ps', 'PS_Crawling.csv', 'PS_Genre_Crawling.csv')
     sleep(2)
     insert_gamedata('switch', 'Switch_Crawling.csv', 'Switch_Genre_Crawling.csv')
+    sleep(2)
+    insert_danawa('Danawa_Crawling.csv')
 
     if conn:
         cursor.close()
