@@ -60,24 +60,22 @@ def Driver_Start(platform, URL):
     return driver
 
 def nintendo_crawling():
-    num_game = 1
-    num_genre = 1
     platform = 'switch'
     excel_gamedata = openpyxl.Workbook()
     excel_gamedata_sheet = excel_gamedata.active
-    gamedata_row_column = ["NUM", "TITLE", "PRICE", "SALEPRICE", "SALEPER", "DESCRIPTION", "IMGDATA", "GAMEIMG", "URL"]
+    gamedata_row_column = ["TITLE", "PRICE", "SALEPRICE", "SALEPER", "DESCRIPTION", "IMGDATA", "GAMEIMG", "URL"]
     excel_gamedata_sheet.append(gamedata_row_column)
-
+    sleep(1)
     excel_gamegenre = openpyxl.Workbook()
     excel_gamegenre_sheet = excel_gamegenre.active
-    gamegenre_row_column = ["NUM", "TITLE", "GENRE"]
+    gamegenre_row_column = ["TITLE", "GENRE"]
     excel_gamegenre_sheet.append(gamegenre_row_column)
-
+    sleep(1)
     path = f'C:\Crawling_Excel_File\{timestr}'
     Path(path).mkdir(parents=True, exist_ok=True)
     
     driver = Driver_Start(platform, 'https://store.nintendo.co.kr/games/sale')
-
+    sleep(1)
     soup = BeautifulSoup(driver.page_source, "html.parser")
     error = soup.select_one('h1')
     if error.text == '403 Forbidden':
@@ -165,7 +163,7 @@ def nintendo_crawling():
         if gameimg != None:
             gameimg = gameimg["src"]
 
-        gamedata_column = [num_game, title, price, saleprice, saleper, description, imgdata, gameimg, move]
+        gamedata_column = [title, price, saleprice, saleper, description, imgdata, gameimg, move]
         excel_gamedata_sheet.append(gamedata_column)
 
         tagparent = new_soup.find("div", class_="product-attribute game_category")
@@ -176,16 +174,14 @@ def nintendo_crawling():
 
             while num < tag_length:
                 tag[num] = tag[num].strip()
-                gamegenre_column = [num_genre, title, tag[num]]
+                gamegenre_column = [title, tag[num]]
                 excel_gamegenre_sheet.append(gamegenre_column)
                 num += 1
-                num_genre += 1
         
         i+=1
         #l+=1
 
         print(f'switch - {i}.{title} 입력 완료')
-        num_game += 1
         driver.close()
         driver.switch_to.window(driver.window_handles[-1])
 
@@ -193,8 +189,8 @@ def nintendo_crawling():
     newtimestr = newtime.strftime("%Y%m%d_%H%M")
 
     sleep(2)
-    excel_gamedata.save(f'{path}\Switch_Crawling.csv')
-    excel_gamegenre.save(f'{path}\Switch_Genre_Crawling.csv')
+    excel_gamedata.save(f'{path}\Switch_Crawling.xlsx')
+    excel_gamegenre.save(f'{path}\Switch_Genre_Crawling.xlsx')
     excel_gamedata.close()
     excel_gamegenre.close()
     print(platform, " 크롤링 완료 시작시간:", timestr, ", 완료시간:", newtimestr)
@@ -204,18 +200,16 @@ def nintendo_crawling():
 def ps_crawling():
     platform = 'ps'
     gameURL = 'https://store.playstation.com/'
-    num_game = 1
-    num_genre = 1
     excel_gamedata = openpyxl.Workbook()
     excel_gamedata_sheet = excel_gamedata.active
-    gamedata_row_column = ["NUM", "TITLE", "PRICE", "SALEPRICE", "SALEPER", "DESCRIPTION", "IMGDATA", "GAMEIMG", "URL"]
+    gamedata_row_column = ["TITLE", "PRICE", "SALEPRICE", "SALEPER", "DESCRIPTION", "IMGDATA", "GAMEIMG", "URL"]
     excel_gamedata_sheet.append(gamedata_row_column)
-
+    sleep(1)
     excel_gamegenre = openpyxl.Workbook()
     excel_gamegenre_sheet = excel_gamegenre.active
-    gamegenre_row_column = ["NUM", "TITLE", "GENRE"]
+    gamegenre_row_column = ["TITLE", "GENRE"]
     excel_gamegenre_sheet.append(gamegenre_row_column)
-
+    sleep(1)
     path = f'C:\Crawling_Excel_File\{timestr}'
     Path(path).mkdir(parents=True, exist_ok=True)
 
@@ -242,8 +236,6 @@ def ps_crawling():
     beforetitle = ""
 
     restart = 1
-    passnum = 0
-    skip_num = 0
 
     for roof in range(1000000):
         if(restart > 4):
@@ -366,7 +358,7 @@ def ps_crawling():
             
             sleep(0.5)
             
-            gamedata_column = [num_game, title, price, saleprice, saleper, description, imgdata, gameimg, move]
+            gamedata_column = [title, price, saleprice, saleper, description, imgdata, gameimg, move]
             excel_gamedata_sheet.append(gamedata_column)
             
             tagparent = new_soup.find("dd", {'data-qa':'gameInfo#releaseInformation#genre-value'})
@@ -377,15 +369,13 @@ def ps_crawling():
             
             while num < tag_length:
                 tag[num] = tag[num].strip()
-                gamegenre_column = [num_genre, title, tag[num]]
+                gamegenre_column = [title, tag[num]]
                 excel_gamegenre_sheet.append(gamegenre_column)
-                num_genre += 1
                 num += 1
 
             beforetitle = title
 
             print(f'ps - {next_page-1}p.{title} 입력 완료')
-            num_game += 1
             driver.close()
             driver.switch_to.window(driver.window_handles[-1])
 
@@ -410,8 +400,8 @@ def ps_crawling():
     newtime = datetime.now()
     newtimestr = newtime.strftime("%Y%m%d_%H%M")
 
-    excel_gamedata.save(f'{path}\PS_Crawling.csv')
-    excel_gamegenre.save(f'{path}\PS_Genre_Crawling.csv')
+    excel_gamedata.save(f'{path}\PS_Crawling.xlsx')
+    excel_gamegenre.save(f'{path}\PS_Genre_Crawling.xlsx')
     excel_gamedata.close()
     excel_gamegenre.close()
 
@@ -421,8 +411,6 @@ def ps_crawling():
     driver.quit()
 
 def steam_crawling(driver, excel_gamedata_sheet, excel_gamegenre_sheet):
-    num_game = 1
-    num_genre = 1
     driver.execute_script("window.scrollTo(0,document.body.scrollHeight)")
     html = driver.page_source
     soup = BeautifulSoup(html, "html.parser")
@@ -501,20 +489,18 @@ def steam_crawling(driver, excel_gamedata_sheet, excel_gamegenre_sheet):
         tag_length = len(tag)
         num = 0
 
-        gamedata_column = [num_game, title, price, saleprice, saleper, description, imgdata, gameimg, move]
+        gamedata_column = [title, price, saleprice, saleper, description, imgdata, gameimg, move]
         excel_gamedata_sheet.append(gamedata_column)
 
         while num < tag_length:
             tag[num] = tag[num].text.strip()
-            gamegenre_column = [num_genre, title, tag[num]]
+            gamegenre_column = [title, tag[num]]
             excel_gamegenre_sheet.append(gamegenre_column)
-            num_genre += 1
             num += 1
 
         print(f'steam - {title} 입력 완료')
 
         #탭 종료후 원래 탭(베스트게임 페이지)으로 이동
-        num_game += 1
         driver.close()
         driver.switch_to.window(driver.window_handles[-1])
 
@@ -524,14 +510,14 @@ def steam_start():
     url = 'https://store.steampowered.com/specials/'
     excel_gamedata = openpyxl.Workbook()
     excel_gamedata_sheet = excel_gamedata.active
-    gamedata_row_column = ["NUM", "TITLE", "PRICE", "SALEPRICE", "SALEPER", "DESCRIPTION", "IMGDATA", "GAMEIMG", "URL"]
+    gamedata_row_column = ["TITLE", "PRICE", "SALEPRICE", "SALEPER", "DESCRIPTION", "IMGDATA", "GAMEIMG", "URL"]
     excel_gamedata_sheet.append(gamedata_row_column)
-
+    sleep(1)
     excel_gamegenre = openpyxl.Workbook()
     excel_gamegenre_sheet = excel_gamegenre.active
-    gamegenre_row_column = ["NUM", "TITLE", "GENRE"]
+    gamegenre_row_column = ["TITLE", "GENRE"]
     excel_gamegenre_sheet.append(gamegenre_row_column)
-
+    sleep(1)
     path = f'C:\Crawling_Excel_File\{timestr}'
     Path(path).mkdir(parents=True, exist_ok=True)
 
@@ -581,8 +567,8 @@ def steam_start():
             break
         driver.quit()
 
-    excel_gamedata.save(f'{path}\Steam_Crawling.csv')
-    excel_gamegenre.save(f'{path}\Steam_Genre_Crawling.csv')
+    excel_gamedata.save(f'{path}\Steam_Crawling.xlsx')
+    excel_gamegenre.save(f'{path}\Steam_Genre_Crawling.xlsx')
     excel_gamedata.close()
     excel_gamegenre.close()
     driver.quit()
@@ -601,18 +587,16 @@ def epic_crawling():
     URL = 'https://store.epicgames.com/ko/browse'
     epicgames = 'https://store.epicgames.com'
     
-    num_game = 1
-    num_genre = 1
     excel_gamedata = openpyxl.Workbook()
     excel_gamedata_sheet = excel_gamedata.active
-    gamedata_row_column = ["NUM", "TITLE", "PRICE", "SALEPRICE", "SALEPER", "DESCRIPTION", "IMGDATA", "GAMEIMG", "URL"]
+    gamedata_row_column = ["TITLE", "PRICE", "SALEPRICE", "SALEPER", "DESCRIPTION", "IMGDATA", "GAMEIMG", "URL"]
     excel_gamedata_sheet.append(gamedata_row_column)
-
+    sleep(1)
     excel_gamegenre = openpyxl.Workbook()
     excel_gamegenre_sheet = excel_gamegenre.active
-    gamegenre_row_column = ["NUM", "TITLE", "GENRE"]
+    gamegenre_row_column = ["TITLE", "GENRE"]
     excel_gamegenre_sheet.append(gamegenre_row_column)
-
+    sleep(1)
     path = f'C:\Crawling_Excel_File\{timestr}'
     Path(path).mkdir(parents=True, exist_ok=True)
 
@@ -694,18 +678,16 @@ def epic_crawling():
             tag_length = len(tag)
             num = 0
 
-            gamedata_column = [num_game, title, price, saleprice, saleper, description, imgdata, gameimg, move]
+            gamedata_column = [title, price, saleprice, saleper, description, imgdata, gameimg, move]
             excel_gamedata_sheet.append(gamedata_column)
 
             while num < tag_length:
                 tag[num] = tag[num].text.strip()
-                gamegenre_column = [num_genre, title, tag[num]]
+                gamegenre_column = [title, tag[num]]
                 excel_gamegenre_sheet.append(gamegenre_column)
-                num_genre += 1
                 num += 1
 
             print(f'epic - {title} 입력 완료')
-            num_game += 1
             driver.quit()
 
             #현재 페이지가 마지막 페이지면 last_game_title에 지금 크롤링중인 게임 타이틀 집어넣기
@@ -735,14 +717,86 @@ def epic_crawling():
     sleep(2)
     print(platform, " 크롤링 완료 - 시작시간:", timestr, ", 완료시간:", newtimestr)
 
-    excel_gamedata.save(f'{path}\Epic_Crawling.csv')
-    excel_gamegenre.save(f'{path}\Epic_Genre_Crawling.csv')
+    excel_gamedata.save(f'{path}\Epic_Crawling.xlsx')
+    excel_gamegenre.save(f'{path}\Epic_Genre_Crawling.xlsx')
     excel_gamedata.close()
     excel_gamegenre.close()
 
     print("크롤링 끝 driver 종료")
     driver.quit()
     mode4 = 1
+
+def danawa():
+    URL = 'https://prod.danawa.com/game/index.php'
+    driver = Driver_Start("danawa", URL)
+
+    excel_releasedata = openpyxl.Workbook()
+    excel_sheet = excel_releasedata.active
+    gamedata_row_column = ["DATE", "TITLE", "PLATFORM", "PRICE"]
+    excel_sheet.append(gamedata_row_column)
+    path = f'C:\Crawling_Excel_File\{timestr}'
+    Path(path).mkdir(parents=True, exist_ok=True)
+
+    action = ActionChains(driver)
+
+    before_date = ""
+
+    for _ in range(10000000000000):
+        soup = BeautifulSoup(driver.page_source, "html.parser")
+        gamelist = soup.select_one('div.upc_tbl_wrap').select('tr')
+
+        for list in gamelist:
+            date = list.select_one('td.date')
+            if date != None:
+                date = date.text.strip()
+
+            if date == "":
+                date = before_date
+
+            platform = list.select_one('td.type')
+
+            if platform != None:
+                platform = platform.text.strip()
+                if 'XBOX' in platform:
+                    continue
+
+            title = list.select_one('a.tit_link')
+            if title != None:
+                if date == None:
+                    date = before_date
+                title = title.text.strip()
+
+            price = list.select_one('em.num')
+
+            if price == None:
+                price = list.select_one('span.p_txt')
+
+            if price != None:
+                price = price.text.strip()
+            
+            before_date = date
+
+            if title != None:
+                gamedata_column = [date, title, platform, price]
+                excel_sheet.append(gamedata_column)
+                print(f'danawa - {title} DB 입력 완료')
+
+        next_page_btn = driver.find_element(By.XPATH, '//*[@id="#nav_edge_next"]')
+        action.click(next_page_btn).perform()
+
+        sleep(3)
+
+        new_soup = BeautifulSoup(driver.page_source, "html.parser")
+        x = new_soup.select_one('p.n_txt')
+        if x != None:
+            break
+
+    excel_releasedata.save(f'{path}\Danawa_Crawling.xlsx')
+    excel_releasedata.close()
+
+    sleep(2)
+    print("크롤링 완료")
+    driver.quit()
 
 if __name__ == "__main__":
     services = Service(executable_path=ChromeDriverManager().install())
@@ -758,31 +812,34 @@ if __name__ == "__main__":
     process2 = multiprocessing.Process(target=ps_crawling)
     process3 = multiprocessing.Process(target=steam_start)
     process4 = multiprocessing.Process(target=epic_crawling)
-    """
+    process5 = multiprocessing.Process(target=danawa)
+
+
     try:
         process1.start()
     except:
         print("process1 시작 오류")
-
     sleep(3)
     try:
         process2.start()
     except:
         print("process2 시작 오류")
-
     sleep(3)
-    """
     try:
         process3.start()
     except:
         print("process3 시작 오류")
-    """
     sleep(3)
     try:
         process4.start()
     except:
         print("process4 시작 오류")
-    """
+    sleep(3)
+    try:
+        process5.start()
+    except:
+        print("process5 시작 오류")
+
     # 프로세스 종료 대기
     try:
         process1.join()
@@ -800,4 +857,9 @@ if __name__ == "__main__":
         process4.join()
     except:
         pass
+    try:
+        process5.join()
+    except:
+        pass
+
     quit()

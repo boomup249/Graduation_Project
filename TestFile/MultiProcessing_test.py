@@ -80,7 +80,7 @@ def nintendo_crawling():
                                                                 `IMGDATA` TEXT NULL DEFAULT NULL,
                                                                 `GAMEIMG` TEXT NULL DEFAULT NULL,
                                                                 `URL` TEXT NULL DEFAULT NULL,
-                                                                `VARIA` TINYINT(1) NOT NULL DEFAULT 0,
+                                                                `VARIA` TINYINT(1) NOT NULL DEFAULT 1,
                                                                 PRIMARY KEY (`NUM`),
                                                                 UNIQUE KEY (`TITLE`))
                 ''')
@@ -237,7 +237,7 @@ def ps_crawling():
                                                             `IMGDATA` TEXT NULL DEFAULT NULL,
                                                             `GAMEIMG` TEXT NULL DEFAULT NULL,
                                                             `URL` TEXT NULL DEFAULT NULL,
-                                                            `VARIA` TINYINT(1) NOT NULL DEFAULT 0,
+                                                            `VARIA` TINYINT(1) NOT NULL DEFAULT 1,
                                                             PRIMARY KEY (`NUM`),
                                                             UNIQUE KEY (`TITLE`))
                 ''')
@@ -557,7 +557,7 @@ def steam_start():
                                                                 `IMGDATA` TEXT NULL DEFAULT NULL,
                                                                 `GAMEIMG` TEXT NULL DEFAULT NULL,
                                                                 `URL` TEXT NULL DEFAULT NULL,
-                                                                `VARIA` TINYINT(1) NOT NULL DEFAULT 0,
+                                                                `VARIA` TINYINT(1) NOT NULL DEFAULT 1,
                                                                 PRIMARY KEY (`NUM`),
                                                                 UNIQUE KEY (`TITLE`))
                 ''')
@@ -644,7 +644,7 @@ def epic_crawling():
                                                                 `IMGDATA` TEXT NULL DEFAULT NULL,
                                                                 `GAMEIMG` TEXT NULL DEFAULT NULL,
                                                                 `URL` TEXT NULL DEFAULT NULL,
-                                                                `VARIA` TINYINT(1) NOT NULL DEFAULT 0,
+                                                                `VARIA` TINYINT(1) NOT NULL DEFAULT 1,
                                                                 PRIMARY KEY (`NUM`),
                                                                 UNIQUE KEY (`TITLE`))
                 ''')
