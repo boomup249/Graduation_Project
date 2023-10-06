@@ -1,0 +1,79 @@
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+		<title>loco > news</title>
+		
+		<!-- 외부 css -->
+		<link rel="stylesheet" href="css/font.css"> <!-- 폰트 css -->
+		<link rel="stylesheet" href="css/header.css"> <!-- 헤더 css -->
+		<style>
+			/*css 속성*/
+			/*내용*/
+			#content { 
+						position: relative;
+						top: 100px;
+						left: 0px; /*헤더 아래부터*/
+						width: 100%; height: calc(100% - 100px)/*화면 - 헤더*/;
+						overflow-y: scroll; /*콘텐츠에만 스크롤이 적용되도록*/
+						}
+			
+			body { background-color: #222831;
+					margin: 0; padding: 0;}
+		</style>
+	</head>
+	<body>
+		<!-- 헤더 -->
+		<div id="header">
+			<!-- 로고 -->
+			<div class="logo_btn"><a href="/main"><img src="imgs/header/logo.png"/></a></div>
+			
+			<!-- 메뉴 -->
+			<ul>
+				<!-- 콘솔 -->
+				<li>
+					<div class="menu">
+						<a href="/console">CONSOLE</a>
+					</div>
+				</li>
+				
+				<!-- pc -->
+				<li>
+					<div class="menu">
+						<a href="/pc">PC</a>
+					</div>
+				</li>
+				
+				<!-- 게시판 -->
+				<li>
+					<div class="menu">
+						<a href="/bbs">BBS</a>
+					</div>
+				</li>
+				
+				<!-- 신작 -->
+				<li>
+					<div class="menu">
+						<a href="/news">NEWS</a>
+					</div>
+				</li>
+				
+				<!-- 로그인 버튼-->
+				<li th:if="${session.user == null}"> <!-- 세션(user)가 없으면 -->
+					<div class="menu">
+						<a href="/login"><img src="imgs/header/login.png"/></a>
+					</div>
+				</li>
+				
+				<!-- 마이페이지 -->
+				<li th:if="${session.user != null}"> <!-- 세션(user)가 있으면 -->
+					<div class="mypage"></div>
+					<!-- 드롭다운 -->
+					<ul class="dropdown">
+						<li><a href="/mypage">내 계정</a></li>
+						<li><a href="/profile">프로필 설정</a></li>
+						<li><a href="/logout">로그아웃</a></li>
+					</ul>
+				</li>
+			</ul>
+	</body>	
+</html>	

@@ -173,4 +173,10 @@ public class GameController {
         model.addAttribute("csGameDetail", csGameDetail);
         return "/game/ConsoleDetail";
 	}
+    
+    //News
+    @GetMapping("/news")
+    public String news() {
+        return "/game/news"; 
+    }
 }
