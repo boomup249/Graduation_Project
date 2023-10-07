@@ -12,6 +12,7 @@ import MySQLdb
 import requests
 from time import sleep
 from datetime import datetime
+import re
 
 conn = MySQLdb.connect(
     user="root",
@@ -62,6 +63,8 @@ for _ in range(10000000000000):
         date = list.select_one('td.date')
         if date != None:
             date = date.text.strip()
+            date = date.replace('.', '-')
+            date = re.sub(r'\(.\)', '', date)
 
         if date == "":
             date = before_date
@@ -71,7 +74,7 @@ for _ in range(10000000000000):
         if platform != None:
             platform = platform.text.strip()
             if "XBOX" in platform:
-                platform = None
+                continue
 
         title = list.select_one('a.tit_link')
         if title != None:
@@ -89,9 +92,6 @@ for _ in range(10000000000000):
         
         before_date = date
         if date != None and platform != None and title != None and price != None:
-            print("요일 :", date,", 플랫폼 :", platform, ", 제목 :", title, ", 가격 :", price)
-
-        if title != None:
             sql = 'INSERT INTO release_info (DATE, TITLE, PLATFORM, PRICE) VALUES (%s, %s, %s, %s)'
             cursor.execute(sql, (date, title, platform, price))
             conn.commit()

@@ -11,6 +11,7 @@ from bs4 import BeautifulSoup
 import MySQLdb
 import requests
 from time import sleep
+import re
 
 conn = MySQLdb.connect(
     user="root",
@@ -57,6 +58,8 @@ for _ in range(10000000000000):
         date = list.select_one('td.date')
         if date != None:
             date = date.text.strip()
+            date = date.replace('.', '-')
+            date = re.sub(r'\(.\)', '', date)
 
         if date == "":
             date = before_date
@@ -66,7 +69,7 @@ for _ in range(10000000000000):
         if platform != None:
             platform = platform.text.strip()
             if "XBOX" in platform:
-                platform = None
+                continue
 
         title = list.select_one('a.tit_link')
         if title != None:

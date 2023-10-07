@@ -15,6 +15,7 @@ from time import sleep
 from datetime import datetime
 from pathlib import Path
 import openpyxl
+import re
 
 mode1 = 0
 mode2 = 0
@@ -749,6 +750,8 @@ def danawa():
             date = list.select_one('td.date')
             if date != None:
                 date = date.text.strip()
+                date = date.replace('.', '-')
+                date = re.sub(r'\(.\)', '', date)
 
             if date == "":
                 date = before_date
@@ -775,8 +778,7 @@ def danawa():
                 price = price.text.strip()
             
             before_date = date
-
-            if title != None:
+            if date != None and platform != None and title != None and price != None:
                 gamedata_column = [date, title, platform, price]
                 excel_sheet.append(gamedata_column)
                 print(f'danawa - {title} DB 입력 완료')
@@ -814,7 +816,7 @@ if __name__ == "__main__":
     process4 = multiprocessing.Process(target=epic_crawling)
     process5 = multiprocessing.Process(target=danawa)
 
-
+    """
     try:
         process1.start()
     except:
@@ -835,6 +837,7 @@ if __name__ == "__main__":
     except:
         print("process4 시작 오류")
     sleep(3)
+    """
     try:
         process5.start()
     except:

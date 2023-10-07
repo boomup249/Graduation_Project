@@ -7,6 +7,7 @@ DROP TABLE IF EXISTS gamedata_steam;
 DROP TABLE IF EXISTS gamedata_epic_genre;
 DROP TABLE IF EXISTS gamedata_epic;
 DROP TABLE IF EXISTS release_info;
+DROP TABLE IF EXISTS crawling_time;
 
 CREATE TABLE IF NOT EXISTS gamedata_switch (`NUM` INT NOT NULL AUTO_INCREMENT,
                                                                 `TITLE` VARCHAR(100) NULL DEFAULT NULL,
@@ -107,3 +108,5 @@ CREATE TABLE IF NOT EXISTS release_info (`DATE` VARCHAR(15) NULL DEFAULT NULL,
 										 `VARIA` TINYINT(1) NULL DEFAULT 1,
 										 PRIMARY KEY (`TITLE`)
             );
+            
+CREATE TABLE IF NOT EXISTS crawling_time (`ENDTIME` DATETIME PRIMARY KEY);
