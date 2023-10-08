@@ -13,11 +13,7 @@ import MySQLdb
 import requests
 from time import sleep
 from datetime import datetime
-
-mode1 = 0
-mode2 = 0
-mode3 = 0
-mode4 = 0
+import re
 
 #DB연결
 conn = MySQLdb.connect(
@@ -28,6 +24,8 @@ conn = MySQLdb.connect(
     charset='utf8'
 )
 cursor = conn.cursor()
+
+cursor.execute('CREATE TABLE IF NOT EXISTS crawling_time (`ENDTIME` DATETIME PRIMARY KEY);')
 
 time = datetime.now()
 timestr = time.strftime("%Y%m%d_%H%M")
@@ -69,32 +67,8 @@ def Driver_Start(platform, URL):
 
 def nintendo_crawling():
     platform = 'switch'
-    cursor.execute("DROP TABLE IF EXISTS gamedata_switch_genre")
-    cursor.execute("DROP TABLE IF EXISTS gamedata_switch")
-    cursor.execute('''CREATE TABLE IF NOT EXISTS gamedata_switch (`NUM` INT NOT NULL AUTO_INCREMENT,
-                                                                `TITLE` VARCHAR(100) NULL DEFAULT NULL,
-                                                                `PRICE` VARCHAR(15) NULL DEFAULT NULL,
-                                                                `SALEPRICE` VARCHAR(15) NULL DEFAULT NULL,
-                                                                `SALEPER` VARCHAR(5) NULL DEFAULT NULL,
-                                                                `DESCRIPTION` TEXT NULL DEFAULT NULL,
-                                                                `IMGDATA` TEXT NULL DEFAULT NULL,
-                                                                `GAMEIMG` TEXT NULL DEFAULT NULL,
-                                                                `URL` TEXT NULL DEFAULT NULL,
-                                                                `VARIA` TINYINT(1) NOT NULL DEFAULT 1,
-                                                                PRIMARY KEY (`NUM`),
-                                                                UNIQUE KEY (`TITLE`))
-                ''')
-    cursor.execute('''CREATE TABLE IF NOT EXISTS gamedata_switch_genre (`NUM` INT NOT NULL AUTO_INCREMENT,
-                                                                        `TITLE` VARCHAR(100) NULL DEFAULT NULL,
-                                                                        `GENRE` VARCHAR(30) NULL DEFAULT NULL,
-                                                                        PRIMARY KEY (`NUM`),
-                                                                        CONSTRAINT `switch_title`
-                                                                            FOREIGN KEY (`TITLE`)
-                                                                            REFERENCES `gamedata_switch` (`TITLE`)
-                                                                            ON DELETE CASCADE
-                                                                            ON UPDATE CASCADE)
-                ''')
-    
+    dictionary_list = []
+    dictionary_list_genre = []
     driver = Driver_Start(platform, 'https://store.nintendo.co.kr/games/sale')
 
     soup = BeautifulSoup(driver.page_source, "html.parser")
@@ -120,8 +94,6 @@ def nintendo_crawling():
     panel = soup.select_one("div.category-product-list")
     gamelist = panel.select("div.category-product-item")
 
-    i=0
-    #l=0
     for item in gamelist:
         title = item.find("a", class_="category-product-item-title-link").text.strip()
         price = item.find("span", attrs={"data-price-type" : "oldPrice"})
@@ -140,15 +112,9 @@ def nintendo_crawling():
             saleper = saleper_calc(price, saleprice)
 
         game_link = item.select_one('a')
-        move = game_link["href"]
-        
-        """
-        if l > 120:
-            print("5분간 일시정지(403 forbidden 오류 회피를 위해)")
-            sleep(300)
-            print("실행")
-            l=0
-        """
+
+        if game_link != None:
+            move = game_link["href"]
 
         driver.execute_script(f'window.open(\'{move}\');')
         driver.switch_to.window(driver.window_handles[-1])
@@ -191,8 +157,9 @@ def nintendo_crawling():
         if gameimg != None:
             gameimg = gameimg["src"]
 
-        sql = 'INSERT INTO gamedata_switch (TITLE, PRICE, SALEPRICE, SALEPER, DESCRIPTION, IMGDATA, GAMEIMG, URL) VALUES (%s, %s, %s, %s, %s, %s, %s ,%s)'
-        cursor.execute(sql, (title, price, saleprice, saleper, description, imgdata, gameimg, move))
+        data = {'TITLE' : title, 'PRICE' : price, 'SALEPRICE' : saleprice, 'SALEPER' : saleper, 'DESCRIPTION' : description, 'IMGDATA' : imgdata, 'GAMEIMG' : gameimg, 'URL' : move}
+        dictionary_list.append(data)
+        print(f'{platform} = {title}.append')
 
         tagparent = new_soup.find("div", class_="product-attribute game_category")
         if tagparent != None:
@@ -202,55 +169,91 @@ def nintendo_crawling():
 
             while num < tag_length:
                 tag[num] = tag[num].strip()
-                sql = 'INSERT INTO gamedata_switch_genre (TITLE, GENRE) VALUES (%s, %s)'
-                cursor.execute(sql, (title, tag[num]))
+                data_genre = {'TITLE' : title, 'GENRE' : tag[num]}
+                dictionary_list_genre.append(data_genre)
                 num += 1
-        
-        i+=1
-        #l+=1
 
-        conn.commit()
-        print(f'switch - {i}.{title} DB 입력 완료')
         driver.close()
         driver.switch_to.window(driver.window_handles[-1])
+
+    update_query = "UPDATE gamedata_switch SET VARIA = 0"
+    cursor.execute(update_query)
+    conn.commit()
+
+    for data in dictionary_list:
+        d_title = data['TITLE']
+        d_price = data['PRICE']
+        d_saleprice = data['SALEPRICE']
+        d_saleper = data['SALEPER']
+        d_description = data['DESCRIPTION']
+        d_imgdata = data['IMGDATA']
+        d_gameimg = data['GAMEIMG']
+        d_url = data['URL']
+        
+        # 데이터베이스에 해당 TITLE이 존재하는지 확인
+        query = "SELECT * FROM gamedata_switch WHERE TITLE = %s"
+        cursor.execute(query, (d_title))
+        result = cursor.fetchone()
+
+        if result is None:
+            # 데이터베이스에 존재하지 않으면 INSERT
+            insert_query = "INSERT INTO gamedata_switch (TITLE, PRICE, SALEPRICE, SALEPER, DESCRIPTION, IMGDATA, GAMEIMG, URL) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+            cursor.execute(insert_query, (d_title, d_price, d_saleprice, d_saleper, d_description, d_imgdata, d_gameimg, d_url))
+            conn.commit()
+            print(f"{platform} - INSERT: {d_title}")
+        else:
+            # 데이터베이스에 이미 존재하면 saleprice를 비교하여 업데이트하고 varia 값을 1로 변경
+            existing_price = result[3]  # 결과에서 현재 데이터베이스의 saleprice 가져오기
+            if existing_price != d_saleprice:
+                update_query = "UPDATE gamedata_switch SET PRICE = %s, SALEPRICE = %s, SALEPER = %s, VARIA = 1 WHERE TITLE = %s"
+                cursor.execute(update_query, (d_price, d_saleprice, d_saleper, d_title))
+                conn.commit()
+                print(f"{platform} - UPDATE: {d_title} (할인가 바뀜, Varia Update)")
+            else: # 할인가격이 똑같으면 할인은 계속 진행중이므로 varia 값을 1로 변경
+                update_query = "UPDATE gamedata_switch SET VARIA = 1 WHERE TITLE = %s"
+                cursor.execute(update_query, (d_title))
+                conn.commit()
+                print(f"{platform} - UPDATE: {d_title} (아직 할인중, VARIA Update)")
+
+    #varia값 변경이 전부끝났으면 0은 전부 삭제
+    delete_query = "DELETE FROM gamedata_switch WHERE VARIA = 0"
+    cursor.execute(delete_query)
+    conn.commit()
+
+    #장르는 gamedata에서 title이 지워지면 genre의 title도 다삭제돼서 없으면 insert만 하면됨
+    for data in dictionary_list_genre:
+        g_title = data['TITLE']
+        g_genre = data['GENRE']
+
+        query = "SELECT * FROM gamedata_switch WHERE TITLE = %s"
+        cursor.execute(query, (g_title))
+        result = cursor.fetchone()
+
+        if result is None: # title값이 존재하지않으면 장르는 안넣어도됨
+            continue
+        else: # title값이 존재하면 장르 넣어야함
+            insert_query = "INSERT INTO gamedata_switch_genre (TITLE, GENRE) VALUES (%s, %s)"
+            try:
+                cursor.execute(insert_query, (g_title, g_genre))
+                conn.commit()
+                print(f"{platform} - GENRE INSERT: {g_title}")
+            except:
+                print(f'{platform} - 이미 장르값이 존재하던 타이틀이라 스킵')
 
     newtime = datetime.now()
     newtimestr = newtime.strftime("%Y%m%d_%H%M")
 
     sleep(2)
-    print(platform, " 크롤링 완료 시작시간:", timestr, ", 완료시간:", newtimestr)
-    mode1 = 1
+    print(platform, " 크롤링 및 DB 적용 완료 - 시작시간:", timestr, ", 완료시간:", newtimestr)
     driver.quit()
 
 def ps_crawling():
     platform = 'ps'
     gameURL = 'https://store.playstation.com/'
+    dictionary_list = []
+    dictionary_list_genre = []
     driver = Driver_Start(platform, 'https://store.playstation.com/ko-kr/pages/deals')
-    cursor.execute("DROP TABLE IF EXISTS gamedata_ps_genre")
-    cursor.execute("DROP TABLE IF EXISTS gamedata_ps")
-    cursor.execute('''CREATE TABLE IF NOT EXISTS gamedata_ps (`NUM` INT NOT NULL AUTO_INCREMENT,
-                                                            `TITLE` VARCHAR(100) NULL DEFAULT NULL,
-                                                            `PRICE` VARCHAR(15) NULL DEFAULT NULL,
-                                                            `SALEPRICE` VARCHAR(15) NULL DEFAULT NULL,
-                                                            `SALEPER` VARCHAR(5) NULL DEFAULT NULL,
-                                                            `DESCRIPTION` TEXT NULL DEFAULT NULL,
-                                                            `IMGDATA` TEXT NULL DEFAULT NULL,
-                                                            `GAMEIMG` TEXT NULL DEFAULT NULL,
-                                                            `URL` TEXT NULL DEFAULT NULL,
-                                                            `VARIA` TINYINT(1) NOT NULL DEFAULT 1,
-                                                            PRIMARY KEY (`NUM`),
-                                                            UNIQUE KEY (`TITLE`))
-                ''')
-    cursor.execute('''CREATE TABLE IF NOT EXISTS gamedata_ps_genre (`NUM` INT NOT NULL AUTO_INCREMENT,
-                                                                    `TITLE` VARCHAR(100) NULL DEFAULT NULL,
-                                                                    `genre` VARCHAR(30) NULL DEFAULT NULL,
-                                                                    PRIMARY KEY (`NUM`),
-                                                                    CONSTRAINT `ps_title`
-                                                                        FOREIGN KEY (`TITLE`)
-                                                                        REFERENCES `gamedata_ps` (`TITLE`)
-                                                                        ON DELETE CASCADE
-                                                                        ON UPDATE CASCADE)
-                ''')
+
     sleep(2)
     driver.find_element(By.XPATH, "//*[@id='main']/div/div[3]/section/div/ul/li[3]/a").click()
     sleep(2)
@@ -272,10 +275,8 @@ def ps_crawling():
     beforetitle = ""
 
     restart = 1
-    passnum = 0
-    skip_num = 0
 
-    for roof in range(1000000):
+    for _ in range(100000000):
         if(restart > 4):
             new_url = driver.current_url
             driver.quit()
@@ -285,8 +286,7 @@ def ps_crawling():
             restart = 1
 
         #페이지가 변경됐을때 변경된 페이지를 파싱
-        html = driver.page_source
-        soup = BeautifulSoup(html, "html.parser")
+        soup = BeautifulSoup(driver.page_source, "html.parser")
 
         sleep(1.5)
 
@@ -294,18 +294,10 @@ def ps_crawling():
         game_list = panel.find_all("li", class_="psw-l-w-1/2@mobile-s psw-l-w-1/2@mobile-l psw-l-w-1/6@tablet-l psw-l-w-1/4@tablet-s psw-l-w-1/6@laptop psw-l-w-1/8@desktop psw-l-w-1/8@max")
 
         for game in game_list:
-            try:
-                title = game.find("span", class_="psw-t-body psw-c-t-1 psw-t-truncate-2 psw-m-b-2").text
-            except:
-                _ = 0
-                while(title == None):
-                    if _ > 5:
-                        print("title 크롤링 오류 재실행할것(트래픽이 느린것으로 추정)")
-                        driver.quit()
-                        break
-                    sleep(3)
-                    title = game.find("span", class_="psw-t-body psw-c-t-1 psw-t-truncate-2 psw-m-b-2").text
-                    _  += 1
+            title = game.find("span", class_="psw-t-body psw-c-t-1 psw-t-truncate-2 psw-m-b-2")
+
+            if title != None:
+                title = title.text
 
             if title == beforetitle:
                 continue
@@ -318,15 +310,7 @@ def ps_crawling():
             try:
                 imgdata = img["src"]
             except:
-                _ = 0
-                while(imgdata == None):
-                    if _ > 5:
-                        print("imgdata 크롤링 오류 재실행할것(트래픽이 느린것으로 추정)")
-                        driver.quit()
-                        break
-                    sleep(3)
-                    imgdata = game.find("img", class_="psw-fade-in psw-top-left psw-l-fit-cover")["src"]
-                    _  += 1
+                pass
             
             saleper = game.find("span", class_="psw-body-2 psw-badge__text psw-badge--none psw-text-bold psw-p-y-0 psw-p-2 psw-r-1 psw-l-anchor")
 
@@ -337,7 +321,11 @@ def ps_crawling():
                 saleprice = "무료"
                 #-100% 할인도 적혀있지않다면 구매할수없는 게임이기에 정가, 할인가, 할인율의 값을 "구매할 수 없음"으로 설정
                 if saleper == None:
-                    price = game.find("span", class_="psw-m-r-3").text
+                    price = game.find("span", class_="psw-m-r-3")
+                    if price != None:
+                        price = price.text
+                    else:
+                        price = "구매할 수 없음"
                     saleprice = "구매할 수 없음"
                     saleper = "구매할 수 없음"
                 else:
@@ -370,54 +358,33 @@ def ps_crawling():
                     if char.isalnum() or char.isspace():
                         description += char
 
-            try:
-                gameimg = new_soup.find('img', attrs={'data-qa': 'gameBackgroundImage#heroImage#image'})
-                if gameimg == None:
-                    gameimg = new_soup.find('img', attrs={'data-qa': 'gameBackgroundImage#tileImage#image'})
-            except TypeError as e:
-                print(e)
-                _ = 0
-                while(gameimg==None):
-                    if _ > 5:
-                        print("gameimg 크롤링 오류 재실행할것(트래픽이 느린것으로 추정)")
-                        driver.quit()
-                        break
-                    sleep(3)
-                    print("gameimg 추출중")
-                    gameimg = new_soup.find('img', attrs={'data-qa': 'gameBackgroundImage#heroImage#image'})
-                    if gameimg == None:
-                        gameimg = new_soup.find('img', attrs={'data-qa': 'gameBackgroundImage#tileImage#image'})
-                    _ += 1
-            except:
-                gameimg = None
+            gameimg = new_soup.find('img', attrs={'data-qa': 'gameBackgroundImage#heroImage#image'})
+            if gameimg == None:
+                gameimg = new_soup.find('img', attrs={'data-qa': 'gameBackgroundImage#tileImage#image'})
 
             if gameimg != None:
                 gameimg = gameimg["src"]
             
             sleep(0.5)
+
+            data = {'TITLE' : title, 'PRICE' : price, 'SALEPRICE' : saleprice, 'SALEPER' : saleper, 'DESCRIPTION' : description, 'IMGDATA' : imgdata, 'GAMEIMG' : gameimg, 'URL' : move}
+            dictionary_list.append(data)
+            print(f'{platform} = {title}.append')
             
-            try:
-                sql = 'INSERT INTO gamedata_ps (TITLE, PRICE, SALEPRICE, SALEPER, DESCRIPTION, IMGDATA, GAMEIMG, URL) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)'
-                cursor.execute(sql, (title, price, saleprice, saleper, description, imgdata, gameimg, move))
-                
-                tagparent = new_soup.find("dd", {'data-qa':'gameInfo#releaseInformation#genre-value'})
-                if tagparent != None:
-                    tag = tagparent.select_one("span").text.split(',')
-                    tag_length = len(tag)
-                    num = 0
-                
-                while num < tag_length:
-                    tag[num] = tag[num].strip()
-                    sql = 'INSERT INTO gamedata_ps_genre (TITLE, GENRE) VALUES (%s, %s)'
-                    cursor.execute(sql, (title, tag[num]))
-                    num += 1
-            except:
-                print(f"{title} DB 입력중 오류 발생(동일명 게임 존재)")
+            tagparent = new_soup.find("dd", {'data-qa':'gameInfo#releaseInformation#genre-value'})
+            if tagparent != None:
+                tag = tagparent.select_one("span").text.split(',')
+                tag_length = len(tag)
+                num = 0
+            
+            while num < tag_length:
+                tag[num] = tag[num].strip()
+                data_genre = {'TITLE' : title, 'GENRE' : tag[num]}
+                dictionary_list_genre.append(data_genre)
+                num += 1
 
             beforetitle = title
 
-            conn.commit()
-            print(f'ps - {next_page-1}p.{title} DB 입력 완료')
             driver.close()
             driver.switch_to.window(driver.window_handles[-1])
 
@@ -439,15 +406,78 @@ def ps_crawling():
                 sleep(1.5)
                 break
 
+    update_query = "UPDATE gamedata_ps SET VARIA = 0"
+    cursor.execute(update_query)
+    conn.commit()
+
+    for data in dictionary_list:
+        d_title = data['TITLE']
+        d_price = data['PRICE']
+        d_saleprice = data['SALEPRICE']
+        d_saleper = data['SALEPER']
+        d_description = data['DESCRIPTION']
+        d_imgdata = data['IMGDATA']
+        d_gameimg = data['GAMEIMG']
+        d_url = data['URL']
+        
+        # 데이터베이스에 해당 TITLE이 존재하는지 확인
+        query = "SELECT * FROM gamedata_ps WHERE TITLE = %s"
+        cursor.execute(query, (d_title))
+        result = cursor.fetchone()
+
+        if result is None:
+            # 데이터베이스에 존재하지 않으면 INSERT
+            insert_query = "INSERT INTO gamedata_ps (TITLE, PRICE, SALEPRICE, SALEPER, DESCRIPTION, IMGDATA, GAMEIMG, URL) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+            cursor.execute(insert_query, (d_title, d_price, d_saleprice, d_saleper, d_description, d_imgdata, d_gameimg, d_url))
+            conn.commit()
+            print(f"{platform} - INSERT: {d_title}")
+        else:
+            # 데이터베이스에 이미 존재하면 saleprice를 비교하여 업데이트하고 varia 값을 1로 변경
+            existing_price = result[3]  # 결과에서 현재 데이터베이스의 saleprice 가져오기
+            if existing_price != d_saleprice:
+                update_query = "UPDATE gamedata_ps SET PRICE = %s, SALEPRICE = %s, SALEPER = %s, VARIA = 1 WHERE TITLE = %s"
+                cursor.execute(update_query, (d_price, d_saleprice, d_saleper, d_title))
+                conn.commit()
+                print(f"{platform} - UPDATE: {d_title} (할인가 바뀜, Varia Update)")
+            else: # 할인가격이 똑같으면 할인은 계속 진행중이므로 varia 값을 1로 변경
+                update_query = "UPDATE gamedata_ps SET VARIA = 1 WHERE TITLE = %s"
+                cursor.execute(update_query, (d_title))
+                conn.commit()
+                print(f"{platform} - UPDATE: {d_title} (아직 할인중, VARIA Update)")
+
+    #varia값 변경이 전부끝났으면 0은 전부 삭제
+    delete_query = "DELETE FROM gamedata_ps WHERE VARIA = 0"
+    cursor.execute(delete_query)
+    conn.commit()
+
+    #장르는 gamedata에서 title이 지워지면 genre의 title도 다삭제돼서 없으면 insert만 하면됨
+    for data in dictionary_list_genre:
+        g_title = data['TITLE']
+        g_genre = data['GENRE']
+
+        query = "SELECT * FROM gamedata_ps WHERE TITLE = %s"
+        cursor.execute(query, (g_title))
+        result = cursor.fetchone()
+
+        if result is None: # title값이 존재하지않으면 장르는 안넣어도됨
+            continue
+        else: # title값이 존재하면 장르 넣어야함
+            insert_query = "INSERT INTO gamedata_ps_genre (TITLE, GENRE) VALUES (%s, %s)"
+            try:
+                cursor.execute(insert_query, (g_title, g_genre))
+                conn.commit()
+                print(f"{platform} - GENRE INSERT: {g_title}")
+            except:
+                print(f'{platform} - 이미 장르값이 존재하던 타이틀이라 스킵')
+
     newtime = datetime.now()
     newtimestr = newtime.strftime("%Y%m%d_%H%M")
 
     sleep(2)
-    print(platform, " 크롤링 완료 - 시작시간:", timestr, ", 완료시간:", newtimestr)
-    mode2 = 1
+    print(platform, " 크롤링 및 DB 적용 완료 - 시작시간:", timestr, ", 완료시간:", newtimestr)
     driver.quit()
 
-def steam_crawling(driver):
+def steam_crawling(driver, dictionary_list, dictionary_list_genre):
     driver.execute_script("window.scrollTo(0,document.body.scrollHeight)")
     html = driver.page_source
     soup = BeautifulSoup(html, "html.parser")
@@ -526,51 +556,25 @@ def steam_crawling(driver):
         tag_length = len(tag)
         num = 0
 
-        sql = 'INSERT INTO gamedata_steam (title, price, saleprice, saleper, description, imgdata, gameimg, url) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)'
-        cursor.execute(sql, (title, price, saleprice, saleper, description, imgdata, gameimg, move))
+        data = {'TITLE' : title, 'PRICE' : price, 'SALEPRICE' : saleprice, 'SALEPER' : saleper, 'DESCRIPTION' : description, 'IMGDATA' : imgdata, 'GAMEIMG' : gameimg, 'URL' : move}
+        dictionary_list.append(data)
+        print(f'steam - {title}.append')
 
         while num < tag_length:
             tag[num] = tag[num].text.strip()
-            sql = 'INSERT INTO gamedata_steam_genre (title, genre) VALUES (%s, %s)'
-            cursor.execute(sql, (title, tag[num]))
+            data_genre = {'TITLE' : title, 'GENRE' : tag[num]}
+            dictionary_list_genre.append(data_genre)
             num += 1
-
-        conn.commit()
-        print(f'steam - {title} DB 입력 완료')
 
         #탭 종료후 원래 탭(베스트게임 페이지)으로 이동
         driver.close()
         driver.switch_to.window(driver.window_handles[-1])
 
-
 def steam_start():
+    dictionary_list = []
+    dictionary_list_genre = []
     platform = 'steam'
     url = 'https://store.steampowered.com/specials/'
-    cursor.execute("DROP TABLE IF EXISTS gamedata_steam_genre")
-    cursor.execute("DROP TABLE IF EXISTS gamedata_steam")
-    cursor.execute('''CREATE TABLE IF NOT EXISTS gamedata_steam (`NUM` INT NOT NULL AUTO_INCREMENT,
-                                                                `TITLE` VARCHAR(100) NULL DEFAULT NULL,
-                                                                `PRICE` VARCHAR(15) NULL DEFAULT NULL,
-                                                                `SALEPRICE` VARCHAR(15) NULL DEFAULT NULL,
-                                                                `SALEPER` VARCHAR(5) NULL DEFAULT NULL,
-                                                                `DESCRIPTION` TEXT NULL DEFAULT NULL,
-                                                                `IMGDATA` TEXT NULL DEFAULT NULL,
-                                                                `GAMEIMG` TEXT NULL DEFAULT NULL,
-                                                                `URL` TEXT NULL DEFAULT NULL,
-                                                                `VARIA` TINYINT(1) NOT NULL DEFAULT 1,
-                                                                PRIMARY KEY (`NUM`),
-                                                                UNIQUE KEY (`TITLE`))
-                ''')
-    cursor.execute('''CREATE TABLE IF NOT EXISTS gamedata_steam_genre (`NUM` INT NOT NULL AUTO_INCREMENT,
-                                                                    `TITLE` VARCHAR(100) NULL DEFAULT NULL,
-                                                                    `genre` VARCHAR(30) NULL DEFAULT NULL,
-                                                                    PRIMARY KEY (`NUM`),
-                                                                    CONSTRAINT `steam_title`
-                                                                        FOREIGN KEY (`TITLE`)
-                                                                        REFERENCES `gamedata_steam` (`TITLE`)
-                                                                        ON DELETE CASCADE
-                                                                        ON UPDATE CASCADE)
-                ''')
 
     btn_num = 1
     btn_check = 1
@@ -600,25 +604,89 @@ def steam_start():
                         btn_check += 1
                     else: #'더 보기' 버튼이 존재하지않으면 break로 반복문 빠져나옴
                         print("버튼 전부 클릭 완료 - ", btn_check, "번 실행")
-                        steam_crawling(driver)
+                        steam_crawling(driver, dictionary_list, dictionary_list_genre)
                         mode = 1
                         break
                 else:
-                    steam_crawling(driver)
+                    steam_crawling(driver, dictionary_list, dictionary_list_genre)
                     action.move_to_element(button).click().perform()
                     sleep(1.5)
                     url = driver.current_url
                     btn_num = 1
                     break
+
         elif mode == 1:
+            update_query = "UPDATE gamedata_steam SET VARIA = 0"
+            cursor.execute(update_query)
+            conn.commit()
+
+            for data in dictionary_list:
+                d_title = data['TITLE']
+                d_price = data['PRICE']
+                d_saleprice = data['SALEPRICE']
+                d_saleper = data['SALEPER']
+                d_description = data['DESCRIPTION']
+                d_imgdata = data['IMGDATA']
+                d_gameimg = data['GAMEIMG']
+                d_url = data['URL']
+                
+                # 데이터베이스에 해당 TITLE이 존재하는지 확인
+                query = "SELECT * FROM gamedata_steam WHERE TITLE = %s"
+                cursor.execute(query, (d_title))
+                result = cursor.fetchone()
+
+                if result is None:
+                    # 데이터베이스에 존재하지 않으면 INSERT
+                    insert_query = "INSERT INTO gamedata_steam (TITLE, PRICE, SALEPRICE, SALEPER, DESCRIPTION, IMGDATA, GAMEIMG, URL) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+                    cursor.execute(insert_query, (d_title, d_price, d_saleprice, d_saleper, d_description, d_imgdata, d_gameimg, d_url))
+                    conn.commit()
+                    print(f"{platform} - INSERT: {d_title}")
+                else:
+                    # 데이터베이스에 이미 존재하면 saleprice를 비교하여 업데이트하고 varia 값을 1로 변경
+                    existing_price = result[3]  # 결과에서 현재 데이터베이스의 saleprice 가져오기
+                    if existing_price != d_saleprice:
+                        update_query = "UPDATE gamedata_steam SET PRICE = %s, SALEPRICE = %s, SALEPER = %s, VARIA = 1 WHERE TITLE = %s"
+                        cursor.execute(update_query, (d_price, d_saleprice, d_saleper, d_title))
+                        conn.commit()
+                        print(f"{platform} - UPDATE: {d_title} (할인가 바뀜, Varia Update)")
+                    else: # 할인가격이 똑같으면 할인은 계속 진행중이므로 varia 값을 1로 변경
+                        update_query = "UPDATE gamedata_steam SET VARIA = 1 WHERE TITLE = %s"
+                        cursor.execute(update_query, (d_title))
+                        conn.commit()
+                        print(f"{platform} - UPDATE: {d_title} (아직 할인중, VARIA Update)")
+
+            #varia값 변경이 전부끝났으면 0은 전부 삭제
+            delete_query = "DELETE FROM gamedata_steam WHERE VARIA = 0"
+            cursor.execute(delete_query)
+            conn.commit()
+
+            #장르는 gamedata에서 title이 지워지면 genre의 title도 다삭제돼서 없으면 insert만 하면됨
+            for data in dictionary_list_genre:
+                g_title = data['TITLE']
+                g_genre = data['GENRE']
+
+                query = "SELECT * FROM gamedata_steam WHERE TITLE = %s"
+                cursor.execute(query, (g_title))
+                result = cursor.fetchone()
+
+                if result is None: # title값이 존재하지않으면 장르는 안넣어도됨
+                    continue
+                else: # title값이 존재하면 장르 넣어야함
+                    insert_query = "INSERT INTO gamedata_steam_genre (TITLE, GENRE) VALUES (%s, %s)"
+                    try:
+                        cursor.execute(insert_query, (g_title, g_genre))
+                        conn.commit()
+                        print(f"{platform} - GENRE INSERT: {g_title}")
+                    except:
+                        print(f'{platform} - 이미 장르값이 존재하던 타이틀이라 스킵')
+
             newtime = datetime.now()
             newtimestr = newtime.strftime("%Y%m%d_%H%M")
             sleep(2)
-            print(platform, " 크롤링 완료 - 시작시간:", timestr, ", 완료시간:", newtimestr)
+            print(platform, " 크롤링 및 DB 적용 완료 - 시작시간:", timestr, ", 완료시간:", newtimestr)
             break
         driver.quit()
     driver.quit()
-    mode3 = 1
 
 def steam_language_change(driver, soup):
     #정보를 한글로 크롤링하기위해 페이지 언어 변경
@@ -632,33 +700,9 @@ def epic_crawling():
     platform = "epicgames"
     URL = 'https://store.epicgames.com/ko/browse'
     epicgames = 'https://store.epicgames.com'
-    cursor.execute("DROP TABLE IF EXISTS gamedata_epic_genre")
-    cursor.execute("DROP TABLE IF EXISTS gamedata_epic")
-    #rank에 AUTO_INCREMENT를 사용함으로써 INSERT가 입력될때마다 자동으로 숫자를 +1 올린다
-    cursor.execute('''CREATE TABLE IF NOT EXISTS gamedata_epic (`NUM` INT NOT NULL AUTO_INCREMENT,
-                                                                `TITLE` VARCHAR(100) NULL DEFAULT NULL,
-                                                                `PRICE` VARCHAR(15) NULL DEFAULT NULL,
-                                                                `SALEPRICE` VARCHAR(15) NULL DEFAULT NULL,
-                                                                `SALEPER` VARCHAR(5) NULL DEFAULT NULL,
-                                                                `DESCRIPTION` TEXT NULL DEFAULT NULL,
-                                                                `IMGDATA` TEXT NULL DEFAULT NULL,
-                                                                `GAMEIMG` TEXT NULL DEFAULT NULL,
-                                                                `URL` TEXT NULL DEFAULT NULL,
-                                                                `VARIA` TINYINT(1) NOT NULL DEFAULT 1,
-                                                                PRIMARY KEY (`NUM`),
-                                                                UNIQUE KEY (`TITLE`))
-                ''')
+    dictionary_list = []
+    dictionary_list_genre = []
 
-    cursor.execute('''CREATE TABLE IF NOT EXISTS gamedata_epic_genre (`NUM` INT NOT NULL AUTO_INCREMENT,
-                                                                `TITLE` VARCHAR(100) NULL DEFAULT NULL,
-                                                                `GENRE` VARCHAR(30) NULL DEFAULT NULL,
-                                                                PRIMARY KEY (`NUM`),
-                                                                CONSTRAINT `epic_title`
-                                                                    FOREIGN KEY (`TITLE`)
-                                                                    REFERENCES `gamedata_epic` (`TITLE`)
-                                                                    ON DELETE CASCADE
-                                                                    ON UPDATE CASCADE)
-                ''')
     driver = Driver_Start(platform, URL)
     soup = BeautifulSoup(driver.page_source, "html.parser")
     sleep(3)
@@ -698,7 +742,7 @@ def epic_crawling():
 
             game_link = item.select_one('a.css-g3jcms')["href"]
             move = epicgames+game_link
-            print(f'{title}로 이동')
+            print(f'{platform} - {title}로 이동')
 
             driver = Driver_Start(platform, move)
             sleep(3)
@@ -708,46 +752,43 @@ def epic_crawling():
                 driver.quit()
                 continue
 
-            try:
-                descript = new_soup.select_one("div.css-1myreog")
-                description = ""
-                if descript != None:
-                    descript = descript.text.strip()
-                    for char in descript:
-                        if char.isalnum() or char.isspace():
-                            description += char
-            except:
-                print("게임 설명 크롤링 오류 NULL로 대체")
+            descript = new_soup.select_one("div.css-1myreog")
+            description = ""
+            if descript != None:
+                descript = descript.text.strip()
+                for char in descript:
+                    if char.isalnum() or char.isspace():
+                        description += char
 
-            try:
-                imgdata = new_soup.select_one('img.css-7i770w')["src"]
-            except:
-                pass
-            
-            try:
-                gameimg_bar = new_soup.select_one('ul.css-elmzlf')
-                if gameimg_bar != None:
-                    gameimg = gameimg_bar.select_one('div.css-1q03292 > img')["src"]
-                else:
-                    gameimg = new_soup.select_one('img.css-1bbjmcj')["src"]
-            except:
-                pass
+            img = new_soup.select_one('img.css-7i770w')
+            if img != None:
+                imgdata = img["src"]
+
+            gameimg_bar = new_soup.select_one('ul.css-elmzlf')
+            if gameimg_bar != None:
+                gameimg = gameimg_bar.select_one('div.css-1q03292')
+                gameimg = gameimg.select_one('img')
+                if gameimg != None:
+                    gameimg = gameimg["src"]
+            else:
+                gameimg = new_soup.select_one('img.css-1bbjmcj')
+                if gameimg != None:
+                    gameimg = gameimg["src"]
+
+            data = {'TITLE' : title, 'PRICE' : price, 'SALEPRICE' : saleprice, 'SALEPER' : saleper, 'DESCRIPTION' : description, 'IMGDATA' : imgdata, 'GAMEIMG' : gameimg, 'URL' : move}
+            dictionary_list.append(data)
+            print(f'{platform} = {title}.append')
 
             tag = new_soup.select("li.css-t8k7")
             tag_length = len(tag)
             num = 0
 
-            sql = 'INSERT INTO gamedata_epic (TITLE, PRICE, SALEPRICE, SALEPER, DESCRIPTION, IMGDATA, GAMEIMG, URL) VALUES (%s, %s, %s, %s, %s, %s, %s ,%s)'
-            cursor.execute(sql, (title, price, saleprice, saleper, description, imgdata, gameimg, move))
-
             while num < tag_length:
                 tag[num] = tag[num].text.strip()
-                sql = 'INSERT INTO gamedata_epic_genre (TITLE, GENRE) VALUES (%s, %s)'
-                cursor.execute(sql, (title, tag[num]))
+                data_genre = {'TITLE' : title, 'GENRE' : tag[num]}
+                dictionary_list_genre.append(data_genre)
                 num += 1
 
-            conn.commit()
-            print(f'epic - {title} DB 입력 완료')
             driver.quit()
 
             #현재 페이지가 마지막 페이지면 last_game_title에 지금 크롤링중인 게임 타이틀 집어넣기
@@ -772,14 +813,179 @@ def epic_crawling():
                 sleep(5)
                 break
 
+    update_query = "UPDATE gamedata_epic SET VARIA = 0"
+    cursor.execute(update_query)
+    conn.commit()
+
+    for data in dictionary_list:
+        d_title = data['TITLE']
+        d_price = data['PRICE']
+        d_saleprice = data['SALEPRICE']
+        d_saleper = data['SALEPER']
+        d_description = data['DESCRIPTION']
+        d_imgdata = data['IMGDATA']
+        d_gameimg = data['GAMEIMG']
+        d_url = data['URL']
+        
+        # 데이터베이스에 해당 TITLE이 존재하는지 확인
+        query = "SELECT * FROM gamedata_epic WHERE TITLE = %s"
+        cursor.execute(query, (d_title))
+        result = cursor.fetchone()
+
+        if result is None:
+            # 데이터베이스에 존재하지 않으면 INSERT
+            insert_query = "INSERT INTO gamedata_epic (TITLE, PRICE, SALEPRICE, SALEPER, DESCRIPTION, IMGDATA, GAMEIMG, URL) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+            cursor.execute(insert_query, (d_title, d_price, d_saleprice, d_saleper, d_description, d_imgdata, d_gameimg, d_url))
+            conn.commit()
+            print(f"{platform} - INSERT: {d_title}")
+        else:
+            # 데이터베이스에 이미 존재하면 saleprice를 비교하여 업데이트하고 varia 값을 1로 변경
+            existing_price = result[3]  # 결과에서 현재 데이터베이스의 saleprice 가져오기
+            if existing_price != d_saleprice:
+                update_query = "UPDATE gamedata_epic SET PRICE = %s, SALEPRICE = %s, SALEPER = %s, VARIA = 1 WHERE TITLE = %s"
+                cursor.execute(update_query, (d_price, d_saleprice, d_saleper, d_title))
+                conn.commit()
+                print(f"{platform} - UPDATE: {d_title} (할인가 바뀜, Varia Update)")
+            else: # 할인가격이 똑같으면 할인은 계속 진행중이므로 varia 값을 1로 변경
+                update_query = "UPDATE gamedata_epic SET VARIA = 1 WHERE TITLE = %s"
+                cursor.execute(update_query, (d_title))
+                conn.commit()
+                print(f"{platform} - UPDATE: {d_title} (아직 할인중, VARIA Update)")
+
+    #varia값 변경이 전부끝났으면 0은 전부 삭제
+    delete_query = "DELETE FROM gamedata_epic WHERE VARIA = 0"
+    cursor.execute(delete_query)
+    conn.commit()
+
+    #장르는 gamedata에서 title이 지워지면 genre의 title도 다삭제돼서 없으면 insert만 하면됨
+    for data in dictionary_list_genre:
+        g_title = data['TITLE']
+        g_genre = data['GENRE']
+
+        query = "SELECT * FROM gamedata_epic WHERE TITLE = %s"
+        cursor.execute(query, (g_title))
+        result = cursor.fetchone()
+
+        if result is None: # title값이 존재하지않으면 장르는 안넣어도됨
+            continue
+        else: # title값이 존재하면 장르 넣어야함
+            insert_query = "INSERT INTO gamedata_epic_genre (TITLE, GENRE) VALUES (%s, %s)"
+            try:
+                cursor.execute(insert_query, (g_title, g_genre))
+                conn.commit()
+                print(f"{platform} - GENRE INSERT: {g_title}")
+            except:
+                print(f'{platform} - 이미 장르값이 존재하던 타이틀이라 스킵')
+
     newtime = datetime.now()
     newtimestr = newtime.strftime("%Y%m%d_%H%M")
-    sleep(2)
-    print(platform, " 크롤링 완료 - 시작시간:", timestr, ", 완료시간:", newtimestr)
 
-    print("크롤링 끝 driver 종료")
+    sleep(2)
+    print(platform, " 크롤링 및 DB 적용 완료 - 시작시간:", timestr, ", 완료시간:", newtimestr)
     driver.quit()
-    mode4 = 1
+
+def danawa_crawling():
+    URL = 'https://prod.danawa.com/game/index.php'
+    platform = 'danawa'
+
+    driver = Driver_Start(platform, URL)
+    action = ActionChains(driver)
+
+    before_date = ""
+    dictionary_list = []
+
+    for _ in range(100000000):
+        soup = BeautifulSoup(driver.page_source, "html.parser")
+        gamelist = soup.select_one('div.upc_tbl_wrap').select('tr')
+
+        for list in gamelist:
+            date = list.select_one('td.date')
+            if date != None:
+                date = date.text.strip()
+                date = date.replace('.', '-')
+                date = re.sub(r'\(.\)', '', date)
+
+            if date == "":
+                date = before_date
+
+            platform = list.select_one('td.type')
+
+            if platform != None:
+                platform = platform.text.strip()
+                if "XBOX" in platform:
+                    continue
+
+            title = list.select_one('a.tit_link')
+            if title != None:
+                if date == None:
+                    date = before_date
+                title = title.text.strip()
+
+            price = list.select_one('em.num')
+
+            if price == None:
+                price = list.select_one('span.p_txt')
+
+            if price != None:
+                price = price.text.strip()
+            
+            before_date = date
+            if date != None and platform != None and title != None and price != None:
+                data = {'DATE' : date, 'TITLE' : title, 'PLATFORM' : platform, 'PRICE' : price}
+                dictionary_list.append(data)
+
+        next_page_btn = driver.find_element(By.XPATH, '//*[@id="#nav_edge_next"]')
+        action.click(next_page_btn).perform()
+
+        sleep(3)
+
+        new_soup = BeautifulSoup(driver.page_source, "html.parser")
+        x = new_soup.select_one('p.n_txt')
+        if x != None:
+            break
+
+    update_query = "UPDATE release_info SET VARIA = 0"
+    cursor.execute(update_query)
+    conn.commit()
+
+    for data in dictionary_list:
+        date = data['DATE']
+        title = data['TITLE']
+        platform = data['PLATFORM']
+        price = data['PRICE']
+        # 데이터베이스에 해당 TITLE이 존재하는지 확인
+        query = "SELECT * FROM release_info WHERE TITLE = %s AND platform = %s"
+        cursor.execute(query, (title, platform))
+        result = cursor.fetchone()
+
+        if result is None:
+            # 데이터베이스에 존재하지 않으면 INSERT
+            insert_query = "INSERT INTO release_info (DATE, TITLE, PLATFORM, PRICE) VALUES (%s, %s, %s, %s)"
+            cursor.execute(insert_query, (date, title, platform, price))
+            conn.commit()
+            print(f"INSERT: {title}")
+        else:
+            # 데이터베이스에 이미 존재하면 price를 비교하여 업데이트하고 varia 값을 1로 변경
+            existing_price = result[3]  # 결과에서 현재 데이터베이스의 price 가져오기
+            if existing_price != price:
+                update_query = "UPDATE release_info SET PRICE = %s, VARIA = 1 WHERE TITLE = %s AND PLATFORM = %s"
+                cursor.execute(update_query, (price, title, platform))
+                conn.commit()
+                print(f"UPDATE: {title} (Price || Varia Updated)")
+            else:
+                update_query = "UPDATE release_info SET VARIA = 1 WHERE TITLE = %s AND PLATFORM = %s"
+                cursor.execute(update_query, (title, platform))
+                conn.commit()
+                print(f"UPDATE: {title} (Price Not Changed, VARIA UPDATE)")
+
+    #varia값 변경이 전부끝났으면 0은 전부 삭제
+    delete_query = "DELETE FROM release_info WHERE VARIA = 0"
+    cursor.execute(delete_query)
+    conn.commit()
+
+    sleep(2)
+    print(f"{platform} 크롤링 완료")
+    driver.quit()
 
 if __name__ == "__main__":
     services = Service(executable_path=ChromeDriverManager().install())
@@ -795,32 +1001,19 @@ if __name__ == "__main__":
     process2 = multiprocessing.Process(target=ps_crawling)
     process3 = multiprocessing.Process(target=steam_start)
     process4 = multiprocessing.Process(target=epic_crawling)
+    process5 = multiprocessing.Process(target=danawa_crawling)
 
-    """
     try:
         process1.start()
     except:
         print("process1 시작 오류")
 
     sleep(3)
-        """
     try:
         process2.start()
     except:
         print("process2 시작 오류")
-    """
-    sleep(3)
-    try:
-        process3.start()
-    except:
-        print("process3 시작 오류")
 
-    sleep(3)
-    try:
-        process4.start()
-    except:
-        print("process4 시작 오류")
-    """
     # 프로세스 종료 대기
     try:
         process1.join()
@@ -830,6 +1023,24 @@ if __name__ == "__main__":
         process2.join()
     except:
         pass    
+
+    sleep(3)
+    try:
+        process3.start()
+    except:
+        print("process3 시작 오류")
+    sleep(3)
+    try:
+        process4.start()
+    except:
+        print("process4 시작 오류")
+
+    sleep(3)
+    try:
+        process5.start()
+    except:
+        print("process5 시작 오류")
+
     try:
         process3.join()
     except:
@@ -838,5 +1049,17 @@ if __name__ == "__main__":
         process4.join()
     except:
         pass
+    try:
+        process5.join()
+    except:
+        pass
+
+    nowtime = datetime.now()
+    formattime = nowtime.strftime("%Y-%m-%d %H:%M:%S")
+
+    sql = 'INSERT INTO crawling_time (ENDTIME) VALUES (%s)'
+    cursor.execute(sql, (formattime, ))
+    conn.commit()
+
     conn.close()
     quit()
