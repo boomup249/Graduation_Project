@@ -88,7 +88,7 @@ public class BBSController {
 			model.addAttribute("userDTO", userdb);
 			model.addAttribute("postDTO", new PostDB());
 			System.out.println(userdb.getID());
-			return "board/bbs_write";
+			return "/board/bbs_write";
 		}
 		model.addAttribute("bbsDB", bbsDB);
 		model.addAttribute("postDB", postDB);
@@ -124,11 +124,11 @@ public class BBSController {
 		postService.create(postDTO.getId(), postDTO.getCategory(), postDTO.getTitle(), postDTO.getWriter(), postDTO.getContent(), postDTO.getComment());
 		bbsService.create(bbsDTO.getId(), bbsDTO.getTitle(), bbsDTO.getWriter(), bbsDTO.getCategory(), bbsDTO.getDate(), bbsDTO.getViews(), bbsDTO.getComment());
 		model.addAttribute("bbsDTO", bbsDTO);
-		return "/post/list";
+		return "post/list";
 	}
 	@GetMapping("post_cancel")
 	public String cancel() {
-		return "/post/list";
+		return "post/list";
 	}
 	
 	@GetMapping("/article/{id}")
