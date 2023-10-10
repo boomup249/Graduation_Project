@@ -264,15 +264,16 @@
 									<div class="price_info">
 										
 										<!-- 변동 있을 시 바꾸기 -->
-										<!-- 10.03기준  = '구매할 수 없음' -->
+										<!-- 10.03기준  = '구매할 수 없음' --><!-- 1011기준 원가 탭 -->
+										<!-- 10.11기준  = 'X' -->
 										<!-- 할인 x --><!-- 크롤링시 할인율이 없을 때 price에 값이 있는지, sale price에 값이 있는지에 따라 고치기 -->
-										<div th:if="${game.SALEPER.equals('구매할 수 없음') || game.SALEPER == null}" 
-										id="no_dc" th:text="${game.SALEPRICE}">
+										<div th:if="${game.SALEPER.equals('X') || game.SALEPER == null}" 
+										id="no_dc" th:text="${game.PRICE}">
 												정가
 										</div>
 										
 										<!-- 할인 o -->
-										<div th:if="${!(game.SALEPER.equals('구매할 수 없음') || game.SALEPER == null)}"
+										<div th:if="${!(game.SALEPER.equals('X') || game.SALEPER == null)}"
 										id="dc">
 												<div class="dc_rate" th:text="${game.SALEPER}">할인율</div>
 												<div class="prices">
