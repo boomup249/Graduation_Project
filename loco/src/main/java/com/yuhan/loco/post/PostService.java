@@ -38,5 +38,4 @@ public class PostService {
    public PostDB getByID(Long id) {
        return Postrepository.findById(id);
    }
-   
 }

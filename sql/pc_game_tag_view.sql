@@ -8,7 +8,7 @@ CREATE VIEW `member`.`pc_game_tag` AS
     UNION
     SELECT
 		((SELECT 
-                MAX(`member`.`gamedata_steam_genre`.`NUM`)
+                IFNULL(MAX(`member`.`gamedata_steam_genre`.`NUM`), 0)
             FROM
                 `member`.`gamedata_steam_genre`) + `member`.`gamedata_epic_genre`.`NUM`) AS `NUM`,
         `TITLE` AS `TITLE`,

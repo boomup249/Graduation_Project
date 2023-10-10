@@ -291,7 +291,6 @@
 			
 			#tags_info 
 			{
-				font-family: 'HSBombaram21-Regular';
 				font-size: 30px;
 				color: #fff;			
 				background-color: #252b33; /*배경색에 하얀색 1프로 추가*/				
@@ -305,6 +304,7 @@
 			
 			#tg_lbl 
 			{
+				font-family: 'HSBombaram21-Regular';
 				padding: 10px 0 10px 0;
 				margin-left: 25px;
 				margin-top: 10px;
@@ -325,12 +325,12 @@
 			
 			#hashtag 
 			{
-				display: flex;
-				float: left;
+				font-family: 'GangwonEdu_OTFBoldA';
+				
+				display: inline-block;
 				padding: 10px 25px 10px 25px;
 			}
 			
-			#hash { margin-right: 10px; }
 			
 			#show_more_button 
 			{
@@ -402,8 +402,8 @@
 					<div class="mypage"></div>
 					<!-- 드롭다운 -->
 					<ul class="dropdown">
-						<li><a href="#">내 계정</a></li>
-						<li><a href="#">프로필 설정</a></li>
+						<li><a href="/mypage">내 계정</a></li>
+						<li><a href="/profile">프로필 설정</a></li>
 						<li><a href="/logout">로그아웃</a></li>
 					</ul>
 				</li>
@@ -529,7 +529,7 @@
 						<!-- 저작권 -->
 					</div>
 					
-					<<a id="goto_btn" th:href="@{${pcGameDTO.URL}}">
+					<a id="goto_btn" th:href="@{${pcGameDTO.URL}}">
 						<img src="/imgs/btn/goto.png" />
 					</a>
 					
@@ -583,7 +583,7 @@
 		</div>
 		
 		
-		<div class="footer_box">
+		<div class="footer_box" th:if="${gameService.getPcTags(pcGameDTO.TITLE).size() != 0}">
 			
 			<div id="tags_info">
 			
@@ -591,149 +591,9 @@
 					TAGS:
 				</div>
 				
-				<div class="tags tags_hidden">
+				<div class="tags tags_hidden" th:each="tags : ${gameService.getPcTags(pcGameDTO.TITLE)}">
 					
-					<div id="hashtag">
-						
-						<div id="hash">#</div>
-						<div id="tag">111</div>
-						
-					</div>
-					
-				</div>
-				
-				<!-- js 동작 확인용 코드 -->
-				
-				
-				<div class="tags tags_hidden">
-					
-					<div id="hashtag">
-						
-						<div id="hash">#</div>
-						<div id="tag">111</div>
-						
-					</div>
-					
-				</div>
-				
-				<div class="tags tags_hidden">
-					
-					<div id="hashtag">
-						
-						<div id="hash">#</div>
-						<div id="tag">111</div>
-						
-					</div>
-					
-				</div>
-				
-				<div class="tags tags_hidden">
-					
-					<div id="hashtag">
-						
-						<div id="hash">#</div>
-						<div id="tag">111</div>
-						
-					</div>
-					
-				</div>
-				
-				<div class="tags tags_hidden">
-					
-					<div id="hashtag">
-						
-						<div id="hash">#</div>
-						<div id="tag">111</div>
-						
-					</div>
-					
-				</div>
-				
-				<div class="tags tags_hidden">
-					
-					<div id="hashtag">
-						
-						<div id="hash">#</div>
-						<div id="tag">111</div>
-						
-					</div>
-					
-				</div>
-				
-				<div class="tags tags_hidden">
-					
-					<div id="hashtag">
-						
-						<div id="hash">#</div>
-						<div id="tag">111</div>
-						
-					</div>
-					
-				</div>
-				
-				<div class="tags tags_hidden">
-					
-					<div id="hashtag">
-						
-						<div id="hash">#</div>
-						<div id="tag">111</div>
-						
-					</div>
-					
-				</div>
-				
-				<div class="tags tags_hidden">
-					
-					<div id="hashtag">
-						
-						<div id="hash">#</div>
-						<div id="tag">111</div>
-						
-					</div>
-					
-				</div>
-				
-				<div class="tags tags_hidden">
-					
-					<div id="hashtag">
-						
-						<div id="hash">#</div>
-						<div id="tag">111</div>
-						
-					</div>
-					
-				</div>
-				
-				<div class="tags tags_hidden">
-					
-					<div id="hashtag">
-						
-						<div id="hash">#</div>
-						<div id="tag">111</div>
-						
-					</div>
-					
-				</div>
-				
-				<div class="tags tags_hidden">
-					
-					<div id="hashtag">
-						
-						<div id="hash">#</div>
-						<div id="tag">111</div>
-						
-					</div>
-					
-				</div>
-				
-				<div class="tags tags_hidden">
-					
-					<div id="hashtag">
-						
-						<div id="hash">#</div>
-						<div id="tag">111</div>
-						
-					</div>
+					<div id="hashtag" th:text="'# ' + ${tags}"></div>
 					
 				</div>
 				
@@ -742,7 +602,7 @@
 				
 				
 				
-				<button id="show_more_button" onclick="showMoreTags()">+</button>
+				<button id="show_more_button" onclick="showMoreTags()" th:if="${gameService.getPcTags(pcGameDTO.TITLE).size() > 5}">+</button>
 				<!-- tags_info end -->
 			</div>
 			<!-- footer_box end -->

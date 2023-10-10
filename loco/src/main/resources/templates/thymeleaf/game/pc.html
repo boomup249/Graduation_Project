@@ -11,6 +11,7 @@
 		
 		<!-- 외부 js -->
 		<script src="js/longTitle.js"></script>
+		<script src="js/longGenre.js"></script>
 		
 		<style>	
 			/*css 속성*/
@@ -43,11 +44,18 @@
 				font-size: 20px;
 				color: #19D3DA;
 				
+				min-width: 500px;
+				
 				margin-left: 20px;
 			}
 			
 			#filtering {
 				margin-right: 20px;
+				min-width: 450px;
+				
+				/*자식 오른쪽 정렬*/
+				display: flex;
+				justify-content: flex-end;
 			}
 			
 			#filtering select {
@@ -57,6 +65,35 @@
 				font-size: 15px;
 				
 				margin-left: 10px;
+			}
+			
+			/**/
+			.no_page {
+				/*자식 위치 잡기*/
+				display: flex;
+				justify-content: center;
+				align-items: center;
+			}
+			
+			.no_game{
+				font-family: 'GmarketSansMedium';
+				font-size: 35px;
+				
+				color: #fff;
+				
+				margin-top: 20px;
+				margin-bottom: 15px;
+			}
+			
+			.re_search {
+				font-family: 'GmarketSansMedium';
+				font-size: 20px;
+				
+				color: lightgrey;
+				
+				/*자식 위치 잡기*/
+				display: flex;
+				justify-content: center;
 			}
 			
 					
@@ -127,7 +164,7 @@
 			<div class="denote">
 				
 				<!-- 업데이트 일시 -->
-				<div class="update_time">마지막 업데이트: yyyy-mm-dd hh:mm:ss</div>
+				<div class="update_time" th:text="'마지막 업데이트: ' + ${cTime}">마지막 업데이트: yyyy-mm-dd hh:mm:ss</div>
 				
 				<!-- 필터링 -->
 				<div id="filtering">
@@ -141,7 +178,7 @@
 					
 									
 					<!-- 카테고리 -->
-					<select id="category_filter">
+					<select id="category_filter" th:if="${!(orderbyF == 'pick')}"> <!-- 정렬이 추천순이면 카테고리 선택 x -->
 						<option value="0" th:selected="${categoryF == '0'}" disabled hidden>-- 카테고리 --</option>
 						<option value="all" th:selected="${categoryF == 'all'}">전체</option>
 						<option value="action" th:selected="${categoryF == 'action'}">액션</option>
@@ -149,23 +186,23 @@
 						<option value="adventure" th:selected="${categoryF == 'adventure'}">어드벤처</option>
 						<option value="fighting" th:selected="${categoryF == 'fighting'}">격투</option>
 						<option value="roguelike" th:selected="${categoryF == 'roguelike'}">로그라이크</option>
-						<option value="rpg" th:selected="${categoryF == 'rpg'}">RPG</option>
+						<option value="RPG" th:selected="${categoryF == 'RPG'}">RPG</option>
 						<option value="mmorpg" th:selected="${categoryF == 'mmorpg'}">MMORPG</option>
 						<option value="simulation" th:selected="${categoryF == 'simulation'}">시뮬레이션</option>
 						<option value="sports" th:selected="${categoryF == 'sports'}">스포츠</option>
 						<option value="puzzle" th:selected="${categoryF == 'puzzle'}">퍼즐</option>
 						<option value="arcade" th:selected="${categoryF == 'arcade'}">아케이드</option>
-						<option value="strategy" th:selected="${categoryF == 'strategy'}">전략</option>
+						<option value="strat" th:selected="${categoryF == 'strat'}">전략</option>
 						<option value="horror" th:selected="${categoryF == 'horror'}">공포</option>
-						<option value="multiplayer" th:selected="${categoryF == 'multiplayer'}">멀티플레이어</option>
-						<option value="singleplayer" th:selected="${categoryF == 'singleplayer'}">싱글플레이어</option>
+						<option value="multi" th:selected="${categoryF == 'multi'}">멀티플레이어</option>
+						<option value="single" th:selected="${categoryF == 'single'}">싱글플레이어</option>
 					</select>
 					
 					<!-- 정렬 -->
 					<select id="order_filter">
 						<option value="popular" th:selected="${orderbyF == 'popular'}">인기순</option>
 						<option value="sale" th:selected="${orderbyF == 'sale'}">할인순</option>
-						<option value="pick" th:selected="${orderbyF == 'pick'}">추천순</option>
+						<option value="pick" th:selected="${orderbyF == 'pick'}" th:if="${session.user != null}">추천순</option>
 					</select>
 					
 				</div>
@@ -176,9 +213,27 @@
 			
 			<!-- denote end -->
 			
+			<!-- 페이지에 데이터가 없을때 -->
+			<div class="no_page" th:if="${gamePage.totalElements == 0}">
+				
+				<div class="msg_page">
+					
+					<div class="no_game">
+						해당하는 게임이 없습니다.
+					</div>
+					
+					<div class="re_search">
+						검색 조건을 다시 설정해주세요.
+					</div>
+					
+				</div>
+				
+				
+			</div>
+			
 			
 			<!-- 테이블 -->
-			<table>
+			<table th:if="${gamePage.totalElements != 0}">
 				<tr th:each="game : ${gamePage.content}">
 					<td>
 						<!-- 게임 누르면 링크연결  -->
@@ -192,7 +247,8 @@
 									
 									<div id="text_tb">
 										<div class="title_tb" th:text="${game.TITLE}" data-original-text="" >게임 타이틀</div>
-										<div class="genre_tb">게임 장르</div>
+										<div class="genre_tb" data-original-text=""
+										th:text="${gameService.getGenreToString(game.TITLE)}">게임 장르</div>
 									</div>
 									
 								</div>
@@ -240,7 +296,8 @@
 									
 									<div id="text_tb">
 										<div class="title_tb" th:text="${game.TITLE}" data-original-text="">게임 타이틀</div>
-										<div class="genre_tb">게임 장르</div>
+										<div class="genre_tb" data-original-text=""
+										th:text="${gameService.getGenreToString(game.TITLE)}">게임 장르</div>
 									</div>
 									
 								</div>
@@ -292,7 +349,8 @@
 										
 										<div id="text_tb">
 											<div class="title_tb" th:text="${game.TITLE}" data-original-text="">게임 타이틀</div>
-											<div class="genre_tb">게임 장르</div>
+											<div class="genre_tb" data-original-text=""
+											th:text="${gameService.getGenreToString(game.TITLE)}">게임 장르</div>
 										</div>
 										
 									</div>
@@ -342,7 +400,8 @@
 										
 										<div id="text_tb">
 											<div class="title_tb" th:text="${game.TITLE}" data-original-text="">게임 타이틀</div>
-											<div class="genre_tb">게임 장르</div>
+											<div class="genre_tb" data-original-text=""
+											th:text="${gameService.getGenreToString(game.TITLE)}">게임 장르</div>
 										</div>
 										
 									</div>
@@ -393,24 +452,25 @@
 			
 			
 			<!-- 페이징 -->
-			<div id="pagination">
-			    <ul>
+			<div id="pagination" th:if="${gamePage.totalElements != 0}">
+				
+				<ul>
 					
-			        <li th:if="${currentPage > 1}" class="fir_btn">
-			            <a href="#" onclick="changePage(1)">
-			                <<
-			            </a>
+					<li th:if="${currentPage > 1}" class="fir_btn">
+			            <a th:href="@{/pc(page=1, site=${siteF}, category=${categoryF}, orderby=${orderbyF})}">
+			            	<<
+			           	</a>
 			        </li>
-			        
+					
 			        <li th:if="${startPage >= 10}" class="pv_btn">
-			            <a href="#" th:onclick="'changePage(\'' + ${startPage - 1} + '\');'"
-			               th:classappend="${startPage > 1} ? '' : 'disabled'">
-			                이전
-			            </a>
+			            <a th:href="@{/pc(page=${startPage - 1}, site=${siteF}, category=${categoryF}, orderby=${orderbyF})}"
+			            th:classappend="${startPage > 1} ? '' : 'disabled'">
+			            	이전
+			           	</a>
 			        </li>
 			        
 			        <li th:each="pageNum : ${#numbers.sequence(startPage, endPage)}" class="page_btn">
-			            <a href="#" th:onclick="'changePage(\'' + ${pageNum} + '\');'"
+			            <a th:href="@{/pc(page=${pageNum}, site=${siteF}, category=${categoryF}, orderby=${orderbyF})}"
 			               th:classappend="${pageNum == currentPage} ? 'current' : ''"
 			               th:text="${pageNum}">
 			               ${pageNum}
@@ -418,46 +478,24 @@
 			        </li>
 			        
 			        <li th:if="${endPage < totalPage}" class="next_btn">
-			            <a href="#" th:onclick="'changePage(\'' + ${endPage + 1} + '\');'"
-			               th:classappend="${endPage < totalPage} ? '' : 'disabled'">
-			                다음
+			            <a th:href="@{/pc(page=${endPage + 1}, site=${siteF}, category=${categoryF}, orderby=${orderbyF})}"
+			            th:classappend="${endPage < totalPage} ? '' : 'disabled'">
+			            	다음
 			            </a>
 			        </li>
 			        
 			        <li th:if="${currentPage < totalPage}" class="last_btn">
-			            <a href="#" th:onclick="'changePage(\'' + ${totalPage} + '\');'">
-			                >>
-			            </a>
+			            <a th:href="@{/pc(page=${totalPage}, site=${siteF}, category=${categoryF}, orderby=${orderbyF})}">
+			            >>
+			           	</a>
 			        </li>
 			        
 			    </ul>
+							
 			</div>
-
-
-			<script>
-			    // 페이지 이동을 처리하는 함수
-			    function changePage(pageNumber) {
-							    const currentUrl = window.location.href;
-							    let updatedUrl = currentUrl;
-							
-							    // 페이지 번호가 이미 URL에 포함되어 있는지 검사
-							    if (/page=\d/.test(currentUrl)) {
-							        updatedUrl = currentUrl.replace(/page=\d+/g, 'page=' + pageNumber);
-							    } else {
-							        // URL에 다른 쿼리 문자열이 있는지 검사
-							        if (currentUrl.indexOf('?') !== -1) {
-							            updatedUrl += '&page=' + pageNumber;
-							        } else {
-							            updatedUrl += '?page=' + pageNumber;
-							        }
-							    }
-							
-							    window.location.href = updatedUrl;
-							}
-			
-			</script>
 			
 			<!-- 페이징 end -->
+			
 			
 		</div>
 		

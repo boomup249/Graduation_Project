@@ -42,12 +42,16 @@ public class BBSController {
 
 	@GetMapping("/post")
 	public String post(Model model,
-			@RequestParam(value = "page", defaultValue = "1") int page,
+			@RequestParam(value = "pages", defaultValue = "1") int pages,
 			@RequestParam(value = "orderby", defaultValue = "id") String order, PostDB postDB)
 	{
-		page -= 1;
-		Page<BBSDB> bbs = this.bbsService.search(page);
-				int currentPage = page + 1;
+		pages -= 1;
+		Page<BBSDB> bbs = this.bbsService.search(pages);
+		if(page == "bbs") {bbs = this.bbsService.findbbs(pages);}
+		else if(page == "notice") {bbs = this.bbsService.findnotice(pages);}
+		else if(page == "party") {bbs = this.bbsService.findparty(pages);}
+		else if(page == "guide") {bbs = this.bbsService.findguide(pages);}
+				int currentPage = pages + 1;
 				int calcEnd = (int)(Math.ceil(currentPage / 10.0) * 10);
 				int startPage = calcEnd - 9;
 				int endPage = Math.min(calcEnd, bbs.getTotalPages());
@@ -61,11 +65,11 @@ public class BBSController {
 	}
 	@GetMapping("/list/search")
 	public String searchres(Model model,
-			@RequestParam(value = "page", defaultValue = "1") int page,
+			@RequestParam(value = "pages", defaultValue = "1") int pages,
 			@RequestParam(value = "orderby", defaultValue = "id") String order, String search, PostDB postDB) {
-		page -= 1;
-		Page<BBSDB> bbs = this.bbsService.findbytitle(search, page);
-		int currentPage = page + 1;
+		pages -= 1;
+		Page<BBSDB> bbs = this.bbsService.findbytitle(search, pages);
+		int currentPage = pages + 1;
 		int calcEnd = (int)(Math.ceil(currentPage / 10.0) * 10);
 		int startPage = calcEnd - 9;
 		int endPage = Math.min(calcEnd, bbs.getTotalPages());
@@ -88,7 +92,7 @@ public class BBSController {
 			model.addAttribute("userDTO", userdb);
 			model.addAttribute("postDTO", new PostDB());
 			System.out.println(userdb.getID());
-			return "/board/bbs_write";
+			return "board/bbs_write";
 		}
 		model.addAttribute("bbsDB", bbsDB);
 		model.addAttribute("postDB", postDB);
@@ -102,33 +106,63 @@ public class BBSController {
 		model.addAttribute("bbsDB", bbsDB);
 		return "/board/bbs";
 	}
+	@GetMapping("/notice")
+	public String notice(Model model, BBSDB bbsDB)
+	{
+		page = "notice";
+		model.addAttribute("bbsDB", bbsDB);
+		return "/board/bbs";
+	}
+	@GetMapping("/guide")
+	public String guide(Model model, BBSDB bbsDB)
+	{
+		page = "guide";
+		model.addAttribute("bbsDB", bbsDB);
+		return "/board/bbs";
+	}
+	@GetMapping("/party")
+	public String party(Model model, BBSDB bbsDB)
+	{
+		page = "party";
+		model.addAttribute("bbsDB", bbsDB);
+		return "/board/bbs";
+	}
 	@PostMapping("post_write")
 	public String write(PostDTO postDTO, BBSDTO bbsDTO, UserDB userDB, Model model, HttpServletRequest req) {
 		LocalDateTime time = LocalDateTime.now();
 		String timestr = time.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-		String userId, title;
+		String userId, title, category;
 		HttpSession session = req.getSession(false);
 		userId = (String)session.getAttribute("user");
 		title = postDTO.getTitle();
-		if(page == "bbs") { //자유 게시판
+		category = postDTO.getCategory();
+		if(category == "bbs") { //자유 게시판
 			postDTO.setCategory("bbs");
-			postDTO.setWriter(userId);
-			postDTO.setComment("임시 댓글");//임시, 댓글 구현 시 삭제
-			bbsDTO.setWriter(userId);
-			bbsDTO.setTitle(title);
-			bbsDTO.setCategory("bbs");
-			bbsDTO.setDate(timestr);
-			bbsDTO.setViews(0L);
-			bbsDTO.setComment(0L);
+			bbsDTO.setCategory("bbs");			
 		}
+		else if(category == "guide") {
+			postDTO.setCategory("guide");
+			bbsDTO.setCategory("guide");
+		}
+		else if(category == "party") {
+			postDTO.setCategory("party");
+			bbsDTO.setCategory("party");
+		}
+		postDTO.setWriter(userId);
+		postDTO.setComment("임시 댓글");//임시, 댓글 구현 시 삭제
+		bbsDTO.setWriter(userId);
+		bbsDTO.setTitle(title);		
+		bbsDTO.setDate(timestr);
+		bbsDTO.setViews(0L);
+		bbsDTO.setComment(0L);
 		postService.create(postDTO.getId(), postDTO.getCategory(), postDTO.getTitle(), postDTO.getWriter(), postDTO.getContent(), postDTO.getComment());
 		bbsService.create(bbsDTO.getId(), bbsDTO.getTitle(), bbsDTO.getWriter(), bbsDTO.getCategory(), bbsDTO.getDate(), bbsDTO.getViews(), bbsDTO.getComment());
 		model.addAttribute("bbsDTO", bbsDTO);
-		return "post/list";
+		return "/post/list";
 	}
 	@GetMapping("post_cancel")
 	public String cancel() {
-		return "post/list";
+		return "/post/list";
 	}
 	
 	@GetMapping("/article/{id}")

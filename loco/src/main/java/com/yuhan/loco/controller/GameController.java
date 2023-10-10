@@ -13,8 +13,15 @@ import com.yuhan.loco.game.PcDB;
 import com.yuhan.loco.game.ConsoleDB;
 import com.yuhan.loco.game.GameDTO;
 import com.yuhan.loco.game.PcRepository;
+import com.yuhan.loco.game.service.GameService;
+import com.yuhan.loco.game.service.GameThService;
+import com.yuhan.loco.prefer.PreferDB;
+import com.yuhan.loco.prefer.PreferService;
+import com.yuhan.loco.user.UserDB;
+import com.yuhan.loco.user.UserService;
 
-import com.yuhan.loco.game.GameService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -59,9 +66,16 @@ public class GameController {
 	
 	//
 	private final GameService gameService;
+	private final GameThService thService;
+	private final UserService userService;
+	private final PreferService preferService;
 
-	public GameController(GameService gameService) {
+	public GameController(GameService gameService, GameThService thService, 
+			UserService userService, PreferService preferService) {
         this.gameService = gameService;
+        this.thService = thService;
+        this.userService = userService;
+        this.preferService = preferService;
     }
 	
 	
@@ -72,20 +86,45 @@ public class GameController {
 			@RequestParam(value = "page", defaultValue = "1") int page,
 			@RequestParam(value = "site", defaultValue = "0") String site,
 			@RequestParam(value = "category", defaultValue = "0") String category,
-			@RequestParam(value = "orderby", defaultValue = "popular") String order) {
-		//gameService.test();
-		List<String> genres = Arrays.asList("로그라이크", "전략");
-		List<String> titles = gameService.getTitleByGenre(genres);
+			@RequestParam(value = "orderby", defaultValue = "popular") String order,
+			HttpServletRequest req) {
 		
-		for (int i = 0; i < titles.size(); i++) {
-			System.out.println(titles.get(i));
+		/*선호 장르 가져오기(로그인 시)*/
+		
+		//선호 정보 문자열
+		String like = null;
+		
+		//로그인 했는지 확인
+		HttpSession session = req.getSession(false);
+		
+		//로그인했다면 userdb 객체 받아오기
+		if(session != null) { //로그인?
+			if(session.getAttribute("user") != null) { //로그인!
+				String id = (String)session.getAttribute("user");
+				String rId = userService.findUserId(id);
+				
+				PreferDB UserP = preferService.findUser(rId); //유저 선호 정보 db
+				like = UserP.getLove();
+			}
 		}
+		
+		/*선호 장르 가져오기(로그인 시) end*/
+		
+		
+		/*크롤링 완료 시간 가져오기*/
+		//크롤링 시간 가져오기(string)
+		String cTime = gameService.getCrawlingTime();
+		
+		/*크롤링 완료 시간 가져오기 end*/
+		
+		
+		/*Page<db> 객체 & 페이지 정보 가공*/
 		
 		//페이징용 page, pageable은 0부터 시작함 -> -1로 가공해주기, html에서도 가공 필요
 		page -= 1;
 		
 		//페이징 리스트 받아오기
-		Page<PcDB> paging = this.gameService.getFullPcList(page);
+		Page<PcDB> paging = gameService.getPcPageByFilter(page, site, category, order, like);
 		System.out.println(paging.getTotalElements());
 			
 		//페이지네이션 정보 가공: 시작 페이지 번호, 현재 페이지 번호, 끝 페이지 번호
@@ -95,19 +134,26 @@ public class GameController {
 			
 		//끝 페이지 번호 확정
 		int endPage = Math.min(calcEnd, paging.getTotalPages());
+		
+		/*Page<db> 객체 & 페이지 정보 가공 end*/
 			
+		
+		/*model에 넣기*/
 		//페이징 객체 model에 넣기
 		model.addAttribute("gamePage", paging);
 		model.addAttribute("startPage", startPage);
 		model.addAttribute("endPage", endPage);
 		model.addAttribute("currentPage", currentPage);
 		model.addAttribute("totalPage", paging.getTotalPages());
-		model.addAttribute("gameService", gameService);
+		model.addAttribute("gameService", thService);
 		
-		//
+		//정렬
 		model.addAttribute("siteF", site);
 		model.addAttribute("categoryF", category);
 		model.addAttribute("orderbyF", order);
+		
+		//크롤링 시간
+		model.addAttribute("cTime", cTime);
 			
 		return "/game/pc";
 		}
@@ -118,13 +164,45 @@ public class GameController {
 				@RequestParam(value = "page", defaultValue = "1") int page,
 				@RequestParam(value = "site", defaultValue = "0") String site,
 				@RequestParam(value = "category", defaultValue = "0") String category,
-				@RequestParam(value = "orderby", defaultValue = "popular") String order) {
-			
+				@RequestParam(value = "orderby", defaultValue = "popular") String order,
+				HttpServletRequest req) {
+		
+			/*선호 장르 가져오기(로그인 시)*/
+		
+		//선호 정보 문자열
+		String like = null;
+		
+		//로그인 했는지 확인
+		HttpSession session = req.getSession(false);
+		
+		//로그인했다면 userdb 객체 받아오기
+		if(session != null) { //로그인?
+			if(session.getAttribute("user") != null) { //로그인!
+				String id = (String)session.getAttribute("user");
+				String rId = userService.findUserId(id);
+				
+				PreferDB UserP = preferService.findUser(rId); //유저 선호 정보 db
+				like = UserP.getLove();
+			}
+		}
+		
+			/*선호 장르 가져오기(로그인 시) end*/
+		
+		
+			/*크롤링 완료 시간 가져오기*/
+		//크롤링 시간 가져오기(string)
+		String cTime = gameService.getCrawlingTime();
+		
+			/*크롤링 완료 시간 가져오기 end*/
+		
+		
+			/*Page<db> 객체 & 페이지 정보 가공*/
+		
 		//페이징용 page, pageable은 0부터 시작함 -> -1로 가공해주기, html에서도 가공 필요
 		page -= 1;
 				
 		//페이징 리스트 받아오기
-		Page<ConsoleDB> paging = this.gameService.getFullConsoleList(page);
+		Page<ConsoleDB> paging = gameService.getConsolePageByFilter(page, site, category, order, like);
 		System.out.println(paging.getTotalElements());
 					
 		//페이지네이션 정보 가공: 시작 페이지 번호, 현재 페이지 번호, 끝 페이지 번호
@@ -134,19 +212,25 @@ public class GameController {
 					
 		//끝 페이지 번호 확정
 		int endPage = Math.min(calcEnd, paging.getTotalPages());
-					
+		
+			/*Page<db> 객체 & 페이지 정보 가공 end*/
+				
+			/*model에 넣기*/
 		//페이징 객체 model에 넣기
 		model.addAttribute("gamePage", paging);
 		model.addAttribute("startPage", startPage);
 		model.addAttribute("endPage", endPage);
 		model.addAttribute("currentPage", currentPage);
 		model.addAttribute("totalPage", paging.getTotalPages());
-		//model.addAttribute("gameService", gameService);
-		
-		//
+		model.addAttribute("gameService", thService);
+				
+		//정렬
 		model.addAttribute("siteF", site);
 		model.addAttribute("categoryF", category);
 		model.addAttribute("orderbyF", order);
+				
+		//크롤링 시간
+		model.addAttribute("cTime", cTime);
 				
 		
 		return "/game/console";
@@ -162,6 +246,7 @@ public class GameController {
 	    //List<PcDB> pcDB = gameService.getAllData();
 	    model.addAttribute("pcGameDTO", pcGameDTO);
 	    model.addAttribute("pcGameDetail", pcGameDetail);
+	    model.addAttribute("gameService", thService);
 	    return "/game/PcDetail";
 	}
 
@@ -171,6 +256,7 @@ public class GameController {
         ConsoleDB csGameDetail = gameService.getCsByNum(num);
 
         model.addAttribute("csGameDetail", csGameDetail);
+        model.addAttribute("gameService", thService);
         return "/game/ConsoleDetail";
 	}
     

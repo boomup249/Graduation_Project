@@ -21,7 +21,7 @@ VIEW `member`.`game_switch_ps2` AS
         `member`.`gamedata_ps` 
     UNION SELECT 
         ((SELECT 
-                MAX(`member`.`gamedata_ps`.`NUM`)
+                IFNULL(MAX(`member`.`gamedata_ps`.`NUM`), 0)
             FROM
                 `member`.`gamedata_ps`) + `member`.`gamedata_switch`.`NUM`) AS `NUM`,
         `member`.`gamedata_switch`.`TITLE` AS `TITLE`,

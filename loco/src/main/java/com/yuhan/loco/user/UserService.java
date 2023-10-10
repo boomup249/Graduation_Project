@@ -79,11 +79,41 @@ public class UserService {
 
       return ck2;
    }
+   
    public UserDB findUser(String id) {
 	   //용주 컴퓨터에서는 session에서 getAttribute(user) 실행하면 email을 받아와서 findByEMAIL로 설정
 	   //오류나면 findByID로 바꿀것
-       UserDB userdb = this.userRepository.findByEMAIL(id);
+	   
+	   //<2023.10.07>
+	   // -> LoginController에서 아이디 or email란에 넣은 값이 session.setAttribute("user", userDTO.getUserId());로 남게 됨
+	   	//userDTO.getUserId() 이게 아이디를 가져오는 게 아니라, 그 필드에 있는 값을 무조건 가져오기 때문,
+	   //따라서 로그인 세션을 통해 여기 집어넣어서 쓰려면 그냥 이메일인지 아이디인지 판별해서 생성하면 됨, 고쳐 놓겠음
+	   UserDB userdb = null;
+	   if (id.contains("@")) {
+		   userdb = this.userRepository.findByEMAIL(id);
+	   } else {
+		   userdb = this.userRepository.findByID(id);
+	   }
+       
        return userdb;
    }
+   
+   
+   //무조건 아이디값 받아오는 함수(이메일 넣든, 아이디 넣든)
+   public String findUserId(String id) {
+	   //userdb 객체 받아오기
+	   UserDB userdb = null;
+	   if (id.contains("@")) {
+		   userdb = this.userRepository.findByEMAIL(id);
+	   } else {
+		   userdb = this.userRepository.findByID(id);
+	   }
+	   
+	   //id 받아오기
+	   String realId = userdb.getID();
+	   return realId;
+   }
+   
+   
    //암호화는 한번만 실행되어야 함 (반복 호출 시 암호화 값이 달라져서 비밀번호가 달라짐. 그래서 어떤 방법으로도 DB와 일치시킬 수 없음)
 }

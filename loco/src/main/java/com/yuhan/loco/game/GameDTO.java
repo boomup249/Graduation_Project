@@ -1,6 +1,25 @@
 package com.yuhan.loco.game;
 
 public class GameDTO {
+	
+    private int NUM;
+    private String SITEAVAILABILITY;
+	private String TITLE;
+	private String PRICE;
+	private String SALEPRICE;
+	private String SALEPER;
+	private String DESCRIPTION;
+	private String IMGDATA;
+	private String GAMEIMG;
+	private String URL;
+    
+	//getter setter
+	public int getNUM() {
+		return NUM;
+	}
+	public void setNUM(int nUM) {
+		NUM = nUM;
+	}
 	public String getSITEAVAILABILITY() {
         return SITEAVAILABILITY;
     }
@@ -8,14 +27,6 @@ public class GameDTO {
     public void setSITEAVAILABILITY(String SITEAVAILABILITY) {
         this.SITEAVAILABILITY = SITEAVAILABILITY;
     }
-
-    private int NUM;
-	public int getNUM() {
-		return NUM;
-	}
-	public void setNUM(int nUM) {
-		NUM = nUM;
-	}
 	public String getTITLE() {
 		return TITLE;
 	}
@@ -68,15 +79,7 @@ public class GameDTO {
 	}
 
 
-	private String SITEAVAILABILITY;
-	private String TITLE;
-	private String PRICE;
-	private String SALEPRICE;
-	private String SALEPER;
-	private String DESCRIPTION;
-	private String IMGDATA;
-	private String GAMEIMG;
-	private String URL;
+	
 
 
 }

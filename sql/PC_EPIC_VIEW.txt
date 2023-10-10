@@ -24,6 +24,13 @@ VIEW `member`.`game_steam_epic` AS
         `e`.`PRICE` AS `EPICPRICE`,
         `s`.`SALEPRICE` AS `STEAMSALEPRICE`,
         `e`.`SALEPRICE` AS `EPICSALEPRICE`,
+        (CASE
+            WHEN (`s`.`SALEPER` > `e`.`SALEPER`) THEN `s`.`SALEPER`
+            WHEN (`s`.`SALEPER` < `e`.`SALEPER`) THEN `e`.`SALEPER`
+            WHEN (`s`.`SALEPER` IS NULL) THEN `e`.`SALEPER`
+            WHEN `e`.`SALEPER` THEN `s`.`SALEPER`
+            ELSE `s`.`SALEPER`
+        END) AS `SALEPER`,
         `s`.`SALEPER` AS `STEAMSALEPER`,
         `e`.`SALEPER` AS `EPICSALEPER`,
         `s`.`DESCRIPTION` AS `STEAMDESCRIPTION`,
@@ -58,6 +65,13 @@ VIEW `member`.`game_steam_epic` AS
         `e`.`PRICE` AS `EPICPRICE`,
         `s`.`SALEPRICE` AS `STEAMSALEPRICE`,
         `e`.`SALEPRICE` AS `EPICSALEPRICE`,
+        (CASE
+            WHEN (`s`.`SALEPER` > `e`.`SALEPER`) THEN `s`.`SALEPER`
+            WHEN (`s`.`SALEPER` < `e`.`SALEPER`) THEN `e`.`SALEPER`
+            WHEN (`s`.`SALEPER` IS NULL) THEN `e`.`SALEPER`
+            WHEN `e`.`SALEPER` THEN `s`.`SALEPER`
+            ELSE `s`.`SALEPER`
+        END) AS `SALEPER`,
         `s`.`SALEPER` AS `STEAMSALEPER`,
         `e`.`SALEPER` AS `EPICSALEPER`,
         `s`.`DESCRIPTION` AS `STEAMDESCRIPTION`,

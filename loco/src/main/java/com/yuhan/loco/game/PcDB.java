@@ -24,6 +24,7 @@ public class PcDB {
 	private String STEAMSALEPRICE;
 	private String EPICSALEPRICE;
 
+	private String SALEPER;
 	private String STEAMSALEPER;
 	private String EPICSALEPER;
 
@@ -39,7 +40,7 @@ public class PcDB {
 	private String STEAMURL;
 	private String EPICURL;
 
-
+	
 	//getter setter
 	public String getKEY() {
 		return KEY;
@@ -94,6 +95,12 @@ public class PcDB {
 	}
 	public void setEPICSALEPRICE(String ePICSALEPRICE) {
 		EPICSALEPRICE = ePICSALEPRICE;
+	}
+	public String getSALEPER() {
+		return SALEPER;
+	}
+	public void setSALEPER(String sALEPER) {
+		SALEPER = sALEPER;
 	}
 	public String getSTEAMSALEPER() {
 		return STEAMSALEPER;

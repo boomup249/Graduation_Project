@@ -55,9 +55,9 @@
 					   제목 : 
 					   <input type="text" class="write_title" th:field="*{title}" placeholder="제목을 입력해주세요.">	 					
 					   <select class="write_category" th:field="*{category}">
-						   <option value="#">자유 게시판</option>
-						   <option value="#">게임공략</option>
-						   <option value="#">파티원</option> 
+						   <option value="bbs">자유 게시판</option>
+						   <option value="guide">게임공략</option>
+						   <option value="party">파티원</option> 
 						   <!-- 각각 따로따로 페이지 만들지 의논해보고 결정 -->
 					   </select>				
          					<input type="submit" id="sub" value="작성"/>

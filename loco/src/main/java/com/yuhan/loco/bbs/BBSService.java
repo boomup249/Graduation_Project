@@ -35,14 +35,30 @@ public class BBSService {
 	   Pageable pageable = PageRequest.of(page, 5);
 	   return this.BBSrepository.findAll(pageable);
    }
-   public List<BBSDB> searchall(){
+   /*public List<BBSDB> searchall(){
 	   return BBSrepository.findAll();
-   }
+   }*/
    public int viewerup(Long id) {
 	   return BBSrepository.updateView(id);
    }
    public Page<BBSDB> findbytitle(String title, int page){
 	   Pageable pageable = PageRequest.of(page, 5);
 	   return this.BBSrepository.findByTitleContaining(title, pageable);
+   }
+   public Page<BBSDB> findbbs(int page){
+	   Pageable pageable = PageRequest.of(page, 5);
+	   return this.BBSrepository.findByCategory("bbs", pageable);
+   }
+   public Page<BBSDB> findnotice(int page){
+	   Pageable pageable = PageRequest.of(page, 5);
+	   return this.BBSrepository.findByCategory("notice", pageable);
+   }
+   public Page<BBSDB> findguide(int page){
+	   Pageable pageable = PageRequest.of(page, 5);
+	   return this.BBSrepository.findByCategory("guide", pageable);
+   }
+   public Page<BBSDB> findparty(int page){
+	   Pageable pageable = PageRequest.of(page, 5);
+	   return this.BBSrepository.findByCategory("party", pageable);
    }
 }

@@ -6,14 +6,13 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import java.util.List;
 
-//pcTag view는 모든 장르를 가져오는 뷰임.
+//consoleTag view는 모든 장르를 가져오는 뷰임.
 
 @Repository
-public interface PcTagRepository extends JpaRepository<PcTagDB, Long>{
+public interface ConsoleTagRepository extends JpaRepository<ConsoleTagDB, Long>{
 	
 	/*genre 반환*/
 	//타이틀 넣어주면, 해당 타이틀인 장르 모두 반환
-	@Query("SELECT DISTINCT p.GENRE FROM PcTagDB p WHERE p.TITLE = :title")
+	@Query("SELECT DISTINCT c.GENRE FROM ConsoleTagDB c WHERE c.TITLE = :title")
 	List<String> findGenresByTitle(@Param("title") String title);
-	
 }

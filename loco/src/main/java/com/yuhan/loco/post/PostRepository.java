@@ -11,5 +11,4 @@ import com.yuhan.loco.bbs.BBSDB;
 @Repository
 public interface PostRepository extends JpaRepository<PostDB, String> {
 	PostDB findById(Long id);
-
 }

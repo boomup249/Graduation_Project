@@ -94,29 +94,28 @@
          </ul>
       </div>
       
-<form class = "search" method="get" action="#">
+
      <div id="b1">
 		 <div class="b2">
 			<tr>
         		<td class="button-container3">
           			<!-- '공지사항' 버튼 -->
-          			<button class="button transparent-button" id="btn_notice">공지사항</button>	
+          			<button class="button transparent-button" th:onclick="|location.href='@{/notice}'|" id="btn_notice">공지사항</button>	
         		</td>
         		<td class="button-container4">
           			<!-- '자유게시판' 버튼 -->
-          			<button class="button transparent-button" id="btn_free">자유게시판</button>
+          			<button class="button transparent-button" th:onclick="|location.href='@{/bbs}'|" id="btn_free">자유게시판</button>
         		</td>
         		<td class="button-container5">
           			<!-- '게임공략' 버튼 -->
-          			<button class="button transparent-button" id="btn_guide">게임공략</button>
+          			<button class="button transparent-button" th:onclick="|location.href='@{/guide}'|" id="btn_guide">게임공략</button>
         		</td>
         		<td class="button-container6">
           			<!-- '파티원' 버튼 -->
-          			<button class="button transparent-button" id="btn_party">파티원</button>
+          			<button class="button transparent-button" th:onclick="|location.href='@{/party}'|" id="btn_party">파티원</button>
         		</td>
         	</tr>
         </div>
-        
     <div class="line">
         <table class="line2">
             <tr>
@@ -135,16 +134,15 @@
                 </td>
                 <td class="button-container2">
 					<!-- '최신글' 버튼 -->
-                    <button class="button latest-button" id="btn_new" th:onclick="@{/post/list, orderby=date)}">최신글</button>
+                    <button class="button latest-button" id="btn_new" th:onclick="@{/post/list, orderby=id)}">최신글</button>
                     <!-- '인기글' 버튼 -->
-                    <button class="button popular-button" id="btn_popular" th:onclick="@{/post/list, orderby=views)}">인기글</button>        
+                    <button class="button popular-button" id="btn_popular" th:onclick="@{/post/list, orderby=comment)}">인기글</button>
                     <!-- '글쓰기' 버튼 -->
                     <button class="button write-button" id="btn_write" >글쓰기</button>
-                    
-                    <input type="text" class="search-input" name="search" placeholder="검색어를 입력하세요">
+                    <form class = "search" method="get" th:action="@{'/list/search'}" th:object="${bbsDB}">
+                    <input type="text" class="search-input" name="search" placeholder="검색어를 입력하세요" th:field="*{title}">
                     <!-- 검색 버튼 -->
-                    <button class="button search-button" type="submit" >검색</button>
-                    
+                    <button class="button search-button" type="submit">검색</button>
                     </form>
                 </td>
             </tr>
