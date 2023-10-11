@@ -34,7 +34,7 @@
 				left: 0.1%;
             	display: flex;
     			flex-direction: column; /* 세로로 정렬을 위한 설정 */
-    			justify-content: flex-start; /* 상단 정렬 */
+    			justify-content: space; /* 상단 정렬 */
     			align-items: center; /* 가운데 정렬 */
          	}
 
@@ -94,7 +94,7 @@
 
 		.button-container1 {
 			 width : 30%;
-			 height : 38%;
+			 height : auto;
 			 text-align : left;
 			 margin-top: 4.5%;
 			 border : none;
@@ -108,7 +108,7 @@
 		 
 		.button-container2{
 			width : 50%;
-			height : 38%;
+			height : auto;
 			text-align: right;
 			margin-top: 4.5%;
 			border : none;
@@ -162,56 +162,4 @@
 		
 		
 		
-		
-		.dropdown{
-  			position : relative;
-  			display : inline-block;
-  			margin : 1px;
-			}
-
-		.dropbtn_icon{
-  			font-family : 'Material Icons';
-			}
-.dropbtn{
-  font-family: 'TheJamsil5Bold';
-    		width: 110%; /* 버튼 너비 조절 */
-    		background-color: lightslategray;
-    		color: white; /* 버튼 글자색 지정 */
-    		border-radius: 5px; /* 버튼 모서리 둥글게 만들기 */
-			font-size : 24px;
-    		margin: 1px; /* 버튼 간격 조절 */
-    		cursor: pointer; /* 마우스 커서를 포인터로 변경하여 클릭 가능한 상태로 표시 */
-    		transition: background-color 0.3s ease;
-}
-.dropdown .dropbtn{
-	height : 50%;
-	z-index:3;
-}
-.dropdown-content{
-  display : none;
-  position : absolute;
-  font-weight: 400;
-  background-color: #f9f9f9;
-  min-width : 150px;
-  z-index : 3;
-}
-
-.dropdown-content a{
-  display : block;
-  text-decoration : none;
-  color : rgb(37, 37, 37);
-  font-size: 12px;
-  padding : 12px 20px;
-  z-index : 3;
-}
-
-.dropdown-content a:hover{
-  background-color : #ececec;
-  z-index : 3;
-}
-
-.dropdown:hover .dropdown-content {
-  display: block;
-  z-index : 3;
-		}
 		

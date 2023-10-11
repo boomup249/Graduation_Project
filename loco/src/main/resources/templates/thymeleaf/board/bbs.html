@@ -30,7 +30,27 @@
 				left: 0.1%;
             
          	}
-           
+            .image{
+			   width: 38px; 
+    		   height: 38px; 
+    		   margin-left : 22%;
+		   }
+		   .inner1{
+			   margin-left : 9%;
+			   margin-top : 4%;
+		   }
+		   .inner2{
+			   margin-left : 7%;
+			   margin-top : 3%;
+		   }
+		   .inner3{
+			   margin-left : 10%;
+			   margin-top : 4%;
+		   }
+		   .inner4{
+			   margin-left : 14%;
+			   margin-top : 3%;
+		   }
          
        </style>
     	
@@ -70,7 +90,7 @@
             <!-- 신작 -->
             <li>
                <div class="menu">
-                  <a href="#">NEWS</a>
+                  <a href="/news">NEWS</a>
                </div>
             </li>
             
@@ -95,51 +115,60 @@
       </div>
       
 
+     <form class = "search" method="get" action="#">
      <div id="b1">
 		 <div class="b2">
 			<tr>
         		<td class="button-container3">
-          			<!-- '공지사항' 버튼 -->
-          			<button class="button transparent-button" th:onclick="|location.href='@{/notice}'|" id="btn_notice">공지사항</button>	
+          				<!-- '공지사항' 버튼 -->
+          				<button class="button notice transparent-button" th:onclick="|location.href='@{/notice}'|" id="btn_notice">
+						  <div style="display:flex;" justify-content: "space-around;" align-items: "center;">
+								<img src = "/imgs/notice.png" class="image">
+								<span class="inner1">공지사항</span>
+          					</div>
+						</button>	
         		</td>
         		<td class="button-container4">
-          			<!-- '자유게시판' 버튼 -->
-          			<button class="button transparent-button" th:onclick="|location.href='@{/bbs}'|" id="btn_free">자유게시판</button>
+          				<!-- '자유게시판' 버튼 -->
+          				<button class="button free transparent-button" th:onclick="|location.href='@{/bbs}'|" id="btn_free">
+							<div style="display:flex;" justify-content: "space-around;" align-items: "center;">
+								<img src = "/imgs/smile.png" class="image">
+								<span class="inner2">자유게시판</span>
+          					</div>
+          				</button>	
         		</td>
         		<td class="button-container5">
-          			<!-- '게임공략' 버튼 -->
-          			<button class="button transparent-button" th:onclick="|location.href='@{/guide}'|" id="btn_guide">게임공략</button>
+          				<!-- '게임공략' 버튼 -->
+          				<button class="button guide transparent-button" th:onclick="|location.href='@{/guide}'|" id="btn_guide">
+						  	<div style="display:flex;" justify-content: "space-around;" align-items: "center;">
+									<img src = "/imgs/game.png" class="image">
+									<span class="inner3">게임공략</span>
+          					</div>
+						</button>
         		</td>
         		<td class="button-container6">
           			<!-- '파티원' 버튼 -->
-          			<button class="button transparent-button" th:onclick="|location.href='@{/party}'|" id="btn_party">파티원</button>
+          			<button class="button party transparent-button" th:onclick="|location.href='@{/party}'|" id="btn_party">
+						  <div style="display:flex;" justify-content: "space-around;" align-items: "center;">
+									<img src = "/imgs/friend.png" class="image">
+									<span class="inner4">파티원</span>
+          					</div>  
+					</button>
         		</td>
         	</tr>
         </div>
     <div class="line">
         <table class="line2">
             <tr>
-                <td class="button-container1">
-               <!--<div class="dropdown">
-      						<button class="dropbtn"> 
-        						카테고리
-      						</button>
-      					<div class="dropdown-content">
-        					<a href="#">자유게시판</a>
-        					<a href="#">게임 공략</a>
-        					<a href="#">파티원모집</a>
-      					</div>
-    				</div>-->
-                  
-                </td>
+                <td class="button-container1"></td>
                 <td class="button-container2">
 					<!-- '최신글' 버튼 -->
-                    <button class="button latest-button" id="btn_new" th:onclick="@{/post/list, orderby=id)}">최신글</button>
+                    <button class="button latest-button" id="btn_new" th:onclick="@{/post/list, orderby=date)}">최신글</button>
                     <!-- '인기글' 버튼 -->
-                    <button class="button popular-button" id="btn_popular" th:onclick="@{/post/list, orderby=comment)}">인기글</button>
+                    <button class="button popular-button" id="btn_popular" th:onclick="@{/post/list, orderby=views)}">인기글</button>
                     <!-- '글쓰기' 버튼 -->
                     <button class="button write-button" id="btn_write" >글쓰기</button>
-                    <form class = "search" method="get" th:action="@{'/list/search'}" th:object="${bbsDB}">
+                    <!--<form class = "search" method="get" th:action="@{'/list/search'}" th:object="${bbsDB}">-->
                     <input type="text" class="search-input" name="search" placeholder="검색어를 입력하세요" th:field="*{title}">
                     <!-- 검색 버튼 -->
                     <button class="button search-button" type="submit">검색</button>
