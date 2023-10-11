@@ -3,13 +3,51 @@
     <meta charset="UTF-8">
     <title>게시판</title>
     
-    <link rel="stylesheet" href="css/list.css"> <!-- 게시판 css -->
+    <link rel="stylesheet" href="css/font.css"> <!-- 폰트 css -->
+    <link rel="stylesheet" href="css/article.css"> <!-- 작성후페이지 css -->
     <style>
 		/* 게시판 컨테이너 */
 		.board-container {
+			height : 100%;
+			position : relative;
     		max-width: 100%;
-    		margin: 0 auto;
-    		
+		}
+		.post-table{
+			width : 100%;
+			height : 100%;
+			position :relative;
+		}
+		
+		.post-table th{
+		position : relative;
+		font-family: 'GmarketSansMedium';	
+    	padding: 7px;
+    	text-align: left;
+    	border-bottom: 1px solid black;
+    	background-color : white;
+    	/* 원하는 너비로 지정 (예: 150px) */
+    	width : 100%;
+    	
+		}
+	
+		.comment-input{
+			width : 95%;
+			height : 60px;
+		}
+		input[type="submit"] {
+    		position: absolute;
+    		top: 10px; /* 원하는 위치의 상단 여백(px) */
+    		margin : 0 1%;
+		}
+		.content-1{
+			font-size: 16px; /* 텍스트 크기 조절 (예: 16px) */
+    		font-weight: lighter; /* 텍스트 굵기 조절 (예: 굵게 표시) */
+    		height : 90%;
+    		margin-top : 1%;
+		}
+		.title-1{
+			font-size: 16px; /* 텍스트 크기 조절 (예: 16px) */
+    		font-weight: lighter; /* 텍스트 굵기 조절 (예: 굵게 표시) */
 		}
 
 		
@@ -21,38 +59,30 @@
     <table class="post-table">
         <thead>
             <tr>
-                <th>제목</th>
-                <td>
-                    <div th:object="${postDTO}" th:text="${postDTO.getTitle()}"></div>
-                </td>
+                <th>제목 <span class="title-1" th:object="${postDTO}" th:text="${postDTO.getTitle()}"></span></th>    
             </tr>
         </thead>
         <tbody>
             <tr>
-            	<th>내용</th>
-                <td>
-                    <div th:object="${postDTO}" th:text="${postDTO.getContent()}"></div>
-                </td>
+            	<th class="content" style="height:60%;">내용 <div class="content-1" th:object="${postDTO}" th:text="${postDTO.getContent()}"></div></th>
             </tr>
             <tr>
-            	<th>댓글</th>
-            	<td>
-            		<div th:object="${postDTO}" th:text="${postDTO.getComment()}"></div>
-            	</td>
+            	<th class="comment-form" style="height:5%;">
+					<form action ="#" th:action="@{/email_ck}"
+										th:object="${postDTO}"
+										method = "post" style="margin:0";>
+						<div class="item2">
+							<input type="text" th:field="*{comment}" class="comment-input" />
+							<input type="submit" id="sub" value="확인" class="comment-submit" />
+						</div>
+					</form>
+				</th>
+ 	
             </tr>
             <tr>
-            	<th>댓글 입력</th>
-            	<td>
-            	<form action ="#" th:action="@{/email_ck}"
-				th:object="${postDTO}"
-				method = "post">
-			<div class="item2">
-				<input type="text" th:field="*{comment}"/>
-				<input type="submit" id="sub" value=""/>
-			</div>
-			</form>
-            	</td>
+            	<th class="comment" style="height:20%;"> <span th:object="${postDTO}" th:text="${postDTO.getComment()}" style="font-weight: lighter;"></span></th>
             </tr>
+            
             <!-- 추가적인 게시글 아이템들을 동적으로 생성하거나 서버에서 데이터를 가져와서 출력하세요. -->
         </tbody>
     </table>
