@@ -115,7 +115,6 @@
       </div>
       
 
-     <form class = "search" method="get" action="#">
      <div id="b1">
 		 <div class="b2">
 			<tr>
@@ -160,7 +159,11 @@
     <div class="line">
         <table class="line2">
             <tr>
-                <td class="button-container1"></td>
+                <td class="button-container1">
+					<span style="font-size: 30px;" value="[공지]">[소식]</span><br>
+					<span style="font-size: 18px;">  LOCO의 새로운 소식을 만나보세요.</span>
+				</td>
+                	
                 <td class="button-container2">
 					<!-- '최신글' 버튼 -->
                     <button class="button latest-button" id="btn_new" th:onclick="@{/post/list, orderby=date)}">최신글</button>
@@ -171,6 +174,7 @@
                     <!--<form class = "search" method="get" th:action="@{'/list/search'}" th:object="${bbsDB}">-->
                     <input type="text" class="search-input" name="search" placeholder="검색어를 입력하세요">
                     <!-- 검색 버튼 -->
+     				<form class = "search" method="get" action="@{/list/search}">
                     <button class="button search-button" type="submit">검색</button>
                     </form>
                 </td>

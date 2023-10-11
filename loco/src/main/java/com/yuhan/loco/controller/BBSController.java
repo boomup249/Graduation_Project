@@ -18,7 +18,6 @@ import com.yuhan.loco.bbs.BBSDTO;
 import com.yuhan.loco.bbs.BBSService;
 import com.yuhan.loco.post.PostDB;
 import com.yuhan.loco.post.PostDTO;
-import com.yuhan.loco.post.PostRepository;
 import com.yuhan.loco.post.PostService;
 import com.yuhan.loco.user.UserDB;
 import com.yuhan.loco.user.UserService;
@@ -158,7 +157,7 @@ public class BBSController {
 		postService.create(postDTO.getId(), postDTO.getCategory(), postDTO.getTitle(), postDTO.getWriter(), postDTO.getContent(), postDTO.getComment());
 		bbsService.create(bbsDTO.getId(), bbsDTO.getTitle(), bbsDTO.getWriter(), bbsDTO.getCategory(), bbsDTO.getDate(), bbsDTO.getViews(), bbsDTO.getComment());
 		model.addAttribute("bbsDTO", bbsDTO);
-		return "/post/list";
+		return "redirect:/post";
 	}
 	@GetMapping("post_cancel")
 	public String cancel() {
