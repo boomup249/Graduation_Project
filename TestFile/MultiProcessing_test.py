@@ -14,6 +14,7 @@ import requests
 from time import sleep
 from datetime import datetime
 import re
+from selenium.common.exceptions import StaleElementReferenceException
 
 #DB연결
 conn = MySQLdb.connect(
@@ -44,18 +45,22 @@ def saleper_calc(price, saleprice):
     saleper = "-"+str(__)+"%"
     return saleper
 
+def rmEmoji_ascii(inputString):
+    return inputString.encode('utf-8', 'ignore').decode('utf-8')
+
 def Driver_Start(platform, URL):
     #크롬드라이버 옵션 설정
+    services = Service(executable_path=ChromeDriverManager().install())
     options = Options()
     options.add_experimental_option("detach", True)
-    options.add_argument("headless")
+    options.add_argument("--headless=new")
     options.add_argument("disable-gpu")
     options.add_argument("lang=ko_KR")
     options.add_argument('user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36')
 
     #크롬드라이버 인스턴스 생성 및 옵션, 크기, URL, 암시적 대기 설정
-    driver = webdriver.Chrome(options=options)
-    driver.implicitly_wait(10)
+    driver = webdriver.Chrome(service=services, options=options)
+    driver.implicitly_wait(30)
     driver.set_window_size(1920,1080)
     driver.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument", {"source": """ Object.defineProperty(navigator, 'webdriver', { get: () => undefined }) """})
     driver.execute_script("Object.defineProperty(navigator, 'plugins', {get: function() {return[1, 2, 3, 4, 5];},});")
@@ -74,9 +79,9 @@ def nintendo_crawling():
     soup = BeautifulSoup(driver.page_source, "html.parser")
     error = soup.select_one('h1')
     if error.text == '403 Forbidden':
-        print("4분30초간 일시정지(403 forbidden 오류 회피를 위해)")
+        print("5분간 일시정지(403 forbidden 오류 회피를 위해)")
         driver.quit()
-        sleep(270)
+        sleep(300)
         print("재실행")
         driver = Driver_Start(platform, 'https://store.nintendo.co.kr/games/sale')
 
@@ -123,10 +128,10 @@ def nintendo_crawling():
 
         error = new_soup.select_one('h1')
         if error.text == '403 Forbidden':
-            print("4분30초간 일시정지(403 forbidden 오류 회피를 위해)")
+            print("5분간 일시정지(403 forbidden 오류 회피를 위해)")
             driver.close()
             driver.switch_to.window(driver.window_handles[-1])
-            sleep(270)
+            sleep(300)
             print("재실행")
             driver.execute_script(f'window.open(\'{move}\');')
             driver.switch_to.window(driver.window_handles[-1])
@@ -189,10 +194,13 @@ def nintendo_crawling():
         d_imgdata = data['IMGDATA']
         d_gameimg = data['GAMEIMG']
         d_url = data['URL']
+
+        d_title = rmEmoji_ascii(d_title)
+        d_description = rmEmoji_ascii(d_description)
         
         # 데이터베이스에 해당 TITLE이 존재하는지 확인
         query = "SELECT * FROM gamedata_switch WHERE TITLE = %s"
-        cursor.execute(query, (d_title))
+        cursor.execute(query, (d_title, ))
         result = cursor.fetchone()
 
         if result is None:
@@ -211,7 +219,7 @@ def nintendo_crawling():
                 print(f"{platform} - UPDATE: {d_title} (할인가 바뀜, Varia Update)")
             else: # 할인가격이 똑같으면 할인은 계속 진행중이므로 varia 값을 1로 변경
                 update_query = "UPDATE gamedata_switch SET VARIA = 1 WHERE TITLE = %s"
-                cursor.execute(update_query, (d_title))
+                cursor.execute(update_query, (d_title, ))
                 conn.commit()
                 print(f"{platform} - UPDATE: {d_title} (아직 할인중, VARIA Update)")
 
@@ -224,9 +232,11 @@ def nintendo_crawling():
     for data in dictionary_list_genre:
         g_title = data['TITLE']
         g_genre = data['GENRE']
+        
+        g_title = rmEmoji_ascii(g_title)
 
         query = "SELECT * FROM gamedata_switch WHERE TITLE = %s"
-        cursor.execute(query, (g_title))
+        cursor.execute(query, (g_title, ))
         result = cursor.fetchone()
 
         if result is None: # title값이 존재하지않으면 장르는 안넣어도됨
@@ -235,10 +245,10 @@ def nintendo_crawling():
             insert_query = "INSERT INTO gamedata_switch_genre (TITLE, GENRE) VALUES (%s, %s)"
             try:
                 cursor.execute(insert_query, (g_title, g_genre))
-                conn.commit()
-                print(f"{platform} - GENRE INSERT: {g_title}")
+                print(f'{platform} - {g_title} genre 입력 완료')
             except:
-                print(f'{platform} - 이미 장르값이 존재하던 타이틀이라 스킵')
+                print(f"{g_title} - 타이틀 중복 오류")
+            conn.commit()
 
     newtime = datetime.now()
     newtimestr = newtime.strftime("%Y%m%d_%H%M")
@@ -326,8 +336,8 @@ def ps_crawling():
                         price = price.text
                     else:
                         price = "구매할 수 없음"
-                    saleprice = "구매할 수 없음"
-                    saleper = "구매할 수 없음"
+                        saleprice = None
+                        saleper = None
                 else:
                     saleper = saleper.text
             #saleper가 None이 아니였기때문에 price와 saleprice를 크롤링
@@ -340,8 +350,12 @@ def ps_crawling():
             if next_page-1 == int(last_page):
                 last_game_title = title
 
-            game_link = game.select_one('a')["href"]
-            move = gameURL + game_link
+            game_link = game.select_one('a')
+            if game_link != None:
+                game_link = game_link['href']
+                move = gameURL + game_link
+            else:
+                move = None
 
             driver.execute_script(f'window.open(\'{move}\');')
             driver.switch_to.window(driver.window_handles[-1])
@@ -420,9 +434,15 @@ def ps_crawling():
         d_gameimg = data['GAMEIMG']
         d_url = data['URL']
         
+        d_title = rmEmoji_ascii(d_title)
+        d_description = rmEmoji_ascii(d_description)
+
         # 데이터베이스에 해당 TITLE이 존재하는지 확인
         query = "SELECT * FROM gamedata_ps WHERE TITLE = %s"
-        cursor.execute(query, (d_title))
+        try:
+            cursor.execute(query, (d_title, ))
+        except:
+            cursor.execute(query, (d_title, ))
         result = cursor.fetchone()
 
         if result is None:
@@ -441,7 +461,7 @@ def ps_crawling():
                 print(f"{platform} - UPDATE: {d_title} (할인가 바뀜, Varia Update)")
             else: # 할인가격이 똑같으면 할인은 계속 진행중이므로 varia 값을 1로 변경
                 update_query = "UPDATE gamedata_ps SET VARIA = 1 WHERE TITLE = %s"
-                cursor.execute(update_query, (d_title))
+                cursor.execute(update_query, (d_title, ))
                 conn.commit()
                 print(f"{platform} - UPDATE: {d_title} (아직 할인중, VARIA Update)")
 
@@ -454,9 +474,11 @@ def ps_crawling():
     for data in dictionary_list_genre:
         g_title = data['TITLE']
         g_genre = data['GENRE']
+        
+        g_title = rmEmoji_ascii(g_title)
 
         query = "SELECT * FROM gamedata_ps WHERE TITLE = %s"
-        cursor.execute(query, (g_title))
+        cursor.execute(query, (g_title, ))
         result = cursor.fetchone()
 
         if result is None: # title값이 존재하지않으면 장르는 안넣어도됨
@@ -465,10 +487,10 @@ def ps_crawling():
             insert_query = "INSERT INTO gamedata_ps_genre (TITLE, GENRE) VALUES (%s, %s)"
             try:
                 cursor.execute(insert_query, (g_title, g_genre))
-                conn.commit()
-                print(f"{platform} - GENRE INSERT: {g_title}")
+                print(f'{platform} - {g_title} genre 입력 완료')
             except:
-                print(f'{platform} - 이미 장르값이 존재하던 타이틀이라 스킵')
+                print(f"{g_title} - 타이틀 중복 오류")
+            conn.commit()
 
     newtime = datetime.now()
     newtimestr = newtime.strftime("%Y%m%d_%H%M")
@@ -505,9 +527,11 @@ def steam_crawling(driver, dictionary_list, dictionary_list_genre):
             saleper = saleper.text
 
         driver.execute_script(f'window.open(\'{move}\');')
+        sleep(2)
         driver.switch_to.window(driver.window_handles[-1])
-        sleep(1.5)
-        new_soup = BeautifulSoup(driver.page_source, "html.parser")
+        sleep(3)
+        new_html = driver.page_source
+        new_soup = BeautifulSoup(new_html, "html.parser")
 
         check = new_soup.select_one("div.agegate_btn_ctn")
         if check != None:
@@ -565,8 +589,10 @@ def steam_crawling(driver, dictionary_list, dictionary_list_genre):
             data_genre = {'TITLE' : title, 'GENRE' : tag[num]}
             dictionary_list_genre.append(data_genre)
             num += 1
+        print(f'steam genre - {title}.append')
 
         #탭 종료후 원래 탭(베스트게임 페이지)으로 이동
+        sleep(0.5)
         driver.close()
         driver.switch_to.window(driver.window_handles[-1])
 
@@ -594,11 +620,16 @@ def steam_start():
             #반복문으로 할인중인 게임 목록에 '더 보기' 버튼이 존재하면 해당 버튼을 누르고 없어지면 반복문을 빠져나오게 작성
             for __ in range(10000000000):
                 button = find_element_by_css(driver, '#SaleSection_13268 > div.partnersaledisplay_SaleSection_2NfLq.eventbbcodeparser_SaleSectionCtn_2Xrw_.SaleSectionForCustomCSS > div.saleitembrowser_SaleItemBrowserContainer_2wLns > div:nth-child(2) > div.facetedbrowse_FacetedBrowseInnerCtn_hWbTI > div > div.saleitembrowser_ShowContentsContainer_3IRkb > button')
-                if btn_num < 20:
+                if btn_num < 21:
                     #if else문 : '더 보기' 버튼이 존재하면(None 타입이 아니라 WebElement 타입이 반환되면)
                     if button != None:
                         #화면을 '더 보기' 버튼이 있는곳으로 이동시킨 후 버튼을 클릭한다
-                        action.move_to_element(button).click().perform()
+                        try:
+                            action.move_to_element(button).click().perform()
+                        except StaleElementReferenceException as e:
+                            print(f"버튼 없음 - {e}")
+                            mode = 1
+                            break
                         print("steam 버튼 클릭 - ", btn_num)
                         btn_num += 1
                         btn_check += 1
@@ -609,7 +640,12 @@ def steam_start():
                         break
                 else:
                     steam_crawling(driver, dictionary_list, dictionary_list_genre)
-                    action.move_to_element(button).click().perform()
+                    try:
+                        action.move_to_element(button).click().perform()
+                    except StaleElementReferenceException as e:
+                        print(f"버튼 없음 - {e}")
+                        mode = 1
+                        break
                     sleep(1.5)
                     url = driver.current_url
                     btn_num = 1
@@ -629,10 +665,13 @@ def steam_start():
                 d_imgdata = data['IMGDATA']
                 d_gameimg = data['GAMEIMG']
                 d_url = data['URL']
+
+                d_title = rmEmoji_ascii(d_title)
+                d_description = rmEmoji_ascii(d_description)
                 
                 # 데이터베이스에 해당 TITLE이 존재하는지 확인
                 query = "SELECT * FROM gamedata_steam WHERE TITLE = %s"
-                cursor.execute(query, (d_title))
+                cursor.execute(query, (d_title, ))
                 result = cursor.fetchone()
 
                 if result is None:
@@ -651,7 +690,7 @@ def steam_start():
                         print(f"{platform} - UPDATE: {d_title} (할인가 바뀜, Varia Update)")
                     else: # 할인가격이 똑같으면 할인은 계속 진행중이므로 varia 값을 1로 변경
                         update_query = "UPDATE gamedata_steam SET VARIA = 1 WHERE TITLE = %s"
-                        cursor.execute(update_query, (d_title))
+                        cursor.execute(update_query, (d_title, ))
                         conn.commit()
                         print(f"{platform} - UPDATE: {d_title} (아직 할인중, VARIA Update)")
 
@@ -665,8 +704,10 @@ def steam_start():
                 g_title = data['TITLE']
                 g_genre = data['GENRE']
 
+                g_title = rmEmoji_ascii(g_title)
+
                 query = "SELECT * FROM gamedata_steam WHERE TITLE = %s"
-                cursor.execute(query, (g_title))
+                cursor.execute(query, (g_title, ))
                 result = cursor.fetchone()
 
                 if result is None: # title값이 존재하지않으면 장르는 안넣어도됨
@@ -675,10 +716,10 @@ def steam_start():
                     insert_query = "INSERT INTO gamedata_steam_genre (TITLE, GENRE) VALUES (%s, %s)"
                     try:
                         cursor.execute(insert_query, (g_title, g_genre))
-                        conn.commit()
-                        print(f"{platform} - GENRE INSERT: {g_title}")
+                        print(f'{platform} - {g_title} genre 입력 완료')
                     except:
-                        print(f'{platform} - 이미 장르값이 존재하던 타이틀이라 스킵')
+                        print(f"{g_title} - 타이틀 중복 오류")
+                    conn.commit()
 
             newtime = datetime.now()
             newtimestr = newtime.strftime("%Y%m%d_%H%M")
@@ -826,10 +867,13 @@ def epic_crawling():
         d_imgdata = data['IMGDATA']
         d_gameimg = data['GAMEIMG']
         d_url = data['URL']
+
+        d_title = rmEmoji_ascii(d_title)
+        d_description = rmEmoji_ascii(d_description)
         
         # 데이터베이스에 해당 TITLE이 존재하는지 확인
         query = "SELECT * FROM gamedata_epic WHERE TITLE = %s"
-        cursor.execute(query, (d_title))
+        cursor.execute(query, (d_title, ))
         result = cursor.fetchone()
 
         if result is None:
@@ -848,7 +892,7 @@ def epic_crawling():
                 print(f"{platform} - UPDATE: {d_title} (할인가 바뀜, Varia Update)")
             else: # 할인가격이 똑같으면 할인은 계속 진행중이므로 varia 값을 1로 변경
                 update_query = "UPDATE gamedata_epic SET VARIA = 1 WHERE TITLE = %s"
-                cursor.execute(update_query, (d_title))
+                cursor.execute(update_query, (d_title, ))
                 conn.commit()
                 print(f"{platform} - UPDATE: {d_title} (아직 할인중, VARIA Update)")
 
@@ -861,9 +905,11 @@ def epic_crawling():
     for data in dictionary_list_genre:
         g_title = data['TITLE']
         g_genre = data['GENRE']
+        
+        g_title = rmEmoji_ascii(g_title)
 
         query = "SELECT * FROM gamedata_epic WHERE TITLE = %s"
-        cursor.execute(query, (g_title))
+        cursor.execute(query, (g_title, ))
         result = cursor.fetchone()
 
         if result is None: # title값이 존재하지않으면 장르는 안넣어도됨
@@ -872,10 +918,10 @@ def epic_crawling():
             insert_query = "INSERT INTO gamedata_epic_genre (TITLE, GENRE) VALUES (%s, %s)"
             try:
                 cursor.execute(insert_query, (g_title, g_genre))
-                conn.commit()
-                print(f"{platform} - GENRE INSERT: {g_title}")
+                print(f'{platform} - {g_title} genre 입력 완료')
             except:
-                print(f'{platform} - 이미 장르값이 존재하던 타이틀이라 스킵')
+                print(f"{g_title} - 타이틀 중복 오류")
+            conn.commit()
 
     newtime = datetime.now()
     newtimestr = newtime.strftime("%Y%m%d_%H%M")
@@ -886,17 +932,20 @@ def epic_crawling():
 
 def danawa_crawling():
     URL = 'https://prod.danawa.com/game/index.php'
-    platform = 'danawa'
+    platform_ = 'danawa'
 
-    driver = Driver_Start(platform, URL)
+    driver = Driver_Start(platform_, URL)
     action = ActionChains(driver)
 
     before_date = ""
     dictionary_list = []
+    month = None
 
     for _ in range(100000000):
         soup = BeautifulSoup(driver.page_source, "html.parser")
         gamelist = soup.select_one('div.upc_tbl_wrap').select('tr')
+        year = soup.select_one('em#nYear').text
+        etc = None
 
         for list in gamelist:
             date = list.select_one('td.date')
@@ -904,6 +953,11 @@ def danawa_crawling():
                 date = date.text.strip()
                 date = date.replace('.', '-')
                 date = re.sub(r'\(.\)', '', date)
+
+                if '년' in date:
+                    month = None
+                elif '월' in date:
+                    month = before_date[5:7]
 
             if date == "":
                 date = before_date
@@ -930,8 +984,16 @@ def danawa_crawling():
                 price = price.text.strip()
             
             before_date = date
-            if date != None and platform != None and title != None and price != None:
-                data = {'DATE' : date, 'TITLE' : title, 'PLATFORM' : platform, 'PRICE' : price}
+
+            if date != None and not re.match(r'\d{4}-\d{2}-\d{2}', date):
+                date = None
+                if month != None:
+                    etc = year + "-" + month + " 출시 예정"
+                else:
+                    etc = year + " 출시 예정"
+
+            if platform != None and title != None and price != None:
+                data = {'DATE' : date, 'TITLE' : title, 'PLATFORM' : platform, 'PRICE' : price, 'ETC' : etc}
                 dictionary_list.append(data)
 
         next_page_btn = driver.find_element(By.XPATH, '//*[@id="#nav_edge_next"]')
@@ -953,6 +1015,7 @@ def danawa_crawling():
         title = data['TITLE']
         platform = data['PLATFORM']
         price = data['PRICE']
+        etc = data['ETC']
         # 데이터베이스에 해당 TITLE이 존재하는지 확인
         query = "SELECT * FROM release_info WHERE TITLE = %s AND platform = %s"
         cursor.execute(query, (title, platform))
@@ -960,8 +1023,8 @@ def danawa_crawling():
 
         if result is None:
             # 데이터베이스에 존재하지 않으면 INSERT
-            insert_query = "INSERT INTO release_info (DATE, TITLE, PLATFORM, PRICE) VALUES (%s, %s, %s, %s)"
-            cursor.execute(insert_query, (date, title, platform, price))
+            insert_query = "INSERT INTO release_info (DATE, TITLE, PLATFORM, PRICE) VALUES (%s, %s, %s, %s, %s)"
+            cursor.execute(insert_query, (date, title, platform, price, etc))
             conn.commit()
             print(f"INSERT: {title}")
         else:
@@ -984,18 +1047,10 @@ def danawa_crawling():
     conn.commit()
 
     sleep(2)
-    print(f"{platform} 크롤링 완료")
+    print(f"{platform_} 크롤링 완료")
     driver.quit()
 
 if __name__ == "__main__":
-    services = Service(executable_path=ChromeDriverManager().install())
-    options = Options()
-    options.add_argument("headless")
-    driver = webdriver.Chrome(service=services, options=options)
-    driver.get('https://www.google.com')
-    driver.quit()
-    print("Chromedriver Install 완료")
-    sleep(1)
     # 멀티프로세싱을 사용하여 각 코드 블록을 별도의 프로세스에서 실행
     process1 = multiprocessing.Process(target=nintendo_crawling)
     process2 = multiprocessing.Process(target=ps_crawling)
@@ -1007,12 +1062,35 @@ if __name__ == "__main__":
         process1.start()
     except:
         print("process1 시작 오류")
-
     sleep(3)
+
+    try:
+        process3.start()
+    except:
+        print("process3 시작 오류")
+    sleep(3)
+
+    try:
+        process5.start()
+    except:
+        print("process5 시작 오류")
+    sleep(3)
+
+    try:
+        process5.join()
+    except:
+        pass
+
     try:
         process2.start()
     except:
         print("process2 시작 오류")
+
+    try:
+        process4.start()
+    except:
+        print("process4 시작 오류")
+    sleep(3)
 
     # 프로세스 종료 대기
     try:
@@ -1022,42 +1100,20 @@ if __name__ == "__main__":
     try:
         process2.join()
     except:
-        pass    
-
-    sleep(3)
-    try:
-        process3.start()
-    except:
-        print("process3 시작 오류")
-    sleep(3)
-    try:
-        process4.start()
-    except:
-        print("process4 시작 오류")
-
-    sleep(3)
-    try:
-        process5.start()
-    except:
-        print("process5 시작 오류")
-
+        pass
     try:
         process3.join()
     except:
-        pass    
-    try:
-        process4.join()
-    except:
         pass
     try:
-        process5.join()
+        process4.join()
     except:
         pass
 
     nowtime = datetime.now()
     formattime = nowtime.strftime("%Y-%m-%d %H:%M:%S")
 
-    sql = 'INSERT INTO crawling_time (ENDTIME) VALUES (%s)'
+    sql = 'UPDATE crawling_time SET ENDTIME = %s ORDER BY ENDTIME LIMIT 1'
     cursor.execute(sql, (formattime, ))
     conn.commit()
 
