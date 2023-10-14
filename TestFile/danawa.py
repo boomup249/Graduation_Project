@@ -23,12 +23,13 @@ conn = MySQLdb.connect(
 cursor = conn.cursor()
 
 cursor.execute("DROP TABLE IF EXISTS release_info")
-cursor.execute('''CREATE TABLE IF NOT EXISTS release_info (`DATE` VARCHAR(15) NULL DEFAULT NULL,
-                                                            `TITLE` VARCHAR(100) NOT NULL,
-                                                            `PLATFORM` VARCHAR(15) NULL DEFAULT NULL,
-                                                            `PRICE` VARCHAR(15) NULL DEFAULT NULL,
-										                    `VARIA` TINYINT(1) NULL DEFAULT '1',
-                                                            PRIMARY KEY (`TITLE`)
+cursor.execute('''CREATE TABLE IF NOT EXISTS release_info (`DATE` DATE NULL DEFAULT NULL,
+										                   `TITLE` VARCHAR(200) NOT NULL,
+										                   `PLATFORM` VARCHAR(15) NULL DEFAULT NULL,
+										                   `PRICE` VARCHAR(15) NULL DEFAULT NULL,
+										                   `ETC` VARCHAR(15) NULL DEFAULT NULL,
+										                   `VARIA` TINYINT(1) NULL DEFAULT 1,
+										                   PRIMARY KEY (`TITLE`)
             )''')
 
 url = 'https://prod.danawa.com/game/index.php'
@@ -54,10 +55,13 @@ action = ActionChains(driver)
 
 before_date = ""
 dict_list = []
+month = None
 
 for _ in range(10000000000000):
     soup = BeautifulSoup(driver.page_source, "html.parser")
     gamelist = soup.select_one('div.upc_tbl_wrap').select('tr')
+    year = soup.select_one('em#nYear').text
+    etc = None
 
     for list in gamelist:
         date = list.select_one('td.date')
@@ -65,6 +69,11 @@ for _ in range(10000000000000):
             date = date.text.strip()
             date = date.replace('.', '-')
             date = re.sub(r'\(.\)', '', date)
+
+            if '년' in date:
+                month = None
+            elif '월' in date:
+                month = before_date[5:7]
 
         if date == "":
             date = before_date
@@ -91,9 +100,17 @@ for _ in range(10000000000000):
             price = price.text.strip()
         
         before_date = date
-        if date != None and platform != None and title != None and price != None:
-            sql = 'INSERT INTO release_info (DATE, TITLE, PLATFORM, PRICE) VALUES (%s, %s, %s, %s)'
-            cursor.execute(sql, (date, title, platform, price))
+
+        if date != None and not re.match(r'\d{4}-\d{2}-\d{2}', date):
+            date = None
+            if month != None:
+                etc = year + "-" + month + " 출시 예정"
+            else:
+                etc = year + " 출시 예정"
+        
+        if platform != None and title != None and price != None:
+            sql = 'INSERT INTO release_info (DATE, TITLE, PLATFORM, PRICE, ETC) VALUES (%s, %s, %s, %s, %s)'
+            cursor.execute(sql, (date, title, platform, price, etc))
             conn.commit()
             print(f'{title} DB 입력 완료')
 
