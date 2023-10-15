@@ -6,15 +6,82 @@
 		<!-- 외부 css -->
 		<link rel="stylesheet" href="css/font.css"> <!-- 폰트 css -->
 		<link rel="stylesheet" href="css/header.css"> <!-- 헤더 css -->
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.9.0/main.css">
+		
+		<!--<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.9.0/main.css">-->
 	    
-	    <!--날짜 부분 텍스트 색상 변경-->
+	    <!-- js -->
+	    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/index.global.min.js'></script>
+	    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+		<script>
+	        document.addEventListener('DOMContentLoaded', function() {
+				
+	            //ajax
+	            var req = $.ajax({
+					url: "/news_event",
+					type: "get",
+					dataType:"json"
+					
+				});
+				
+				req.done(function(data){ //ajax 성공하면 달력에 데이터 넣기
+					
+					var calendarEl = document.getElementById('calendar');
+					
+					//
+					
+					var calendar = new FullCalendar.Calendar(calendarEl, {
+	                initialView: 'dayGridMonth',
+	                
+	                dayMaxEventRows: true,
+	                views: {
+						timeGrid: {
+							dayMaxEventRows: 3
+						}
+					},
+	                
+	                events: data,
+	                
+	                eventClick: function(info) {
+	                    // 이벤트 클릭 시 모달 창을 표시
+	                    var modal = document.getElementById('eventModal');
+	                    var eventTitle = document.getElementById('eventTitle');
+	                    var eventDetails = document.getElementById('eventDetails');
+	    
+	                    // 이벤트 정보를 모달 창에 추가
+	                   	eventTitle.innerText = info.event.title;
+						var startDate = info.event.start.toLocaleDateString();
+						eventDetails.innerHTML = '<p>날짜: ' + startDate + '</p>' +
+						    '<p>가격: ' + info.event.extendedProps.price + '</p>' + 
+						    '<p>플랫폼: ' + info.event.extendedProps.platform + '</p>' +
+						    '<p>기타: ' + info.event.extendedProps.etc + '</p>';
+	                    modal.style.display = 'block';
+	    
+	                    // 모달 창의 닫기 버튼에 이벤트 리스너 추가
+	                    var closeBtn = modal.querySelector('.close');
+	                    closeBtn.addEventListener('click', function() {
+	                        modal.style.display = 'none';
+	                    });
+	                }
+	            });
+	            calendar.render();
+	        });
+					
+					//
+					
+				});
+	            
+	    </script>
+	    
+	    
+	    <!--날짜 부분 텍스트 색상 변경--><!-- 이거 적용되면 more 눌렀을때 글씨 안보여서 잠깐 끔 -->
+	    <!--
 	    <script>
 		  document.addEventListener('DOMContentLoaded', function() {
 		    var calendarText = document.querySelector('#calendar');
 		    calendarText.style.color = '#FFFFFF'; 
 		  });
 		</script>
+		-->
 	    
 		<style>
 			/*css 속성*/
@@ -25,9 +92,10 @@
 			    left: 0px;
 			    width: 100%;    
 			    height: calc(100% - 100px);
-			    overflow: hidden;
+			    overflow-y: scroll;
 			}
 			
+			/*달력*/
 			#calendar {
 				top: 0%;
 				left: 0%;
@@ -36,7 +104,40 @@
 			 	width: 1100px;
 			 	height: 800px;
 			}
-				
+			
+				/*달력 세부*/
+			.fc-toolbar-title { /* 달력 제목만 흰색(more 눌렀을때 안 보여서, 나중에 디자인 수정하면 고치기) */
+				color: #FFFFFF;
+			}
+			
+			.fc-event:hover { /* 이벤트에 마우스 갖다대면 클릭할 수 있다고 알려주기 */
+				cursor: pointer; 
+			}
+			
+			.fc-event-time { /* 시간이 계속 의미없이 떠서 제거 */
+				display: none;
+			}
+			
+			.fc-popover { /* more 눌렀을때 팝업창이 z-index가 너무 높아서 조절함 */
+				z-index: 10 !important;
+			}
+			
+	        .fc-daygrid { /* 달력 전체에 배경색 적용 */
+	            background-color: #FFFFFF;
+	        }
+	
+	        .fc-daygrid-day { /* 날짜 부분에 배경색 제거 */
+	            background-color: transparent !important;
+	        }
+	        
+	        .fc-day-today {
+			    background-color: lightyellow !important; /* 연노란색 배경 색상 */
+			 }
+			 	/*달력 세부 end*/
+			 /*달력 end*/
+			
+			
+			/*박스*/
 			.box {
 				margin: 50px;
 			}
@@ -55,23 +156,8 @@
 			    height: 400px;
 			    background-color: white;
 			}
-
-			 /* 달력 전체에 배경색 적용 */
-	        .fc-daygrid {
-	            background-color: #FFFFFF;
-	        }
-	
-	        /* 날짜 부분에 배경색 제거 */
-	        .fc-daygrid-day {
-	            background-color: transparent !important;
-	        }
-	        
-	        .fc-day-today {
-			    background-color: lightyellow !important; /* 연노란색 배경 색상 */
-			 }
-			 
-			body { background-color: #222831;
-					margin: 0; padding: 0;}
+			/*박스 end*/
+			
 					
 			/* 모달 스타일 */
 	        .modal {
@@ -82,7 +168,7 @@
 	            width: 100%;
 	            height: 100%;
 	            background-color: rgba(0, 0, 0, 0.7);
-	            z-index: 1;
+	            z-index: 99; /* modal 최상단으로 */
 	        }
 	
 	        .modal-content {
@@ -107,6 +193,12 @@
 				font-size: 30px;
 				font-style: italic;
 			}
+			/* 모달 스타일 end*/
+			
+			
+			body { background-color: #222831;
+					margin: 0; padding: 0;}
+					
 		</style>
 	</head>
 	<body>
@@ -193,93 +285,6 @@
 						</div>
 					</div>
 				</div>
-		<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.9.0/main.js"></script>
-		<script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var calendarEl = document.getElementById('calendar');
-            var calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth',
-                events: [
-               		{
-                        title: '어쌔신 크리드: 미라지 한글판 (PS5, 패키지디스크)',
-                        start: '2023-10-05',
-                        platform: 'PS5',
-                        price: '23440원'
-                    },
-                    {
-                        title: '호라이즌 포비든 웨스트 컴플리트 에디션 한글판 (PS5, 패키지디스크)',
-                        start: '2023-10-06',
-                        platform: 'PS5',
-                        price: '14440원'
-                    },
-                    {
-                        title: '다운타운 열혈이야기 SP 한글판 (SWITCH, 패키지칩)',
-                        start: '2023-10-10',
-                        platform: 'SWITCH',
-                        price: '23410원'
-                    },
-                    {
-                        title: '칼리굴라 2 한글판 (PS5, 패키지디스크)',
-                        start: '2023-10-12',
-                        platform: 'PS5',
-                        price: '57840원'
-                    },
-                    {
-                        title: '레드 데드 리뎀션 한글판 (SWITCH, 패키지칩)',
-                        start: '2023-10-13',
-                        platform: 'SWITCH',
-                        price: '32420원'
-                    },
-                    {
-                        title: '소닉 슈퍼스타즈 한글판 (SWITCH, 패키지칩)',
-                        start: '2023-10-18',
-                        platform: 'SWITCH',
-                        price: '12340원'
-                    },
-                    {
-                        title: '슈퍼 마리오브라더스 원더 일본판 (SWITCH, 패키지칩/해외구매)',
-                        start: '2023-10-19',
-                        platform: 'SWITCH',
-                        price: '32840원'
-                    },
-                    {
-                        title: '패션 드리머 한글판 (SWITCH, 패키지칩)',
-                        start: '2023-10-20',
-                        platform: 'SWITCH',
-                        price: '20원'
-                    },
-                    {
-                        title: 'UFC 5 한글판 (PS5, 패키지디스크)',
-                        start: '2023-10-26',
-                        platform: 'SWITCH',
-                        price: '20원'
-                    },
-                ],
-                eventClick: function(info) {
-                    // 이벤트 클릭 시 모달 창을 표시
-                    var modal = document.getElementById('eventModal');
-                    var eventTitle = document.getElementById('eventTitle');
-                    var eventDetails = document.getElementById('eventDetails');
-    
-                    // 이벤트 정보를 모달 창에 추가
-                   	eventTitle.innerText = info.event.title;
-					var startDate = info.event.start.toLocaleDateString();
-					eventDetails.innerHTML = '<p>날짜: ' + startDate + '</p>' +
-					    '<p>가격: ' + info.event.extendedProps.price + '</p>' + 
-					    '<p>플랫폼: ' + info.event.extendedProps.platform + '</p>' +
-					    '<p>기타: ' + info.event.extendedProps.etc + '</p>';
-                    modal.style.display = 'block';
-    
-                    // 모달 창의 닫기 버튼에 이벤트 리스너 추가
-                    var closeBtn = modal.querySelector('.close');
-                    closeBtn.addEventListener('click', function() {
-                        modal.style.display = 'none';
-                    });
-                }
-            });
-            calendar.render();
-        });
-    </script>
     
 	</body>	
 </html>	
