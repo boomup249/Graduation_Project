@@ -2,6 +2,7 @@ import importlib
 import csv
 from time import sleep
 import os
+import re
 
 def install_and_import(package):
     try:
@@ -134,12 +135,13 @@ cursor.execute('''CREATE TABLE IF NOT EXISTS gamedata_epic_genre (`NUM` INT NOT 
                                                                 ON DELETE CASCADE
                                                                 ON UPDATE CASCADE)
             ''')
-cursor.execute('''CREATE TABLE IF NOT EXISTS release_info (`DATE` VARCHAR(15) NULL DEFAULT NULL,
-										 `TITLE` VARCHAR(100) NOT NULL,
-										 `PLATFORM` VARCHAR(15) NULL DEFAULT NULL,
-										 `PRICE` VARCHAR(15) NULL DEFAULT NULL,
-										 `VARIA` TINYINT(1) NULL DEFAULT 1,
-										 PRIMARY KEY (`TITLE`))
+cursor.execute('''CREATE TABLE IF NOT EXISTS release_info (`DATE` DATE NULL DEFAULT NULL,
+										                   `TITLE` VARCHAR(200) NOT NULL,
+										                   `PLATFORM` VARCHAR(15) NULL DEFAULT NULL,
+										                   `PRICE` VARCHAR(15) NULL DEFAULT NULL,
+                                                           `ETC` VARCHAR(15) NULL DEFAULT NULL,
+                                                           `VARIA` TINYINT(1) NULL DEFAULT 1,
+                                                           PRIMARY KEY (`TITLE`));
             ''')
 
 def insert_gamedata(platform, filename1, filename2):
@@ -240,11 +242,12 @@ def insert_danawa(filename):
             csv_reader = csv.reader(file)
             next(csv_reader) # 첫번째 행은 헤더라 건너뜀
             for row in csv_reader:
+                date_value = None if row[0] == '' else row[0]
                 insert_query = """
-                INSERT INTO release_info (DATE, TITLE, PLATFORM, PRICE)
-                VALUES (%s, %s, %s, %s)
+                INSERT INTO release_info (`DATE`, `TITLE`, `PLATFORM`, `PRICE`, `ETC`)
+                VALUES (%s, %s, %s, %s, %s)
                 """
-                cursor.execute(insert_query, tuple(row))
+                cursor.execute(insert_query, (date_value, row[1], row[2], row[3], row[4]))
 
         conn.commit()
         print("danawa 데이터 삽입이 완료되었습니다.")
