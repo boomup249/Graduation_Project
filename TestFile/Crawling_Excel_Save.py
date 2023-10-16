@@ -16,6 +16,7 @@ from datetime import datetime
 from pathlib import Path
 import openpyxl
 import re
+from selenium.common.exceptions import StaleElementReferenceException
 
 mode1 = 0
 mode2 = 0
@@ -41,15 +42,16 @@ def saleper_calc(price, saleprice):
 
 def Driver_Start(platform, URL):
     #크롬드라이버 옵션 설정
+    services = Service(executable_path=ChromeDriverManager().install())
     options = Options()
     options.add_experimental_option("detach", True)
-    options.add_argument("headless")
+    options.add_argument("--headless=new")
     options.add_argument("disable-gpu")
     options.add_argument("lang=ko_KR")
     options.add_argument('user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36')
 
     #크롬드라이버 인스턴스 생성 및 옵션, 크기, URL, 암시적 대기 설정
-    driver = webdriver.Chrome(options=options)
+    driver = webdriver.Chrome(service=services, options=options)
     driver.implicitly_wait(10)
     driver.set_window_size(1920,1080)
     driver.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument", {"source": """ Object.defineProperty(navigator, 'webdriver', { get: () => undefined }) """})
@@ -59,6 +61,9 @@ def Driver_Start(platform, URL):
 
     print(platform,"driver 생성 완료")
     return driver
+
+def rmEmoji_ascii(inputString):
+    return inputString.encode('utf-8', 'ignore').decode('utf-8')
 
 def nintendo_crawling():
     platform = 'switch'
@@ -111,10 +116,7 @@ def nintendo_crawling():
             imgdata = img["src"]
 
         if price == None:
-            price = item.find("span", class_="point-icon-wrapper")
-            price = price.text + "포인트"
-            saleprice = "포인트로 구매 가능"
-            saleper = "X"
+            continue
         else:
             price = price.find("span").text
             saleprice = saleprice.find("span").text
@@ -163,6 +165,9 @@ def nintendo_crawling():
 
         if gameimg != None:
             gameimg = gameimg["src"]
+
+        title = rmEmoji_ascii(title)
+        description = rmEmoji_ascii(description)
 
         gamedata_column = [title, price, saleprice, saleper, description, imgdata, gameimg, move]
         excel_gamedata_sheet.append(gamedata_column)
@@ -300,12 +305,12 @@ def ps_crawling():
                 saleprice = "무료"
                 #-100% 할인도 적혀있지않다면 구매할수없는 게임이기에 정가, 할인가, 할인율의 값을 "구매할 수 없음"으로 설정
                 if saleper == None:
-                    price = game.find("span", class_="psw-m-r-3").text
-                    saleprice = "X"
-                    saleper = "X"
+                    price = None
+                    saleprice = game.find("span", class_="psw-m-r-3").text
+                    saleper = None
                 else:
                     saleper = saleper.text
-            #saleper가 None이 아니였기때문에 price와 saleprice를 크롤링
+            #saleper가 None이 아니였기때문에(할인율 써있기때문에) price와 saleprice를 크롤링
             else:
                 price = game.find("s").text
                 saleprice = game.find("span", class_="psw-m-r-3").text
@@ -359,6 +364,9 @@ def ps_crawling():
             
             sleep(0.5)
             
+            title = rmEmoji_ascii(title)
+            description = rmEmoji_ascii(description)
+
             gamedata_column = [title, price, saleprice, saleper, description, imgdata, gameimg, move]
             excel_gamedata_sheet.append(gamedata_column)
             
@@ -430,9 +438,9 @@ def steam_crawling(driver, excel_gamedata_sheet, excel_gamegenre_sheet):
         
         #게임은 할인하는데 확장팩이 할인안하는 경우 price와 saleper가 안적혀있어서 if문 작성
         if price == None:
-            price = "할인 X"
-            saleprice = "할인 X"
-            saleper = "할인 X"
+            price = None
+            saleprice = price.text
+            saleper = None
         else:
             price = price.text
             saleprice = saleprice.text
@@ -490,6 +498,9 @@ def steam_crawling(driver, excel_gamedata_sheet, excel_gamegenre_sheet):
         tag_length = len(tag)
         num = 0
 
+        title = rmEmoji_ascii(title)
+        description = rmEmoji_ascii(description)
+
         gamedata_column = [title, price, saleprice, saleper, description, imgdata, gameimg, move]
         excel_gamedata_sheet.append(gamedata_column)
 
@@ -504,7 +515,6 @@ def steam_crawling(driver, excel_gamedata_sheet, excel_gamegenre_sheet):
         #탭 종료후 원래 탭(베스트게임 페이지)으로 이동
         driver.close()
         driver.switch_to.window(driver.window_handles[-1])
-
 
 def steam_start():
     platform = 'steam'
@@ -543,8 +553,13 @@ def steam_start():
                 if btn_num < 20:
                     #if else문 : '더 보기' 버튼이 존재하면(None 타입이 아니라 WebElement 타입이 반환되면)
                     if button != None:
+                        try:
+                            action.move_to_element(button).click().perform()
+                        except StaleElementReferenceException as e:
+                            print(f"버튼 없음 - {e}")
+                            mode = 1
+                            break
                         #화면을 '더 보기' 버튼이 있는곳으로 이동시킨 후 버튼을 클릭한다
-                        action.move_to_element(button).click().perform()
                         print("steam 버튼 클릭 - ", btn_num)
                         btn_num += 1
                         btn_check += 1
@@ -555,7 +570,12 @@ def steam_start():
                         break
                 else:
                     steam_crawling(driver, excel_gamedata_sheet, excel_gamegenre_sheet)
-                    action.move_to_element(button).click().perform()
+                    try:
+                        action.move_to_element(button).click().perform()
+                    except StaleElementReferenceException as e:
+                        print(f"버튼 없음 - {e}")
+                        mode = 1
+                        break
                     sleep(1.5)
                     url = driver.current_url
                     btn_num = 1
@@ -679,6 +699,9 @@ def epic_crawling():
             tag_length = len(tag)
             num = 0
 
+            title = rmEmoji_ascii(title)
+            description = rmEmoji_ascii(description)
+
             gamedata_column = [title, price, saleprice, saleper, description, imgdata, gameimg, move]
             excel_gamedata_sheet.append(gamedata_column)
 
@@ -733,7 +756,7 @@ def danawa():
 
     excel_releasedata = openpyxl.Workbook()
     excel_sheet = excel_releasedata.active
-    gamedata_row_column = ["DATE", "TITLE", "PLATFORM", "PRICE"]
+    gamedata_row_column = ["DATE", "TITLE", "PLATFORM", "PRICE", "ETC"]
     excel_sheet.append(gamedata_row_column)
     path = f'C:\Crawling_Excel_File\{timestr}'
     Path(path).mkdir(parents=True, exist_ok=True)
@@ -741,10 +764,13 @@ def danawa():
     action = ActionChains(driver)
 
     before_date = ""
+    month = None
 
     for _ in range(10000000000000):
         soup = BeautifulSoup(driver.page_source, "html.parser")
         gamelist = soup.select_one('div.upc_tbl_wrap').select('tr')
+        year = soup.select_one('em#nYear').text
+        etc = None
 
         for list in gamelist:
             date = list.select_one('td.date')
@@ -752,6 +778,11 @@ def danawa():
                 date = date.text.strip()
                 date = date.replace('.', '-')
                 date = re.sub(r'\(.\)', '', date)
+
+                if '년' in date:
+                    month = None
+                elif '월' in date:
+                    month = before_date[5:7]
 
             if date == "":
                 date = before_date
@@ -778,8 +809,16 @@ def danawa():
                 price = price.text.strip()
             
             before_date = date
-            if date != None and platform != None and title != None and price != None:
-                gamedata_column = [date, title, platform, price]
+
+            if date != None and not re.match(r'\d{4}-\d{2}-\d{2}', date):
+                date = None
+                if month != None:
+                    etc = year + "-" + month + " 출시 예정"
+                else:
+                    etc = year + " 출시 예정"
+
+            if platform != None and title != None and price != None:
+                gamedata_column = [date, title, platform, price, etc]
                 excel_sheet.append(gamedata_column)
                 print(f'danawa - {title} DB 입력 완료')
 
@@ -801,21 +840,12 @@ def danawa():
     driver.quit()
 
 if __name__ == "__main__":
-    services = Service(executable_path=ChromeDriverManager().install())
-    options = Options()
-    options.add_argument("headless")
-    driver = webdriver.Chrome(service=services, options=options)
-    driver.get('https://www.google.com')
-    driver.quit()
-    print("Chromedriver Install 완료")
-    sleep(1)
     # 멀티프로세싱을 사용하여 각 코드 블록을 별도의 프로세스에서 실행
     process1 = multiprocessing.Process(target=nintendo_crawling)
     process2 = multiprocessing.Process(target=ps_crawling)
     process3 = multiprocessing.Process(target=steam_start)
     process4 = multiprocessing.Process(target=epic_crawling)
     process5 = multiprocessing.Process(target=danawa)
-
     """
     try:
         process1.start()
@@ -827,21 +857,26 @@ if __name__ == "__main__":
     except:
         print("process2 시작 오류")
     sleep(3)
+    """
     try:
         process3.start()
     except:
         print("process3 시작 오류")
-    sleep(3)
-    try:
-        process4.start()
-    except:
-        print("process4 시작 오류")
     sleep(3)
     """
     try:
         process5.start()
     except:
         print("process5 시작 오류")
+
+    try:
+        process5.join()
+    except:
+        pass
+    try:
+        process4.start()
+    except:
+        print("process4 시작 오류")
 
     # 프로세스 종료 대기
     try:
@@ -853,16 +888,12 @@ if __name__ == "__main__":
     except:
         pass    
     try:
-        process3.join()
-    except:
-        pass    
-    try:
         process4.join()
     except:
         pass
+    """
     try:
-        process5.join()
+        process3.join()
     except:
-        pass
-
+        pass    
     quit()
