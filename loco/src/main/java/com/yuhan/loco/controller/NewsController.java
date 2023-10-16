@@ -33,5 +33,11 @@ public class NewsController {
 	public List<NewsDTO> getEvent() {
 		return nService.getCalendarNews();
 	}
+    
+    @GetMapping("/news_memo")
+    @ResponseBody
+    public List<NewsDTO> getMemoNews() {
+        return nService.getMemoNews();
+    }
 
 }

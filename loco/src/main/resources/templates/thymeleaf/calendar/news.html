@@ -13,65 +13,85 @@
 	    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/index.global.min.js'></script>
 	    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 		<script>
+		    document.addEventListener('DOMContentLoaded', function() {
+			    var req = $.ajax({
+			        url: "/news_event",
+			        type: "get",
+			        dataType: "json"
+			    });
+			
+			    req.done(function(data) {
+			        var calendarEl = document.getElementById('calendar');
+			        var calendar = new FullCalendar.Calendar(calendarEl, {
+			            initialView: 'dayGridMonth',
+			            dayMaxEventRows: true,
+			            views: {
+			                timeGrid: {
+			                    dayMaxEventRows: 3
+			                }
+			            },
+			            events: data,
+			            eventClick: function(info) {
+			                var modal = document.getElementById('eventModal');
+			                var eventTitle = document.getElementById('eventTitle');
+			                var eventDetails = document.getElementById('eventDetails');
+			
+			                eventTitle.innerText = info.event.title;
+			                var startDate = info.event.start.toLocaleDateString();
+			                eventDetails.innerHTML = '<p>날짜: ' + startDate + '</p>' +
+			                    '<p>가격: ' + info.event.extendedProps.price + '</p>' + 
+			                    '<p>플랫폼: ' + info.event.extendedProps.platform + '</p>' +
+			                    '<p>기타: ' + info.event.extendedProps.etc + '</p>';
+			                modal.style.display = 'block';
+			
+			                var closeBtn = modal.querySelector('.close');
+			                closeBtn.addEventListener('click', function() {
+			                    modal.style.display = 'none';
+			                });
+			            },
+			            // datesSet: 이전/다음달 선택시 bottom-box의 날짜가 바뀌게 함
+			            datesSet: function(info) {
+			                var currentYear = info.view.currentStart.getFullYear();
+			                var currentMonth = info.view.currentStart.getMonth() + 1;
+			                var currentYearElement = document.getElementById('currentYear');
+			                var currentMonthElement = document.getElementById('currentMonth');
+			                currentYearElement.innerText = currentYear;
+			                currentMonthElement.innerText = currentMonth;
+			            }
+			        });
+			        calendar.render();
+			    });
+		        // 현재 연도와 월 가져오기
+		        var currentYear = new Date().getFullYear();
+		        var currentMonth = new Date().getMonth() + 1; // 월은 0부터 시작하므로 +1
+
+		        // 현재 연도와 월 업데이트
+		        var currentYearElement = document.getElementById('currentYear');
+		        var currentMonthElement = document.getElementById('currentMonth');
+		        currentYearElement.innerText = currentYear;
+		        currentMonthElement.innerText = currentMonth;
+		    });
+		</script>
+
+	     <script>
 	        document.addEventListener('DOMContentLoaded', function() {
-				
-	            //ajax
 	            var req = $.ajax({
-					url: "/news_event",
-					type: "get",
-					dataType:"json"
-					
-				});
-				
-				req.done(function(data){ //ajax 성공하면 달력에 데이터 넣기
-					
-					var calendarEl = document.getElementById('calendar');
-					
-					//
-					
-					var calendar = new FullCalendar.Calendar(calendarEl, {
-	                initialView: 'dayGridMonth',
-	                
-	                dayMaxEventRows: true,
-	                views: {
-						timeGrid: {
-							dayMaxEventRows: 3
-						}
-					},
-	                
-	                events: data,
-	                
-	                eventClick: function(info) {
-	                    // 이벤트 클릭 시 모달 창을 표시
-	                    var modal = document.getElementById('eventModal');
-	                    var eventTitle = document.getElementById('eventTitle');
-	                    var eventDetails = document.getElementById('eventDetails');
-	    
-	                    // 이벤트 정보를 모달 창에 추가
-	                   	eventTitle.innerText = info.event.title;
-						var startDate = info.event.start.toLocaleDateString();
-						eventDetails.innerHTML = '<p>날짜: ' + startDate + '</p>' +
-						    '<p>가격: ' + info.event.extendedProps.price + '</p>' + 
-						    '<p>플랫폼: ' + info.event.extendedProps.platform + '</p>' +
-						    '<p>기타: ' + info.event.extendedProps.etc + '</p>';
-	                    modal.style.display = 'block';
-	    
-	                    // 모달 창의 닫기 버튼에 이벤트 리스너 추가
-	                    var closeBtn = modal.querySelector('.close');
-	                    closeBtn.addEventListener('click', function() {
-	                        modal.style.display = 'none';
-	                    });
-	                }
+	                url: "/news_memo", // /news_memo 엔드포인트로 변경
+	                type: "get",
+	                dataType: "json"
 	            });
-	            calendar.render();
+	
+	            req.done(function(data) {
+	                var topBox = document.querySelector('.top-box');
+	
+	                data.forEach(function(news) {
+	                    var p = document.createElement('p');
+	                    p.innerText = news.title;
+	                    topBox.appendChild(p);
+	                });
+	            });
 	        });
-					
-					//
-					
-				});
-	            
 	    </script>
-	    
 	    
 	    <!--날짜 부분 텍스트 색상 변경--><!-- 이거 적용되면 more 눌렀을때 글씨 안보여서 잠깐 끔 -->
 	    <!--
@@ -97,12 +117,12 @@
 			
 			/*달력*/
 			#calendar {
-				top: 0%;
-				left: 0%;
-			 	float: left;
-			 	margin: 70px;
-			 	width: 1100px;
-			 	height: 800px;
+			    top: 0%;
+			    left: 0%;
+			    float: left;
+			    margin: 70px;
+			    width: 1100px;
+			    height: 800px; 
 			}
 			
 				/*달력 세부*/
@@ -264,24 +284,19 @@
 				        <span class="close">&times;</span>
 				        <h2 id="eventTitle">이벤트 상세 정보</h2>
 					        <div id="eventDetails">
-					            <!-- 이벤트 상세 정보를 여기에 표시합니다. -->
+					            <!-- 이벤트 상세 정보 여기에 표시 -->
 					        </div>
 					    </div>  
 					</div>
 					<div class="box">
 						<div class="top-box">
 						    <p id="plan">2023년 출시 예정 게임</p>
-						    <p> * 붉은 사막 PS5 (한글판)</p>
-						    <p> * 스컬 앤 본즈 PS5 (한글판)</p>
-						    <p> * 아바타: 프론티어 오브 판도라 PS5</p>
-						    <p> * 창세기전: 회색의 잔영 SWITCH (한글판)</p>
+						    <!-- 여기에 2023 예정 게임 목록 표시 -->
 						</div>
 						
 						<div class="bottom-box">
-						    <p id="plan">2023년 10월 출시 예정 게임</p>
-						    <p> * 환세취호전 플러스 한글판 (SWITCH, 한정판/패키지칩)</p>
-						    <p> * 환세취호전 플러스 한글판 (SWITCH, 패키지칩)</p>
-						    <p> * 끝내주게 춤춰라 메이드 인 와리오 한글판 (SWITCH, 패키지칩)</p>
+						    <p id="plan"><span id="currentYear"></span>년 <span id="currentMonth"></span>월 출시 예정 게임</p>
+						    <!-- 여기에 2023 n월 예정 게임 목록 표시 -->
 						</div>
 					</div>
 				</div>
