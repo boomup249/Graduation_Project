@@ -57,6 +57,12 @@
 			                var currentMonthElement = document.getElementById('currentMonth');
 			                currentYearElement.innerText = currentYear;
 			                currentMonthElement.innerText = currentMonth;
+			                
+			                // 추가: JavaScript에서 가져온 currentYear를 bottom-box의 span에 설정
+			                var bottomBoxCurrentYear = document.getElementById('bottomBoxCurrentYear');
+			                if (bottomBoxCurrentYear) {
+			                    bottomBoxCurrentYear.innerText = currentYear;
+			                }
 			            }
 			        });
 			        calendar.render();
@@ -290,13 +296,13 @@
 					</div>
 					<div class="box">
 						<div class="top-box">
-						    <p id="plan">2023년 출시 예정 게임</p>
-						    <!-- 여기에 2023 예정 게임 목록 표시 -->
+						    <p id="plan"><span id="currentYear"></span>년 출시 예정 게임</p>
+						    <!-- 여기에 202n 예정 게임 목록 표시 -->
 						</div>
 						
 						<div class="bottom-box">
-						    <p id="plan"><span id="currentYear"></span>년 <span id="currentMonth"></span>월 출시 예정 게임</p>
-						    <!-- 여기에 2023 n월 예정 게임 목록 표시 -->
+						    <p id="plan"><span id="bottomBoxCurrentYear"></span>년 <span id="currentMonth"></span>월 출시 예정 게임</p>
+						    <!-- 여기에 202n n월 예정 게임 목록 표시 -->
 						</div>
 					</div>
 				</div>
