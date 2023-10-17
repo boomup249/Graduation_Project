@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 
@@ -60,5 +61,13 @@ public class BBSService {
    public Page<BBSDB> findparty(int page){
 	   Pageable pageable = PageRequest.of(page, 5);
 	   return this.BBSrepository.findByCategory("party", pageable);
+   }
+   public Page<BBSDB> sortdate(int page){
+	   Pageable pageable = PageRequest.of(page, 5, Sort.by("date").descending());
+	   return this.BBSrepository.findAll(pageable);
+   }
+   public Page<BBSDB> sortview(int page){
+	   Pageable pageable = PageRequest.of(page, 5, Sort.by("views").descending());
+	   return this.BBSrepository.findAll(pageable);
    }
 }

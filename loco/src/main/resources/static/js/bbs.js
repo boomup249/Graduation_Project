@@ -4,7 +4,21 @@
         iframe.setAttribute("src", "/bbs_write");       
     });
     var currentURL = window.location.href;
-    
+    document.getElementById("btn_new").addEventListener("click", function () {
+        // iframe의 src 속성을 변경하여 /game/bbs_write 페이지를 표시
+        var iframe = document.querySelector(".change_frame");
+        iframe.setAttribute("src", "/new");       
+    });
+    document.getElementById("btn_popular").addEventListener("click", function () {
+        // iframe의 src 속성을 변경하여 /game/bbs_write 페이지를 표시
+        var iframe = document.querySelector(".change_frame");
+        iframe.setAttribute("src", "/views");       
+    });
+    document.getElementById("btn_search").addEventListener("click", function () {
+        // iframe의 src 속성을 변경하여 /game/bbs_write 페이지를 표시
+        var iframe = document.querySelector(".change_frame");
+        iframe.setAttribute("src", "/list/search");       
+    });
     // 페이지가 로드될 때 실행되는 코드
     /*
 	var buttonContainer1 = document.querySelector('.button-container1');

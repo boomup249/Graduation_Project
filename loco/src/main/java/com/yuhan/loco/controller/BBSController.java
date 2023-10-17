@@ -5,7 +5,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -50,10 +52,10 @@ public class BBSController {
 		else if(page == "notice") {bbs = this.bbsService.findnotice(pages);}
 		else if(page == "party") {bbs = this.bbsService.findparty(pages);}
 		else if(page == "guide") {bbs = this.bbsService.findguide(pages);}
-				int currentPage = pages + 1;
-				int calcEnd = (int)(Math.ceil(currentPage / 10.0) * 10);
-				int startPage = calcEnd - 9;
-				int endPage = Math.min(calcEnd, bbs.getTotalPages());
+		int currentPage = pages + 1;
+		int calcEnd = (int)(Math.ceil(currentPage / 10.0) * 10);
+		int startPage = calcEnd - 9;
+		int endPage = Math.min(calcEnd, bbs.getTotalPages());
 		model.addAttribute("bbsDTO", bbs);
 		model.addAttribute("startPage", startPage);
 		model.addAttribute("endPage", endPage);
@@ -68,6 +70,42 @@ public class BBSController {
 			@RequestParam(value = "orderby", defaultValue = "id") String order, String search, PostDB postDB) {
 		pages -= 1;
 		Page<BBSDB> bbs = this.bbsService.findbytitle(search, pages);
+		int currentPage = pages + 1;
+		int calcEnd = (int)(Math.ceil(currentPage / 10.0) * 10);
+		int startPage = calcEnd - 9;
+		int endPage = Math.min(calcEnd, bbs.getTotalPages());
+		model.addAttribute("bbsDTO", bbs);
+		model.addAttribute("startPage", startPage);
+		model.addAttribute("endPage", endPage);
+		model.addAttribute("currentPage", currentPage);
+		model.addAttribute("totalPage", bbs.getTotalPages());
+		model.addAttribute("bbsService", bbsService);
+		return "/post/list";
+	}
+	@GetMapping("/new")
+	public String sortbyNew(Model model,
+			@RequestParam(value = "pages", defaultValue = "1") int pages,
+			@RequestParam(value = "orderby", defaultValue = "date") String order, PostDB postDB) {
+		pages -= 1;
+		Page<BBSDB> bbs = this.bbsService.sortdate(pages);
+		int currentPage = pages + 1;
+		int calcEnd = (int)(Math.ceil(currentPage / 10.0) * 10);
+		int startPage = calcEnd - 9;
+		int endPage = Math.min(calcEnd, bbs.getTotalPages());
+		model.addAttribute("bbsDTO", bbs);
+		model.addAttribute("startPage", startPage);
+		model.addAttribute("endPage", endPage);
+		model.addAttribute("currentPage", currentPage);
+		model.addAttribute("totalPage", bbs.getTotalPages());
+		model.addAttribute("bbsService", bbsService);
+		return "/post/list";
+	}
+	@GetMapping("/views")
+	public String sortbyView(Model model,
+			@RequestParam(value = "pages", defaultValue = "1") int pages,
+			@RequestParam(value = "orderby", defaultValue = "views") String order, PostDB postDB) {
+		pages -= 1;
+		Page<BBSDB> bbs = this.bbsService.sortview(pages);
 		int currentPage = pages + 1;
 		int calcEnd = (int)(Math.ceil(currentPage / 10.0) * 10);
 		int startPage = calcEnd - 9;
