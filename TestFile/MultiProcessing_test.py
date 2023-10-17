@@ -74,6 +74,8 @@ def nintendo_crawling():
     platform = 'switch'
     dictionary_list = []
     dictionary_list_genre = []
+    db_num = 1
+
     driver = Driver_Start(platform, 'https://store.nintendo.co.kr/games/sale')
 
     soup = BeautifulSoup(driver.page_source, "html.parser")
@@ -199,29 +201,24 @@ def nintendo_crawling():
         d_description = rmEmoji_ascii(d_description)
         
         # 데이터베이스에 해당 TITLE이 존재하는지 확인
-        query = "SELECT * FROM gamedata_switch WHERE TITLE = %s"
-        cursor.execute(query, (d_title, ))
+        query = "SELECT * FROM gamedata_switch WHERE NUM = %d"
+        cursor.execute(query, (db_num, ))
         result = cursor.fetchone()
 
         if result is None:
             # 데이터베이스에 존재하지 않으면 INSERT
-            insert_query = "INSERT INTO gamedata_switch (TITLE, PRICE, SALEPRICE, SALEPER, DESCRIPTION, IMGDATA, GAMEIMG, URL) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
-            cursor.execute(insert_query, (d_title, d_price, d_saleprice, d_saleper, d_description, d_imgdata, d_gameimg, d_url))
+            insert_query = "INSERT INTO gamedata_switch (NUM, TITLE, PRICE, SALEPRICE, SALEPER, DESCRIPTION, IMGDATA, GAMEIMG, URL) VALUES (%d, %s, %s, %s, %s, %s, %s, %s, %s)"
+            cursor.execute(insert_query, (db_num, d_title, d_price, d_saleprice, d_saleper, d_description, d_imgdata, d_gameimg, d_url))
             conn.commit()
             print(f"{platform} - INSERT: {d_title}")
         else:
             # 데이터베이스에 이미 존재하면 saleprice를 비교하여 업데이트하고 varia 값을 1로 변경
-            existing_price = result[3]  # 결과에서 현재 데이터베이스의 saleprice 가져오기
-            if existing_price != d_saleprice:
-                update_query = "UPDATE gamedata_switch SET PRICE = %s, SALEPRICE = %s, SALEPER = %s, VARIA = 1 WHERE TITLE = %s"
-                cursor.execute(update_query, (d_price, d_saleprice, d_saleper, d_title))
-                conn.commit()
-                print(f"{platform} - UPDATE: {d_title} (할인가 바뀜, Varia Update)")
-            else: # 할인가격이 똑같으면 할인은 계속 진행중이므로 varia 값을 1로 변경
-                update_query = "UPDATE gamedata_switch SET VARIA = 1 WHERE TITLE = %s"
-                cursor.execute(update_query, (d_title, ))
-                conn.commit()
-                print(f"{platform} - UPDATE: {d_title} (아직 할인중, VARIA Update)")
+            update_query = '''UPDATE gamedata_switch SET TITLE = %s, PRICE = %s, SALEPRICE = %s, SALEPER = %s, DESCRIPTION = %s, 
+                                                         IMGDATA = %s, GAMEIMG = %s, URL = %s, VARIA = 1 WHERE NUM = %d'''
+            cursor.execute(update_query, (d_title, d_price, d_saleprice, d_saleper, d_description, d_imgdata, d_gameimg, d_url, db_num))
+            conn.commit()
+            print(f"{platform} - UPDATE: {d_title}")
+        db_num += 1
 
     #varia값 변경이 전부끝났으면 0은 전부 삭제
     delete_query = "DELETE FROM gamedata_switch WHERE VARIA = 0"
@@ -245,10 +242,10 @@ def nintendo_crawling():
             insert_query = "INSERT INTO gamedata_switch_genre (TITLE, GENRE) VALUES (%s, %s)"
             try:
                 cursor.execute(insert_query, (g_title, g_genre))
-                print(f'{platform} - {g_title} genre 입력 완료')
             except:
                 print(f"{g_title} - 타이틀 중복 오류")
             conn.commit()
+        print(f'{platform} - {g_title} genre 입력 완료')
 
     newtime = datetime.now()
     newtimestr = newtime.strftime("%Y%m%d_%H%M")
@@ -262,6 +259,7 @@ def ps_crawling():
     gameURL = 'https://store.playstation.com/'
     dictionary_list = []
     dictionary_list_genre = []
+    db_num = 1
     driver = Driver_Start(platform, 'https://store.playstation.com/ko-kr/pages/deals')
 
     sleep(2)
@@ -438,32 +436,24 @@ def ps_crawling():
         d_description = rmEmoji_ascii(d_description)
 
         # 데이터베이스에 해당 TITLE이 존재하는지 확인
-        query = "SELECT * FROM gamedata_ps WHERE TITLE = %s"
-        try:
-            cursor.execute(query, (d_title, ))
-        except:
-            cursor.execute(query, (d_title, ))
+        query = "SELECT * FROM gamedata_ps WHERE NUM = %d"
+        cursor.execute(query, (db_num, ))
         result = cursor.fetchone()
 
         if result is None:
             # 데이터베이스에 존재하지 않으면 INSERT
-            insert_query = "INSERT INTO gamedata_ps (TITLE, PRICE, SALEPRICE, SALEPER, DESCRIPTION, IMGDATA, GAMEIMG, URL) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
-            cursor.execute(insert_query, (d_title, d_price, d_saleprice, d_saleper, d_description, d_imgdata, d_gameimg, d_url))
+            insert_query = "INSERT INTO gamedata_ps (NUM, TITLE, PRICE, SALEPRICE, SALEPER, DESCRIPTION, IMGDATA, GAMEIMG, URL) VALUES (%d, %s, %s, %s, %s, %s, %s, %s, %s)"
+            cursor.execute(insert_query, (db_num, d_title, d_price, d_saleprice, d_saleper, d_description, d_imgdata, d_gameimg, d_url))
             conn.commit()
             print(f"{platform} - INSERT: {d_title}")
         else:
             # 데이터베이스에 이미 존재하면 saleprice를 비교하여 업데이트하고 varia 값을 1로 변경
-            existing_price = result[3]  # 결과에서 현재 데이터베이스의 saleprice 가져오기
-            if existing_price != d_saleprice:
-                update_query = "UPDATE gamedata_ps SET PRICE = %s, SALEPRICE = %s, SALEPER = %s, VARIA = 1 WHERE TITLE = %s"
-                cursor.execute(update_query, (d_price, d_saleprice, d_saleper, d_title))
-                conn.commit()
-                print(f"{platform} - UPDATE: {d_title} (할인가 바뀜, Varia Update)")
-            else: # 할인가격이 똑같으면 할인은 계속 진행중이므로 varia 값을 1로 변경
-                update_query = "UPDATE gamedata_ps SET VARIA = 1 WHERE TITLE = %s"
-                cursor.execute(update_query, (d_title, ))
-                conn.commit()
-                print(f"{platform} - UPDATE: {d_title} (아직 할인중, VARIA Update)")
+            update_query = '''UPDATE gamedata_ps SET TITLE = %s, PRICE = %s, SALEPRICE = %s, SALEPER = %s, DESCRIPTION = %s, 
+                                                     IMGDATA = %s, GAMEIMG = %s, URL = %s, VARIA = 1 WHERE NUM = %d'''
+            cursor.execute(update_query, (d_title, d_price, d_saleprice, d_saleper, d_description, d_imgdata, d_gameimg, d_url, db_num))
+            conn.commit()
+            print(f"{platform} - UPDATE: {d_title}")
+        db_num += 1
 
     #varia값 변경이 전부끝났으면 0은 전부 삭제
     delete_query = "DELETE FROM gamedata_ps WHERE VARIA = 0"
@@ -487,10 +477,10 @@ def ps_crawling():
             insert_query = "INSERT INTO gamedata_ps_genre (TITLE, GENRE) VALUES (%s, %s)"
             try:
                 cursor.execute(insert_query, (g_title, g_genre))
-                print(f'{platform} - {g_title} genre 입력 완료')
             except:
                 print(f"{g_title} - 타이틀 중복 오류")
             conn.commit()
+        print(f'{platform} - {g_title} genre 입력 완료')
 
     newtime = datetime.now()
     newtimestr = newtime.strftime("%Y%m%d_%H%M")
@@ -604,6 +594,7 @@ def steam_start():
 
     btn_num = 1
     btn_check = 1
+    db_num = 1
     mode = 0
     for _ in range(10000000000):
         driver = Driver_Start(platform, url)
@@ -670,29 +661,24 @@ def steam_start():
                 d_description = rmEmoji_ascii(d_description)
                 
                 # 데이터베이스에 해당 TITLE이 존재하는지 확인
-                query = "SELECT * FROM gamedata_steam WHERE TITLE = %s"
-                cursor.execute(query, (d_title, ))
+                query = "SELECT * FROM gamedata_steam WHERE NUM = %d"
+                cursor.execute(query, (db_num, ))
                 result = cursor.fetchone()
 
                 if result is None:
                     # 데이터베이스에 존재하지 않으면 INSERT
-                    insert_query = "INSERT INTO gamedata_steam (TITLE, PRICE, SALEPRICE, SALEPER, DESCRIPTION, IMGDATA, GAMEIMG, URL) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
-                    cursor.execute(insert_query, (d_title, d_price, d_saleprice, d_saleper, d_description, d_imgdata, d_gameimg, d_url))
+                    insert_query = "INSERT INTO gamedata_steam (NUM, TITLE, PRICE, SALEPRICE, SALEPER, DESCRIPTION, IMGDATA, GAMEIMG, URL) VALUES (%d, %s, %s, %s, %s, %s, %s, %s, %s)"
+                    cursor.execute(insert_query, (db_num, d_title, d_price, d_saleprice, d_saleper, d_description, d_imgdata, d_gameimg, d_url))
                     conn.commit()
                     print(f"{platform} - INSERT: {d_title}")
                 else:
-                    # 데이터베이스에 이미 존재하면 saleprice를 비교하여 업데이트하고 varia 값을 1로 변경
-                    existing_price = result[3]  # 결과에서 현재 데이터베이스의 saleprice 가져오기
-                    if existing_price != d_saleprice:
-                        update_query = "UPDATE gamedata_steam SET PRICE = %s, SALEPRICE = %s, SALEPER = %s, VARIA = 1 WHERE TITLE = %s"
-                        cursor.execute(update_query, (d_price, d_saleprice, d_saleper, d_title))
+                    # 데이터베이스에 이미 존재하면 값들 UPDATE
+                        update_query = '''UPDATE gamedata_steam SET TITLE = %s, PRICE = %s, SALEPRICE = %s, SALEPER = %s, DESCRIPTION = %s, 
+                                                                    IMGDATA = %s, GAMEIMG = %s, URL = %s, VARIA = 1 WHERE NUM = %d'''
+                        cursor.execute(update_query, (d_title, d_price, d_saleprice, d_saleper, d_description, d_imgdata, d_gameimg, d_url, db_num))
                         conn.commit()
-                        print(f"{platform} - UPDATE: {d_title} (할인가 바뀜, Varia Update)")
-                    else: # 할인가격이 똑같으면 할인은 계속 진행중이므로 varia 값을 1로 변경
-                        update_query = "UPDATE gamedata_steam SET VARIA = 1 WHERE TITLE = %s"
-                        cursor.execute(update_query, (d_title, ))
-                        conn.commit()
-                        print(f"{platform} - UPDATE: {d_title} (아직 할인중, VARIA Update)")
+                        print(f"{platform} - UPDATE: {d_title}")
+                db_num += 1
 
             #varia값 변경이 전부끝났으면 0은 전부 삭제
             delete_query = "DELETE FROM gamedata_steam WHERE VARIA = 0"
@@ -716,10 +702,10 @@ def steam_start():
                     insert_query = "INSERT INTO gamedata_steam_genre (TITLE, GENRE) VALUES (%s, %s)"
                     try:
                         cursor.execute(insert_query, (g_title, g_genre))
-                        print(f'{platform} - {g_title} genre 입력 완료')
                     except:
                         print(f"{g_title} - 타이틀 중복 오류")
                     conn.commit()
+                print(f'{platform} - {g_title} genre 입력 완료')
 
             newtime = datetime.now()
             newtimestr = newtime.strftime("%Y%m%d_%H%M")
@@ -743,6 +729,7 @@ def epic_crawling():
     epicgames = 'https://store.epicgames.com'
     dictionary_list = []
     dictionary_list_genre = []
+    db_num = 1
 
     driver = Driver_Start(platform, URL)
     soup = BeautifulSoup(driver.page_source, "html.parser")
@@ -872,29 +859,24 @@ def epic_crawling():
         d_description = rmEmoji_ascii(d_description)
         
         # 데이터베이스에 해당 TITLE이 존재하는지 확인
-        query = "SELECT * FROM gamedata_epic WHERE TITLE = %s"
-        cursor.execute(query, (d_title, ))
+        query = "SELECT * FROM gamedata_epic WHERE NUM = %d"
+        cursor.execute(query, (db_num, ))
         result = cursor.fetchone()
 
         if result is None:
             # 데이터베이스에 존재하지 않으면 INSERT
-            insert_query = "INSERT INTO gamedata_epic (TITLE, PRICE, SALEPRICE, SALEPER, DESCRIPTION, IMGDATA, GAMEIMG, URL) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
-            cursor.execute(insert_query, (d_title, d_price, d_saleprice, d_saleper, d_description, d_imgdata, d_gameimg, d_url))
+            insert_query = "INSERT INTO gamedata_epic (NUM, TITLE, PRICE, SALEPRICE, SALEPER, DESCRIPTION, IMGDATA, GAMEIMG, URL) VALUES (%d, %s, %s, %s, %s, %s, %s, %s, %s)"
+            cursor.execute(insert_query, (db_num, d_title, d_price, d_saleprice, d_saleper, d_description, d_imgdata, d_gameimg, d_url))
             conn.commit()
             print(f"{platform} - INSERT: {d_title}")
         else:
             # 데이터베이스에 이미 존재하면 saleprice를 비교하여 업데이트하고 varia 값을 1로 변경
-            existing_price = result[3]  # 결과에서 현재 데이터베이스의 saleprice 가져오기
-            if existing_price != d_saleprice:
-                update_query = "UPDATE gamedata_epic SET PRICE = %s, SALEPRICE = %s, SALEPER = %s, VARIA = 1 WHERE TITLE = %s"
-                cursor.execute(update_query, (d_price, d_saleprice, d_saleper, d_title))
-                conn.commit()
-                print(f"{platform} - UPDATE: {d_title} (할인가 바뀜, Varia Update)")
-            else: # 할인가격이 똑같으면 할인은 계속 진행중이므로 varia 값을 1로 변경
-                update_query = "UPDATE gamedata_epic SET VARIA = 1 WHERE TITLE = %s"
-                cursor.execute(update_query, (d_title, ))
-                conn.commit()
-                print(f"{platform} - UPDATE: {d_title} (아직 할인중, VARIA Update)")
+            update_query = '''UPDATE gamedata_epic SET TITLE = %s, PRICE = %s, SALEPRICE = %s, SALEPER = %s, DESCRIPTION = %s, 
+                                                       IMGDATA = %s, GAMEIMG = %s, URL = %s, VARIA = 1 WHERE NUM = %d'''
+            cursor.execute(update_query, (d_title, d_price, d_saleprice, d_saleper, d_description, d_imgdata, d_gameimg, d_url, db_num))
+            conn.commit()
+            print(f"{platform} - UPDATE: {d_title}")
+        db_num += 1
 
     #varia값 변경이 전부끝났으면 0은 전부 삭제
     delete_query = "DELETE FROM gamedata_epic WHERE VARIA = 0"
@@ -918,10 +900,10 @@ def epic_crawling():
             insert_query = "INSERT INTO gamedata_epic_genre (TITLE, GENRE) VALUES (%s, %s)"
             try:
                 cursor.execute(insert_query, (g_title, g_genre))
-                print(f'{platform} - {g_title} genre 입력 완료')
             except:
                 print(f"{g_title} - 타이틀 중복 오류")
             conn.commit()
+        print(f'{platform} - {g_title} genre 입력 완료')
 
     newtime = datetime.now()
     newtimestr = newtime.strftime("%Y%m%d_%H%M")
@@ -1023,7 +1005,7 @@ def danawa_crawling():
 
         if result is None:
             # 데이터베이스에 존재하지 않으면 INSERT
-            insert_query = "INSERT INTO release_info (DATE, TITLE, PLATFORM, PRICE) VALUES (%s, %s, %s, %s, %s)"
+            insert_query = "INSERT INTO release_info (DATE, TITLE, PLATFORM, PRICE, ETC) VALUES (%s, %s, %s, %s, %s)"
             cursor.execute(insert_query, (date, title, platform, price, etc))
             conn.commit()
             print(f"INSERT: {title}")

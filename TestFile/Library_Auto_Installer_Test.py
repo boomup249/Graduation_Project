@@ -1,6 +1,6 @@
 import importlib
-
 from time import sleep
+
 def install_and_import(package):
     try:
         importlib.import_module(package)
