@@ -166,9 +166,9 @@
                 	
                 <td class="button-container2">
 					<!-- '최신글' 버튼 -->
-                    <button class="button latest-button" id="btn_new" th:onclick="|location.href='@{/new}'|">최신글</button>
+                    <button class="button latest-button" id="btn_new">최신글</button>
                     <!-- '인기글' 버튼 -->
-                    <button class="button popular-button" id="btn_popular" th:onclick="|location.href='@{/views}'|">인기글</button>
+                    <button class="button popular-button" id="btn_popular">인기글</button>
                     <!-- '글쓰기' 버튼 -->
                     <button class="button write-button" id="btn_write" >글쓰기</button>
                     <form class = "search" method="get" th:action="@{'/list/search'}" th:object="${bbsDB}">

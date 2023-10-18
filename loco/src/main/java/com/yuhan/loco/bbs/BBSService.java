@@ -32,8 +32,7 @@ public class BBSService {
 	   this.BBSrepository.saveAndFlush(bbs);
 	   return bbs;
    }
-   public Page<BBSDB> search(int page){
-	   Pageable pageable = PageRequest.of(page, 5);
+   public Page<BBSDB> search(int page, Pageable pageable){
 	   return this.BBSrepository.findAll(pageable);
    }
    /*public List<BBSDB> searchall(){
@@ -46,28 +45,17 @@ public class BBSService {
 	   Pageable pageable = PageRequest.of(page, 5);
 	   return this.BBSrepository.findByTitleContaining(title, pageable);
    }
-   public Page<BBSDB> findbbs(int page){
-	   Pageable pageable = PageRequest.of(page, 5);
+   public Page<BBSDB> findbbs(int page, Pageable pageable){
 	   return this.BBSrepository.findByCategory("bbs", pageable);
    }
-   public Page<BBSDB> findnotice(int page){
-	   Pageable pageable = PageRequest.of(page, 5);
+   public Page<BBSDB> findnotice(int page, Pageable pageable){
 	   return this.BBSrepository.findByCategory("notice", pageable);
    }
-   public Page<BBSDB> findguide(int page){
-	   Pageable pageable = PageRequest.of(page, 5);
+   public Page<BBSDB> findguide(int page, Pageable pageable){
 	   return this.BBSrepository.findByCategory("guide", pageable);
    }
-   public Page<BBSDB> findparty(int page){
-	   Pageable pageable = PageRequest.of(page, 5);
+   public Page<BBSDB> findparty(int page, Pageable pageable){
 	   return this.BBSrepository.findByCategory("party", pageable);
    }
-   public Page<BBSDB> sortdate(int page){
-	   Pageable pageable = PageRequest.of(page, 5, Sort.by("date").descending());
-	   return this.BBSrepository.findAll(pageable);
-   }
-   public Page<BBSDB> sortview(int page){
-	   Pageable pageable = PageRequest.of(page, 5, Sort.by("views").descending());
-	   return this.BBSrepository.findAll(pageable);
-   }
+
 }

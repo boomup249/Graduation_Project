@@ -47,11 +47,12 @@ public class BBSController {
 			@RequestParam(value = "orderby", defaultValue = "id") String order, PostDB postDB)
 	{
 		pages -= 1;
-		Page<BBSDB> bbs = this.bbsService.search(pages);
-		if(page == "bbs") {bbs = this.bbsService.findbbs(pages);}
-		else if(page == "notice") {bbs = this.bbsService.findnotice(pages);}
-		else if(page == "party") {bbs = this.bbsService.findparty(pages);}
-		else if(page == "guide") {bbs = this.bbsService.findguide(pages);}
+		Pageable pageable = PageRequest.of(pages, 5);
+		Page<BBSDB> bbs = this.bbsService.search(pages, pageable);
+		if(page == "bbs") {bbs = this.bbsService.findbbs(pages, pageable);}
+		else if(page == "notice") {bbs = this.bbsService.findnotice(pages, pageable);}
+		else if(page == "party") {bbs = this.bbsService.findparty(pages, pageable);}
+		else if(page == "guide") {bbs = this.bbsService.findguide(pages, pageable);}
 		int currentPage = pages + 1;
 		int calcEnd = (int)(Math.ceil(currentPage / 10.0) * 10);
 		int startPage = calcEnd - 9;
@@ -87,7 +88,12 @@ public class BBSController {
 			@RequestParam(value = "pages", defaultValue = "1") int pages,
 			@RequestParam(value = "orderby", defaultValue = "date") String order, PostDB postDB) {
 		pages -= 1;
-		Page<BBSDB> bbs = this.bbsService.sortdate(pages);
+		Pageable pageable = PageRequest.of(pages, 5, Sort.by("date").descending());
+		Page<BBSDB> bbs = this.bbsService.search(pages, pageable);
+		if(page == "bbs") {bbs = this.bbsService.findbbs(pages, pageable);}
+		else if(page == "notice") {bbs = this.bbsService.findnotice(pages, pageable);}
+		else if(page == "party") {bbs = this.bbsService.findparty(pages, pageable);}
+		else if(page == "guide") {bbs = this.bbsService.findguide(pages, pageable);}
 		int currentPage = pages + 1;
 		int calcEnd = (int)(Math.ceil(currentPage / 10.0) * 10);
 		int startPage = calcEnd - 9;
@@ -105,7 +111,12 @@ public class BBSController {
 			@RequestParam(value = "pages", defaultValue = "1") int pages,
 			@RequestParam(value = "orderby", defaultValue = "views") String order, PostDB postDB) {
 		pages -= 1;
-		Page<BBSDB> bbs = this.bbsService.sortview(pages);
+		Pageable pageable = PageRequest.of(pages, 5, Sort.by("views").descending());
+		Page<BBSDB> bbs = this.bbsService.search(pages, pageable);
+		if(page == "bbs") {bbs = this.bbsService.findbbs(pages, pageable);}
+		else if(page == "notice") {bbs = this.bbsService.findnotice(pages, pageable);}
+		else if(page == "party") {bbs = this.bbsService.findparty(pages, pageable);}
+		else if(page == "guide") {bbs = this.bbsService.findguide(pages, pageable);}
 		int currentPage = pages + 1;
 		int calcEnd = (int)(Math.ceil(currentPage / 10.0) * 10);
 		int startPage = calcEnd - 9;
