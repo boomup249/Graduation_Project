@@ -91,9 +91,89 @@
 	                var topBox = document.querySelector('.top-box');
 	
 	                data.forEach(function(news) {
-	                    var p = document.createElement('p');
-	                    p.innerText = news.title;
-	                    topBox.appendChild(p);
+	                    var a = document.createElement('a');
+			            a.href = news.url;
+			            a.innerText = news.title;
+			            
+			            // 첫 번째 줄바꿈
+			            var br1 = document.createElement('br');
+			            
+			            // 두 번째 줄바꿈
+			            var br2 = document.createElement('br');
+			            
+			            topBox.appendChild(a);
+			            topBox.appendChild(br1);
+			            topBox.appendChild(br2);
+			            
+			            // title 클릭 이벤트 핸들러 추가
+			            a.addEventListener('click', function(event) {
+			                event.preventDefault(); // 링크 이동 방지
+
+						    var modal = document.getElementById('eventModal');
+						    var eventTitle = document.getElementById('eventTitle');
+						    var eventDetails = document.getElementById('eventDetails');
+						
+						    eventTitle.innerText = news.title;
+						    
+						    // 직접 데이터 지정
+						    
+						    eventDetails.innerHTML = 
+						        '<p>가격: ' + news.price + '</p>' +
+						        '<p>플랫폼: ' + news.platform + '</p>' +
+						        '<p>기타: ' + news.etc + '</p>';
+						
+						    modal.style.display = 'block';
+						    
+						    var closeBtn = modal.querySelector('.close');
+			                closeBtn.addEventListener('click', function() {
+			                    modal.style.display = 'none';
+			                });
+			            });
+	                });
+	            });
+	            
+	            req.done(function(data) {
+	                var topBox = document.querySelector('.bottom-box');
+	
+	                data.forEach(function(news) {
+	                    var a = document.createElement('a');
+			            a.href = news.url;
+			            a.innerText = news.title;
+			            
+			            // 첫 번째 줄바꿈
+			            var br1 = document.createElement('br');
+			            
+			            // 두 번째 줄바꿈
+			            var br2 = document.createElement('br');
+			            
+			            topBox.appendChild(a);
+			            topBox.appendChild(br1);
+			            topBox.appendChild(br2);
+			            
+			            // title 클릭 이벤트 핸들러 추가
+			            a.addEventListener('click', function(event) {
+			                event.preventDefault(); // 링크 이동 방지
+
+						    var modal = document.getElementById('eventModal');
+						    var eventTitle = document.getElementById('eventTitle');
+						    var eventDetails = document.getElementById('eventDetails');
+						
+						    eventTitle.innerText = news.title;
+						    
+						    // 직접 데이터 지정
+						    
+						    eventDetails.innerHTML = 
+						        '<p>가격: ' + news.price + '</p>' +
+						        '<p>플랫폼: ' + news.platform + '</p>' +
+						        '<p>기타: ' + news.etc + '</p>';
+						
+						    modal.style.display = 'block';
+						    
+						    var closeBtn = modal.querySelector('.close');
+			                closeBtn.addEventListener('click', function() {
+			                    modal.style.display = 'none';
+			                });
+			            });
 	                });
 	            });
 	        });
@@ -111,6 +191,11 @@
 	    
 		<style>
 			/*css 속성*/
+			a {
+			    color: black; /* 텍스트 색상을 검은색으로 설정 */
+			    text-decoration: none; /* 밑줄을 없앰 */
+			}
+			
 			/*내용*/
 			#content {
 				position: relative;
@@ -128,7 +213,7 @@
 			    float: left;
 			    margin: 70px;
 			    width: 1100px;
-			    height: 800px; 
+			    height: 770px; 
 			}
 			
 				/*달력 세부*/
@@ -165,22 +250,24 @@
 			
 			/*박스*/
 			.box {
-				margin: 50px;
+				margin: 30px;
 			}
 			.top-box {
 			    float: left;
-			    width: 30%;
+			    width: 500px;
 			    height: 400px;
-			    margin-top: 10px;
+			    margin-top: 20px;
 			    margin-bottom: 20px;
 			    background-color: white; 
+			    padding-left: 10px;
 			}
 			
 			.bottom-box {
 			    float: left;
-			    width: 30%;
+			    width: 500px;
 			    height: 400px;
 			    background-color: white;
+			    padding-left: 10px;
 			}
 			/*박스 end*/
 			
@@ -209,10 +296,10 @@
 	
 	        .close {
 			    position: absolute;
-			    top: 5px;
-			    right: 20px; 
+			    top: 2px;
+			    right: 10px; 
 			    cursor: pointer;
-			    font-size: 40px; 
+			    font-size: 30px; 
 			}
 			
 			#plan {
