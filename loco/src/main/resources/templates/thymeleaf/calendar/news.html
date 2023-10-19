@@ -80,67 +80,83 @@
 		</script>
 
 		<script>
-	        document.addEventListener('DOMContentLoaded', function() {
-	            var req = $.ajax({
-	                url: "/news_memo", // /news_memo 엔드포인트로 변경
-	                type: "get",
-	                dataType: "json"
-	            });
+	    function addToTopOrBottomBox(news, currentYear, currentMonth) {
+	        var a = document.createElement('a');
+	        a.href = news.url;
+	        a.innerText = news.title;
 	
-	            req.done(function(data) {
-				    var topBox = document.querySelector('.top-box');
-				    var bottomBox = document.querySelector('.bottom-box');
-				    
-				    data.forEach(function(news) {
-				        var a = document.createElement('a');
-				        a.href = news.url;
-				        a.innerText = news.title;
-				
-				        var etcValue = news.etc;
-				        
-				        var br1 = document.createElement('br');
-				        var br2 = document.createElement('br');
-				        var br3 = document.createElement('br');
-				        var br4 = document.createElement('br');
-				        
-				        // 정규 표현식을 사용하여 etc 값에서 '연도'와 '연도-월'을 구분
-				        if (/^\d{4}( - \d{2})? 출시 예정$/.test(etcValue)) {
-				            // etc 값이 '연도' 형식이면 top-box에 추가
-				            topBox.appendChild(a);
-				            topBox.appendChild(br1);
-				        	topBox.appendChild(br2);
-				        } else if (/^\d{4}-\d{2} 출시 예정$/.test(etcValue)) {
-				            // etc 값이 '연도 - 월' 형식이면 bottom-box에 추가
-				            bottomBox.appendChild(a);
-				            bottomBox.appendChild(br3);
-				        	bottomBox.appendChild(br4);
-				        }
-				
-				        a.addEventListener('click', function(event) {
-				            event.preventDefault();
-				
-				            var modal = document.getElementById('eventModal');
-				            var eventTitle = document.getElementById('eventTitle');
-				            var eventDetails = document.getElementById('eventDetails');
-				
-				            eventTitle.innerText = news.title;
-				            eventDetails.innerHTML = 
-				                '<p>가격: ' + news.price + '</p>' +
-				                '<p>플랫폼: ' + news.platform + '</p>' +
-				                '<p>기타: ' + news.etc + '</p>';
-				
-				            modal.style.display = 'block';
-				
-				            var closeBtn = modal.querySelector('.close');
-				            closeBtn.addEventListener('click', function() {
-				                modal.style.display = 'none';
-				            });
-				        });
-				    });
-				});
-
+	        var etcValue = news.etc;
+	        var br = document.createElement('br');
+	
+	        a.addEventListener('click', function(event) {
+	            event.preventDefault();
+	
+	            var modal = document.getElementById('eventModal');
+	            var eventTitle = document.getElementById('eventTitle');
+	            var eventDetails = document.getElementById('eventDetails');
+	
+	            eventTitle.innerText = news.title;
+	            eventDetails.innerHTML =
+	                '<p>가격: ' + news.price + '</p>' +
+	                '<p>플랫폼: ' + news.platform + '</p>' +
+	                '<p>기타: ' + news.etc + '</p>';
+	
+	            modal.style.display = 'block';
+	
+	            var closeBtn = modal.querySelector('.close');
+	            closeBtn.addEventListener('click', function() {
+	                modal.style.display = 'none';
+	            });
 	        });
-	    </script>
+	
+	        var yearPattern = /(\d{4})/;
+			var monthPattern = /-(\d{2})/;
+			var yearMatch = etcValue.match(yearPattern);
+			var monthMatch = etcValue.match(monthPattern);
+			
+			
+			if (yearMatch) {
+			    var etcYear = parseInt(yearMatch[1]);
+			    var etcMonth = monthMatch ? parseInt(monthMatch[1], 10) : null; // 월 정보가 없으면 null
+			
+			    var topBox = document.getElementById('topBox');
+			    var bottomBox = document.getElementById('bottomBox');
+				console.log('etcValue:', etcValue);
+				console.log('yearMatch:', yearMatch);
+				console.log('monthMatch:', monthMatch);
+
+			    if (etcYear === currentYear) {
+			        if (etcMonth === null) {
+			            topBox.appendChild(a);
+			            topBox.appendChild(br);
+			        } else if (etcMonth === currentMonth) {
+			            bottomBox.appendChild(a);
+			            bottomBox.appendChild(br);
+			        }
+			    }
+			}
+
+	    }
+		
+	    document.addEventListener('DOMContentLoaded', function() {
+	        var req = $.ajax({
+	            url: "/news_memo",
+	            type: "get",
+	            dataType: "json"
+	        });
+	
+	        req.done(function(data) {
+	            var currentDate = new Date();
+	            var currentYear = currentDate.getFullYear();
+	            var currentMonth = currentDate.getMonth() + 1;
+	
+	            data.forEach(function(news) {
+	                addToTopOrBottomBox(news, currentYear, currentMonth);
+	            });
+	        });
+	    });
+	</script>
+
 	     
 	    
 	    <!--날짜 부분 텍스트 색상 변경--><!-- 이거 적용되면 more 눌렀을때 글씨 안보여서 잠깐 끔 -->
@@ -346,15 +362,13 @@
 					    </div>  
 					</div>
 					<div class="box">
-						<div class="top-box">
-						    <p id="plan"><span id="currentYear"></span>년 출시 예정 게임</p>
-						    <!-- 여기에 202n 예정 게임 목록 표시 -->
-						</div>
-						
-						<div class="bottom-box">
-						    <p id="plan"><span id="bottomBoxCurrentYear"></span>년 <span id="currentMonth"></span>월 출시 예정 게임</p>
-						    <!-- 여기에 202n n월 예정 게임 목록 표시 -->
-						</div>
+					    <div class="top-box" id="topBox">
+					        <p id="plan"><span id="currentYear"></span>년 출시 예정 게임</p>
+					    </div>
+					
+					    <div class="bottom-box" id="bottomBox">
+					        <p id="plan"><span id="bottomBoxCurrentYear"></span>년 <span id="currentMonth"></span>월 출시 예정 게임</p>
+					    </div>
 					</div>
 				</div>
     
