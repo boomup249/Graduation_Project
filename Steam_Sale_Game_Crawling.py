@@ -12,12 +12,16 @@ class Crawling_Steam_Sale_Game(Crawling_Game_Info):
             action = ActionChains(driver)
             soup = BeautifulSoup(driver.page_source, 'html.parser')
             sleep(5)
-            steam_language = soup.find("span", {"class": "pulldown global_action_link"})
-            if steam_language.get_text() != "언어":
-                driver.find_element(By.XPATH, '//*[@id="language_pulldown"]').click()
-                driver.find_element(By.XPATH, '//*[@id="language_dropdown"]/div/a[4]').click()
-                print("언어설정 완료")
-            sleep(5)
+            try:
+                steam_language = soup.find("span", {"class": "pulldown global_action_link"})
+                if steam_language.text != "언어":
+                    driver.find_element(By.XPATH, '//*[@id="language_pulldown"]').click()
+                    driver.find_element(By.XPATH, '//*[@id="language_dropdown"]/div/a[4]').click()
+                    print("언어설정 완료")
+                sleep(5)
+            except:
+                driver.quit()
+                continue
             self.Check_Mouse_Scroll_Down(driver)
 
             if mode == 0:

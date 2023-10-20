@@ -85,7 +85,7 @@ class Crawling_Game_Info():
                 break
 
     #이모티콘 제거 함수
-    def rmEmoji_ascii(inputString):
+    def rmEmoji_ascii(self, inputString):
         return inputString.encode('utf-8', 'ignore').decode('utf-8')
     
     #driver 생성 함수
@@ -114,14 +114,13 @@ class Crawling_Game_Info():
     #Gamedata Insert 함수
     def Insert_GameData(self):
         db_num = 1
-        dictionary_list = self.dictionary_list
         self.table_name = f'gamedata_{self.platform}'
 
         update_query = 'UPDATE {} SET VARIA = 0'.format(self.table_name)
         self.cursor.execute(update_query)
         self.conn.commit()
 
-        for data in dictionary_list:
+        for data in self.dictionary_list:
             d_title = data['TITLE']
             d_price = data['PRICE']
             d_saleprice = data['SALEPRICE']
@@ -135,24 +134,28 @@ class Crawling_Game_Info():
             d_description = self.rmEmoji_ascii(d_description)
             
             # 데이터베이스에 해당 NUM이 존재하는지 확인
-            query = 'SELECT * FROM {} WHERE NUM = %d'.format(self.table_name)
+            query = 'SELECT * FROM {} WHERE NUM = %s'.format(self.table_name)
             self.cursor.execute(query, (db_num, ))
             result = self.cursor.fetchone()
+            print(result)
 
             if result is None:
-                # NUM이 데이터베이스에 존재하지 않으면 INSERT(인기순으로 크롤링해오기때문에 NUM=1부터 높은순서로 INSERT)
-                insert_query = '''INSERT INTO {} (NUM, TITLE, PRICE, SALEPRICE, SALEPER, DESCRIPTION, IMGDATA, GAMEIMG, URL) 
-                                          VALUES (%d, %s, %s, %s, %s, %s, %s, %s, %s)'''.format(self.table_name)
-                self.cursor.execute(insert_query, (db_num, d_title, d_price, d_saleprice, d_saleper, d_description, d_imgdata, d_gameimg, d_url))
-                self.conn.commit()
-                print(f"{self.platform} - INSERT: {d_title}")
+                try:
+                    # NUM이 데이터베이스에 존재하지 않으면 INSERT(인기순으로 크롤링해오기때문에 NUM=1부터 높은순서로 INSERT)
+                    insert_query = '''INSERT INTO {} (NUM, TITLE, PRICE, SALEPRICE, SALEPER, DESCRIPTION, IMGDATA, GAMEIMG, URL) 
+                                            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)'''.format(self.table_name)
+                    self.cursor.execute(insert_query, (db_num, d_title, d_price, d_saleprice, d_saleper, d_description, d_imgdata, d_gameimg, d_url))
+                    print(f"{self.platform} - INSERT: {d_title}")
+                except Exception as e:
+                    print("insert 오류", str(e))
             else:
                 # 데이터베이스에 이미 존재하면 UPDATE
                 update_query = '''UPDATE {} SET TITLE = %s, PRICE = %s, SALEPRICE = %s, SALEPER = %s, DESCRIPTION = %s, 
-                                                IMGDATA = %s, GAMEIMG = %s, URL = %s, VARIA = 1 WHERE NUM = %d'''.format(self.table_name)
+                                                IMGDATA = %s, GAMEIMG = %s, URL = %s, VARIA = 1 WHERE NUM = %s'''.format(self.table_name)
                 self.cursor.execute(update_query, (d_title, d_price, d_saleprice, d_saleper, d_description, d_imgdata, d_gameimg, d_url, db_num))
-                self.conn.commit()
                 print(f"{self.platform} - UPDATE: {d_title}")
+            
+            self.conn.commit()
             db_num += 1
 
         #varia값 변경이 전부끝났으면 0은 전부 삭제
@@ -162,33 +165,39 @@ class Crawling_Game_Info():
 
     #Genre Insert 함수
     def Insert_GenreData(self):
-        dictionary_list_genre = self.dictionary_list_genre
+        db_num = 1
         genre_table_name = f'gamedata_{self.platform}_genre'
 
         #장르는 gamedata에서 title이 지워지면 genre의 title도 다삭제돼서 없으면 insert만 하면됨
-        for data in dictionary_list_genre:
+        for data in self.dictionary_list_genre:
             g_title = data['TITLE']
             g_genre = data['GENRE']
             
             g_title = self.rmEmoji_ascii(g_title)
 
-            query = 'SELECT * FROM {} WHERE TITLE = %s'.format(self.table_name)
-            self.cursor.execute(query, (g_title, ))
+            query = 'SELECT * FROM {} WHERE NUM = %s'.format(self.table_name)
+            self.cursor.execute(query, (db_num, ))
             result = self.cursor.fetchone()
 
-            if result is None: # title값이 존재하지않으면 장르는 안넣어도됨
-                continue
-            else: # title값이 존재하면 장르 넣어야함
+            if result is None:
                 insert_query = 'INSERT INTO {} (TITLE, GENRE) VALUES (%s, %s)'.format(genre_table_name)
                 try:
                     self.cursor.execute(insert_query, (g_title, g_genre))
-                except:
-                    print(f"{self.platform} - {g_title} : 타이틀 중복 오류")
+                except Exception as e:
+                    print(f"{self.platform} - {g_title} : 타이틀 중복 오류 : ", str(e))
+            else:
+                update_query = 'Update {} SET TITLE = %s, GENRE = %s WHERE NUM = %s'.format(genre_table_name)
+                try:
+                    self.cursor.execute(update_query, (g_title, g_genre, db_num))
+                except Exception as e:
+                    print(f"{g_title} genre update 오류 : ", str(e))
                 self.conn.commit()
             print(f'{self.platform} - {g_title} genre 입력 완료')
+            db_num += 1
         
     #데이터 읽어와서 저장하는 함수(steam은 오버라이딩 해야함)
     def Data_Crawling(self):
+        print("data_crawling 함수 실행")
         self.Insert_GameData()
         self.Insert_GenreData()
 

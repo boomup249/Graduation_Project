@@ -3,7 +3,7 @@ import schedule
 from time import sleep
 
 class Base_Setting():
-    def install_and_import(package):
+    def install_and_import(self, package):
         try:
             importlib.import_module(package)
         except ImportError:

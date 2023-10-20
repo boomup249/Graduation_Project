@@ -53,11 +53,12 @@ class Crawling_Epic_Sale_Game(Crawling_Game_Info):
                 driver = self.Driver_Start(self.platform, move)
                 sleep(3)
                 new_soup = BeautifulSoup(driver.page_source, "html.parser")
-
+                """
                 if new_soup.select_one('h1.css-1gty6cv') != None:
                     driver.quit()
+                    print("페이지 오류")
                     continue
-
+                """
                 descript = new_soup.select_one("div.css-1myreog")
                 description = ""
                 if descript != None:
@@ -120,7 +121,6 @@ class Crawling_Epic_Sale_Game(Crawling_Game_Info):
                     sleep(5)
                     break
 
-        driver.quit()
         self.Data_Crawling()
 
         if driver:

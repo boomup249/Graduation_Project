@@ -7,10 +7,11 @@ class Crawling_Playstation_Sale_Game(Crawling_Game_Info):
     def Start_Crawling(self):
         gameURL = 'https://store.playstation.com/'
         driver = self.Driver_Start(self.platform, self.URL)
-        sleep(2)
+        sleep(5)
         #할인 페이지로 이동
         driver.find_element(By.XPATH, "//*[@id='main']/div/div[3]/section/div/ul/li[3]/a").click()
-        sleep(2)
+        sleep(5)
+        print("ps 이동완료")
         soup = BeautifulSoup(driver.page_source, "html.parser")
 
         #할인 페이지 들어오자마자 페이지바 읽어와서 마지막 페이지 값 저장
