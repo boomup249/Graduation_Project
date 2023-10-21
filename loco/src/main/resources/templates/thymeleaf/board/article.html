@@ -68,19 +68,19 @@
             </tr>
             <tr>
             	<th class="comment-form" style="height:5%;">
-					<form action ="#" th:action="@{/email_ck}"
-										th:object="${postDTO}"
-										method = "post" style="margin:0";>
+					<form>
+						<input type="hidden" id="postsId" th:value="${userDTO.getID()}">
 						<div class="item2">
-							<input type="text" th:field="*{comment}" class="comment-input" />
-							<input type="submit" id="sub" value="확인" class="comment-submit" />
+							<input type="text" id="comment" class="comment-input" />
+							<button type="submit" id="comm_save" class="comment-submit">확인</button>
 						</div>
 					</form>
 				</th>
  	
             </tr>
-            <tr>
-            	<th class="comment" style="height:20%;"> <span th:object="${postDTO}" th:text="${postDTO.getComment()}" style="font-weight: lighter;"></span></th>
+            <tr th:each = "comment : ${CommentResDTO}">
+            	<td class="comment" style="height:20%;"> <span th:text="${comment.writer}" style="font-weight: lighter;"></span></td>
+            	<td class="comment" style="height:20%;"> <span th:text="${comment.comment}" style="font-weight: lighter;"></span></td>
             </tr>
             
             <!-- 추가적인 게시글 아이템들을 동적으로 생성하거나 서버에서 데이터를 가져와서 출력하세요. -->

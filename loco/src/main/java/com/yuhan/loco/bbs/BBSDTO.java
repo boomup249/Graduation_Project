@@ -1,5 +1,6 @@
 package com.yuhan.loco.bbs;
 
+
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -58,7 +59,6 @@ public class BBSDTO {
 	public void setComment(Long comment) {
 		this.comment = comment;
 	}
-
     // Getter for id
 
     }

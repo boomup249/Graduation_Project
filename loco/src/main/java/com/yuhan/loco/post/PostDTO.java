@@ -7,11 +7,11 @@ public class PostDTO {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	private Long BBS_ID;
     private String category;
 	private String title;
     private String writer; // 작성자
     private String content;
-    private String comment;
 
 
 	public Long getId() {
@@ -19,6 +19,12 @@ public class PostDTO {
 	}
 	public void setId(Long id) {
 		this.id = id;
+	}
+	public Long getBBS_ID() {
+		return BBS_ID;
+	}
+	public void setBBS_ID(Long bBS_ID) {
+		BBS_ID = bBS_ID;
 	}
 	public String getCategory() {
 		return category;
@@ -44,10 +50,6 @@ public class PostDTO {
 	public void setContent(String content) {
 		this.content = content;
 	}
-	public String getComment() {
-		return comment;
-	}
-	public void setComment(String comment) {
-		this.comment = comment;
-	}
+	
+	
 }

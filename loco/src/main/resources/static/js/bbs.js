@@ -19,6 +19,14 @@
         var iframe = document.querySelector(".change_frame");
         iframe.setAttribute("src", "/list/search");       
     });
+    
+/*function Submit() {
+	var sz = "<request></request>";
+	document.search.action = "/list/search" ;
+	document.search.target = "search";
+	document.search.txtHTML.value = sz;
+	document.search.submit();
+} */
     // 페이지가 로드될 때 실행되는 코드
     /*
 	var buttonContainer1 = document.querySelector('.button-container1');

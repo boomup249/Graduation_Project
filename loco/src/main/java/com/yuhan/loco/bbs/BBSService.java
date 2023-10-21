@@ -17,9 +17,11 @@ import jakarta.transaction.Transactional;
 @Transactional
 public class BBSService {
    private final BBSRepository BBSrepository;
+   private final CommentRepository Commentrepository;
    BBSDB bbs = new BBSDB();
-   public BBSService(BBSRepository BBSrepository) {
+   public BBSService(BBSRepository BBSrepository, CommentRepository Commentrepository) {
         this.BBSrepository = BBSrepository;
+        this.Commentrepository = Commentrepository;
     }
    public BBSDB create(Long id, String title, String writer, String category, String date, Long views, Long comment) {
 	   bbs.setId(null);
@@ -31,6 +33,9 @@ public class BBSService {
 	   bbs.setComment(comment);
 	   this.BBSrepository.saveAndFlush(bbs);
 	   return bbs;
+   }
+   public BBSDB getbyID(Long id) {
+	   return BBSrepository.findById(id);
    }
    public Page<BBSDB> search(int page, Pageable pageable){
 	   return this.BBSrepository.findAll(pageable);
@@ -57,5 +62,10 @@ public class BBSService {
    public Page<BBSDB> findparty(int page, Pageable pageable){
 	   return this.BBSrepository.findByCategory("party", pageable);
    }
-
+   public Long commentSave(String writer, Long id, CommentReqDTO comm) {
+	   comm.setBbs(bbs);
+	   CommentDB comment = comm.toEntity();
+	   Commentrepository.save(comment);
+	   return comm.getId();
+   }
 }

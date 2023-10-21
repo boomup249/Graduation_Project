@@ -3,9 +3,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-
 import jakarta.persistence.Table;
-
+import lombok.NoArgsConstructor;
+@NoArgsConstructor
 @Entity
 @Table(name = "bbs")
 public class BBSDB {
@@ -18,6 +18,7 @@ public class BBSDB {
     private String date; // 날짜
     private Long views; // 조회수
     private Long comment; // 댓글 수
+
     /*@OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="number")
     private PostDB postDB;*/

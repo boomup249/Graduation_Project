@@ -18,8 +18,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.yuhan.loco.bbs.BBSDB;
 import com.yuhan.loco.bbs.BBSDTO;
 import com.yuhan.loco.bbs.BBSService;
+import com.yuhan.loco.bbs.CommentDB;
+import com.yuhan.loco.bbs.CommentResDTO;
 import com.yuhan.loco.post.PostDB;
 import com.yuhan.loco.post.PostDTO;
+import com.yuhan.loco.post.PostResDTO;
 import com.yuhan.loco.post.PostService;
 import com.yuhan.loco.user.UserDB;
 import com.yuhan.loco.user.UserService;
@@ -197,13 +200,12 @@ public class BBSController {
 			bbsDTO.setCategory("party");
 		}
 		postDTO.setWriter(userId);
-		postDTO.setComment("임시 댓글");//임시, 댓글 구현 시 삭제
 		bbsDTO.setWriter(userId);
 		bbsDTO.setTitle(title);		
 		bbsDTO.setDate(timestr);
 		bbsDTO.setViews(0L);
 		bbsDTO.setComment(0L);
-		postService.create(postDTO.getId(), postDTO.getCategory(), postDTO.getTitle(), postDTO.getWriter(), postDTO.getContent(), postDTO.getComment());
+		postService.create(postDTO.getId(), bbsDTO.getId(), postDTO.getCategory(), postDTO.getTitle(), postDTO.getWriter(), postDTO.getContent());
 		bbsService.create(bbsDTO.getId(), bbsDTO.getTitle(), bbsDTO.getWriter(), bbsDTO.getCategory(), bbsDTO.getDate(), bbsDTO.getViews(), bbsDTO.getComment());
 		model.addAttribute("bbsDTO", bbsDTO);
 		return "redirect:/post";
@@ -214,8 +216,16 @@ public class BBSController {
 	}
 	
 	@GetMapping("/article/{id}")
-	public String show_article(@PathVariable Long id, Model model, BBSDB bbsDB) {
+	public String show_article(@PathVariable Long id, HttpServletRequest req, Model model, BBSDB bbsDB) {
+		HttpSession session = req.getSession(false);
 		PostDB article = postService.getByID(id);
+		String userId = (String)session.getAttribute("user");
+		UserDB userdb = userService.findUser(userId);
+		model.addAttribute("userDTO", userdb);
+		List<CommentDB> comments = article.getCommentDB();
+		if(comments != null && !comments.isEmpty()) {
+			model.addAttribute("comments", comments);
+		}
 		bbsService.viewerup(id);
 		model.addAttribute("postDTO", article);
 		return "/board/article";
