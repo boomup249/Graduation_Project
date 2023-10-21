@@ -40,8 +40,7 @@
 			                var startDate = info.event.start.toLocaleDateString();
 			                eventDetails.innerHTML = '<p>날짜: ' + startDate + '</p>' +
 			                    '<p>가격: ' + info.event.extendedProps.price + '</p>' + 
-			                    '<p>플랫폼: ' + info.event.extendedProps.platform + '</p>' +
-			                    '<p>기타: ' + info.event.extendedProps.etc + '</p>';
+			                    '<p>플랫폼: ' + info.event.extendedProps.platform + '</p>';
 			                modal.style.display = 'block';
 			
 			                var closeBtn = modal.querySelector('.close');
@@ -125,9 +124,6 @@
 			
 			    var topBox = document.getElementById('topBox');
 			    var bottomBox = document.getElementById('bottomBox');
-				console.log('etcValue:', etcValue);
-				console.log('yearMatch:', yearMatch);
-				console.log('monthMatch:', monthMatch);
 
 			    if (etcYear === currentYear) {
 			        if (etcMonth === null) {
@@ -136,10 +132,9 @@
 			        } else if (etcMonth === currentMonth) {
 			            bottomBox.appendChild(a);
 			            bottomBox.appendChild(br);
-			        }
-			    }
+			        } 
+			    }		   
 			}
-
 	    }
 	    function loadNewsMemoData(currentYear, currentMonth) {
 		    var req = $.ajax({
