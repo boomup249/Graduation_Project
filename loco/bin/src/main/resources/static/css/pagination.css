@@ -1,0 +1,58 @@
+@charset "UTF-8";
+@import "font.css";
+
+			#pagination ul {
+				padding: 0;
+				
+				list-style: none;
+				
+				width: 1000px;
+				
+				/*리스트 중앙정렬*/
+				position: relative;
+				left: 50%;
+				margin-left: -525px;
+				
+				/*리스트 위 아래 마진*/
+				margin-top: 40px;
+				margin-bottom: 40px;
+				
+				/*자식 중앙 정렬*/
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+			
+			#pagination > ul > li {
+				float: left;
+				margin-left: 35px;
+			}
+			
+			
+			
+			.fir_btn, .last_btn {
+				border: 2px solid #bcbcbc;
+				padding-left: 5px;
+				padding-right: 5px;
+				padding-top: 2px;
+				}
+				
+			
+			#pagination a {
+				font-family: 'GmarketSansLight';
+				font-size: 25px;
+				color: #fff;
+				text-decoration: none;
+				
+			}
+			
+			#pagination .current {
+			  font-family: 'GmarketSansBold';
+			  font-weight: bold;
+			  text-decoration: underline;
+			}
+			
+			.disabled {
+				pointer-events: none;
+				cursor: default;
+			}

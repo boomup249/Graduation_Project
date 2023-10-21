@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>프로필 페이지</title>
+    <link rel="stylesheet" th:href="@{/css/myaccount.css}" href="/css/myaccount.css">
+</head>
+<body background="#222831">
+	<div id="logo">
+		<div class="link">
+			<a href="/main"><img src="imgs/header/logo.png"/></a>
+		</div>
+	</div>
+	<!-- 왼쪽 박스 -->
+	<div id="left_box">
+		<div class="imgbox">
+			<img class="img" src="/imgs/profileimg.jpg">
+		</div>
+		<span class="left_id" th:text="${userDTO.getID()}"></span>
+		<span class="left_email" th:text="${userDTO.getEMAIL()}"></span>
+		<hr style="border: 1 solid white;width: 100%;position: absolute;top: 46%;left: 0%; ">
+		<button type="button" class="left_btn1">내 계정</button>
+		<button type="button" class="left_btn2">프로필</button>
+	</div>
+	
+	<!--프로필 입력 부분 (주영 외 수정 금지!)-->
+			<div id="content">
+			<div class="info">
+				<p>회원정보 수정</p> 
+			</div>
+			<!--아래 코드를 기존 입력했던 회원 정보가 나오도록 수정-->
+			<div class="edit_email">
+            	<input type="email" placeholder="Email"/>
+	        </div>
+	        
+	         <div class="edit_id">
+	            <input type="text" placeholder="ID"/>
+	            <button id="checkDuplicate">중복확인</button>
+	        </div>
+			
+	        <div class="edit_pw">
+	            <input type="password" placeholder="Password"/>
+	        </div>
+	        <div class="pwchk">
+	            <input type="password" placeholder="Confirm Password"/>
+	        </div>
+	        <!--회원정보 수정 / 취소 버튼-->
+	        <div class="btn-complete">
+		        <button id="modifyComplete">수정완료</button>
+		        <button id="cancel">취소</button>
+		    </div>
+		</div>
+	<!-- 여기까지 (주영) -->
+	
+	<!-- 오른쪽 첫번째 박스 -->
+	<span id="right_span1">기본 정보</span>
+	<div id = "right_box1">
+		<span class="right_id" th:text="${userDTO.getID()}"></span>
+		<button type="button" class="id_btn">수정</button>
+		<hr style="border: 1 solid white; width: 100%; position: absolute;top: 30%;left: 0%;">
+		
+		<span class="right_email" th:text="${userDTO.getEMAIL()}"></span>
+		<button type="button" class="email_btn" onclick="location.href='/join/join_id'";>수정</button>
+		<hr style="border: 1 solid white; width: 100%; position: absolute;top: 60%;left: 0%;">
+		
+		<span class="right_pwd" th:text="${userDTO.getBIRTH()}"></span>
+		<button type="button" class="birth_btn">수정</button>
+	</div>
+	
+	
+	
+	<span id="right_span2">기타 설정</span>
+	<div id = "right_box2">
+		<span th:text="${preferDTO.getAction_adventure()}"></span>
+		
+	</div>
+	
+
+</body>
+</html>

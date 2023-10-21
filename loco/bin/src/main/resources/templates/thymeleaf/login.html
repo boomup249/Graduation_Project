@@ -1,0 +1,187 @@
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+		<title>loco > login</title>
+		
+		<!-- 외부 css -->
+		<link rel="stylesheet" href="css/font.css"> <!-- 폰트 css -->
+		<link rel="stylesheet" href="css/background_image.css"> <!-- b_img css -->
+		
+		<style>		
+			/*css 속성*/
+			/*logo*/
+			#logo {z-index: 4; /* logo가 b_img보다 위에 배치되어야 함*/
+					position: absolute;
+					top: 0px;
+					left: 0px;
+					width: 100%; height: 50px; /*logo 담을 가상 헤더 header 100px 고정 -> 50 + 25 + 25*/ 
+					padding-top: 25px; padding-bottom: 25px;}
+			.link img {height: 50px;} /*로고 이미지*/
+			.link a {float: left; margin-left: 25px;} /*왼쪽 정렬, 마진 25px*/
+			
+			
+			/*내용*/
+			#bg {z-index: 2;
+					width: 600px; height: 800px;
+					position: absolute;
+					top: 50%; left: 50%;
+					margin-left: -300px; margin-top: -400px;
+					background-color: #000;
+					opacity: 0.5;}
+					
+			#content {z-index: 3;
+						position: relative;
+						top: calc( (100% - 800px) / 2 );
+						left: calc( (100% - 600px) / 2 );
+						width: 600px; height: 800px;
+						/*자식 수직 중앙 정렬*/
+						display: flex;
+						flex-direction: column;
+						justify-content: center;}
+			
+			input[type=text], input[type=password] {width: 450px; /*input 공통 속성*/
+					height: 70px;
+					padding-left: 15px;
+					font-family: 'GmarketSansMedium';
+					font-size: 15pt;}
+								
+			#sub {background-color: #21ba21; /*제출 버튼*/
+					width: 450px; height: 70px;
+					font-family: 'GmarketSansMedium';
+					font-size: 15pt;
+					color: #fff; }
+					
+			#text1 {font-family: 'GmarketSansMedium';
+					font-size: 25pt;
+					color: #fff;}
+			
+			#text2 {float: left; margin-left: 15px;
+					font-family: 'GmarketSansMedium';
+					font-size: 15pt;}
+					
+			p { color: #fff;}
+			
+			
+			/*위치 잡기*/
+			.item1 {width: 146.2px; height: 100px;
+					/*요소 가로가 96.2px, 여백 양쪽 25px*/
+					position: relative;
+					left: 50%;
+					margin-left: -250px; /**/
+					margin-bottom: 10px;
+					/*자식 중앙정렬*/
+					display: flex;
+					justify-content: center;
+					align-items: center;}
+					
+			.item2 {width: 500px; height: 100px;
+					position: relative;
+					left: 50%;
+					margin-left: -250px;
+					margin-bottom: 10px;
+					/*자식 중앙정렬*/
+					display: flex;
+					justify-content: center;
+					align-items: center;}
+			
+			.item3 {width: 500px; height: 100px;
+					position: relative;
+					left: 50%;
+					margin-left: -250px;
+					margin-bottom: 10px;
+					/*자식 중앙정렬*/
+					display: flex;
+					justify-content: center;
+					align-items: center;}
+			
+			.item4 {width: 500px; height: 100px;
+					position: relative;
+					left: 50%;
+					margin-left: -250px;
+					margin-bottom: 10px;
+					/*자식 중앙정렬*/
+					display: flex;
+					justify-content: center;
+					align-items: center;}
+					
+			.item5 {width: 400px; height: 100px;
+					position: relative;
+					left: 50%;
+					margin-left: -277px; /* 225 - 여백(마진 제외 왼쪽 여백 37 + 15(마진))*/
+					margin-top: 20px;
+					/*자식 중앙정렬*/
+					display: flex;
+					justify-content: center;
+					align-items: center;}
+					
+			/*error 스타일*/
+	        #error a {
+				font-family: 'GmarketSansMedium';
+				font-size: 15pt;
+				color: red;
+			}
+			#error {
+					/*위치*/
+					position: relative;
+					left: 50%;
+					margin-left: -350px;
+					}
+			
+			body { background-color: #fff;
+					margin: 0; padding: 0;}
+		</style>
+	</head>
+	
+	<body>
+		<div id="b_img"></div><!-- 배경 이미지 불투명도 조절해서 넣기 -->
+		<script src="js/backgroundImage.js"></script>
+		
+		<div id="logo">
+			<div class="link">
+				<a href="/main"><img src="imgs/header/logo.png"/></a>
+			</div>
+		</div>
+		
+		<div id="bg"></div>
+		
+		<div id="content">
+			
+			<div class="item1">
+				<p id="text1">로그인</p>
+			</div>
+			
+			<form action ="#" th:action="@{/login}"
+				th:object="${userDTO}"
+				method = "post">
+				
+			<div class="item2">
+				<input type="text" th:field="*{userId}" placeholder="이메일 혹은 아이디를 입력하세요." required/>
+			</div>
+			<!-- 에러 -->
+	        <div id="error">
+				<a th:if="${#fields.hasErrors('userId')}" th:errors="*{userId}" id="error"></a>
+			</div>
+			
+			<div class="item3">
+				<input type="password" th:field="*{userPwd}" placeholder="비밀번호를 입력하세요." required/>
+			</div>
+			<!-- 에러 -->
+	        <div id="error">
+				<a th:if="${#fields.hasErrors('userPwd')}" th:errors="*{userPwd}" id="error"></a>
+			</div>
+			
+			<div class="item4">
+				<input type="submit" id="sub" value="로그인" />
+			</div>
+			
+			</form>
+			
+			<div class="item5">
+					<p id="text2">회원이 아니신가요?</p>
+					<a href="/join" id="text2">지금 가입하기</a>
+			</div>
+			
+		</div>
+		
+	</body>
+</html>

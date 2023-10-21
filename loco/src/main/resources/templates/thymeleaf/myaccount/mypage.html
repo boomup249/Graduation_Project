@@ -6,31 +6,49 @@
     <link rel="stylesheet" th:href="@{/css/mypage.css}" href="/css/mypage.css">
 </head>
 <body background="#222831">
-	<div id="logo">
-		<div class="link">
-			<a href="/main"><img src="imgs/header/logo.png"/></a>
+	<form action="#" method="post" enctype="multipart/form-data">
+		<div id="logo">
+			<div class="link">
+				<a href="/main"><img src="imgs/header/logo.png"/></a>
+			</div>
 		</div>
-	</div>
 	
-	<!-- 박스 -->
-	<div id="left_box">
-		<div class="imgbox">
-			<img class="img" src="/imgs/profleimg.jpg">
+		<!-- 박스 -->
+		<div id="left_box">
+			<div class="imgbox">
+				<img class="img" th:src="${profile_img}">
+			</div>
+			<span class="left_id" th:text="${userDTO.getID()}"></span>
+			<span class="left_email" th:text="${userDTO.getEMAIL()}"></span>
+			<hr style="border: 1 solid white;width: 100%;position: absolute;top: 50%;left: 0%; ">
+			<button type="button" class="left_btn1" 
+			onclick="location.href='/profile'">내 계정</button>
+			<button type="button" class="left_btn2"
+			onclick="location.href='/mypage'">프로필</button>
 		</div>
-		<span class="left_id" th:text="${userDTO.getID()}"></span>
-		<span class="left_email" th:text="${userDTO.getEMAIL()}"></span>
-		<hr style="border: 1 solid white;width: 100%;position: absolute;top: 50%;left: 0%; ">
-		<button type="button" class="left_btn1" 
-		onclick="location.href='/profile'">내 계정</button>
-		<button type="button" class="left_btn2"
-		onclick="location.href='/mypage'">프로필</button>
-	</div>
-	
-	<!-- 프로필 사진 설정 -->
-	<div class = "select_img">
 		
+		<div id = "box1">
+			<div class = "upload_imgbox">
+				<img class="upload_img" th:src="${profile_img}">
+			</div>
+			
+			<span id = "display_nickname" th:text="${profiledb.getNICKNAME()}"></span>
+			
+			<span class="nickname_span">별명</span>
+			<input type="text" id="input_nickname" placeholder="별명을 입력하세요">
+			
+			<span class="des_span">한줄소개</span>
+			<input type="text" id="input_des" placeholder="소개를 입력하세요">
+			
+			<button id = "save_btn" type="button">저장</button>
+			
+			<input type="file" name="files" id = "inputImg" multiple="multiple"/>
+			<input type="submit" id="submit" value="저장">
+		</div>
 		
-	</div>
+
+	</form>
 	
+	<script src="js/profile_upload.js"></script>
 </body>
 </html>

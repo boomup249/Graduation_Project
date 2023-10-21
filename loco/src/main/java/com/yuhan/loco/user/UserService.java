@@ -116,4 +116,8 @@ public class UserService {
    
    
    //암호화는 한번만 실행되어야 함 (반복 호출 시 암호화 값이 달라져서 비밀번호가 달라짐. 그래서 어떤 방법으로도 DB와 일치시킬 수 없음)
+   public void updatePWD(UserDTO userDTO, UserDB userDB) {
+	   userDB.setPWD(userDTO.getUserPwd());
+	   this.userRepository.save(userDB);
+   }
 }

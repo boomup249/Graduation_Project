@@ -32,8 +32,8 @@ body {
 					color: #FFFFFF}
 					
         /* 입력란 */
-       input[type=email], input[type=text], input[type=password] {
-		    width: 350px;
+       input[type=password] {
+		    width: 300px;
 		    height: 40px;
 		    padding-left: 30px;
 		    font-family: 'GmarketSansMedium';
@@ -42,37 +42,28 @@ body {
 		    border-radius: 5px;
 		    margin-bottom: 10px; 
 			display: inline-block;
-		}
-
-		/* 중복확인 버튼 스타일 */
-		.edit_id {
-		    display: flex;
-		    align-items: center;
-		    margin-left: 90px;
-		}
-		
-		.edit_id input[type="text"] {
-		    width: 350px;
+			float: left;
+			position: absolute;
+			top: 70%;
+			left: 0%;
+		} 
+		#newpwd_re{
+		    width: 300px;
 		    height: 40px;
 		    padding-left: 30px;
 		    font-family: 'GmarketSansMedium';
 		    font-size: 10pt;
 		    border: 1px solid #ccc;
 		    border-radius: 5px;
-		    margin-right: 10px; /* 입력란 오른쪽 간격 조절 */
+		    margin-bottom: 10px; 
+			display: inline-block;
+			float: left;
+			position: absolute;
+			top: 70%;
+			left: 37%;
 		}
-		
-		.edit_id button#checkDuplicate {
-		    width: 80px;
-		    height: 40px;
-		    font-family: 'GmarketSansMedium';
-		    font-size: 10pt;
-		    border: none;
-		    border-radius: 5px;
-		    cursor: pointer;
-		}
-
-        /* 수정 완료 버튼 스타일 */
+	
+        /* 수정 완료 버튼 스타일 
         #modifyComplete {
             width: 150px;
             height: 40px;
@@ -83,9 +74,8 @@ body {
             cursor: pointer;
             background-color: #19D3DA;
             color: white;
-        }
-
-        /* 취소 버튼 스타일 */
+        }*/
+        /* 취소 버튼 스타일 
         #cancel {
             width: 150px;
             height: 40px;
@@ -96,42 +86,26 @@ body {
             cursor: pointer;
             background-color: #A6A6A6;
             color: white;
-        }
-        
-       /*위치 잡기*/
-   
-       .edit_email {
-			position: absolute;
-			top: 40%;
-			left:0%;
-			background-color: #222831;
-			color: white;
-			}
-       .edit_Id {
-			position: absolute;
-			top: 5%;
-			left:0%;}
+        }*/
 		
+		/*
        .edit_pw {
 			position: absolute;
 			top: 71%;
 			left:0%;}
        .pwchk {
 			position: relative;
-			/*자식 중앙정렬*/
+			/*자식 중앙정렬
 			display: flex;
 			justify-content: center;
 			align-items: center;}
 		.btn-complete {
 			position: relative;
-			/*자식 중앙정렬*/
+			/*자식 중앙정렬
 			display: flex;
 			justify-content: center;
 			align-items: center;
-		}
-
-
-/* 왼쪽 박스 (혜민 외 수정 금지!) */
+		}*/
 
 #left_box{
 	width: 30%; 
@@ -142,33 +116,39 @@ body {
 	top:0%;
 	left: 0%; 
 }
-.imgbox{
-	width: 150px; 
-    height: 150px;  
-    border-radius: 70%; 
-    position: absolute; 
-    left: 32%; 
-    top : 12%; 
-    overflow: hidden; 
+.imgbox {
+  width: 150px; /* 초기 가로 크기 */
+  height: 150px; /* 초기 세로 크기 */
+  position: absolute;
+  left: 48%;
+  top: 22%;
+  transform: translate(-50%, -50%); /* 가운데 정렬을 위한 추가 */
+  border-radius: 50%; /* 원형 모양으로 설정 */
+  overflow: hidden;
 }
-.img{ 
-	width: 100%; 
-    height:100%; 
-    object-fit: cover; 
+
+.img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 .left_id{
+	text-align: center;
+	letter-spacing: 2px;
 	font-size: 30px;
 	color: white;
 	position: absolute;
 	top: 35%;
-	left : 37%;
+	left : 38%;
 }
 .left_email{
+	text-align: center;
+	letter-spacing: 2px;
 	font-size: 30px;
 	color: white;
 	position: absolute;
 	top: 40%;
-	left : 27%;
+	left : 28%;
 }
 
 /*왼쪽 계정버튼*/
@@ -242,8 +222,8 @@ body {
 	float: left;
 	margin-left: 1.5%;
 	margin-top:1%;
-	
 }
+
 .right_email{
 	font-size: 30px;
 	color: white;
@@ -267,6 +247,27 @@ body {
 	margin-top:2%;
 }
 /* 오른쪽 수정 버튼 */
+/*
+.id_btn_f{
+	background-color: white;
+	border: none;
+	width: 80px;
+	height: 30px;
+	float: right;
+	border-radius: 20%;
+	font-size: 15px;
+	margin-top: 1.5%;
+	margin-right: 3%;
+	position: absolute;
+	top: 5%;
+	left: 90%;
+	
+}
+.id_btn_f:hover{
+	color:ghostwhite; 
+	background-color:#CCCCCC;
+}
+/* 아이디 변경 버튼
 .id_btn{
 	background-color: white;
 	border: none;
@@ -278,15 +279,33 @@ body {
 	margin-top: 1.5%;
 	margin-right: 3%;
 	position: absolute;
-	top: 0%;
+	top: 5%;
 	left: 90%;
-	
 }
 .id_btn:hover{
 	color:ghostwhite; 
 	background-color:#CCCCCC;
 }
-
+/* 이메일 수정버튼
+.email_btn_f{
+	background-color: white;
+	border: none;
+	width: 80px;
+	height: 30px;
+	float: right;
+	border-radius: 20%;
+	font-size: 15px;
+	margin-top: 2%;
+	margin-right: 3%;
+	position: absolute;
+	top: 30%;
+	left: 90%;
+}
+.email_btn_f:hover{
+	color:ghostwhite; 
+	background-color:#CCCCCC;
+}
+/* 이메일 변경버튼
 .email_btn{
 	background-color: white;
 	border: none;
@@ -305,7 +324,26 @@ body {
 	color:ghostwhite; 
 	background-color:#CCCCCC;
 }
+*/
 
+/* 비밀번호 수정 */
+#input_pwd{
+	visibility: hidden;
+}
+#pwd{
+	visibility: visible;
+}
+#edit_pwd{
+	visibility: hidden;
+}
+#ch_pwd{
+	visibility: visible;
+}
+#ch_pwd_edit{
+	visibility: hidden;
+}
+
+/* 변경 버튼*/
 .pwd_btn{
 	background-color: white;
 	border: none;
@@ -314,23 +352,35 @@ body {
 	float: right;
 	border-radius: 20%;
 	font-size: 15px;
-	margin-top: 2.5%;
+	margin-top: 2%;
 	margin-right: 3%;
 	position: absolute;
-	top: 60%;
+	top: 65%;
 	left: 90%;
-	
 }
 .pwd_btn:hover{
 	color:ghostwhite; 
 	background-color:#CCCCCC;
 }
-
-
-
+/* 기존 비밀번호 확인버튼 */
+#check_pwd{
+		background-color: white;
+	border: none;
+	width: 80px;
+	height: 30px;
+	float: right;
+	border-radius: 20%;
+	font-size: 15px;
+	margin-top: 2%;
+	margin-right: 3%;
+	position: absolute;
+	top: 65%;
+	left: 40%;
+}
 
 /* right_box2 */
 #right_box2{
+	z-index: 3;
 	width: 69%;
 	height: 60%;
 	float: right;
@@ -340,9 +390,84 @@ body {
 	left: 30%;
 	margin: 0.5%;
 }
-.container table tr th{
-	text-align: center;
-	vertical-align: middle;
-	word-break: keep-all;
-	padding-right: 3em;
+.line{
+	border-left: thick solid white;
+	height: 100%;
+	position: absolute;
+	top:0%;
+	left: 50%;
 }
+.likeheader{
+	font-size: x-large;
+	color: white;
+	position: absolute;
+	top: 0%;
+	left: 25%;
+}
+.dislikeheader{
+	font-size: x-large;
+	color: white;
+	position: absolute;
+	top: 0%;
+	left: 74%;
+}
+.dtofontLIKE{
+	font-size: large;
+	color: white;
+	position: absolute;
+	top:10%;
+	left: 20%;
+}
+.dtofontDISLIKE{
+	font-size: large;
+	color: white;
+	position: absolute;
+	top:10%;
+	left: 70%;
+}
+#checktableLike{
+	width: 50%;
+	height: 60%;
+	position: absolute;
+	top: 20%;
+	left:0%;
+    text-align: center;
+    color: white;
+    margin: 1px;
+    
+}
+#checktableDislike{
+	width: 50%;
+	height: 60%;
+	position: absolute;
+	top: 20%;
+	left:50%;
+	border: 2px solid white;
+    text-align: center;
+    color: white;
+    margin: 1px;
+}
+
+#checktableLike_td{
+	border: 1px solid white;
+    padding: 10px;
+}
+#checktableDislike_td{
+   border: 1px solid white;
+    padding: 10px;
+}
+#ch_prefer{
+	font-size: 15px;
+	padding: 5px 10px;
+	position: absolute;
+	top: 88%;
+	left: 40%;
+}
+#ch_prefer1{
+	font-size: 15px;
+	padding: 5px 10px;
+	position: absolute;
+	top: 88%;
+	left: 90%;
+}
+

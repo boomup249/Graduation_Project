@@ -26,13 +26,14 @@ body {
 	left: 0%; 
 }
 .imgbox{
-	width: 150px; 
-    height: 150px;  
-    border-radius: 70%; 
-    position: absolute; 
-    left: 32%; 
-    top : 12%; 
-    overflow: hidden; 
+  width: 150px; /* 초기 가로 크기 */
+  height: 150px; /* 초기 세로 크기 */
+  position: absolute;
+  left: 48%;
+  top: 22%;
+  transform: translate(-50%, -50%); /* 가운데 정렬을 위한 추가 */
+  border-radius: 50%; /* 원형 모양으로 설정 */
+  overflow: hidden;
 }
 .img{ 
 	width: 100%; 
@@ -40,18 +41,22 @@ body {
     object-fit: cover; 
 }
 .left_id{
-	font-size: 25px;
+	text-align: center;
+	letter-spacing: 2px;
+	font-size: 30px;
 	color: white;
 	position: absolute;
 	top: 35%;
-	left : 36%;
+	left : 38%;
 }
 .left_email{
-	font-size: 25px;
+	text-align: center;
+	letter-spacing: 2px;
+	font-size: 30px;
 	color: white;
 	position: absolute;
 	top: 40%;
-	left : 25%;
+	left : 28%;
 }
 
 /*왼쪽 계정버튼*/
@@ -88,12 +93,105 @@ body {
 }
 
 /* 프로필 사진 설정*/
-.select_img{
-	width: 30%; 
-	height:100%; 
-	float: right;
+#box1{
+	z-index: 3;
+	width: 67%; 
+	height:77%; 
+	float: left;
 	background-color:#393E50;
 	position: absolute;
-	top:0%;
-	left: 0%;
+	top:20%;
+	left: 32%; 
 }
+.upload_imgbox{
+	width: 200px; /* 초기 가로 크기 */
+  	height: 200px; /* 초기 세로 크기 */
+  	position: absolute;
+  	left: 15%;
+  	top: 5%;
+  	transform: translate(-50%, -50%); /* 가운데 정렬을 위한 추가 */
+  	border-radius: 50%; /* 원형 모양으로 설정 */
+  	overflow: hidden;
+}
+.upload_img{
+	width: 100%; 
+    height:100%; 
+    object-fit: cover; 
+}
+
+#display_nickname{
+	font-size: 25px;
+	color: white;
+	position: absolute;
+	top:25%;
+	left:12%;
+}
+#display_email{
+	font-size: 25px;
+	color: white;
+	position: absolute;
+	top:29%;
+	left:12%;
+}
+
+
+.nickname_span{
+	font-size: 20px;
+	color: white;
+	position: absolute;
+	top:16%;
+	left:30%;
+	float: left;
+}
+#input_nickname{
+	width: 600px;
+	height: 50px;
+	position: absolute;
+	top: 16%;
+	left: 35%;
+}
+.des_span{
+	font-size: 20px;
+	color: white;
+	position: absolute;
+	top:29%;
+	left:26%;
+	float: left;
+}
+#input_des{
+	width: 600px;
+	height: 310px;
+	position: absolute;
+	top: 29%;
+	left: 35%;
+}
+#save_btn{
+	width: 80px;
+	height: 30px;
+	cursor: auto;
+	font-size: 15px;
+	border-radius: 35%;
+	background-color: white;
+	position: absolute;
+	top: 90%;
+	left: 85%;
+}
+#save_btn:hover{ 
+	color:rgb(192, 192, 192); 
+	background-color:#CCCCCC;
+}
+#inputImg{
+	width: 100px;
+	height: 50%;
+	position: absolute;
+	top: 5%;
+	left:30%
+}
+#submit{
+	width: 80px;
+	height: 30px;
+	position: absolute;
+	top: 5%;
+	left:40%
+}
+
