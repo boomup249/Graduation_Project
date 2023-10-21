@@ -1,0 +1,348 @@
+body {
+    background-color: #222831;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+#logo {z-index: 4; /* logo가 b_img보다 위에 배치되어야 함*/
+					position: absolute;
+					top: 0px;
+					left: 0px;
+					width: 50px; height: 50px; /*logo 담을 가상 헤더 header 100px 고정 -> 50 + 25 + 25*/ 
+					padding-top: 25px; padding-bottom: 25px;}
+.link img {height: 50px;} /*로고 이미지*/
+.link a {float: left; margin-left: 25px;} /*왼쪽 정렬, 마진 25px*/
+
+
+/* 프로필 수정 부분 (주영 외 수정 금지!) */
+	/*내용*/
+        #content {
+			margin-left: 900px;
+		    display: flex;
+		    flex-direction: column;
+		    align-items: center;
+		    justify-content: center;
+		    height: calc(100vh - 100px); /* 헤더 높이를 제외한 높이 */
+		}
+        
+		.info p {font-family: 'GmarketSansMedium';
+					font-size: 25pt;
+					color: #FFFFFF}
+					
+        /* 입력란 */
+       input[type=email], input[type=text], input[type=password] {
+		    width: 350px;
+		    height: 40px;
+		    padding-left: 30px;
+		    font-family: 'GmarketSansMedium';
+		    font-size: 10pt;
+		    border: 1px solid #ccc;
+		    border-radius: 5px;
+		    margin-bottom: 10px; 
+			display: inline-block;
+		}
+
+		/* 중복확인 버튼 스타일 */
+		.edit_id {
+		    display: flex;
+		    align-items: center;
+		    margin-left: 90px;
+		}
+		
+		.edit_id input[type="text"] {
+		    width: 350px;
+		    height: 40px;
+		    padding-left: 30px;
+		    font-family: 'GmarketSansMedium';
+		    font-size: 10pt;
+		    border: 1px solid #ccc;
+		    border-radius: 5px;
+		    margin-right: 10px; /* 입력란 오른쪽 간격 조절 */
+		}
+		
+		.edit_id button#checkDuplicate {
+		    width: 80px;
+		    height: 40px;
+		    font-family: 'GmarketSansMedium';
+		    font-size: 10pt;
+		    border: none;
+		    border-radius: 5px;
+		    cursor: pointer;
+		}
+
+        /* 수정 완료 버튼 스타일 */
+        #modifyComplete {
+            width: 150px;
+            height: 40px;
+            font-family: 'GmarketSansMedium';
+            font-size: 10pt;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #19D3DA;
+            color: white;
+        }
+
+        /* 취소 버튼 스타일 */
+        #cancel {
+            width: 150px;
+            height: 40px;
+            font-family: 'GmarketSansMedium';
+            font-size: 10pt;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #A6A6A6;
+            color: white;
+        }
+        
+       /*위치 잡기*/
+   
+       .edit_email {
+			position: absolute;
+			top: 40%;
+			left:0%;
+			background-color: #222831;
+			color: white;
+			}
+       .edit_Id {
+			position: absolute;
+			top: 5%;
+			left:0%;}
+		
+       .edit_pw {
+			position: absolute;
+			top: 71%;
+			left:0%;}
+       .pwchk {
+			position: relative;
+			/*자식 중앙정렬*/
+			display: flex;
+			justify-content: center;
+			align-items: center;}
+		.btn-complete {
+			position: relative;
+			/*자식 중앙정렬*/
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+
+
+/* 왼쪽 박스 (혜민 외 수정 금지!) */
+
+#left_box{
+	width: 30%; 
+	height:100%; 
+	float: left;
+	background-color:#393E50;
+	position: absolute;
+	top:0%;
+	left: 0%; 
+}
+.imgbox{
+	width: 150px; 
+    height: 150px;  
+    border-radius: 70%; 
+    position: absolute; 
+    left: 32%; 
+    top : 12%; 
+    overflow: hidden; 
+}
+.img{ 
+	width: 100%; 
+    height:100%; 
+    object-fit: cover; 
+}
+.left_id{
+	font-size: 30px;
+	color: white;
+	position: absolute;
+	top: 35%;
+	left : 37%;
+}
+.left_email{
+	font-size: 30px;
+	color: white;
+	position: absolute;
+	top: 40%;
+	left : 27%;
+}
+
+/*왼쪽 계정버튼*/
+.left_btn1{
+	color: white;
+	border: none;
+	width: 100%;
+	height: 10%;
+	background-color: #393E50;
+	font-size: 40px;  
+	position: absolute; 
+	top:52%; 
+	left:0px;
+}
+.left_btn1:hover{ 
+	color:ghostwhite; 
+	background-color:#CCCCCC;
+}
+/*왼쪽 프로필버튼*/
+.left_btn2{
+	color: white;
+	border: none;
+	width: 100%;
+	height: 10%;
+	background-color: #393E50;
+	font-size: 40px;  
+	position: absolute; 
+	top:62%; 
+	left:0px;
+}
+.left_btn2:hover{ 
+	color:ghostwhite; 
+	background-color:#CCCCCC;
+}
+
+/* right_box1 */
+#right_box1{
+	z-index: 1;
+	width: 69%; 
+	height:30%; 
+	float: right;
+	background-color:#393E50;
+	position: absolute;
+	top: 3%;
+	left: 30%;
+	margin: 0.5%;
+}
+
+/*오른쪽 박스 span */
+#right_span1{
+	font-size: 20px;
+	color: white;
+	position: absolute;
+	top: 0%;
+	left: 30%;
+	margin-left: 0.5%;
+}
+#right_span2{
+	font-size: 20px;
+	color: white;
+	position: absolute;
+	top: 35%;
+	left: 30%;
+	margin-left: 0.5%;
+}
+
+/*오른쪽첫번째 박스 컴포넌트*/
+.right_id{
+	font-size: 30px;
+	color: white;
+	float: left;
+	margin-left: 1.5%;
+	margin-top:1%;
+	
+}
+.right_email{
+	font-size: 30px;
+	color: white;
+	float: left;
+	margin-left: 3%;
+	position: absolute;
+	top: 30%;
+	left: 0%;
+	margin-left: 1.5%;
+	margin-top:1.5%;
+}
+.right_pwd{
+	font-size: 30px;
+	color: white;
+	float: left;
+	margin-left: 3%;
+	position: absolute;
+	top: 60%;
+	left: 0%;
+	margin-left: 1.5%;
+	margin-top:2%;
+}
+/* 오른쪽 수정 버튼 */
+.id_btn{
+	background-color: white;
+	border: none;
+	width: 80px;
+	height: 30px;
+	float: right;
+	border-radius: 20%;
+	font-size: 15px;
+	margin-top: 1.5%;
+	margin-right: 3%;
+	position: absolute;
+	top: 0%;
+	left: 90%;
+	
+}
+.id_btn:hover{
+	color:ghostwhite; 
+	background-color:#CCCCCC;
+}
+
+.email_btn{
+	background-color: white;
+	border: none;
+	width: 80px;
+	height: 30px;
+	float: right;
+	border-radius: 20%;
+	font-size: 15px;
+	margin-top: 2%;
+	margin-right: 3%;
+	position: absolute;
+	top: 30%;
+	left: 90%;
+}
+.email_btn:hover{
+	color:ghostwhite; 
+	background-color:#CCCCCC;
+}
+
+.pwd_btn{
+	background-color: white;
+	border: none;
+	width: 80px;
+	height: 30px;
+	float: right;
+	border-radius: 20%;
+	font-size: 15px;
+	margin-top: 2.5%;
+	margin-right: 3%;
+	position: absolute;
+	top: 60%;
+	left: 90%;
+	
+}
+.pwd_btn:hover{
+	color:ghostwhite; 
+	background-color:#CCCCCC;
+}
+
+
+
+
+/* right_box2 */
+#right_box2{
+	width: 69%;
+	height: 60%;
+	float: right;
+	background-color:#393E50;
+	position: absolute;
+	top: 38%;
+	left: 30%;
+	margin: 0.5%;
+}
+.container table tr th{
+	text-align: center;
+	vertical-align: middle;
+	word-break: keep-all;
+	padding-right: 3em;
+}

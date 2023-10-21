@@ -1,0 +1,373 @@
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+		<title>loco > news</title>
+		
+		<!-- 외부 css -->
+		<link rel="stylesheet" href="css/font.css"> <!-- 폰트 css -->
+		<link rel="stylesheet" href="css/header.css"> <!-- 헤더 css -->
+		
+		<!--<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.9.0/main.css">-->
+	    
+	    <!-- js -->
+	    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/index.global.min.js'></script>
+	    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+		<script>
+		    document.addEventListener('DOMContentLoaded', function() {
+			    var req = $.ajax({
+			        url: "/news_event",
+			        type: "get",
+			        dataType: "json"
+			    });
+			
+			    req.done(function(data) {
+			        var calendarEl = document.getElementById('calendar');
+			        var calendar = new FullCalendar.Calendar(calendarEl, {
+			            initialView: 'dayGridMonth',
+			            dayMaxEventRows: true,
+			            views: {
+			                timeGrid: {
+			                    dayMaxEventRows: 3
+			                }
+			            },
+			            events: data,
+			            eventClick: function(info) {
+			                var modal = document.getElementById('eventModal');
+			                var eventTitle = document.getElementById('eventTitle');
+			                var eventDetails = document.getElementById('eventDetails');
+			
+			                eventTitle.innerText = info.event.title;
+			                var startDate = info.event.start.toLocaleDateString();
+			                eventDetails.innerHTML = '<p>날짜: ' + startDate + '</p>' +
+			                    '<p>가격: ' + info.event.extendedProps.price + '</p>' + 
+			                    '<p>플랫폼: ' + info.event.extendedProps.platform + '</p>';
+			                modal.style.display = 'block';
+			
+			                var closeBtn = modal.querySelector('.close');
+			                closeBtn.addEventListener('click', function() {
+			                    modal.style.display = 'none';
+			                });
+			            },
+			            // datesSet: 이전/다음달 선택시 bottom-box의 날짜가 바뀌게 함
+			            datesSet: function(info) {
+							var topBox = document.getElementById('topBox');
+						    var bottomBox = document.getElementById('bottomBox');
+						    topBox.innerText = '';
+						    bottomBox.innerText = '';
+			                var currentYear = info.view.currentStart.getFullYear();
+			                var currentMonth = info.view.currentStart.getMonth() + 1;
+			                var currentYearElement = document.getElementById('currentYear');
+			                    currentYearElement.innerHTML = currentYear;
+			                   
+			                var currentMonthElement = document.getElementById('currentMonth');
+			                    currentMonthElement.innerHTML = currentMonth;
+			                
+			                // 추가: JavaScript에서 가져온 currentYear를 bottom-box의 span에 설정
+			                var bottomBoxCurrentYear = document.getElementById('bottomBoxCurrentYear');
+			                    bottomBoxCurrentYear.textContent = currentYear;
+			                
+			                loadNewsMemoData(currentYear, currentMonth);
+			            }
+			        });
+			        calendar.render();
+			    });
+		        // 현재 연도와 월 가져오기
+		        var currentYear = new Date().getFullYear();
+		        var currentMonth = new Date().getMonth() + 1; // 월은 0부터 시작하므로 +1
+		        
+
+		        // 현재 연도와 월 업데이트
+		        var currentYearElement = document.getElementById('currentYear');
+		        var currentMonthElement = document.getElementById('currentMonth');
+		        currentYearElement.innerText = currentYear;
+		        currentMonthElement.innerText = currentMonth;
+		    });
+		
+	    function addToTopOrBottomBox(news, currentYear, currentMonth) {
+	        var a = document.createElement('a');
+	        a.href = news.url;
+	        a.innerText = '• '+ news.title;
+	
+	        var etcValue = news.etc;
+	        var br = document.createElement('br');
+	
+	        a.addEventListener('click', function(event) {
+	            event.preventDefault();
+	
+	            var modal = document.getElementById('eventModal');
+	            var eventTitle = document.getElementById('eventTitle');
+	            var eventDetails = document.getElementById('eventDetails');
+	
+	            eventTitle.innerText = news.title;
+	            eventDetails.innerHTML =
+	                '<p>가격: ' + news.price + '</p>' +
+	                '<p>플랫폼: ' + news.platform + '</p>' +
+	                '<p>기타: ' + news.etc + '</p>';
+	
+	            modal.style.display = 'block';
+	
+	            var closeBtn = modal.querySelector('.close');
+	            closeBtn.addEventListener('click', function() {
+	                modal.style.display = 'none';
+	            });
+	        });
+	
+	        var yearPattern = /(\d{4})/;
+			var monthPattern = /-(\d{2})/;
+			var yearMatch = etcValue.match(yearPattern);
+			var monthMatch = etcValue.match(monthPattern);
+			
+			
+			if (yearMatch) {
+			    var etcYear = parseInt(yearMatch[1]);
+			    var etcMonth = monthMatch ? parseInt(monthMatch[1], 10) : null; // 월 정보가 없으면 null
+			
+			    var topBox = document.getElementById('topBox');
+			    var bottomBox = document.getElementById('bottomBox');
+
+			    if (etcYear === currentYear) {
+			        if (etcMonth === null) {
+			            topBox.appendChild(a);
+			            topBox.appendChild(br);
+			        } else if (etcMonth === currentMonth) {
+			            bottomBox.appendChild(a);
+			            bottomBox.appendChild(br);
+			        } 
+			    }		   
+			}
+	    }
+	    function loadNewsMemoData(currentYear, currentMonth) {
+		    var req = $.ajax({
+		        url: "/news_memo",
+		        type: "get",
+		        dataType: "json"
+		    });
+		    req.done(function(data) {
+		        var topBox = document.getElementById('topBox');
+		        var bottomBox = document.getElementById('bottomBox');
+		        
+		        data.forEach(function(news) {
+		            addToTopOrBottomBox(news, currentYear, currentMonth);
+		        });
+		    });
+		}
+	</script>
+
+	     
+	    
+	    <!--날짜 부분 텍스트 색상 변경--><!-- 이거 적용되면 more 눌렀을때 글씨 안보여서 잠깐 끔 -->
+	    <!--
+	    <script>
+		  document.addEventListener('DOMContentLoaded', function() {
+		    var calendarText = document.querySelector('#calendar');
+		    calendarText.style.color = '#FFFFFF'; 
+		  });
+		</script>
+		-->
+	    
+		<style>
+			/*css 속성*/
+			a {
+			    color: black; /* 텍스트 색상을 검은색으로 설정 */
+			    text-decoration: none; /* 밑줄을 없앰 */
+			    font-family: 'GmarketSansMedium';
+			    font-size: 20px;
+			}
+			
+			/*내용*/
+			#content {
+				position: relative;
+			    top: 80px;
+			    left: 0px;
+			    width: 100%;    
+			    height: calc(100% - 100px);
+			    overflow-y: scroll;
+			}
+			
+			/*달력*/
+			#calendar {
+			    top: 0%;
+			    left: 0%;
+			    float: left;
+			    margin: 70px;
+			    
+			    width: 1100px;
+			    height: 740px; 
+			}
+			
+				/*달력 세부*/
+			.fc-toolbar-title { /* 달력 제목만 흰색(more 눌렀을때 안 보여서, 나중에 디자인 수정하면 고치기) */
+				color: #FFFFFF;
+			}
+			
+			.fc-event:hover { /* 이벤트에 마우스 갖다대면 클릭할 수 있다고 알려주기 */
+				cursor: pointer; 
+			}
+			
+			.fc-event-time { /* 시간이 계속 의미없이 떠서 제거 */
+				display: none;
+			}
+			
+			.fc-popover { /* more 눌렀을때 팝업창이 z-index가 너무 높아서 조절함 */
+				z-index: 10 !important;
+			}
+			
+	        .fc-daygrid { /* 달력 전체에 배경색 적용 */
+	            background-color: #FFFFFF;
+	        }
+	
+	        .fc-daygrid-day { /* 날짜 부분에 배경색 제거 */
+	            background-color: transparent !important;
+	        }
+	        
+	        .fc-day-today {
+			    background-color: lightyellow !important; /* 연노란색 배경 색상 */
+			 }
+			 	/*달력 세부 end*/
+			 /*달력 end*/
+			
+			
+			/*박스*/
+			#plan {
+				margin-top: 70px;
+				color:#FFFFFF;
+				font-size: 30px;
+				font-family: 'GmarketSansMedium';
+			}
+			.box {
+				margin: 10px;
+			}
+			.top-box {
+			    float: left;
+			    width: 500px;
+			    height: 250px;
+			    margin-bottom: 20px;
+			    background-color: white; 
+			    padding: 10px;
+			}
+			
+			.bottom-box {
+			    float: left;
+			    width: 500px;
+			    height: 250px;
+			    background-color: white;
+			    padding: 10px;
+			}
+			/*박스 end*/
+			
+					
+			/* 모달 스타일 */
+	        .modal {
+	            display: none;
+	            position: fixed;
+	            top: 0;
+	            left: 0;
+	            width: 100%;
+	            height: 100%;
+	            background-color: rgba(0, 0, 0, 0.7);
+	            z-index: 99; /* modal 최상단으로 */
+	        }
+	
+	        .modal-content {
+	            background-color: #fff;
+	            margin: 10% auto;
+	            padding: 20px;
+	            border: 1px solid #888;
+	            width: 80%;
+	            max-width: 600px;
+	            position: relative;
+	        }
+	
+	        .close {
+			    position: absolute;
+			    top: 2px;
+			    right: 10px; 
+			    cursor: pointer;
+			    font-size: 30px; 
+			}
+			
+			/* 모달 스타일 end*/
+			
+			
+			body { background-color: #222831;
+					margin: 0; padding: 0;}
+					
+		</style>
+	</head>
+	<body>
+		<!-- 헤더 -->
+		<div id="header">
+			<!-- 로고 -->
+			<div class="logo_btn"><a href="/main"><img src="imgs/header/logo.png"/></a></div>
+			
+			<!-- 메뉴 -->
+			<ul>
+				<!-- 콘솔 -->
+				<li>
+					<div class="menu">
+						<a href="/console">CONSOLE</a>
+					</div>
+				</li>
+				
+				<!-- pc -->
+				<li>
+					<div class="menu">
+						<a href="/pc">PC</a>
+					</div>
+				</li>
+				
+				<!-- 게시판 -->
+				<li>
+					<div class="menu">
+						<a href="/bbs">BBS</a>
+					</div>
+				</li>
+				
+				<!-- 신작 -->
+				<li>
+					<div class="menu">
+						<a href="/news">NEWS</a>
+					</div>
+				</li>
+				
+				<!-- 로그인 버튼-->
+				<li th:if="${session.user == null}"> <!-- 세션(user)가 없으면 -->
+					<div class="menu">
+						<a href="/login"><img src="imgs/header/login.png"/></a>
+					</div>
+				</li>
+				
+				<!-- 마이페이지 -->
+				<li th:if="${session.user != null}"> <!-- 세션(user)가 있으면 -->
+					<div class="mypage"></div>
+					<!-- 드롭다운 -->
+					<ul class="dropdown">
+						<li><a href="/mypage">내 계정</a></li>
+						<li><a href="/profile">프로필 설정</a></li>
+						<li><a href="/logout">로그아웃</a></li>
+					</ul>
+				</li>
+			</ul> </div>
+				<div id='content'>
+					<div id='calendar'></div>
+				
+					<!--이벤트 상세 페이지-->
+					<div id="eventModal" class="modal">
+				    <div class="modal-content">
+				        <span class="close">&times;</span>
+				        <h2 id="eventTitle">이벤트 상세 정보</h2>
+					        <div id="eventDetails">
+					            <!-- 이벤트 상세 정보 여기에 표시 -->
+					        </div>
+					    </div>  
+					</div>
+					<div class="box">
+						<p id="plan"><span id="currentYear"></span>년 출시 예정 게임</p>
+					    <div class="top-box" id="topBox"></div>
+						<p id="plan"><span id="bottomBoxCurrentYear"></span>년 <span id="currentMonth"></span>월 출시 예정 게임</p>
+					    <div class="bottom-box" id="bottomBox"></div>
+					</div>
+				</div>
+    
+	</body>	
+</html>	

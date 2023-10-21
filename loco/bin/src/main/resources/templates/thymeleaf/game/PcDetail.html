@@ -1,0 +1,613 @@
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+		<title>loco > PCdetail</title>
+		
+		<!-- 외부 css -->
+		<link rel="stylesheet" href="/css/font.css"> <!-- 폰트 css -->
+		<link rel="stylesheet" href="/css/header.css"> <!-- 헤더 css -->
+		
+		<!-- 외부 js -->
+		<script src="/js/tagsMore.js"></script>
+		<script src="/js/longTitle.js"></script>
+		
+		<style>	
+			/*css 속성*/
+			/*내용*/
+			#content 
+			{	z-index: 2;
+				position: relative;
+				top: 100px;
+				left: 0px; /*헤더 아래부터*/
+				width: 100%; height: calc(100% - 100px)/*화면 - 헤더*/;
+				overflow-y: scroll; /*헤더 움직이지 않고 스크롤바 생성*/
+			}
+						
+			body { background-color: #222831; margin: 0; padding: 0;}
+			
+			/*상단 박스*/		
+			.up_box 
+			{
+				width: 1600px;
+				height: 600px;
+				
+				/*본인(?) 정렬*/
+				margin: 0 auto; /*가로 중앙 정렬*/
+				margin-top: 30px;
+				
+				/*자식 가로 세로 중앙 정렬*/
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+			
+			/*상단 왼쪽 박스*/		
+			.left_up_box 
+			{
+				display: inline-block;
+				width: 1000px;
+				/*
+				height: 600px;
+				*/
+				background-color: #2d333c;
+				border: #000 solid 1px;
+				
+				margin-right: 10px;
+				
+			}
+					
+			.title_tb {
+				z-index: 5;
+				font-family: 'Ramche';
+				font-size: 25px;
+
+				cursor: pointer; /*올리면 커서 모양 바뀌게*/
+				
+				width: 900px;
+				height: 35px;
+				
+				/*overflow-x: hidden;*/ /*글자 수 width 넘기면 숨기기*/
+				
+				/*본인(?) 정렬*/
+				margin: 0 auto;
+				margin-top: 25px;
+				
+				color: #fff;
+				text-shadow: -2px -2px #000, 2px -2px #000, -2px 2px #000, 2px 2px #000; /* 글자 테두리 */
+			}
+			
+			#img_box 
+			{
+				width: 880px;
+				height: 495px;
+				background-color: #393e46; /*배경색에 하얀색 10프로 추가*/
+				border: #000 solid 1px;
+				
+				/*본인(?) 정렬*/
+				margin: 0 auto;
+				margin-top: 20px;
+				margin-bottom: 20px;
+			}
+			
+			#img_box img 
+			{
+				width: 880px;
+				height: 495px;
+				object-fit: contain; /*비율 그대로 꽉 채우기*/
+			}
+			
+			/*상단 오른쪽 박스*/
+			.right_up_box 
+			{
+				width: 550px;
+				height: 600px;
+				background-color: #393e46; /*배경색에 하얀색 10프로 추가*/
+				border: #000 solid 1px;
+			}
+			
+			#thumbnail 
+			{
+				width: 480px;
+				height: 270px;
+				
+				/*본인(?) 정렬*/
+				margin: 0 auto;
+				margin-top: 65px;
+				
+				background-color: #2d333c; /*배경색에 하얀색 5프로 추가*/
+				border: #000 solid 1px;
+			}
+			
+			#thumbnail img 
+			{
+				width: 480px;
+				height: 270px;
+				object-fit: contain;
+			}
+			
+			#des 
+			{
+				font-family: 'GmarketSansLight';
+				font-size: 20px;
+				color: #fff;
+				
+				width: 480px;
+				height: 200px;
+				
+				/*본인(?) 정렬*/
+				margin: 0 auto;
+
+				overflow-y: scroll; /*스크롤바로 제어*/	
+			}
+			
+			#des p { width: 450px; }
+	
+			/*중앙 박스*/
+			.mid_box 
+			{
+				width: 1600px;
+				
+				/*본인(?) 정렬*/
+				margin: 0 auto;
+				margin-top: 30px;
+				
+				/*자식 가로 세로 중앙 정렬*/
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+			
+			.info_box /*취급 사이트 및 가격 정보 박스*/
+			{ 
+				width: 1550px;
+				background-color: #252b33; /*배경색에 하얀색 1프로 추가*/
+			}
+			
+			#site /*단순 레이블*/
+			{ 
+				font-family: 'GmarketSansBold';
+				font-size: 35px;
+				
+				color: #fff;
+				text-shadow: -1px -1px #000, 1px -1px #000, -1px 1px #000, 1px 1px #000; /* 글자 테두리 */
+				
+				/*본인(?) 정렬*/
+				margin-top: 10px;
+				margin-left: 25px;
+			}
+			
+			.price_info 
+			{
+			    height: 180px;
+			    /*자식 가로 세로 중앙 정렬*/
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}	
+			
+			/*price_info 세부*/	
+			.site_logo img 
+			{
+				width: 100px;
+				height: 100px;
+				object-fit: contain;
+				margin-right: 35px;
+			}
+			
+			/* goto_btn */
+			#goto_btn img 
+			{
+				width: 200px;
+				margin-right: 35px;
+			}	
+			
+			/* 정가 */
+			#no_dc
+			{	
+				z-index: 1; /* 테이블의 행에서 위에 표시되도록 */
+				font-family: 'GmarketSansMedium';
+				font-size: 30px;
+				color: #fff;
+				/*border: 2px solid #bcbcbc;*/
+				height: 60px;
+				/*자식 가로 세로 중앙 정렬*/
+				display: none;
+				/*display: flex;*/
+				align-items: center;
+				justify-content: center;
+			}
+						
+			/* 할인가 및 할인율 */			
+			#dc
+			{	
+				/* 테이블의 행에서 위에 표시되도록 */
+				z-index: 1; 			
+				/*자식 가로 세로 중앙 정렬*/
+				/*display: none;*/
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+						
+			/*dc 세부*/
+			.dc_rate 
+			{
+				font-family: 'GmarketSansMedium';
+				font-size: 25px;
+				color: #fff;
+				
+				background-color: #19D3DA;
+				border: 2px solid #fff;
+	
+				width: 100px;
+				height: 60px;
+				
+				/*자식 가로 세로 중앙 정렬*/
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+			
+			.prices 
+			{
+				display: flex;
+			    flex-direction: column;
+			    justify-content: center;
+			    align-items: flex-start;
+			    margin-left: 20px;
+			}
+			
+			
+			/*prices 세부*/
+			.fir_price 
+			{
+				font-family: 'GmarketSansMedium';
+				font-size: 15px;
+				color: darkgrey;	
+				text-decoration: line-through;
+			}
+			
+			.dc_price 
+			{
+				font-family: 'GmarketSansMedium';
+				font-size: 30px;
+				color: #19D3DA;
+			}
+			
+			/*해시태그(장르)*/
+			.footer_box 
+			{
+				width: 1600px;
+				
+				/*본인(?) 정렬*/
+				margin: 0 auto;
+				margin-top: 30px;
+				
+				/*자식 가로 세로 중앙 정렬*/
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+			
+			#tags_info 
+			{
+				font-size: 30px;
+				color: #fff;			
+				background-color: #252b33; /*배경색에 하얀색 1프로 추가*/				
+				width: 1550px;				
+				margin-bottom: 40px;
+				padding-bottom: 10px;			
+				display: flex;
+				float: left;
+				flex-wrap: wrap; /* 요소들을 자동으로 다음 줄로 내려가게 설정 */
+			}
+			
+			#tg_lbl 
+			{
+				font-family: 'HSBombaram21-Regular';
+				padding: 10px 0 10px 0;
+				margin-left: 25px;
+				margin-top: 10px;
+			}
+			
+			.tags 
+			{
+				/* 자식 요소의 너비, 높이로 하기 위해 */
+				display: inline-block;
+				background-color: #393e46; /*배경색에 하얀색 10프로 추가*/
+				border-radius: 15%;
+				margin-left: 25px;
+				margin-top: 10px;
+			}
+			
+			/* 더보기 버튼 활용 */
+			.tags_hidden { display: none; }
+			
+			#hashtag 
+			{
+				font-family: 'GangwonEdu_OTFBoldA';
+				
+				display: inline-block;
+				padding: 10px 25px 10px 25px;
+			}
+			
+			
+			#show_more_button 
+			{
+				background-color: #fff;
+				border-radius: 15%;
+				color: #000;
+				font-family: 'Dovemayo_gothic';
+				font-size: 20px;
+				width: 60px;
+				height: 60px;
+				margin-left: 25px;
+				margin-top: 10px;			
+			}	
+		</style>
+		
+		<script th:inline="javascript">
+        function redirectToUrl(url) {
+            window.location.href = url; // URL로 리다이렉션
+        }
+    	</script>
+    
+	</head>
+	
+	<body>
+	<!-- 헤더 -->
+		<div id="header">
+			<!-- 로고 -->
+			<div class="logo_btn"><a href="/main"><img src="/imgs/header/logo.png"/></a></div>
+			
+			<!-- 메뉴 -->
+			<ul>
+				<!-- 콘솔 -->
+				<li>
+					<div class="menu">
+						<a href="/console">CONSOLE</a>
+					</div>
+				</li>
+				
+				<!-- pc -->
+				<li>
+					<div class="menu">
+						<a href="/pc">PC</a>
+					</div>
+				</li>
+				
+				<!-- 게시판 -->
+				<li>
+					<div class="menu">
+						<a href="/bbs">BBS</a>
+					</div>
+				</li>
+				
+				<!-- 신작 -->
+				<li>
+					<div class="menu">
+						<a href="/news">NEWS</a>
+					</div>
+				</li>
+				
+				<!-- 로그인 버튼-->
+				<li th:if="${session.user == null}"> <!-- 세션(user)가 없으면 -->
+					<div class="menu">
+						<a href="/login"><img src="/imgs/header/login.png"/></a>
+					</div>
+				</li>
+				
+				<!-- 마이페이지 -->
+				<li th:if="${session.user != null}"> <!-- 세션(user)가 있으면 -->
+					<div class="mypage"></div>
+					<!-- 드롭다운 -->
+					<ul class="dropdown">
+						<li><a href="/mypage">내 계정</a></li>
+						<li><a href="/profile">프로필 설정</a></li>
+						<li><a href="/logout">로그아웃</a></li>
+					</ul>
+				</li>
+			</ul>
+			
+		</div>
+	<!--여기까지 헤더-->
+		
+	<!-- 콘텐츠 -->
+	<div id="content" >
+		
+		<div class="up_box">
+			
+			<div class="left_up_box">
+				<div class="title_tb" th:text="${pcGameDTO.TITLE}">기본 제목</div>
+				
+				<div id="img_box">
+					<img th:src="${pcGameDTO.GAMEIMG}" />
+				</div>
+				
+			</div>
+			
+			<div class="right_up_box">
+				
+				<div id="thumbnail">
+					<img th:src="${pcGameDTO.IMGDATA}" />
+					<!-- <img src="https://cdn1.epicgames.com/epic/offer/RDR2PC1227_Epic Games_860x1148-860x1148-b4c2210ee0c3c3b843a8de399bfe7f5c.jpg?h=480&quality=medium&resize=1&w=360" /> -->
+					<!-- <img src="https://image.api.playstation.com/vulcan/ap/rnd/202009/3021/B2aUYFC0qUAkNnjbTHRyhrg3.png?w=440" /> -->
+				</div>
+				
+				<div id="des">
+					<p th:text="${pcGameDTO.DESCRIPTION}">게임 설명이 없습니다.</p>
+				</div>
+				
+			</div>
+			
+		</div>
+		
+		
+		
+		
+		<div class="mid_box">
+			
+			
+			<div class="info_box" >
+				<!-- th:if로 나타날 항목 조정
+						 steam only, epic only, pc both
+						 nintendo, ps -->
+						 
+				<!-- 레이블 -->
+				<div id="site">
+					판매 사이트
+				</div>
+				
+				<div th:if="${pcGameDTO.SITEAVAILABILITY == 'Both'}"><!-- Both -->
+					
+					<!--STEAM 부분-->
+					<div class="price_info">
+						
+						<div class="site_logo">
+							<!--STEAM 부분-->
+							<img src="/imgs/other_logo/white/steam/steam_logo_white.png" />
+							<!-- 저작권 -->
+						</div>
+						
+						<a id="goto_btn" th:href="@{${pcGameDetail.STEAMURL}}">
+							<img src="/imgs/btn/goto.png" />
+						</a>
+						
+						<div th:if="${pcGameDetail.STEAMSALEPER.equals('할인 X') || pcGameDetail.STEAMSALEPER == null}" 
+							 id="no_dc" th:text="${pcGameDetail.STEAMPRICE}"><!-- 할인 x -->
+								정가
+						</div>
+										
+						<div th:if="${!(pcGameDetail.STEAMSALEPER.equals('할인 X') || pcGameDetail.STEAMSALEPER == null)}"
+							 id="dc"><!-- 할인 o -->
+								<div class="dc_rate" th:text="${pcGameDetail.STEAMSALEPER}">할인율</div>
+								<div class="prices" >
+									<div class="fir_price" th:text="${pcGameDetail.STEAMPRICE}">정가</div>
+									<div class="dc_price" th:text="${pcGameDetail.STEAMSALEPRICE}">할인가</div>
+								</div>
+						</div>
+							
+					</div>
+					
+					
+					<!--EPIC 부분-->
+					<div class="price_info">
+						
+						<div class="site_logo"> 
+							<!--EPIC 부분-->
+							<img src="/imgs/other_logo/white/epic/EpicGames_White2.png" />
+							<!-- 저작권 -->
+						</div>
+						
+						<a id="goto_btn" th:href="@{${pcGameDetail.EPICURL}}">
+							<img src="/imgs/btn/goto.png" />
+						</a>
+						
+						<div th:if="${pcGameDetail.EPICSALEPER.equals('X') || pcGameDetail.EPICSALEPER == null}" 
+							 id="no_dc" th:text="${pcGameDetail.EPICPRICE}"><!-- 할인 x -->
+								정가
+						</div>
+										
+						<div th:if="${!(pcGameDetail.EPICSALEPER.equals('X') || pcGameDetail.EPICSALEPER == null)}"
+							 id="dc"><!-- 할인 o -->
+								<div class="dc_rate" th:text="${pcGameDetail.EPICSALEPER}">할인율</div>
+								<div class="prices">
+									<div class="fir_price" th:text="${pcGameDetail.EPICPRICE}">정가</div>
+									<div class="dc_price" th:text="${pcGameDetail.EPICSALEPRICE}">할인가</div>
+								</div>
+						</div>			
+						
+					</div>
+					
+					
+				</div>
+				
+				<div class="price_info" th:if="${pcGameDTO.SITEAVAILABILITY == 'Steam Only'}"><!-- steam -->
+					
+					<div class="site_logo">
+						<img src="/imgs/other_logo/white/steam/steam_logo_white.png" />
+						<!-- 저작권 -->
+					</div>
+					
+					<a id="goto_btn" th:href="@{${pcGameDTO.URL}}">
+						<img src="/imgs/btn/goto.png" />
+					</a>
+					
+					<div th:if="${pcGameDetail.STEAMSALEPER.equals('할인 X') || pcGameDetail.STEAMSALEPER == null}" 
+						 id="no_dc" th:text="${pcGameDetail.STEAMPRICE}"><!-- 할인 x -->
+							정가
+					</div>
+									
+					<div th:if="${!(pcGameDetail.STEAMSALEPER.equals('할인 X') || pcGameDetail.STEAMSALEPER == null)}"
+						 id="dc"><!-- 할인 o -->
+							<div class="dc_rate" th:text="${pcGameDetail.STEAMSALEPER}">할인율</div>
+							<div class="prices" >
+								<div class="fir_price" th:text="${pcGameDetail.STEAMPRICE}">정가</div>
+								<div class="dc_price" th:text="${pcGameDetail.STEAMSALEPRICE}">할인가</div>
+							</div>
+					</div>	
+				</div>
+			
+				<div class="price_info" th:if="${pcGameDTO.SITEAVAILABILITY == 'Epic Only'}"><!-- epic -->
+					
+					<div class="site_logo">
+						<img src="/imgs/other_logo/white/epic/EpicGames_White2.png" />
+						<!-- 저작권 -->
+					</div>
+					
+					<a id="goto_btn" th:href="@{${pcGameDTO.URL}}">
+						<img src="/imgs/btn/goto.png" />
+					</a>
+					
+					<div th:if="${pcGameDetail.EPICSALEPER.equals('X') || pcGameDetail.EPICSALEPER == null}" 
+						 id="no_dc" th:text="${pcGameDetail.EPICPRICE}"><!-- 할인 x -->
+							정가
+					</div>
+									
+					<div th:if="${!(pcGameDetail.EPICSALEPER.equals('X') || pcGameDetail.EPICSALEPER == null)}"
+						 id="dc"><!-- 할인 o -->
+							<div class="dc_rate" th:text="${pcGameDetail.EPICSALEPER}">할인율</div>
+							<div class="prices">
+								<div class="fir_price" th:text="${pcGameDetail.EPICPRICE}">정가</div>
+								<div class="dc_price" th:text="${pcGameDetail.EPICSALEPRICE}">할인가</div>
+							</div>
+					</div>			
+					
+				</div>
+				
+				<!-- info_box end -->
+			</div>
+			
+			
+			<!-- mid_box end -->
+		</div>
+		
+		
+		<div class="footer_box" th:if="${gameService.getPcTags(pcGameDTO.TITLE).size() != 0}">
+			
+			<div id="tags_info">
+			
+				<div id="tg_lbl">
+					TAGS:
+				</div>
+				
+				<div class="tags tags_hidden" th:each="tags : ${gameService.getPcTags(pcGameDTO.TITLE)}">
+					
+					<div id="hashtag" th:text="'# ' + ${tags}"></div>
+					
+				</div>
+				
+				
+				<!-- -->
+				
+				
+				
+				<button id="show_more_button" onclick="showMoreTags()" th:if="${gameService.getPcTags(pcGameDTO.TITLE).size() > 5}">+</button>
+				<!-- tags_info end -->
+			</div>
+			<!-- footer_box end -->
+		</div>
+			
+		
+	</body>
+</html>
