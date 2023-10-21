@@ -51,18 +51,22 @@
 			            },
 			            // datesSet: 이전/다음달 선택시 bottom-box의 날짜가 바뀌게 함
 			            datesSet: function(info) {
+							var topBox = document.getElementById('topBox');
+						    var bottomBox = document.getElementById('bottomBox');
+						    topBox.innerText = '';
+						    bottomBox.innerText = '';
 			                var currentYear = info.view.currentStart.getFullYear();
 			                var currentMonth = info.view.currentStart.getMonth() + 1;
 			                var currentYearElement = document.getElementById('currentYear');
+			                    currentYearElement.innerHTML = currentYear;
+			                   
 			                var currentMonthElement = document.getElementById('currentMonth');
-			                currentYearElement.innerText = currentYear;
-			                currentMonthElement.innerText = currentMonth;
+			                    currentMonthElement.innerHTML = currentMonth;
 			                
 			                // 추가: JavaScript에서 가져온 currentYear를 bottom-box의 span에 설정
 			                var bottomBoxCurrentYear = document.getElementById('bottomBoxCurrentYear');
-			                if (bottomBoxCurrentYear) {
-			                    bottomBoxCurrentYear.innerText = currentYear;
-			                }
+			                    bottomBoxCurrentYear.textContent = currentYear;
+			                
 			                loadNewsMemoData(currentYear, currentMonth);
 			            }
 			        });
@@ -83,7 +87,7 @@
 	    function addToTopOrBottomBox(news, currentYear, currentMonth) {
 	        var a = document.createElement('a');
 	        a.href = news.url;
-	        a.innerText = news.title;
+	        a.innerText = '• '+ news.title;
 	
 	        var etcValue = news.etc;
 	        var br = document.createElement('br');
@@ -152,40 +156,6 @@
 		        });
 		    });
 		}
-
-
-	   document.addEventListener('DOMContentLoaded', function() {
-	    var currentDate = new Date();
-	    var currentYear = currentDate.getFullYear();
-	    var currentMonth = currentDate.getMonth() + 1; // 월은 0부터 시작하므로 +1
-	    
-	   
-	     // 초기 연도와 월을 업데이트합니다.
-	    var currentYearElement = document.getElementById('currentYear');
-	    var currentMonthElement = document.getElementById('currentMonth');
-	    currentYearElement.innerText = currentYear;
-	    currentMonthElement.innerText = currentMonth;
-	});
-	
-		
-		/*
-	    document.addEventListener('DOMContentLoaded', function() {
-	        var req = $.ajax({
-	            url: "/news_memo",
-	            type: "get",
-	            dataType: "json"
-	        });
-	
-	        req.done(function(data) {
-	            var currentDate = new Date();
-	            var currentYear = currentDate.getFullYear();
-	            var currentMonth = currentDate.getMonth() + 1;
-	
-	            data.forEach(function(news) {
-	                addToTopOrBottomBox(news, currentYear, currentMonth);
-	            });
-	        });
-	    });*/
 	</script>
 
 	     
@@ -205,6 +175,8 @@
 			a {
 			    color: black; /* 텍스트 색상을 검은색으로 설정 */
 			    text-decoration: none; /* 밑줄을 없앰 */
+			    font-family: 'GmarketSansMedium';
+			    font-size: 20px;
 			}
 			
 			/*내용*/
@@ -223,8 +195,9 @@
 			    left: 0%;
 			    float: left;
 			    margin: 70px;
+			    
 			    width: 1100px;
-			    height: 770px; 
+			    height: 740px; 
 			}
 			
 				/*달력 세부*/
@@ -260,25 +233,30 @@
 			
 			
 			/*박스*/
+			#plan {
+				margin-top: 70px;
+				color:#FFFFFF;
+				font-size: 30px;
+				font-family: 'GmarketSansMedium';
+			}
 			.box {
-				margin: 30px;
+				margin: 10px;
 			}
 			.top-box {
 			    float: left;
 			    width: 500px;
-			    height: 400px;
-			    margin-top: 20px;
+			    height: 250px;
 			    margin-bottom: 20px;
 			    background-color: white; 
-			    padding-left: 10px;
+			    padding: 10px;
 			}
 			
 			.bottom-box {
 			    float: left;
 			    width: 500px;
-			    height: 400px;
+			    height: 250px;
 			    background-color: white;
-			    padding-left: 10px;
+			    padding: 10px;
 			}
 			/*박스 end*/
 			
@@ -313,10 +291,6 @@
 			    font-size: 30px; 
 			}
 			
-			#plan {
-				font-size: 30px;
-				font-style: italic;
-			}
 			/* 모달 스타일 end*/
 			
 			
@@ -393,13 +367,10 @@
 					    </div>  
 					</div>
 					<div class="box">
-					    <div class="top-box" id="topBox">
-					        <p id="plan"><span id="currentYear"></span>년 출시 예정 게임</p>
-					    </div>
-					
-					    <div class="bottom-box" id="bottomBox">
-					        <p id="plan"><span id="bottomBoxCurrentYear"></span>년 <span id="currentMonth"></span>월 출시 예정 게임</p>
-					    </div>
+						<p id="plan"><span id="currentYear"></span>년 출시 예정 게임</p>
+					    <div class="top-box" id="topBox"></div>
+						<p id="plan"><span id="bottomBoxCurrentYear"></span>년 <span id="currentMonth"></span>월 출시 예정 게임</p>
+					    <div class="bottom-box" id="bottomBox"></div>
 					</div>
 				</div>
     
