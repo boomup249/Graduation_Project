@@ -63,9 +63,7 @@
 			                if (bottomBoxCurrentYear) {
 			                    bottomBoxCurrentYear.innerText = currentYear;
 			                }
-			                
 			                loadNewsMemoData(currentYear, currentMonth);
-			               
 			            }
 			        });
 			        calendar.render();
@@ -73,7 +71,7 @@
 		        // 현재 연도와 월 가져오기
 		        var currentYear = new Date().getFullYear();
 		        var currentMonth = new Date().getMonth() + 1; // 월은 0부터 시작하므로 +1
-		        data = loadNewsMemoData(currentYear, currentMonth);
+		        
 
 		        // 현재 연도와 월 업데이트
 		        var currentYearElement = document.getElementById('currentYear');
@@ -139,49 +137,55 @@
 			}
 
 	    }
-	    
 	    function loadNewsMemoData(currentYear, currentMonth) {
 		    var req = $.ajax({
 		        url: "/news_memo",
 		        type: "get",
 		        dataType: "json"
 		    });
-		
 		    req.done(function(data) {
 		        var topBox = document.getElementById('topBox');
 		        var bottomBox = document.getElementById('bottomBox');
-		        // 이전 데이터 지우기
-        topBox.innerHTML = '';
-        bottomBox.innerHTML = '';
-
-        // 기존 텍스트 추가
-        topBox.innerHTML = '<p id="plan"><span id="currentYear"></span>년 출시 예정 게임</p>';
-        bottomBox.innerHTML = '<p id="plan"><span id="bottomBoxCurrentYear"></span>년 <span id="currentMonth"></span>월 출시 예정 게임</p>';
-		
+		        
 		        data.forEach(function(news) {
 		            addToTopOrBottomBox(news, currentYear, currentMonth);
 		        });
 		    });
 		}
 
-		
+
 	   document.addEventListener('DOMContentLoaded', function() {
 	    var currentDate = new Date();
 	    var currentYear = currentDate.getFullYear();
 	    var currentMonth = currentDate.getMonth() + 1; // 월은 0부터 시작하므로 +1
-	
-	    // 초기 데이터를 로드합니다.
-	    data = loadNewsMemoData(currentYear, currentMonth);
-	
-	    // 초기 연도와 월을 업데이트합니다.
+	    
+	   
+	     // 초기 연도와 월을 업데이트합니다.
 	    var currentYearElement = document.getElementById('currentYear');
 	    var currentMonthElement = document.getElementById('currentMonth');
 	    currentYearElement.innerText = currentYear;
 	    currentMonthElement.innerText = currentMonth;
 	});
-
-   
-
+	
+		
+		/*
+	    document.addEventListener('DOMContentLoaded', function() {
+	        var req = $.ajax({
+	            url: "/news_memo",
+	            type: "get",
+	            dataType: "json"
+	        });
+	
+	        req.done(function(data) {
+	            var currentDate = new Date();
+	            var currentYear = currentDate.getFullYear();
+	            var currentMonth = currentDate.getMonth() + 1;
+	
+	            data.forEach(function(news) {
+	                addToTopOrBottomBox(news, currentYear, currentMonth);
+	            });
+	        });
+	    });*/
 	</script>
 
 	     
