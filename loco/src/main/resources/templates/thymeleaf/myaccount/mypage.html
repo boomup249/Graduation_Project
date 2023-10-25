@@ -29,19 +29,26 @@
 		
 		<div id = "box1">
 			<div class = "upload_imgbox">
+				<div th:if = "${profiledb != null}">
+					
+					
+				</div>
 				<img class="upload_img" th:src="${profile_img}">
 			</div>
 			
-			<span id = "display_nickname" th:text="${profiledb.getNICKNAME()}"></span>
-			
+			<div th:if="${profiledb != null}" id="display_nickname">
+			    <span th:if="${profiledb.getNICKNAME() != null}" th:text="${profiledb.getNICKNAME()}"></span>
+			    <span th:unless="${profiledb.getNICKNAME() != null}" th:text="${userDTO.getID()}"></span>
+			</div>
+
 			<span class="nickname_span">별명</span>
-			<input type="text" id="input_nickname" placeholder="별명을 입력하세요">
+			<input type="text" id="input_nickname" th:placeholder="${profiledb.getNICKNAME()}">
 			
 			<span class="des_span">한줄소개</span>
-			<input type="text" id="input_des" placeholder="소개를 입력하세요">
+			<input type="text" id="input_des" th:placeholder="${profiledb.getDESCRIPTION()}">
 			
 			<button id = "save_btn" type="button">저장</button>
-			
+			<span class="img_span">프로필사진</span>
 			<input type="file" name="files" id = "inputImg" multiple="multiple"/>
 			<input type="submit" id="submit" value="저장">
 		</div>

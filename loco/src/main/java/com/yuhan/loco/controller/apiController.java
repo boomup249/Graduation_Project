@@ -227,16 +227,11 @@ public class apiController {
 	        userId = (String) session.getAttribute("user");
 	    		
 	        profiledb = profileService.findUser(userId);
-	        UserDB userdb = new UserDB();
-	        profileDB profiledb = new profileDB();
-	        System.out.println(profiledb);
-
-	        if(profiledb != null) {
-	        	profileService.saveMypage(userId, nickname, des);
+	        
+	        if (nickname.matches("\\s*")) {
+	        	nickname = profiledb.getNICKNAME();
 	        }
-	        else {
-	        	profileService.create(userId, nickname, null, des);
-	        }
+	        profileService.saveMypage(userId, nickname, des);
 	    }
 	    String response = "Success";
 	    return new ResponseEntity<>(response, HttpStatus.OK);
@@ -251,7 +246,6 @@ public class apiController {
 	        
 	        try {
 	        	byte[] imageBytes = uploadedFile.getBytes(); // MultipartFile을 byte[]로 변환
-	        	System.out.println("*********" + imageBytes);
 	        	profileService.saveImage(userId, imageBytes);
 	        	return new ResponseEntity<>("File uploaded successfully", HttpStatus.OK);
 	        }catch(IOException e) {

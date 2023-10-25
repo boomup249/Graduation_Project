@@ -7,8 +7,12 @@ import javax.mail.Multipart;
 
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
+
 
 import com.yuhan.loco.user.UserDB;
 
@@ -59,6 +63,15 @@ public class ProfileService {
     public String convertByteToBase64(byte[] imageData) {
         byte[] encoded = Base64.encodeBase64(imageData, false);
         return "data:image/jpeg;base64," + new String(encoded);
+    }
+    public byte[] loadImageAsBytes() throws IOException {
+        // 리소스 경로 설정 (classpath: 를 사용하여 클래스패스 상의 파일을 찾음)
+        Resource resource = new ClassPathResource("static/imgs/header/normal.png");
+
+        // 파일을 byte[]로 읽어오기
+        byte[] imageBytes = FileCopyUtils.copyToByteArray(resource.getInputStream());
+
+        return imageBytes;
     }
 
 }

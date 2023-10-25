@@ -103,18 +103,18 @@ public class MypageController {
         if(req.getSession(false) != null) { //로그인?
             HttpSession session = req.getSession(false);
             userId = (String)session.getAttribute("user");
-
+            
             UserDB userdb = userService.findUser(userId);
             PreferDB preferdb = preferService.findUser(userId);
             profileDB profiledb = profileService.findUser(userId);
-            
             String nickname = profiledb.getNICKNAME();
             String profile_img = profileService.convertByteToBase64(profiledb.getIMG());
             
-            model.addAttribute("userDTO", userdb);
-            model.addAttribute("preferDTO", preferdb);
             model.addAttribute("profiledb",profiledb);
             model.addAttribute("profile_img", profile_img);
+            model.addAttribute("userDTO", userdb);
+            model.addAttribute("preferDTO", preferdb);
+
         }
         page = "mypage";
 		return "/myaccount/mypage";

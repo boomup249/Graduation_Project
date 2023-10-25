@@ -1,5 +1,7 @@
 package com.yuhan.loco.controller;
 
+import java.io.IOException;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.yuhan.loco.prefer.PreferDTO;
 import com.yuhan.loco.prefer.PreferService;
+import com.yuhan.loco.profile.ProfileService;
 import com.yuhan.loco.user.UserDTO;
 import com.yuhan.loco.user.UserService;
 
@@ -58,11 +61,14 @@ public class JoinController {
 	String page = "";
 	private final UserService userService;
 	private final PreferService preferService;
+	private final ProfileService profileService;
 
-	public JoinController(UserService userService, PreferService preferService) {
+	public JoinController(UserService userService, PreferService preferService, ProfileService profileService) {
         this.userService = userService;
         this.preferService = preferService;
+        this.profileService = profileService;
     }
+
 
 	/*<가입 정보 처리 방법(최종)>
 	 * 각 폼에 invisible로 이전 정보 칸을 만듦
@@ -212,7 +218,7 @@ public class JoinController {
 
 	//join_end
 	@PostMapping("join_end")
-	public String joinEnd(@Valid UserDTO userDTO, @Valid PreferDTO preferDTO, BindingResult bindingResult, Model model) {
+	public String joinEnd(@Valid UserDTO userDTO, @Valid PreferDTO preferDTO, BindingResult bindingResult, Model model) throws IOException {
 		//db에 맞게 고치기
 		if(userDTO.getUserGender().equals("women")) { //성별
 			userDTO.setUserGender("여자");
@@ -239,7 +245,7 @@ public class JoinController {
 		userService.create(userDTO.getUserEmail(), userDTO.getUserId(), userDTO.getUserPwd(),
 				userDTO.getUserBirth(), userDTO.getUserGender());
 		preferService.create(userDTO.getUserId(), preferDTO.getUserLike(), preferDTO.getUserHate());
-
+		profileService.create(userDTO.getUserId(), userDTO.getUserId(),profileService.loadImageAsBytes(), null);
 		page = "end";
 		return "/join/complete";
 	}
