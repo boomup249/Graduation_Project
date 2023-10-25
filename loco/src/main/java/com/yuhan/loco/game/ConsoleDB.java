@@ -8,7 +8,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Immutable
-@Table(name = "game_switch_ps2")
+@Table(name = "game_switch_ps")
 public class ConsoleDB {
 	@Id
 	private Integer NUM;

@@ -2,7 +2,7 @@ CREATE
     ALGORITHM = UNDEFINED 
     DEFINER = `root`@`localhost` 
     SQL SECURITY DEFINER
-VIEW `member`.`game_switch_ps2` AS
+VIEW `member`.`game_switch_ps` AS
     SELECT 
         `member`.`gamedata_ps`.`NUM` AS `NUM`,
         `member`.`gamedata_ps`.`TITLE` AS `TITLE`,
