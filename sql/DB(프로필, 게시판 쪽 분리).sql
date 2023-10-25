@@ -31,7 +31,25 @@ CREATE TABLE IF NOT EXISTS `member`.`bbs` (
   PRIMARY KEY (`ID`),
   INDEX `ID_idx` (`ID` ASC) VISIBLE)
 ENGINE = InnoDB
-AUTO_INCREMENT = 12
+AUTO_INCREMENT = 4
+DEFAULT CHARACTER SET = utf8mb3;
+
+
+-- -----------------------------------------------------
+-- Table `member`.`bbs_comment`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `member`.`bbs_comment` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `post_id` INT NULL DEFAULT NULL,
+  `comment` TEXT NULL DEFAULT NULL,
+  `writer` VARCHAR(12) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `post_id_idx` (`post_id` ASC) VISIBLE,
+  CONSTRAINT `post_id`
+    FOREIGN KEY (`post_id`)
+    REFERENCES `member`.`bbs` (`ID`)
+    ON DELETE CASCADE)
+ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb3;
 
 
@@ -40,15 +58,21 @@ DEFAULT CHARACTER SET = utf8mb3;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `member`.`bbs_content` (
   `ID` INT NOT NULL AUTO_INCREMENT,
+  `BBS_ID` INT NULL DEFAULT NULL,
   `CATEGORY` VARCHAR(10) NOT NULL,
   `TITLE` VARCHAR(20) NOT NULL,
   `WRITER` VARCHAR(12) NOT NULL,
   `CONTENT` TEXT NULL DEFAULT NULL,
-  `COMMENT` TEXT NULL DEFAULT NULL,
   PRIMARY KEY (`ID`),
-  INDEX `uploader_idx` (`WRITER` ASC) VISIBLE)
+  INDEX `uploader_idx` (`WRITER` ASC) VISIBLE,
+  INDEX `bbs_id_idx` (`BBS_ID` ASC) VISIBLE,
+  CONSTRAINT `bbs_id`
+    FOREIGN KEY (`BBS_ID`)
+    REFERENCES `member`.`bbs` (`ID`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB
-AUTO_INCREMENT = 12
+AUTO_INCREMENT = 4
 DEFAULT CHARACTER SET = utf8mb3;
 
 
