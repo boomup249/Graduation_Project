@@ -69,7 +69,7 @@
             <tr>
             	<th class="comment-form" style="height:5%;">
 					<form>
-						<input type="hidden" id="postsId" th:value="${userDTO.getID()}">
+						<input type="hidden" id="postsId" th:object="${postDTO}" th:value="${postDTO.getId()}">
 						<div class="item2">
 							<input type="text" id="comment" class="comment-input" />
 							<button type="submit" id="comm_save" class="comment-submit">확인</button>

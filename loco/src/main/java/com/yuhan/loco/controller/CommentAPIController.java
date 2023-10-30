@@ -14,7 +14,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
 @RequestMapping("/comm")
 @RestController
 public class CommentAPIController {

@@ -17,14 +17,11 @@ public class PostResDTO {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "bbs_id")
-	private BBSDB bbsDB;
+	private Long bbs_id;
     private String category;
 	private String title;
     private String writer; // 작성자
     private String content;
-    private Long post_id;
     private List<CommentResDTO> comments;
 
 
@@ -58,11 +55,12 @@ public class PostResDTO {
 	public void setContent(String content) {
 		this.content = content;
 	}
-	public Long getPost_id() {
-		return post_id;
+
+	public Long getBbs_id() {
+		return bbs_id;
 	}
-	public void setPost_id(Long post_id) {
-		this.post_id = post_id;
+	public void setBbs_id(Long bbs_id) {
+		this.bbs_id = bbs_id;
 	}
 	public List<CommentResDTO> getComments() {
 		return comments;
@@ -73,19 +71,13 @@ public class PostResDTO {
 
 	
 	
-	public BBSDB getBbsDB() {
-		return bbsDB;
-	}
-	public void setBbsDB(BBSDB bbsDB) {
-		this.bbsDB = bbsDB;
-	}
 	public PostResDTO(PostDB postDB) {
 		this.id = postDB.getId();
 		this.category = postDB.getCategory();
 		this.title = postDB.getTitle();
 		this.writer = postDB.getWriter();
 		this.content = postDB.getContent();
-		this.post_id = postDB.getBbs().getId();
+		this.bbs_id = postDB.getBbs().getId();
 		this.comments = postDB.getCommentDB().stream().map(CommentResDTO::new).collect(Collectors.toList());
 		
 	}
