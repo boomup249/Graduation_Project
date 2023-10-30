@@ -12,7 +12,9 @@ import Danawa_Release_Crawling
 from Danawa_Release_Crawling import *
 import multiprocessing
 
-def start_crawling(dict_list, mysql_passwd):
+mysql_passwd = 1234
+
+def start_crawling(dict_list):
     URL = dict_list['URL']
     platform = dict_list['platform']
 
@@ -38,7 +40,7 @@ def start_crawling(dict_list, mysql_passwd):
 
 def run_daily_job(mysql_passwd):
     steam_dict = {'URL': 'https://store.steampowered.com/specials/', 'platform': 'steam'}
-    steam_process = multiprocessing.Process(target=start_crawling, args=(steam_dict,mysql_passwd,))
+    steam_process = multiprocessing.Process(target=start_crawling, args=(steam_dict,))
     steam_process.start()
     
     processes = []
@@ -48,7 +50,7 @@ def run_daily_job(mysql_passwd):
         ]
 
     for instance in instances:
-        process = multiprocessing.Process(target=start_crawling, args=(instance,mysql_passwd,))
+        process = multiprocessing.Process(target=start_crawling, args=(instance,))
         processes.append(process)
         process.start()
         sleep(3)
@@ -65,7 +67,7 @@ def run_daily_job(mysql_passwd):
         ]
 
     for instance in instances:
-        process = multiprocessing.Process(target=start_crawling, args=(instance,mysql_passwd,))
+        process = multiprocessing.Process(target=start_crawling, args=(instance,))
         processes.append(process)
         process.start()
         sleep(3)
@@ -79,11 +81,10 @@ def run_daily_job(mysql_passwd):
     
 
 if __name__ == "__main__":
-    mysql_passwd = input("MYSQL 비밀번호를 입력하세요 : ")
-
+    print("MYSQL root 비밀번호가 1234여야 작동됩니다")
     base = Base_Setting()
     del base
-    schedule.every().day.at("03:00").do(run_daily_job, mysql_passwd)
+    schedule.every().day.at("03:00").do(run_daily_job)
     
     try:
         print("bot 실행 시작")
