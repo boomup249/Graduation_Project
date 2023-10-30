@@ -10,9 +10,9 @@ import Epic_Sale_Game_Crawling
 from Epic_Sale_Game_Crawling import *
 import Danawa_Release_Crawling
 from Danawa_Release_Crawling import *
+import multiprocessing
 
-
-def start_crawling(dict_list):
+def start_crawling(dict_list, mysql_passwd):
     URL = dict_list['URL']
     platform = dict_list['platform']
 
@@ -36,31 +36,58 @@ def start_crawling(dict_list):
     except Exception as e:
         print(f'{platform} 크롤링 시작 오류 - ', e)
 
-mysql_passwd = "1937"
-
-def run_daily_job():
-    # 프로세스들을 생성하고 시작합니다.
+def run_daily_job(mysql_passwd):
+    steam_dict = {'URL': 'https://store.steampowered.com/specials/', 'platform': 'steam'}
+    steam_process = multiprocessing.Process(target=start_crawling, args=(steam_dict,mysql_passwd,))
+    steam_process.start()
+    
     processes = []
     instances = [
-        {'URL': 'https://store.steampowered.com/specials/', 'platform': 'steam'}, 
         {'URL': 'https://store.epicgames.com/ko/browse', 'platform': 'epic'},
-        {'URL': 'https://store.nintendo.co.kr/games/sale', 'platform': 'switch'},
-        {'URL': 'https://store.playstation.com/ko-kr/pages/deals', 'platform': 'ps'},
         {'URL':'https://prod.danawa.com/game/index.php', 'platform': 'danawa'} 
         ]
 
     for instance in instances:
-        process = multiprocessing.Process(target=start_crawling, args=(instance,))
+        process = multiprocessing.Process(target=start_crawling, args=(instance,mysql_passwd,))
         processes.append(process)
         process.start()
         sleep(3)
 
     for process in processes:
         process.join()
+        del process
+    
+    
+    processes = []
+    instances = [
+        {'URL': 'https://store.nintendo.co.kr/games/sale', 'platform': 'switch'},
+        {'URL': 'https://store.playstation.com/ko-kr/pages/deals', 'platform': 'ps'}
+        ]
 
+    for instance in instances:
+        process = multiprocessing.Process(target=start_crawling, args=(instance,mysql_passwd,))
+        processes.append(process)
+        process.start()
+        sleep(3)
+
+    for process in processes:
+        process.join()
+        del process
+    
+    steam_process.join()
+    del steam_process
+    
 
 if __name__ == "__main__":
+    mysql_passwd = input("MYSQL 비밀번호를 입력하세요 : ")
+
     base = Base_Setting()
     del base
-    import multiprocessing
-    run_daily_job()
+    schedule.every().day.at("03:00").do(run_daily_job, mysql_passwd)
+    
+    try:
+        print("bot 실행 시작")
+        while True:
+            schedule.run_pending()
+    except KeyboardInterrupt:
+        pass

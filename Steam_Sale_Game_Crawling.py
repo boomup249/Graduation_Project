@@ -60,6 +60,7 @@ class Crawling_Steam_Sale_Game(Crawling_Game_Info):
                         break
 
                 driver.quit()
+                sleep(2)
 
             elif mode == 1:
                 self.Insert_GameData()
@@ -77,12 +78,13 @@ class Crawling_Steam_Sale_Game(Crawling_Game_Info):
     def Data_Crawling(self, driver):
         driver.execute_script("window.scrollTo(0,document.body.scrollHeight)")
         soup = BeautifulSoup(driver.page_source, "html.parser")
-
         panel = soup.select_one("div.saleitembrowser_SaleItemBrowserContainer_2wLns")
         gamelist = panel.select("div.salepreviewwidgets_SaleItemBrowserRow_y9MSd")
 
         for item in gamelist:
-            title = item.find("div", class_="salepreviewwidgets_StoreSaleWidgetTitle_3jI46 StoreSaleWidgetTitle").text
+            title = item.find("div", class_="salepreviewwidgets_StoreSaleWidgetTitle_3jI46 StoreSaleWidgetTitle")
+            if title != None:
+                title = title.text
             price = item.find("div", class_="salepreviewwidgets_StoreOriginalPrice_1EKGZ")
             saleprice = item.find("div", class_="salepreviewwidgets_StoreSalePriceBox_Wh0L8")
             saleper = item.find("div", class_="salepreviewwidgets_StoreSaleDiscountBox_2fpFv")
@@ -90,46 +92,39 @@ class Crawling_Steam_Sale_Game(Crawling_Game_Info):
             game_link = item.select_one('div.salepreviewwidgets_StoreSaleWidgetHalfLeft_2Va3O > a')
             move = game_link["href"]
             
-            #게임은 할인하는데 확장팩이 할인안하는 경우 price와 saleper가 안적혀있어서 if문 작성
-            if price == None:
-                price = None
-                saleprice = price.text
-                saleper = None
-            else:
+            if price != None:
                 price = price.text
+                
+            if saleprice != None:
                 saleprice = saleprice.text
+                
+            if saleper != None:
                 saleper = saleper.text
+                
+            print("1.기본데이터 크롤링")
 
             driver.execute_script(f'window.open(\'{move}\');')
             driver.switch_to.window(driver.window_handles[-1])
+            print("2.페이지 생성 후 이동")
             sleep(3)
             new_soup = BeautifulSoup(driver.page_source, "html.parser")
+            print(new_soup)
 
             check = new_soup.select_one("div.agegate_btn_ctn")
             if check != None:
+                print("2-1.성인인증중")
                 driver.find_element(By.XPATH, '//*[@id="ageYear"]').click()
                 driver.find_element(By.XPATH, '//*[@id="ageYear"]/option[88]').click()
                 driver.find_element(By.XPATH, '//*[@id="view_product_page_btn"]/span').click()
                 sleep(1.5)
                 new_soup = BeautifulSoup(driver.page_source, "html.parser")
                 sleep(1.5)
+                print("2-1.성인인증 끝")
             imgdata = new_soup.select_one('img.game_header_image_full')
 
             if imgdata == None:
-                driver.execute_script(f'window.open(\'{move}\');')
-                driver.switch_to.window(driver.window_handles[-1])
-                if self.find_element_by_css(driver, '#ageYear') != None:
-                    driver.find_element(By.XPATH, '//*[@id="ageYear"]').click()
-                    driver.find_element(By.XPATH, '//*[@id="ageYear"]/option[88]').click()
-                    driver.find_element(By.XPATH, '//*[@id="view_product_page_btn"]/span').click()
-                    sleep(1.5)
-                new_soup = BeautifulSoup(driver.page_source, "html.parser")
-                sleep(1.5)
-                imgdata = new_soup.select_one('img.game_header_image_full') 
-                if imgdata == None:
-                    imgdata = new_soup.select_one('img.package_header')
-
-            if imgdata != None:
+                imgdata = new_soup.select_one('img.package_header')
+            else:
                 imgdata = imgdata["src"]
 
             gameimg = new_soup.select_one('a.highlight_screenshot_link')
@@ -146,7 +141,7 @@ class Crawling_Steam_Sale_Game(Crawling_Game_Info):
                         description += char
 
             tag = new_soup.select("a.app_tag")
-            
+            print("3.페이지 이동후 정보 크롤링")
             tag_length = len(tag)
             num = 0
 

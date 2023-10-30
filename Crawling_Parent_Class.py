@@ -27,9 +27,20 @@ class Crawling_Game_Info():
     def __del__(self):
         nowtime = datetime.now()
         formattime = nowtime.strftime("%Y-%m-%d %H:%M:%S")
-        sql = 'UPDATE crawling_time SET ENDTIME = %s ORDER BY ENDTIME LIMIT 1'
-        self.cursor.execute(sql, (formattime, ))
-        self.conn.commit()
+        
+        #중복 타이틀이 있으면 제거
+        data_check_query = 'SELECT * FROM crawling_time'
+        self.cursor.execute(data_check_query)
+        result = self.cursor.fetchone()
+        if result is None:
+            insert_query = 'INSERT INTO crawling_time (ENDTIME) VALUES (%s)'
+            self.cursor.execute(insert_query, (formattime, ))
+            self.conn.commit()
+        else:
+            sql = 'UPDATE crawling_time SET ENDTIME = %s ORDER BY ENDTIME LIMIT 1'
+            self.cursor.execute(sql, (formattime, ))
+            self.conn.commit()
+        
         print(f'{self.platform} 크롤링 종료 시간 - {formattime}, crawling_time 테이블에 종료 시간 입력 완료')
 
         if hasattr(self, 'cursor') and self.cursor:
@@ -47,6 +58,107 @@ class Crawling_Game_Info():
                     charset='utf8'
                 )
         self.cursor = self.conn.cursor()
+        self.cursor.execute('''CREATE TABLE IF NOT EXISTS gamedata_switch (`NUM` INT NOT NULL AUTO_INCREMENT,
+                                                                            `TITLE` VARCHAR(100) NULL DEFAULT NULL,
+                                                                            `PRICE` VARCHAR(15) NULL DEFAULT NULL,
+                                                                            `SALEPRICE` VARCHAR(15) NULL DEFAULT NULL,
+                                                                            `SALEPER` VARCHAR(5) NULL DEFAULT NULL,
+                                                                            `DESCRIPTION` TEXT NULL DEFAULT NULL,
+                                                                            `IMGDATA` TEXT NULL DEFAULT NULL,
+                                                                            `GAMEIMG` TEXT NULL DEFAULT NULL,
+                                                                            `URL` TEXT NULL DEFAULT NULL,
+                                                                            `VARIA` TINYINT(1) NOT NULL DEFAULT 1,
+                                                                            PRIMARY KEY (`NUM`),
+                                                                            UNIQUE KEY (`TITLE`))
+            ''')
+        self.cursor.execute('''CREATE TABLE IF NOT EXISTS gamedata_switch_genre (`NUM` INT NOT NULL AUTO_INCREMENT,
+                                                                                 `TITLE` VARCHAR(100) NULL DEFAULT NULL,
+                                                                                 `GENRE` VARCHAR(30) NULL DEFAULT NULL,
+                                                                                 PRIMARY KEY (`NUM`),
+                                                                                 CONSTRAINT `switch_title`
+                                                                                    FOREIGN KEY (`TITLE`)
+                                                                                    REFERENCES `gamedata_switch` (`TITLE`)
+                                                                                    ON DELETE CASCADE
+                                                                                    ON UPDATE CASCADE)
+                    ''')
+        self.cursor.execute('''CREATE TABLE IF NOT EXISTS gamedata_ps (`NUM` INT NOT NULL AUTO_INCREMENT,
+                                                                        `TITLE` VARCHAR(200) NULL DEFAULT NULL,
+                                                                        `PRICE` VARCHAR(15) NULL DEFAULT NULL,
+                                                                        `SALEPRICE` VARCHAR(15) NULL DEFAULT NULL,
+                                                                        `SALEPER` VARCHAR(5) NULL DEFAULT NULL,
+                                                                        `DESCRIPTION` TEXT NULL DEFAULT NULL,
+                                                                        `IMGDATA` TEXT NULL DEFAULT NULL,
+                                                                        `GAMEIMG` TEXT NULL DEFAULT NULL,
+                                                                        `URL` TEXT NULL DEFAULT NULL,
+                                                                        `VARIA` TINYINT(1) NOT NULL DEFAULT 1,
+                                                                        PRIMARY KEY (`NUM`),
+                                                                        UNIQUE KEY (`TITLE`))
+                    ''')
+        self.cursor.execute('''CREATE TABLE IF NOT EXISTS gamedata_ps_genre (`NUM` INT NOT NULL AUTO_INCREMENT,
+                                                                            `TITLE` VARCHAR(200) NULL DEFAULT NULL,
+                                                                            `genre` VARCHAR(30) NULL DEFAULT NULL,
+                                                                            PRIMARY KEY (`NUM`),
+                                                                            CONSTRAINT `ps_title`
+                                                                                FOREIGN KEY (`TITLE`)
+                                                                                REFERENCES `gamedata_ps` (`TITLE`)
+                                                                                ON DELETE CASCADE
+                                                                                ON UPDATE CASCADE)
+                    ''')
+        self.cursor.execute('''CREATE TABLE IF NOT EXISTS gamedata_steam (`NUM` INT NOT NULL AUTO_INCREMENT,
+                                                                            `TITLE` VARCHAR(100) NULL DEFAULT NULL,
+                                                                            `PRICE` VARCHAR(15) NULL DEFAULT NULL,
+                                                                            `SALEPRICE` VARCHAR(15) NULL DEFAULT NULL,
+                                                                            `SALEPER` VARCHAR(5) NULL DEFAULT NULL,
+                                                                            `DESCRIPTION` TEXT NULL DEFAULT NULL,
+                                                                            `IMGDATA` TEXT NULL DEFAULT NULL,
+                                                                            `GAMEIMG` TEXT NULL DEFAULT NULL,
+                                                                            `URL` TEXT NULL DEFAULT NULL,
+                                                                            `VARIA` TINYINT(1) NOT NULL DEFAULT 1,
+                                                                            PRIMARY KEY (`NUM`),
+                                                                            UNIQUE KEY (`TITLE`))
+                    ''')
+        self.cursor.execute('''CREATE TABLE IF NOT EXISTS gamedata_steam_genre (`NUM` INT NOT NULL AUTO_INCREMENT,
+                                                                                `TITLE` VARCHAR(100) NULL DEFAULT NULL,
+                                                                                `genre` VARCHAR(30) NULL DEFAULT NULL,
+                                                                                PRIMARY KEY (`NUM`),
+                                                                                CONSTRAINT `steam_title`
+                                                                                    FOREIGN KEY (`TITLE`)
+                                                                                    REFERENCES `gamedata_steam` (`TITLE`)
+                                                                                    ON DELETE CASCADE
+                                                                                    ON UPDATE CASCADE)
+                    ''')
+        self.cursor.execute('''CREATE TABLE IF NOT EXISTS gamedata_epic (`NUM` INT NOT NULL AUTO_INCREMENT,
+                                                                        `TITLE` VARCHAR(100) NULL DEFAULT NULL,
+                                                                        `PRICE` VARCHAR(15) NULL DEFAULT NULL,
+                                                                        `SALEPRICE` VARCHAR(15) NULL DEFAULT NULL,
+                                                                        `SALEPER` VARCHAR(5) NULL DEFAULT NULL,
+                                                                        `DESCRIPTION` TEXT NULL DEFAULT NULL,
+                                                                        `IMGDATA` TEXT NULL DEFAULT NULL,
+                                                                        `GAMEIMG` TEXT NULL DEFAULT NULL,
+                                                                        `URL` TEXT NULL DEFAULT NULL,
+                                                                        `VARIA` TINYINT(1) NOT NULL DEFAULT 1,
+                                                                        PRIMARY KEY (`NUM`),
+                                                                        UNIQUE KEY (`TITLE`))
+                    ''')
+        self.cursor.execute('''CREATE TABLE IF NOT EXISTS gamedata_epic_genre (`NUM` INT NOT NULL AUTO_INCREMENT,
+                                                                                `TITLE` VARCHAR(100) NULL DEFAULT NULL,
+                                                                                `GENRE` VARCHAR(30) NULL DEFAULT NULL,
+                                                                                PRIMARY KEY (`NUM`),
+                                                                                CONSTRAINT `epic_title`
+                                                                                    FOREIGN KEY (`TITLE`)
+                                                                                    REFERENCES `gamedata_epic` (`TITLE`)
+                                                                                    ON DELETE CASCADE
+                                                                                    ON UPDATE CASCADE)
+                    ''')
+        self.cursor.execute('''CREATE TABLE IF NOT EXISTS release_info (`DATE` DATE NULL DEFAULT NULL,
+                                                                        `TITLE` VARCHAR(200) NOT NULL,
+                                                                        `PLATFORM` VARCHAR(15) NULL DEFAULT NULL,
+                                                                        `PRICE` VARCHAR(15) NULL DEFAULT NULL,
+                                                                        `ETC` VARCHAR(15) NULL DEFAULT NULL,
+                                                                        `VARIA` TINYINT(1) NULL DEFAULT 1,
+                                                                        PRIMARY KEY (`TITLE`));
+                    ''')
+        self.cursor.execute('CREATE TABLE IF NOT EXISTS crawling_time (`ENDTIME` DATETIME PRIMARY KEY);')
 
     #URL 설정 함수
     def Set_URL_Platform(self, url, platform):
@@ -84,6 +196,21 @@ class Crawling_Game_Info():
                     sleep(0.3)
                 break
 
+    def remove_emoji(self, inputString):
+        emoji_pattern = re.compile("["
+            u"\U0001F600-\U0001F64F"  # emoticons
+            u"\U0001F300-\U0001F5FF"  # symbols & pictographs
+            u"\U0001F680-\U0001F6FF"  # transport & map symbols
+            u"\U0001F700-\U0001F77F"  # alchemical symbols
+            u"\U0001F780-\U0001F7FF"  # Geometric Shapes Extended
+            u"\U0001F800-\U0001F8FF"  # Supplemental Arrows-C
+            u"\U0001F900-\U0001F9FF"  # Supplemental Symbols and Pictographs
+            u"\U0001FA00-\U0001FA6F"  # Chess Symbols
+            u"\U0001FA70-\U0001FAFF"  # Symbols and Pictographs Extended-A
+            u"\U0001F004-\U0001F0CF"  # Mahjong Tiles
+            u"\U0001F200-\U0001F251"  # Enclosed Ideographic Supplement
+            "]+", flags=re.UNICODE)
+        return emoji_pattern.sub(r'', inputString)
     #이모티콘 제거 함수
     def rmEmoji_ascii(self, inputString):
         return inputString.encode('utf-8', 'ignore').decode('utf-8')
@@ -130,14 +257,26 @@ class Crawling_Game_Info():
             d_gameimg = data['GAMEIMG']
             d_url = data['URL']
 
-            d_title = self.rmEmoji_ascii(d_title)
-            d_description = self.rmEmoji_ascii(d_description)
+            if d_title is not None:
+                d_title = self.remove_emoji(d_title)
+                d_title = self.rmEmoji_ascii(d_title)
+            if d_description is not None:
+                d_description = self.remove_emoji(d_description)
+                d_description = self.rmEmoji_ascii(d_description)
+            
+            #중복 타이틀이 있으면 제거
+            duplication_check_query = 'SELECT * FROM {} WHERE TITLE = %s'.format(self.table_name)
+            self.cursor.execute(duplication_check_query, (d_title, ))
+            result = self.cursor.fetchone()
+            if result is not None:
+                delete_query = 'DELETE FROM {} WHERE TITLE = %s'.format(self.table_name)
+                self.cursor.execute(delete_query, (d_title, ))
+                self.conn.commit()
             
             # 데이터베이스에 해당 NUM이 존재하는지 확인
             query = 'SELECT * FROM {} WHERE NUM = %s'.format(self.table_name)
             self.cursor.execute(query, (db_num, ))
             result = self.cursor.fetchone()
-            print(result)
 
             if result is None:
                 try:
@@ -173,7 +312,9 @@ class Crawling_Game_Info():
             g_title = data['TITLE']
             g_genre = data['GENRE']
             
-            g_title = self.rmEmoji_ascii(g_title)
+            if g_title is not None:
+                g_title = self.remove_emoji(g_title)
+                g_title = self.rmEmoji_ascii(g_title)
 
             query = 'SELECT * FROM {} WHERE NUM = %s'.format(self.table_name)
             self.cursor.execute(query, (db_num, ))
@@ -192,8 +333,8 @@ class Crawling_Game_Info():
                 except Exception as e:
                     print(f"{g_title} genre update 오류 : ", str(e))
                 self.conn.commit()
-            print(f'{self.platform} - {g_title} genre 입력 완료')
             db_num += 1
+            print(f'{self.platform} - {g_title} genre 입력 완료')
         
     #데이터 읽어와서 저장하는 함수(steam은 오버라이딩 해야함)
     def Data_Crawling(self):
