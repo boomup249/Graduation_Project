@@ -211,6 +211,7 @@ class Crawling_Game_Info():
             u"\U0001F200-\U0001F251"  # Enclosed Ideographic Supplement
             "]+", flags=re.UNICODE)
         return emoji_pattern.sub(r'', inputString)
+    
     #이모티콘 제거 함수
     def rmEmoji_ascii(self, inputString):
         return inputString.encode('utf-8', 'ignore').decode('utf-8')
@@ -264,7 +265,8 @@ class Crawling_Game_Info():
                 d_description = self.remove_emoji(d_description)
                 d_description = self.rmEmoji_ascii(d_description)
             
-            #중복 타이틀이 있으면 제거
+            #인기순으로 정렬하려면 UPDATE문을 1번 num부터 순서대로 업데이트해야됨
+            #100번째 num을 업데이트하는데 170번 게임이 동일명이면 오류나서 170번을 먼저 delete하고 update하게 수정
             duplication_check_query = 'SELECT * FROM {} WHERE TITLE = %s'.format(self.table_name)
             self.cursor.execute(duplication_check_query, (d_title, ))
             result = self.cursor.fetchone()

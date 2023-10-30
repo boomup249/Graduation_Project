@@ -12,9 +12,8 @@ import Danawa_Release_Crawling
 from Danawa_Release_Crawling import *
 import multiprocessing
 
-mysql_passwd = 1234
-
 def start_crawling(dict_list):
+    mysql_passwd = "1234"
     URL = dict_list['URL']
     platform = dict_list['platform']
 
@@ -38,10 +37,11 @@ def start_crawling(dict_list):
     except Exception as e:
         print(f'{platform} 크롤링 시작 오류 - ', e)
 
-def run_daily_job(mysql_passwd):
+def run_daily_job():
     steam_dict = {'URL': 'https://store.steampowered.com/specials/', 'platform': 'steam'}
     steam_process = multiprocessing.Process(target=start_crawling, args=(steam_dict,))
     steam_process.start()
+    sleep(10)
     
     processes = []
     instances = [
@@ -78,17 +78,18 @@ def run_daily_job(mysql_passwd):
     
     steam_process.join()
     del steam_process
-    
 
 if __name__ == "__main__":
+    multiprocessing.freeze_support()
     print("MYSQL root 비밀번호가 1234여야 작동됩니다")
-    base = Base_Setting()
-    del base
     schedule.every().day.at("03:00").do(run_daily_job)
-    
+    base = Base_Setting()   
+    del base
+
     try:
         print("bot 실행 시작")
         while True:
             schedule.run_pending()
+            sleep(0.5)
     except KeyboardInterrupt:
         pass
