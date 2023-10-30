@@ -19,9 +19,11 @@ import lombok.RequiredArgsConstructor;
 public class CommentAPIController {
  
 	private final BBSService bbsService;
+	/*
 	public CommentAPIController(BBSService bbsService) {
 		this.bbsService = bbsService;
 	}
+	*/
  	@PostMapping("/article/{id}/comments")
 	public ResponseEntity commentSave(@PathVariable Long id, @RequestBody CommentReqDTO comm, HttpServletRequest req) {
 		HttpSession session = req.getSession(false);
