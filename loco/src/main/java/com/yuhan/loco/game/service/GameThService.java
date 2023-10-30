@@ -72,10 +72,10 @@ public class GameThService {
   		
   		//(원) 붙어 있으면 없애기
   		if(steam_salePrice != null) {
-  			steam_salePrice = steam_salePrice.replaceAll("[₩,\\s]+", "");
+  			steam_salePrice = steam_salePrice.replaceAll("[₩,\\\\s]+", ""); // '\\s' : 공백
   		}
   		if(epic_salePrice != null) {
-  			epic_salePrice = epic_salePrice.replaceAll("[₩,\\s]+", "");
+  			epic_salePrice = epic_salePrice.replaceAll("[₩,\\\\s]+", "");
   		}
   		
   		System.out.println("s_s: " + steam_salePrice);
