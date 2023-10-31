@@ -15,14 +15,18 @@ class Crawling_Nintendo_Sale_Game(Crawling_Game_Info):
     def Start_Crawling(self):
         driver = self.Driver_Start(self.platform, self.URL)
 
-        soup = BeautifulSoup(driver.page_source, "html.parser")
-        error = soup.select_one('h1')
-        if error.text == '403 Forbidden':
-            print("5분간 일시정지(403 forbidden 오류 회피를 위해)")
-            driver.quit()
-            sleep(300)
-            print("재실행")
-            driver = self.Driver_Start(self.platform, self.URL)
+        while True:
+            soup= BeautifulSoup(driver.page_source, "html.parser")
+            error = soup.select_one('h1')
+            if error.text == '403 Forbidden':
+                print("1분 30초 일시정지(403 forbidden 오류 회피를 위해)")
+                driver.quit()
+                sleep(90)
+                print(f"{self.platform} 재실행")
+                driver = self.Driver_Start(self.platform, self.URL)
+                sleep(3)
+            else:
+                break
 
         sleep(5)
         driver.find_element(By.CLASS_NAME, 'popup-close').click()
@@ -52,23 +56,20 @@ class Crawling_Nintendo_Sale_Game(Crawling_Game_Info):
             if game_link != None:
                 move = game_link["href"]
 
-            driver.execute_script(f'window.open(\'{move}\');')
-            driver.switch_to.window(driver.window_handles[-1])
-            sleep(1.5)
-            new_soup = BeautifulSoup(driver.page_source, "html.parser")
-
-            error = new_soup.select_one('h1')
-            if error.text == '403 Forbidden':
-                print("5분간 일시정지(403 forbidden 오류 회피를 위해)")
-                driver.close()
-                driver.switch_to.window(driver.window_handles[-1])
-                sleep(300)
-                print("재실행")
+            while True:
                 driver.execute_script(f'window.open(\'{move}\');')
+                sleep(1)
                 driver.switch_to.window(driver.window_handles[-1])
-                sleep(5)
+                sleep(1)
                 new_soup = BeautifulSoup(driver.page_source, "html.parser")
-
+                error = new_soup.select_one('h1')
+                if error.text == '403 Forbidden':
+                    print("1분 30초 일시정지(403 forbidden 오류 회피를 위해)")
+                    driver.close()
+                    driver.switch_to.window(driver.window_handles[-1])
+                    sleep(90)
+                else:
+                    break
 
             descript = new_soup.select_one("div.game_ex")
             description = ""
