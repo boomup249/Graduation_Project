@@ -114,3 +114,72 @@
 				background-position: center;
 				background-repeat: no-repeat;
 			}
+			
+			#search_box { /* div 태ㅑ그*/
+			  width: 400px;
+			}
+			#search_ul {
+			  width: 400px;
+			  display: flex;
+			  flex-direction: column;
+			  justify-content: center;
+			  align-items: center;
+			  background-size: cover;
+			  background-position: center center;
+			  text-align: center;
+			  background-color: white;
+			  position: absolute;
+			  left: 18%;
+			  top: 75px; /* #search 아래에 배치 */
+			}
+
+			.hr{
+				width: 400px;
+				border: solid 5px black;
+			}
+			
+			#search_ul .li {
+			  width: 100%;
+			  display: flex;
+			  flex-direction: row;
+			  justify-content: space-between;
+			  align-items: center;
+			  background-size: cover;
+			  background-position: center center;
+			  text-align: center;
+			  background-color: white;
+			  position: absolute;
+			  left: 18%;
+			  top: 75px;
+			}
+			
+			#search_ul .left-box {
+			  width: 70%;
+			  height: 50px;
+			  background-color: white;
+			  display: flex;
+			  align-items: center;
+			}
+			
+			#search_ul .right-box {
+			  width: 30%;
+			  height: 50px;
+			  background-color: white;
+			  display: flex;
+			  align-items: center;
+			}
+
+			
+			.img {
+			  width: 100px;
+			  color: black;
+			}
+			
+			.title {
+			  font-size: 15px;
+			  color: black;
+			}
+			
+			.price {
+			  color: black;
+			}

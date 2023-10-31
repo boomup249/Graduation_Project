@@ -31,6 +31,8 @@ import com.yuhan.loco.prefer.PreferService;
 import com.yuhan.loco.profile.ProfileRepository;
 import com.yuhan.loco.profile.ProfileService;
 import com.yuhan.loco.profile.profileDB;
+import com.yuhan.loco.search.GameSearchDB;
+import com.yuhan.loco.search.GameSearchService;
 import com.yuhan.loco.user.EmailSend;
 import com.yuhan.loco.user.UserDB;
 import com.yuhan.loco.user.UserDTO;
@@ -49,14 +51,16 @@ public class apiController {
 	private final UserService userService;
 	private final ProfileService profileService;
 	private final PasswordEncoder passwordEncoder;
+	private final GameSearchService gamesearchService;
 	private UserDB userdb = new UserDB();
 	private profileDB profiledb = new profileDB();
 	
-	public apiController(PreferService preferService, UserService userService, ProfileService profileService ,PasswordEncoder passwordEncoder) {
+	public apiController(PreferService preferService, UserService userService, ProfileService profileService ,PasswordEncoder passwordEncoder, GameSearchService gamesearchService) {
         this.preferService = preferService;
         this.userService = userService;
         this.profileService = profileService;
         this.passwordEncoder = passwordEncoder;
+        this.gamesearchService = gamesearchService;
     }
 	
 	@GetMapping(value="/email_auth", consumes = org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
@@ -255,6 +259,17 @@ public class apiController {
 	            return new ResponseEntity<>("Session not found", HttpStatus.UNAUTHORIZED);
 	        }
 	        
+	}
+	@PostMapping(
+			value = "/search/{word}",
+			produces = "application/json; charset=utf8"
+			)
+	public ResponseEntity<List<GameSearchDB>> getContainWord(@PathVariable String word) {			
+			String regex = ".*" + word + ".*";
+			List<GameSearchDB> list = gamesearchService.SearchList(regex);
+			for(GameSearchDB item : list)
+	            System.out.println("***" + item);
+			return new ResponseEntity<>(list, HttpStatus.OK);
 	}
 	
 }

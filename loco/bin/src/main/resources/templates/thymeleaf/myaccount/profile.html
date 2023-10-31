@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>내계정 페이지</title>
+    <link rel="stylesheet" th:href="@{/css/myaccount.css}" href="/css/myaccount.css">
+</head>
+<body background="#222831">
+	<input type="hidden" name="Love" th:object="${preferdb}" th:value="${preferdb.getLove()}" th:field="*{Love}"/>
+    <input type="hidden" name="dislike" th:object="${preferdb}" th:value="${preferdb.getDislike()}" th:field="*{dislike}"/>
+	<form action="#" th:object="${preferDTO}" method="post">
+	<div id="logo">
+		<div class="link">
+			<a href="/main"><img src="imgs/header/logo.png"/></a>
+		</div>
+	</div>
+	<!-- 왼쪽 박스 -->
+	<div id="left_box">
+		<div class="imgbox">
+			<img class="img" th:src="${profile_img}">
+		</div>
+		<span class="left_id" th:text="${userDTO.getID()}"></span>
+		<span class="left_email" th:text="${userDTO.getEMAIL()}"></span>
+		<hr style="border: 1 solid white;width: 100%;position: absolute;top: 50%;left: 0%; ">
+		<button type="button" class="left_btn1">내 계정</button>
+		<button type="button" class="left_btn2"
+		onclick="location.href='/mypage'">프로필</button>
+	</div>
+	
+	
+	<!-- 오른쪽 첫번째 박스 -->
+	<span id="right_span1">기본 정보</span>
+	<div id = "right_box1">
+		
+		<!-- 아이디 -->
+		<div id="id" style="display: block;">
+			<span class="right_id" th:text="${userDTO.getID()}"></span>
+		</div>
+		
+		
+		<hr style="border: 1px solid white; width: 100%; position: absolute; top: 30%; left: 0%;">
+		
+		
+		<div id="email" style="display: block;">
+			<span class="right_email" th:text="${userDTO.getEMAIL()}"></span>
+		</div>
+		<hr style="border: 1 solid white; width: 100%; position: absolute;top: 60%;left: 0%;">
+		
+		<!-- 비밀번호 -->
+	
+		<div id="pwd">
+			<span class="right_pwd">*******</span>
+		</div>
+		
+		<!-- 기존 비밀번호 입력 -->
+		<div id = "input_pwd">
+			<input type="password" id = "current_pwd" placeholder="기존 비밀번호입력"/>
+			<span id="ck" style="font-size: 15px; color: white; position: absolute; top:60%; left: 50%;"></span>
+			<button id = "check_pwd" type="button">확인</button>
+		</div>
+			
+		
+		<!-- 비밀번호 변경 -->
+		<div class="edit_pw" id="edit_pwd">
+			<input type="password" id = "newpwd" placeholder="새 암호 입력"/>
+			<input type="password" id = "newpwd_re" placeholder="암호 재입력"/><!-- 재입력 -->
+			<span id="new_ck" style="font-size: 15px; color: white; position: absolute; top:80%; left: 70%;"></span>
+	    </div>
+		
+		<button type="button" class="pwd_btn" id="ch_pwd">수정</button>
+		<button type="button" class="pwd_btn" id="ch_pwd_edit" disabled="true">변경</button>
+	</div>
+	
+	
+	<span id="right_span2">기타 설정</span>
+	<div id = "right_box2">
+		<div class = "line"></div><!-- 세로줄 -->
+			<table>
+				<thead>
+					<tr>
+						<th class="likeheader">LIKE</th>
+					</tr>
+				</thead>
+				<tbody class = "dtofontLIKE">
+					<tr th:each="p : ${preferdb}">
+						<td th:each="like : ${#strings.arraySplit(p.love, ',')}">
+							<span th:text="${like}"></span>
+						</td>
+		        	</tr>
+		        </tbody>
+		    </table>
+			<table id ="checktableLike">
+			<tbody>
+				<tr>
+		            <td id = "checktableLike_td"><input type="checkbox" name = "genre"  value="action" th:field="*{userLike}" th:checked="${preferDTO.userLike == 'action'}" />액션</td>
+		            <td id = "checktableLike_td"><input type="checkbox" name = "genre"  value="RPG" th:field="*{userLike}" th:checked="${preferDTO.userLike == 'RPG'}"/>RPG</td>
+		            <td id = "checktableLike_td"><input type="checkbox" name = "genre"  value="shooting" th:field="*{userLike}" th:checked="${preferDTO.userLike == 'shooting'}"/>슈팅</td>
+		            <td id = "checktableLike_td"><input type="checkbox" name = "genre"  value="strategy" th:field="*{userLike}" th:checked="${preferDTO.userLike == 'strategy'}"/>전략</td>
+		            <td id = "checktableLike_td"><input type="checkbox" name = "genre"  value="adventure" th:field="*{userLike}" th:checked="${preferDTO.userLike == 'adventure'}"/>어드벤처</td>
+	        	</tr>
+	        	<tr>
+		            <td id = "checktableLike_td"><input type="checkbox" name = "genre" value="simulation" th:field="*{userLike}" th:checked="${preferDTO.userLike == 'simulation'}"/>시뮬레이션</td>
+		            <td id = "checktableLike_td"><input type="checkbox" name = "genre"  value="sports" th:field="*{userLike}" th:checked="${preferDTO.userLike == 'sports'}"/>스포츠</td>
+		            <td id = "checktableLike_td"><input type="checkbox" name = "genre"  value="roguelike" th:field="*{userLike}" th:checked="${preferDTO.userLike == 'roguelike'}"/>로그라이크</td>
+		            <td id = "checktableLike_td"><input type="checkbox" name = "genre"  value="fight" th:field="*{userLike}"  th:checked="${preferDTO.userLike == 'fight'}"/>격투</td>
+		            <td id = "checktableLike_td"><input type="checkbox" name = "genre"  value="puzzle" th:field="*{userLike}" th:checked="${preferDTO.userLike == 'puzzle'}"/>퍼즐</td>
+	        	</tr>
+	        	<tr>
+		            <td id = "checktableLike_td"><input type="checkbox" name = "genre"  value="aracde" th:field="*{userLike}" th:checked="${preferDTO.userLike == 'aracde'}"/>아케이드</td>
+		            <td id = "checktableLike_td"><input type="checkbox" name = "genre" value="horror" th:field="*{userLike}" th:checked="${preferDTO.userLike == 'horror'}"/>공포</td>
+		            <td id = "checktableLike_td"><input type="checkbox" name = "genre"  value="MMORPG" th:field="*{userLike}" th:checked="${preferDTO.userLike == 'MMORPG'}"/>MMORPG</td>
+		            <td id = "checktableLike_td"><input type="checkbox" name = "genre"  value="multi" th:field="*{userLike}" th:checked="${preferDTO.userLike == 'multi'}"/>멀티</td>
+		            <td id = "checktableLike_td"><input type="checkbox" name = "genre"  value="sigle" th:field="*{userLike}" th:checked="${preferDTO.userLike == 'single'}"/>싱글</td>
+	        	</tr>
+			</tbody>
+		</table>
+		<button type="button" id="ch_prefer">수정</button>
+	
+		<table>
+			<thead>
+				<tr>
+					<th class="dislikeheader">DISLIKE</th>
+				</tr>
+			</thead>
+			<tbody class = "dtofontDISLIKE">
+				<tr th:each="p : ${preferdb}">
+					<td th:each="dislike : ${#strings.arraySplit(p.dislike, ',')}">
+						<span th:text="${dislike}"></span>
+					</td>
+	        	</tr>
+	        </tbody>
+	    </table>
+		<table id ="checktableDislike">
+		<tbody>
+			<tr>
+               <td id = "checktableDislike_td"><input type="checkbox" name = "genre"  value="action" th:field="*{userHate}" th:checked="${preferDTO.userHate == 'action'}" />액션</td>
+               <td id = "checktableDislike_td"><input type="checkbox" name = "genre"  value="RPG" th:checked="${preferDTO.userHate == 'RPG'}"/>RPG</td>
+               <td id = "checktableDislike_td"><input type="checkbox" name = "genre"  value="shooting" th:checked="${preferDTO.userHate == 'shooting'}"/>슈팅</td>
+               <td id = "checktableDislike_td"><input type="checkbox" name = "genre"  value="strategy" th:checked="${preferDTO.userHate == 'strategy'}"/>전략</td>
+               <td id = "checktableDislike_td"><input type="checkbox" name = "genre"  value="adventure" th:checked="${preferDTO.userHate == 'adventure'}"/>어드벤처</td>
+           </tr>
+           <tr>
+               <td id = "checktableDislike_td"><input type="checkbox" name = "genre" value="simulation" th:checked="${preferDTO.userHate == 'simulation'}"/>시뮬레이션</td>
+               <td id = "checktableDislike_td"><input type="checkbox" name = "genre"  value="sports" th:checked="${preferDTO.userHate == 'sports'}"/>스포츠</td>
+               <td id = "checktableDislike_td"><input type="checkbox" name = "genre"  value="roguelike" th:checked="${preferDTO.userHate == 'roguelike'}"/>로그라이크</td>
+               <td id = "checktableDislike_td"><input type="checkbox" name = "genre"  value="fight"  th:checked="${preferDTO.userHate == 'fight'}"/>격투</td>
+               <td id = "checktableDislike_td"><input type="checkbox" name = "genre"  value="puzzle" th:checked="${preferDTO.userHate == 'puzzle'}"/>퍼즐</td>
+           </tr>
+           <tr>
+               <td id = "checktableDislike_td"><input type="checkbox" name = "genre"  value="aracde" th:checked="${preferDTO.userHate == 'aracde'}"/>아케이드</td>
+               <td id = "checktableDislike_td"><input type="checkbox" name = "genre" value="horror" th:checked="${preferDTO.userHate == 'horror'}"/>공포</td>
+               <td id = "checktableDislike_td"><input type="checkbox" name = "genre"  value="MMORPG" th:checked="${preferDTO.userHate == 'MMORPG'}"/>MMORPG</td>
+               <td id = "checktableDislike_td"><input type="checkbox" name = "genre"  value="multi" th:checked="${preferDTO.userHate == 'multi'}"/>멀티</td>
+               <td id = "checktableDislike_td"><input type="checkbox" name = "genre"  value="sigle" th:checked="${preferDTO.userHate == 'single'}"/>싱글</td>
+           </tr>
+		</tbody>
+	</table>
+	<button type="button" id="ch_prefer1">수정</button>
+	</div>
+	</form>
+	
+<script src="js/profile_change.js"></script>
+</body>
+
+</html>

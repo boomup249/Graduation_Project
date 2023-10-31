@@ -1,0 +1,111 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>게시판</title>
+    
+    <link rel="stylesheet" href="css/font.css"> <!-- 폰트 css -->
+    <link rel="stylesheet" href="css/list.css"> <!-- 게시판 css -->
+    <link rel="stylesheet" href="css/pagination.css"> <!-- 페이지네이션 css -->
+    <style>
+		/* 게시판 컨테이너 */
+		.board-container {
+    		max-width: 100%;
+    		margin: 0 auto;
+    		
+		}
+		
+		
+	</style>
+</head>
+
+<body>
+    <div class="board-container">
+    <table class="post-table">
+        <thead>
+            <tr>
+                <th class="custom-width" style="width:60%;">제목</th>
+                <th>작성자</th>
+                <th>조회수</th>
+                <th>댓글</th>
+                <th>날짜</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each = "post : ${bbsDTO}">
+                <td>
+                    <a th:href="@{'/article/' + ${post.id}}"><div th:text="${post.title}"></div></a>
+                </td>
+                <td><div th:text="${post.writer}"></div></td>
+                <td><div th:text="${post.views}" ></div></td>
+                <td><div th:text="${post.comment}" ></div></td>
+                <td><div th:text="${post.date}" ></div></td>
+            </tr>
+            <!-- 추가적인 게시글 아이템들을 동적으로 생성하거나 서버에서 데이터를 가져와서 출력하세요. -->
+        </tbody>
+    </table>
+    <div id="pagination">
+			    <ul>
+					
+			        <li th:if="${currentPage > 1}" class="fir_btn">
+			            <a href="#" onclick="changePage(1)">
+			                <<
+			            </a>
+			        </li>
+			        
+			        <li th:if="${startPage >= 10}" class="pv_btn">
+			            <a href="#" th:onclick="'changePage(\'' + ${startPage - 1} + '\');'"
+			               th:classappend="${startPage > 1} ? '' : 'disabled'">
+			                이전
+			            </a>
+			        </li>
+			        
+			        <li th:each="pageNum : ${#numbers.sequence(startPage, endPage)}" class="page_btn">
+			            <a href="#" th:onclick="'changePage(\'' + ${pageNum} + '\');'"
+			               th:classappend="${pageNum == currentPage} ? 'current' : ''"
+			               th:text="${pageNum}">
+			               ${pageNum}
+			            </a>
+			        </li>
+			        
+			        <li th:if="${endPage < totalPage}" class="next_btn">
+			            <a href="#" th:onclick="'changePage(\'' + ${endPage + 1} + '\');'"
+			               th:classappend="${endPage < totalPage} ? '' : 'disabled'">
+			                다음
+			            </a>
+			        </li>
+			        
+			        <li th:if="${currentPage < totalPage}" class="last_btn">
+			            <a href="#" th:onclick="'changePage(\'' + ${totalPage} + '\');'">
+			                >>
+			            </a>
+			        </li>
+			        
+			    </ul>
+			</div>
+
+
+			<script>
+			    // 페이지 이동을 처리하는 함수
+			    function changePage(pageNumber) {
+							    const currentUrl = window.location.href;
+							    let updatedUrl = currentUrl;
+							
+							    // 페이지 번호가 이미 URL에 포함되어 있는지 검사
+							    if (/page=\d/.test(currentUrl)) {
+							        updatedUrl = currentUrl.replace(/page=\d+/g, 'page=' + pageNumber);
+							    } else {
+							        // URL에 다른 쿼리 문자열이 있는지 검사
+							        if (currentUrl.indexOf('?') !== -1) {
+							            updatedUrl += '&page=' + pageNumber;
+							        } else {
+							            updatedUrl += '?page=' + pageNumber;
+							        }
+							    }
+							
+							    window.location.href = updatedUrl;
+							}
+			
+			</script>
+</div>
+</body>
+</html>
