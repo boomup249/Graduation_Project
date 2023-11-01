@@ -176,20 +176,25 @@
 			
 			/*내용*/
 			#content {
+				display: flex;
+				float: left;
+				
 				position: relative;
 			    top: 80px;
 			    left: 0px;
 			    width: 100%;    
 			    height: calc(100% - 100px);
-			    overflow-y: scroll;
+			    overflow-y: hidden;
 			}
 			
 			/*달력*/
 			#calendar {
 			    top: 0%;
 			    left: 0%;
-			    float: left;
-			    margin: 70px;
+			    /*float: left;*/
+			    margin-top: 50px;
+			    margin-left: 110px;
+			    margin-right: 70px;
 			    
 			    width: 1100px;
 			    height: 760px; 
@@ -228,15 +233,17 @@
 			
 			
 			/*박스*/
-			#plan {
-				margin-top: 70px;
+			.plan {
+				margin-top: 40px;
 				color:#FFFFFF;
 				font-size: 30px;
 				font-family: 'GmarketSansMedium';
 			}
-			.box {
-				margin: 10px;
-				
+			#box {
+				margin-top: 15px;
+				margin-left: 40px;
+				width: 500px;
+				height: 600px;
 			}
 			.top-box {
 			    float: left;
@@ -378,10 +385,10 @@
 					        </div>
 					    </div>  
 					</div>
-					<div class="box">
-						<p id="plan"><span id="currentYear"></span>년 출시 예정 게임</p>
+					<div id="box">
+						<p class="plan"><span id="currentYear"></span>년 출시 예정 게임</p>
 					    <div class="top-box" id="topBox"></div>
-						<p id="plan"><span id="bottomBoxCurrentYear"></span>년 <span id="currentMonth"></span>월 출시 예정 게임</p>
+						<p class="plan"><span id="bottomBoxCurrentYear"></span>년 <span id="currentMonth"></span>월 출시 예정 게임</p>
 					    <div class="bottom-box" id="bottomBox"></div>
 					</div>
 				</div>
