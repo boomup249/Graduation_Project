@@ -89,7 +89,7 @@ document.addEventListener("DOMContentLoaded", function () {
 			const img = document.createElement("img");
 			const title = document.createElement("span");
 			
-			const rightBox = document.createElement("div");
+			//const rightBox = document.createElement("div");
 			const price = document.createElement("span");
     		const hr = document.createElement("hr");
 			
@@ -100,9 +100,9 @@ document.addEventListener("DOMContentLoaded", function () {
 			link.appendChild(img);
 			leftBox.appendChild(title);
 			
-			rightBox.classList.add("right-box");
-			price.innerHTML = j_saleprice;
-			rightBox.appendChild(price);
+			//rightBox.classList.add("right-box");
+			
+			
 			
 			if(j_site == "Switch" || j_site == "Ps")
 				link.setAttribute("href", `/consoleDetail/${j_num}`);
@@ -110,8 +110,7 @@ document.addEventListener("DOMContentLoaded", function () {
 				link.setAttribute("href", `/pcDetail/${j_num}`);
 				
 			li.appendChild(leftBox);
-			li.appendChild(rightBox);
-			li.appendChild(hr);
+			//li.appendChild(rightBox);
 			
 
 			search_Ul.appendChild(li);
@@ -119,7 +118,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
 			
 		})
-		searchUl.style.height = `${data.length * 50}px`;
+		
+		searchUl.style.height = `${data.length * 30}px`;
 	}//fillSearch
 	
 	

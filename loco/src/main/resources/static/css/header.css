@@ -115,71 +115,67 @@
 				background-repeat: no-repeat;
 			}
 			
+			#search{
+				width: 420px;
+				height: 50px;
+				position: absolute;
+				left: 20%;
+				top:20%;
+			}
+			
 			#search_box { /* div 태ㅑ그*/
-			  width: 400px;
+			  width: 420px;
 			}
 			#search_ul {
-			  width: 400px;
+			  width: 420px;
 			  display: flex;
 			  flex-direction: column;
-			  justify-content: center;
-			  align-items: center;
 			  background-size: cover;
 			  background-position: center center;
 			  text-align: center;
 			  background-color: white;
+			
 			  position: absolute;
-			  left: 18%;
-			  top: 75px; /* #search 아래에 배치 */
+			  left: 20%;
+			  top: 78px; /* #search 아래에 배치 */
 			}
 
-			.hr{
-				width: 400px;
-				border: solid 5px black;
-			}
-			
 			#search_ul .li {
 			  width: 100%;
 			  display: flex;
 			  flex-direction: row;
 			  justify-content: space-between;
-			  align-items: center;
 			  background-size: cover;
 			  background-position: center center;
-			  text-align: center;
-			  background-color: white;
+			  background-color: rgb(128, 255, 0);
 			  position: absolute;
-			  left: 18%;
-			  top: 75px;
+			  left: 20%;
+			  top: 78px;
+			  
+			  
+			}
+			
+			#search_ul > li {
+				border:0.5px solid #000 ;
 			}
 			
 			#search_ul .left-box {
-			  width: 70%;
-			  height: 50px;
-			  background-color: white;
+			  width: 100%;
+			  height: auto;
+			  background-color: rgb(255, 255, 255);
 			  display: flex;
-			  align-items: center;
 			}
-			
-			#search_ul .right-box {
-			  width: 30%;
-			  height: 50px;
-			  background-color: white;
-			  display: flex;
-			  align-items: center;
-			}
-
-			
 			.img {
 			  width: 100px;
-			  color: black;
+			  color: rgb(255, 128, 128);
 			}
 			
 			.title {
-			  font-size: 15px;
-			  color: black;
+			  font-size: 10px;
+			  color: rgb(128, 255, 0);
 			}
 			
 			.price {
-			  color: black;
+				font-style: italic;
+			  color: rgb(128, 0, 255);
 			}
