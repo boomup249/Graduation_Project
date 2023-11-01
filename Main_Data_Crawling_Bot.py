@@ -82,8 +82,8 @@ def run_daily_job():
 if __name__ == "__main__":
     multiprocessing.freeze_support()
     print("MYSQL root 비밀번호가 1234여야 작동됩니다")
-    schedule.every().day.at("03:00").do(run_daily_job)
-    base = Base_Setting()   
+    schedule.every().day.at("06:00").do(run_daily_job)
+    base = Base_Setting()
     del base
 
     try:
