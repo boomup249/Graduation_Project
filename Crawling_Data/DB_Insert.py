@@ -24,7 +24,7 @@ except ImportError:
 try:
     conn = MySQLdb.connect(
         user="root",
-        passwd="1937",
+        passwd="1234",
         host="localhost",
         db="member"
     )
