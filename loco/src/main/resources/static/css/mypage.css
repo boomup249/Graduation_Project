@@ -5,6 +5,8 @@ body {
     align-items: center;
     height: 100vh;
     margin: 0;
+    
+    overflow-y: hidden;
 }
 #logo {z-index: 4; /* logo가 b_img보다 위에 배치되어야 함*/
 					position: absolute;
