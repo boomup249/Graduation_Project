@@ -49,6 +49,13 @@
 			font-size: 16px; /* 텍스트 크기 조절 (예: 16px) */
     		font-weight: lighter; /* 텍스트 굵기 조절 (예: 굵게 표시) */
 		}
+		#writer{
+			font-size: 16px; /* 텍스트 크기 조절 (예: 16px) */
+    		font-weight: lighter; /* 텍스트 굵기 조절 (예: 굵게 표시) */
+		}
+		.cell_head{
+			float: right;
+		}
 
 		
 	</style>
@@ -59,7 +66,10 @@
     <table class="post-table">
         <thead>
             <tr>
-                <th>제목 <span class="title-1" th:object="${postDTO}" th:text="${postDTO.getTitle()}"></span></th>    
+                <th>
+					제목 <span class="title-1" th:object="${postDTO}" th:text="${postDTO.getTitle()}"></span>
+                	<span class="cell_head">작성자 <span id="writer" th:object="${postDTO}" th:text="${postDTO.getWriter()}"></span></span>
+                </th>
             </tr>
         </thead>
         <tbody>
@@ -68,17 +78,14 @@
             </tr>
             <tr>
             	<th class="comment-form" style="height:5%;">
-					<form>
-						<input type="hidden" id="postsId" th:object="${postDTO}" th:value="${postDTO.getId()}">
-						<div class="item2">
-							<input type="text" id="comment" class="comment-input" />
-							<button type="submit" id="comm_save" class="comment-submit">확인</button>
-						</div>
-					</form>
+					<input type="hidden" id="postsId" th:object="${postDTO}" th:value="${postDTO.getBbs_id()}">
+					<div class="item2">
+						<input type="text" id="comment" class="comment-input"/>
+						<button type="button" id="comm_save" class="comment-submit">확인</button>
+					</div>
 				</th>
- 	
             </tr>
-            <tr th:each = "comment : ${CommentResDTO}">
+            <tr th:each = "comment : ${comments}">
             	<td class="comment" style="height:20%;"> <span th:text="${comment.writer}" style="font-weight: lighter;"></span></td>
             	<td class="comment" style="height:20%;"> <span th:text="${comment.comment}" style="font-weight: lighter;"></span></td>
             </tr>
@@ -87,5 +94,6 @@
         </tbody>
     </table>
 </div>
+<script src="/js/bbscomment.js"></script>
 </body>
 </html>

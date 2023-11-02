@@ -30,6 +30,8 @@ public interface BBSRepository extends JpaRepository<BBSDB, String> {
     @Query(value = "update bbs BBS set BBS.views = BBS.views + 1 where BBS.id = :id", nativeQuery=true)
     int updateView(@Param("id") Long id);
 	
+	List<BBSDB> findByTitle(String title);
+	
 	Page<BBSDB> findByTitleContaining(String title, Pageable pageable);
 	Page<BBSDB> findByCategory(String category, Pageable pageable);
 }

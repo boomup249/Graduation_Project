@@ -8,7 +8,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import com.yuhan.loco.bbs.BBSDB;
-import com.yuhan.loco.bbs.CommentResDTO;
 
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
@@ -22,7 +21,6 @@ public class PostResDTO {
 	private String title;
     private String writer; // 작성자
     private String content;
-    private List<CommentResDTO> comments;
 
 
 	public Long getId() {
@@ -62,13 +60,6 @@ public class PostResDTO {
 	public void setBbs_id(Long bbs_id) {
 		this.bbs_id = bbs_id;
 	}
-	public List<CommentResDTO> getComments() {
-		return comments;
-	}
-	public void setComments(List<CommentResDTO> comments) {
-		this.comments = comments;
-	}
-
 	
 	
 	public PostResDTO(PostDB postDB) {
@@ -77,8 +68,7 @@ public class PostResDTO {
 		this.title = postDB.getTitle();
 		this.writer = postDB.getWriter();
 		this.content = postDB.getContent();
-		this.bbs_id = postDB.getBbs().getId();
-		this.comments = postDB.getCommentDB().stream().map(CommentResDTO::new).collect(Collectors.toList());
+		//this.bbs_id = postDB.getBbs().getId();
 		
 	}
 }

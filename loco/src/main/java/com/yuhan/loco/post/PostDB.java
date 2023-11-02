@@ -6,6 +6,7 @@ import com.yuhan.loco.bbs.BBSDB;
 import com.yuhan.loco.bbs.CommentDB;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -24,9 +25,8 @@ public class PostDB {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@OneToOne
-	@JoinColumn(name = "BBS_ID")
-	private BBSDB bbsDB;
+	@Column(name = "BBS_ID")
+	private Long bbs;
 	private String category;
 	private String title;
     private String writer; // 작성자
@@ -66,18 +66,19 @@ public class PostDB {
 	public void setContent(String content) {
 		this.content = content;
 	}
-	public BBSDB getBbs() {
-		return bbsDB;
-	}
-	public void setBbs(BBSDB bbsDB) {
-		this.bbsDB = bbsDB;
-	}
 	public List<CommentDB> getCommentDB() {
 		return commentDB;
 	}
 	public void setCommentDB(List<CommentDB> commentDB) {
 		this.commentDB = commentDB;
 	}
+	public Long getBbs_id() {
+		return bbs;
+	}
+	public void setBbs_id(Long bbs_id) {
+		this.bbs = bbs_id;
+	}
+	
 
 
 }

@@ -1,12 +1,8 @@
 package com.yuhan.loco.post;
 
 
-import java.util.List;
-
 import org.springframework.stereotype.Service;
 
-import com.yuhan.loco.bbs.BBSDB;
-import com.yuhan.loco.bbs.CommentResDTO;
 
 import jakarta.transaction.Transactional;
 
@@ -19,8 +15,8 @@ public class PostService {
         this.Postrepository = Postrepository;
     }
 
-   public PostDB create(Long id, Long bbs_id, String category, String title, String writer, String content) {
-	  post.setId(null);
+   public PostDB create(Long bbs_id, String category, String title, String writer, String content) {
+	  post.setBbs_id(bbs_id);
       post.setCategory(category);
       post.setTitle(title);
       post.setWriter(writer);
@@ -35,6 +31,6 @@ public class PostService {
       return post;
    }
    public PostDB getByID(Long id) {
-       return Postrepository.findById(id);
+       return Postrepository.findByBbs(id);
    }
 }

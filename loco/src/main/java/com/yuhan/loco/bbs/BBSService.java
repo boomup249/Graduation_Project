@@ -23,8 +23,7 @@ public class BBSService {
         this.BBSrepository = BBSrepository;
         this.Commentrepository = Commentrepository;
     }
-   public BBSDB create(Long id, String title, String writer, String category, String date, Long views, Long comment) {
-	   bbs.setId(null);
+   public BBSDB create(String title, String writer, String category, String date, Long views, Long comment) {
 	   bbs.setTitle(title);
 	   bbs.setWriter(writer);
 	   bbs.setCategory(category);
@@ -34,6 +33,14 @@ public class BBSService {
 	   this.BBSrepository.saveAndFlush(bbs);
 	   return bbs;
    }
+   public void commentcreate(Long postid, String comment, String writer) {
+	   CommentDB commdb = new CommentDB();
+	   commdb.setPost_id(postid);
+	   commdb.setComment(comment);
+	   commdb.setWriter(writer);
+	   this.Commentrepository.save(commdb);
+   }
+   
    public BBSDB getbyID(Long id) {
 	   return BBSrepository.findById(id);
    }
@@ -62,10 +69,18 @@ public class BBSService {
    public Page<BBSDB> findparty(int page, Pageable pageable){
 	   return this.BBSrepository.findByCategory("party", pageable);
    }
+   /*
    public Long commentSave(String writer, Long id, CommentReqDTO comm) {
 	   comm.setBbs(bbs);
 	   CommentDB comment = comm.toEntity();
 	   Commentrepository.save(comment);
 	   return comm.getId();
+   }*/
+   public List<BBSDB> findID(String title) {
+	   return this.BBSrepository.findByTitle(title);
+   }
+   
+   public List<CommentDB> findCommentDB(Long id){
+	   return this.Commentrepository.findById(id);
    }
 }

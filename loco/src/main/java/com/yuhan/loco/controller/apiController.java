@@ -25,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.yuhan.loco.bbs.BBSService;
 import com.yuhan.loco.prefer.PreferDB;
 import com.yuhan.loco.prefer.PreferDTO;
 import com.yuhan.loco.prefer.PreferService;
@@ -52,15 +53,18 @@ public class apiController {
 	private final ProfileService profileService;
 	private final PasswordEncoder passwordEncoder;
 	private final GameSearchService gamesearchService;
+	private final BBSService bbsService;
 	private UserDB userdb = new UserDB();
 	private profileDB profiledb = new profileDB();
 	
-	public apiController(PreferService preferService, UserService userService, ProfileService profileService ,PasswordEncoder passwordEncoder, GameSearchService gamesearchService) {
+	public apiController(PreferService preferService, UserService userService, ProfileService profileService 
+						 ,PasswordEncoder passwordEncoder, GameSearchService gamesearchService, BBSService bbsService) {
         this.preferService = preferService;
         this.userService = userService;
         this.profileService = profileService;
         this.passwordEncoder = passwordEncoder;
         this.gamesearchService = gamesearchService;
+        this.bbsService = bbsService;
     }
 	
 	@GetMapping(value="/email_auth", consumes = org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
@@ -272,6 +276,17 @@ public class apiController {
 			return new ResponseEntity<>(list, HttpStatus.OK);
 	}
 	
+ 	@PostMapping(value="/article/{id}/comments", consumes = org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity commentSave(@PathVariable Long id, @RequestBody Map<String, String> data, HttpServletRequest req) {
+		HttpSession session = req.getSession(false);
+		String userId = (String)session.getAttribute("user");
+		
+		String comment = (String)data.get("comment");
+		
+		bbsService.commentcreate(id, comment, userId);
+		
+		return ResponseEntity.ok().build();
+ 	}
 }
 	
 

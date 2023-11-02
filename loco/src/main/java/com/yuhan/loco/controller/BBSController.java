@@ -19,10 +19,8 @@ import com.yuhan.loco.bbs.BBSDB;
 import com.yuhan.loco.bbs.BBSDTO;
 import com.yuhan.loco.bbs.BBSService;
 import com.yuhan.loco.bbs.CommentDB;
-import com.yuhan.loco.bbs.CommentResDTO;
 import com.yuhan.loco.post.PostDB;
 import com.yuhan.loco.post.PostDTO;
-import com.yuhan.loco.post.PostResDTO;
 import com.yuhan.loco.post.PostService;
 import com.yuhan.loco.user.UserDB;
 import com.yuhan.loco.user.UserService;
@@ -205,8 +203,11 @@ public class BBSController {
 		bbsDTO.setDate(timestr);
 		bbsDTO.setViews(0L);
 		bbsDTO.setComment(0L);
-		postService.create(postDTO.getId(), bbsDTO.getId(), postDTO.getCategory(), postDTO.getTitle(), postDTO.getWriter(), postDTO.getContent());
-		bbsService.create(bbsDTO.getId(), bbsDTO.getTitle(), bbsDTO.getWriter(), bbsDTO.getCategory(), bbsDTO.getDate(), bbsDTO.getViews(), bbsDTO.getComment());
+		bbsService.create(bbsDTO.getTitle(), bbsDTO.getWriter(), bbsDTO.getCategory(), bbsDTO.getDate(), bbsDTO.getViews(), bbsDTO.getComment());
+		List<BBSDB> bbsDBList = bbsService.findID(bbsDTO.getTitle());
+		BBSDB bbsDB = bbsDBList.get(0);
+		Long bbs_Id = bbsDB.getId();
+		postService.create(bbs_Id, postDTO.getCategory(), postDTO.getTitle(), postDTO.getWriter(), postDTO.getContent());
 		model.addAttribute("bbsDTO", bbsDTO);
 		return "redirect:/post";
 	}
@@ -222,7 +223,8 @@ public class BBSController {
 		String userId = (String)session.getAttribute("user");
 		UserDB userdb = userService.findUser(userId);
 		model.addAttribute("userDTO", userdb);
-		List<CommentDB> comments = article.getCommentDB();
+		
+		List<CommentDB> comments = bbsService.findCommentDB(id);
 		if(comments != null && !comments.isEmpty()) {
 			model.addAttribute("comments", comments);
 		}
