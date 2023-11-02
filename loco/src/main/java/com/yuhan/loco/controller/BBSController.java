@@ -225,6 +225,7 @@ public class BBSController {
 		model.addAttribute("userDTO", userdb);
 		
 		List<CommentDB> comments = bbsService.findCommentDB(id);
+		System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@"+comments);
 		if(comments != null && !comments.isEmpty()) {
 			model.addAttribute("comments", comments);
 		}

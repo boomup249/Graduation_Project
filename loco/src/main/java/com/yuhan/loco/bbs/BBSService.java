@@ -81,6 +81,6 @@ public class BBSService {
    }
    
    public List<CommentDB> findCommentDB(Long id){
-	   return this.Commentrepository.findById(id);
+	   return this.Commentrepository.findByPost(id);
    }
 }

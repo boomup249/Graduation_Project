@@ -1,4 +1,5 @@
 package com.yuhan.loco.bbs;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -14,7 +15,8 @@ public class CommentDB {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-	private Long post_id;
+    @Column(name = "post_id")
+	private Long post;
     private String writer; // 작성자
     private String comment;
     
@@ -26,10 +28,10 @@ public class CommentDB {
 		this.id = id;
 	}
 	public Long getPost_id() {
-		return post_id;
+		return post;
 	}
 	public void setPost_id(Long post_id) {
-		this.post_id = post_id;
+		this.post = post_id;
 	}
 	public String getWriter() {
 		return writer;
