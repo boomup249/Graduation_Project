@@ -1,0 +1,457 @@
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+		<title>loco > pc</title>
+		
+		<!-- 외부 css -->
+		<link rel="stylesheet" href="css/font.css"> <!-- 폰트 css -->
+		<link rel="stylesheet" href="css/header.css"> <!-- 헤더 css -->
+		<link rel="stylesheet" href="css/game_table.css"> <!-- 게임 목록 css -->
+		<link rel="stylesheet" href="css/pagination.css"> <!-- 페이지네이션 css -->
+		
+		<!-- 외부 js -->
+		<script src="js/longTitle.js"></script>
+		<script src="js/longGenre.js"></script>
+		
+		<style>	
+			/*css 속성*/
+			/*내용*/
+			#content { 
+						position: relative;
+						top: 100px;
+						left: 0px; /*헤더 아래부터*/
+						width: 100%; height: calc(100% - 100px)/*화면 - 헤더*/;
+						overflow-y: scroll; /*콘텐츠에만 스크롤이 적용되도록*/
+						}
+			
+			body { background-color: #222831;
+					margin: 0; padding: 0;}
+					
+			
+			/**/
+			.denote {
+				width: 100%;
+				height: 100px;
+				
+				/*자식 위치 잡기*/
+				display: flex;
+				justify-content: space-between; /*사이 벌리기*/
+				align-items: center;
+			}
+			
+			.update_time {
+				font-family: 'GmarketSansMedium';
+				font-size: 20px;
+				color: #19D3DA;
+				
+				min-width: 500px;
+				
+				margin-left: 20px;
+			}
+			
+			#filtering {
+				margin-right: 20px;
+				min-width: 450px;
+				
+				/*자식 오른쪽 정렬*/
+				display: flex;
+				justify-content: flex-end;
+			}
+			
+			#filtering select {
+				padding: 10px; /*상단부터 시계방향*/
+				
+				font-family: 'GmarketSansMedium';
+				font-size: 15px;
+				
+				margin-left: 10px;
+			}
+			
+			/**/
+			.no_page {
+				/*자식 위치 잡기*/
+				display: flex;
+				justify-content: center;
+				align-items: center;
+			}
+			
+			.no_game{
+				font-family: 'GmarketSansMedium';
+				font-size: 35px;
+				
+				color: #fff;
+				
+				margin-top: 20px;
+				margin-bottom: 15px;
+			}
+			
+			.re_search {
+				font-family: 'GmarketSansMedium';
+				font-size: 20px;
+				
+				color: lightgrey;
+				
+				/*자식 위치 잡기*/
+				display: flex;
+				justify-content: center;
+			}
+			
+					
+		</style>
+	</head>
+	
+	<body>
+		<!-- 헤더 -->
+		<div id="header">
+			<!-- 로고 -->
+			<div class="logo_btn"><a href="/main"><img src="imgs/header/logo.png"/></a></div>
+			
+			<!-- 메뉴 -->
+			<ul>
+				<!-- 콘솔 -->
+				<li>
+					<div class="menu">
+						<a href="/console">CONSOLE</a>
+					</div>
+				</li>
+				
+				<!-- pc -->
+				<li>
+					<div class="menu">
+						<a href="/pc">PC</a>
+					</div>
+				</li>
+				
+				<!-- 게시판 -->
+				<li>
+					<div class="menu">
+						<a href="/bbs">BBS</a>
+					</div>
+				</li>
+				
+				<!-- 신작 -->
+				<li>
+					<div class="menu">
+						<a href="/news">NEWS</a>
+					</div>
+				</li>
+				
+				<!-- 로그인 버튼-->
+				<li th:if="${session.user == null}"> <!-- 세션(user)가 없으면 -->
+					<div class="menu">
+						<a href="/login"><img src="imgs/header/login.png"/></a>
+					</div>
+				</li>
+				
+				<!-- 마이페이지 -->
+				<li th:if="${session.user != null}"> <!-- 세션(user)가 있으면 -->
+					<div class="mypage"></div>
+					<!-- 드롭다운 -->
+					<ul class="dropdown">
+						<li><a href="/profile">내 계정</a></li>
+						<li><a href="/mypage">프로필 설정</a></li>
+						<li><a href="/logout">로그아웃</a></li>
+					</ul>
+				</li>
+			</ul>
+			
+		</div>
+		
+		<!-- 콘텐츠 -->
+		<div id="content">
+			
+			<!-- 상단 정렬, 정보 -->
+			<div class="denote">
+				
+				<!-- 업데이트 일시 -->
+				<div class="update_time" th:text="'마지막 업데이트: ' + ${cTime}">마지막 업데이트: yyyy-mm-dd hh:mm:ss</div>
+				
+			</div>
+			
+			<script src="/js/filterRedirect.js"></script>
+			
+			<!-- denote end -->
+			
+			<!-- 페이지에 데이터가 없을때 -->
+			<div class="no_page" th:if="${gamePage.totalElements == 0}">
+				
+				<div class="msg_page">
+					
+					<div class="no_game">
+						해당하는 게임이 없습니다.
+					</div>
+					
+					<div class="re_search">
+						검색 조건을 다시 설정해주세요.
+					</div>
+					
+				</div>
+				
+				
+			</div>
+			
+			
+			<!-- 테이블 -->
+			<table th:if="${gamePage.totalElements != 0}">
+				<tr th:each="game : ${gamePage.content}">
+					<td>
+						<!-- 게임 누르면 링크연결  -->
+						<a th:href="@{'/pcDetail/' + ${game.NUM}}">
+							<!-- steam only -->
+							<div th:if="${game.SITEAVAILABILITY eq 'Steam'}" class="container">
+							
+								<div class="basic">
+									<!-- 이미지 url 넣기 -->
+									<div id="img_tb" th:style="'background-image:url('+ ${game.IMGDATA} +');'"></div>
+									
+									<div id="text_tb">
+										<div class="title_tb" th:text="${game.TITLE}" data-original-text="" >게임 타이틀</div>
+										<div class="genre_tb" data-original-text=""
+										th:text="${gameService.getGenreToString(game.TITLE)}">게임 장르</div>
+									</div>
+									
+								</div>
+								
+								<div class="additional">
+									<!-- -->
+									<div class="site_logos">
+										<img src="imgs/other_logo/white/steam/steam_logo_white.png">
+									</div>
+									
+									<div class="price_info">
+										
+										<!-- 변동 있을 시 바꾸기 -->
+										<!-- 09.29기준 steam = '할인 X' -->
+										<!-- 할인 x --><!-- 크롤링시 할인율이 없을 때 price에 값이 있는지, sale price에 값이 있는지에 따라 고치기 -->
+										<div th:if="${game.SALEPER.equals('할인 X') || game.SALEPER == null}" 
+										id="no_dc" th:text="${game.SALEPRICE}">
+												정가
+										</div>
+										
+										<!-- 할인 o -->
+										<div th:if="${!(game.SALEPER.equals('할인 X') || game.SALEPER == null)}"
+										id="dc">
+												<div class="dc_rate" th:text="${game.SALEPER}">할인율</div>
+												<div class="prices">
+													<div class="fir_price" th:text="${game.PRICE}">정가</div>
+													<div class="dc_price" th:text="${game.SALEPRICE}">할인가</div>
+												</div>
+										</div>
+										
+									</div>
+									
+								</div>
+								
+							</div>
+							
+							
+							
+							<!-- epic only -->
+							<div th:if="${game.SITEAVAILABILITY eq 'Epic'}" class="container">
+							
+								<div class="basic">
+									<!-- 이미지 url 넣기 -->
+									<div id="img_tb" th:style="'background-image:url('+ ${game.IMGDATA} +');'"></div>
+									
+									<div id="text_tb">
+										<div class="title_tb" th:text="${game.TITLE}" data-original-text="">게임 타이틀</div>
+										<div class="genre_tb" data-original-text=""
+										th:text="${gameService.getGenreToString(game.TITLE)}">게임 장르</div>
+									</div>
+									
+								</div>
+								
+								<div class="additional">
+									<!-- -->
+									<div class="site_logos">
+										<img src="imgs/other_logo/white/epic/EpicGames_White2.png">
+									</div>
+									
+									<div class="price_info">
+										
+										<!-- 변동 있을 시 바꾸기 -->
+										<!-- 09.29기준 epic = 'X' -->
+										<!-- 할인 x --><!-- 크롤링시 할인율이 없을 때 price에 값이 있는지, sale price에 값이 있는지에 따라 고치기 -->
+										<div th:if="${game.SALEPER.equals('X') || game.SALEPER == null}" 
+										id="no_dc" th:text="${game.SALEPRICE}">
+												정가
+										</div>
+										
+										<!-- 할인 o -->
+										<div th:if="${!(game.SALEPER.equals('X') || game.SALEPER == null)}"
+										id="dc">
+												<div class="dc_rate" th:text="${game.SALEPER}">할인율</div>
+												<div class="prices">
+													<div class="fir_price" th:text="${game.PRICE}">정가</div>
+													<div class="dc_price" th:text="${game.SALEPRICE}">할인가</div>
+												</div>
+										</div>
+										
+									</div>
+									
+									
+								</div>
+								
+							</div>
+						</a>
+						
+						<a th:href="@{'/consoleDetail/' + ${game.NUM}}">
+							
+							<!-- Ps Only -->
+							<div th:if="${game.SITEAVAILABILITY eq 'Ps'}" class="container">
+							
+								<div class="basic">
+									<!-- 이미지 url 넣기 -->
+									<div id="img_tb" th:style="'background-image:url('+ ${game.IMGDATA} +');'"></div>
+									
+									<div id="text_tb">
+										<div class="title_tb" th:text="${game.TITLE}" data-original-text="" >게임 타이틀</div>
+										<div class="genre_tb" data-original-text=""
+										th:text="${gameService.getConsoleGenreToString(game.TITLE)}">게임 장르</div>
+									</div>
+									
+								</div>
+								
+								<div class="additional">
+									<!-- -->
+									<div class="site_logos">
+										<img src="imgs/other_logo/white/playstation/PlayStation_logo_white.png">
+									</div>
+									
+									<div class="price_info">
+										
+										<!-- 변동 있을 시 바꾸기 -->
+										<!-- 10.03기준  = '구매할 수 없음' --><!-- 1011기준 원가 탭 -->
+										<!-- 10.11기준  = 'X' -->
+										<!-- 할인 x --><!-- 크롤링시 할인율이 없을 때 price에 값이 있는지, sale price에 값이 있는지에 따라 고치기 -->
+										<div th:if="${game.SALEPER.equals('X') || game.SALEPER == null}" 
+										id="no_dc" th:text="${game.PRICE}">
+												정가
+										</div>
+										
+										<!-- 할인 o -->
+										<div th:if="${!(game.SALEPER.equals('X') || game.SALEPER == null)}"
+										id="dc">
+												<div class="dc_rate" th:text="${game.SALEPER}">할인율</div>
+												<div class="prices">
+													<div class="fir_price" th:text="${game.PRICE}">정가</div>
+													<div class="dc_price" th:text="${game.SALEPRICE}">할인가</div>
+												</div>
+										</div>
+										
+									</div>
+									
+								</div>
+								
+							</div>
+							<!-- Ps Only end-->
+							
+							
+							
+							<!-- Switch Only -->
+							<div th:if="${game.SITEAVAILABILITY eq 'Switch'}" class="container">
+							
+								<div class="basic">
+									<!-- 이미지 url 넣기 -->
+									<div id="img_tb" th:style="'background-image:url('+ ${game.IMGDATA} +');'"></div>
+									
+									<div id="text_tb">
+										<div class="title_tb" th:text="${game.TITLE}" data-original-text="" >게임 타이틀</div>
+										<div class="genre_tb" data-original-text=""
+										th:text="${gameService.getConsoleGenreToString(game.TITLE)}">게임 장르</div>
+									</div>
+									
+								</div>
+								
+								<div class="additional">
+									<!-- -->
+									<div class="site_logos">
+										<img src="imgs/other_logo/normal/Nintendo.png">
+									</div>
+									
+									<div class="price_info">
+										
+										<!-- 변동 있을 시 바꾸기 -->
+										<!-- 10.03기준  = 'X' -->
+										<!-- 할인 x --><!-- 크롤링시 할인율이 없을 때 price에 값이 있는지, sale price에 값이 있는지에 따라 고치기 -->
+										<div th:if="${game.SALEPER.equals('X') || game.SALEPER == null}" 
+										id="no_dc" th:text="${game.SALEPRICE}">
+												정가
+										</div>
+										
+										<!-- 할인 o -->
+										<div th:if="${!(game.SALEPER.equals('X') || game.SALEPER == null)}"
+										id="dc">
+												<div class="dc_rate" th:text="${game.SALEPER}">할인율</div>
+												<div class="prices">
+													<div class="fir_price" th:text="${game.PRICE}">정가</div>
+													<div class="dc_price" th:text="${game.SALEPRICE}">할인가</div>
+												</div>
+										</div>
+										
+									</div>
+									
+								</div>
+								
+							</div>
+							<!-- Switch Only end-->
+							
+							
+							
+						</a>
+					</td>
+					
+				</tr>
+			</table>
+			
+			
+			<!-- 페이징 -->
+			<div id="pagination" th:if="${gamePage.totalElements != 0}">
+				
+				<ul>
+					
+					<li th:if="${currentPage > 1}" class="fir_btn">
+			            <a th:href="@{/search(page=1, search=${searchKeyword})}">
+			            	<<
+			           	</a>
+			        </li>
+					
+			        <li th:if="${startPage >= 10}" class="pv_btn">
+			            <a th:href="@{/search(page=${startPage - 1}, search=${searchKeyword})}"
+			            th:classappend="${startPage > 1} ? '' : 'disabled'">
+			            	이전
+			           	</a>
+			        </li>
+			        
+			        <li th:each="pageNum : ${#numbers.sequence(startPage, endPage)}" class="page_btn">
+			            <a th:href="@{/search(page=${pageNum}, search=${searchKeyword})}"
+			               th:classappend="${pageNum == currentPage} ? 'current' : ''"
+			               th:text="${pageNum}">
+			               ${pageNum}
+			            </a>
+			        </li>
+			        
+			        <li th:if="${endPage < totalPage}" class="next_btn">
+			            <a th:href="@{/search(page=${endPage + 1}, search=${searchKeyword})}"
+			            th:classappend="${endPage < totalPage} ? '' : 'disabled'">
+			            	다음
+			            </a>
+			        </li>
+			        
+			        <li th:if="${currentPage < totalPage}" class="last_btn">
+			            <a th:href="@{/search(page=${totalPage}, search=${searchKeyword})}">
+			            >>
+			           	</a>
+			        </li>
+			        
+			    </ul>
+							
+			</div>
+			
+			<!-- 페이징 end -->
+			
+			
+		</div>
+		
+	</body>
+</html>

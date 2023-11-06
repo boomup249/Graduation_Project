@@ -25,6 +25,8 @@ import com.yuhan.loco.game.PcDB;
 import com.yuhan.loco.game.PcRepository;
 import com.yuhan.loco.game.genre.ConsoleGenreRepository;
 import com.yuhan.loco.game.genre.PcGenreRepository;
+import com.yuhan.loco.search.GameSearchDB;
+import com.yuhan.loco.search.GameSearchRepository;
 
 import ch.qos.logback.core.recovery.ResilientSyslogOutputStream;
 
@@ -36,17 +38,20 @@ public class GameService {
     private final PcGenreRepository pcGenreRepository;
     private final ConsoleGenreRepository consoleGenreRepository;
     private final CrawlingTimeRepository cTimeRepository;
+    private final GameSearchRepository gamesearchRepository;
 
     public GameService(PcRepository pcRepository,
     		ConsoleRepository consoleRepository,
     		PcGenreRepository pcGenreRepository,
     		ConsoleGenreRepository consoleGenreRepository,
-    		CrawlingTimeRepository cTimeRepository) {
+    		CrawlingTimeRepository cTimeRepository,
+    		GameSearchRepository gamesearchRepository) {
         this.pcRepository = pcRepository;
         this.consoleRepository = consoleRepository;
         this.pcGenreRepository = pcGenreRepository;
         this.consoleGenreRepository = consoleGenreRepository;
         this.cTimeRepository = cTimeRepository;
+        this.gamesearchRepository = gamesearchRepository;
     }
     
     //함수
@@ -1002,9 +1007,12 @@ public class GameService {
         return gameDTO;
     }
     
-    	//dto 방식 사용때 활용 end
-    //
-    /*dto 변환 or dto 받아오기 end*/
-    
+    public Page<GameSearchDB> getSearchPageByFilter(String searchKeyword, int page){
+    	//한 페이지에 보일 데이터 수
+    	int size = 20;
+    	Pageable pageable = PageRequest.of(page, size);
+    	Page<GameSearchDB> normalPage = gamesearchRepository.findByTITLE(searchKeyword, pageable);
+        return normalPage;
+		}
     
 }

@@ -6,6 +6,8 @@ VIEW `research_view` AS
     SELECT 
         `gamedata_ps`.`NUM` AS `NUM`,
         `gamedata_ps`.`TITLE` AS `TITLE`,
+        `gamedata_ps`.`PRICE` AS `PRICE`,
+        `gamedata_ps`.`SALEPER` AS `SALEPER`,
         `gamedata_ps`.`SALEPRICE` AS `SALEPRICE`,
         `gamedata_ps`.`IMGDATA` AS `IMGDATA`,
         (CASE
@@ -20,6 +22,8 @@ VIEW `research_view` AS
             FROM
                 `gamedata_ps`) + `gamedata_switch`.`NUM`) AS `NUM`,
         `gamedata_switch`.`TITLE` AS `TITLE`,
+        `gamedata_switch`.`PRICE` AS `PRICE`,
+        `gamedata_switch`.`SALEPER` AS `SALEPER`,
         `gamedata_switch`.`SALEPRICE` AS `SALEPRICE`,
         `gamedata_switch`.`IMGDATA` AS `IMGDATA`,
         (CASE
@@ -29,8 +33,10 @@ VIEW `research_view` AS
     FROM
         `gamedata_switch` 
     UNION SELECT 
-        `gamedata_steam`.`NUM` AS `NUM`,
+        CONCAT(`gamedata_steam`.`NUM`, '_') AS `NUM`,
         `gamedata_steam`.`TITLE` AS `TITLE`,
+        `gamedata_steam`.`PRICE` AS `PRICE`,
+        `gamedata_steam`.`SALEPER` AS `SALEPER`,
         `gamedata_steam`.`SALEPRICE` AS `SALEPRICE`,
         `gamedata_steam`.`IMGDATA` AS `IMGDATA`,
         (CASE
@@ -40,8 +46,10 @@ VIEW `research_view` AS
     FROM
         `gamedata_steam` 
     UNION SELECT 
-        `gamedata_epic`.`NUM` AS `NUM`,
+        CONCAT('_', `gamedata_epic`.`NUM`) AS `NUM`,
         `gamedata_epic`.`TITLE` AS `TITLE`,
+        `gamedata_epic`.`PRICE` AS `PRICE`,
+        `gamedata_epic`.`SALEPER` AS `SALEPER`,
         `gamedata_epic`.`SALEPRICE` AS `SALEPRICE`,
         `gamedata_epic`.`IMGDATA` AS `IMGDATA`,
         (CASE

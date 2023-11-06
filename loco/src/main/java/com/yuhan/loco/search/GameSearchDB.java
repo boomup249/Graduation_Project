@@ -9,7 +9,9 @@ import jakarta.persistence.Table;
 public class GameSearchDB {
 	private String NUM;
 	private String TITLE;
+	private String PRICE;
 	private String SALEPRICE;
+	private String SALEPER;
 	@Id
 	private String IMGDATA;
 	private String SITEAVAILABILITY;
@@ -43,9 +45,23 @@ public class GameSearchDB {
 	public void setSITEAVAILABILITY(String sITEAVAILABILITY) {
 		SITEAVAILABILITY = sITEAVAILABILITY;
 	}
+	
+	public String getPRICE() {
+		return PRICE;
+	}
+	public void setPRICE(String pRICE) {
+		PRICE = pRICE;
+	}
+	public String getSALEPER() {
+		return SALEPER;
+	}
+	public void setSALEPER(String sALEPER) {
+		SALEPER = sALEPER;
+	}
 	@Override
 	public String toString() {
-		return "GameSearchDB [NUM=" + NUM + ", TITLE=" + TITLE + ", SALEPRICE=" + SALEPRICE + ", IMGDATA=" + IMGDATA
-				+ ", SITEAVAILABILITY=" + SITEAVAILABILITY + "]";
+		return "GameSearchDB [NUM=" + NUM + ", TITLE=" + TITLE + ", PRICE=" + PRICE + ", SALEPRICE=" + SALEPRICE
+				+ ", SALEPER=" + SALEPER + ", IMGDATA=" + IMGDATA + ", SITEAVAILABILITY=" + SITEAVAILABILITY + "]";
 	}
+	
 }

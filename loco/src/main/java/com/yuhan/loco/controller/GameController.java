@@ -17,6 +17,7 @@ import com.yuhan.loco.game.service.GameService;
 import com.yuhan.loco.game.service.GameThService;
 import com.yuhan.loco.prefer.PreferDB;
 import com.yuhan.loco.prefer.PreferService;
+import com.yuhan.loco.search.GameSearchDB;
 import com.yuhan.loco.user.UserDB;
 import com.yuhan.loco.user.UserService;
 
@@ -260,5 +261,43 @@ public class GameController {
         return "/game/ConsoleDetail";
 	}
     
+    @GetMapping("/search")
+    public String search(Model model,
+    		@RequestParam("search") String searchKeyword,
+			@RequestParam(value = "page", defaultValue = "1") int page) {
+    	
+		//크롤링 시간 가져오기(string)
+		String cTime = gameService.getCrawlingTime();
+		
+		//페이징용 page, pageable은 0부터 시작함 -> -1로 가공해주기, html에서도 가공 필요
+		page -= 1;
+		String Search = ".*" + searchKeyword + ".*";
+		//페이징 리스트 받아오기
+		Page<GameSearchDB> paging = gameService.getSearchPageByFilter(Search, page);
+		System.out.println(paging.getTotalElements());
+					
+		//페이지네이션 정보 가공: 시작 페이지 번호, 현재 페이지 번호, 끝 페이지 번호
+		int currentPage = page + 1; //현재 페이지 번호
+		int calcEnd = (int)(Math.ceil(currentPage / 10.0) * 10); //현재 페이지를 10으로 나눈 후 올리고 10을 곱하면 끝번호가 나옴(ex. 3-> 0.3 - 1 - 10, 23-> 2.3 - 3 - 30)
+		int startPage = calcEnd - 9; //시작 페이지 번호
+					
+		//끝 페이지 번호 확정
+		int endPage = Math.min(calcEnd, paging.getTotalPages());
+		
+		//페이징 객체 model에 넣기
+		model.addAttribute("gamePage", paging);
+		model.addAttribute("startPage", startPage);
+		model.addAttribute("endPage", endPage);
+		model.addAttribute("currentPage", currentPage);
+		model.addAttribute("totalPage", paging.getTotalPages());
+		model.addAttribute("gameService", thService);
+		model.addAttribute("searchKeyword", searchKeyword);
+				
+		//크롤링 시간
+		model.addAttribute("cTime", cTime);
+				
+		
+		return "/game/search";
+    }
  
 }

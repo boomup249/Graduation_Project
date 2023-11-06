@@ -4,11 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.Builder;
-@Builder
+
 @Entity
 @Table(name = "bbs_comment")
 public class CommentDB {

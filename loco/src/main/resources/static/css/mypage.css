@@ -1,3 +1,8 @@
+@charset "UTF-8";
+@import "font.css";
+*{
+	font-family: 'GmarketSansMedium';
+}
 body {
     background-color: #222831;
     display: flex;
@@ -49,7 +54,8 @@ body {
 	color: white;
 	position: absolute;
 	top: 35%;
-	left : 38%;
+	left : 50%;
+	transform: translateX(-50%);
 }
 .left_email{
 	text-align: center;
@@ -58,7 +64,8 @@ body {
 	color: white;
 	position: absolute;
 	top: 40%;
-	left : 28%;
+	left : 50%;
+	transform: translateX(-50%);
 }
 
 /*왼쪽 계정버튼*/

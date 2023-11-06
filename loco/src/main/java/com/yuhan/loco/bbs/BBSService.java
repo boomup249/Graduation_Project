@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import com.yuhan.loco.bbs.CommentDB;
 
 
 import jakarta.transaction.Transactional;

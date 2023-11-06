@@ -26,7 +26,6 @@
     	border-bottom: 1px solid black;
     	background-color : white;
     	/* 원하는 너비로 지정 (예: 150px) */
-    	width : 100%;
     	
 		}
 	
@@ -40,6 +39,7 @@
     		margin : 0 1%;
 		}
 		.content-1{
+			width: 100%;
 			font-size: 16px; /* 텍스트 크기 조절 (예: 16px) */
     		font-weight: lighter; /* 텍스트 굵기 조절 (예: 굵게 표시) */
     		height : 90%;
@@ -57,12 +57,10 @@
 			float: right;
 		}
 		.comment1{
-			width:30%;
-			height:20%;
+			width: 20%;
 		}
 		.comment2{
-			width:70%;
-			height:20%;
+			width: 80%;
 		}
 
 		
@@ -74,7 +72,7 @@
     <table class="post-table">
         <thead>
             <tr>
-                <th>
+                <th colspan="2">
 					제목 <span class="title-1" th:object="${postDTO}" th:text="${postDTO.getTitle()}"></span>
                 	<span class="cell_head">작성자 <span id="writer" th:object="${postDTO}" th:text="${postDTO.getWriter()}"></span></span>
                 </th>
@@ -82,10 +80,10 @@
         </thead>
         <tbody>
             <tr>
-            	<th class="content" style="height:60%;">내용 <div class="content-1" th:object="${postDTO}" th:text="${postDTO.getContent()}"></div></th>
+            	<th class="content">내용 <div class="content-1" th:object="${postDTO}" th:text="${postDTO.getContent()}" aria-colspan="2"></div></th>
             </tr>
             <tr>
-            	<th class="comment-form" style="height:5%;">
+            	<th class="comment-form" style="height:5%;" colspan="2">
 					<input type="hidden" id="postsId" th:object="${postDTO}" th:value="${postDTO.getBbs_id()}">
 					<div class="item2">
 						<input type="text" id="comment" class="comment-input"/>
@@ -94,8 +92,8 @@
 				</th>
             </tr>
             <tr th:each = "comment : ${comments}">
-            	<td class="comment1"> <span th:text="${comment.writer}" style="font-weight: lighter;"></span></td>
-            	<td class="comment2"> <span th:text="${comment.comment}" style="font-weight: lighter;"></span></td>
+            	<td class="comment1"> <span th:text="${comment.writer}" id = "comm1_span"></span></td>
+            	<td class="comment2"> <span th:text="${comment.comment}" id = "comm2_span"></span></td>
             </tr>
         </tbody>
     </table>
