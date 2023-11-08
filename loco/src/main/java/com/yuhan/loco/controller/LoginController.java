@@ -25,7 +25,10 @@ public class LoginController {
     }
 
 	//연결
-
+	@GetMapping("/")
+	public String index() {
+		return "/main";
+	}
 	//login
 	@GetMapping("/login") //로그인 페이지
 	public String loginPage(UserDTO userDTO, @RequestParam(value="ad", defaultValue = "") String email, Model model) {
