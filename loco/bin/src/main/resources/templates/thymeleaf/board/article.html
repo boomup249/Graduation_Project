@@ -1,0 +1,103 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>게시판</title>
+    
+    <link rel="stylesheet" href="css/font.css"> <!-- 폰트 css -->
+    <link rel="stylesheet" href="css/article.css"> <!-- 작성후페이지 css -->
+    <style>
+		/* 게시판 컨테이너 */
+		.board-container {
+			height : 100%;
+			position : relative;
+    		max-width: 100%;
+		}
+		.post-table{
+			width : 100%;
+			height : 100%;
+			position :relative;
+		}
+		
+		.post-table th{
+		position : relative;
+		font-family: 'GmarketSansMedium';	
+    	padding: 7px;
+    	text-align: left;
+    	border-bottom: 1px solid black;
+    	background-color : white;
+    	/* 원하는 너비로 지정 (예: 150px) */
+    	
+		}
+	
+		.comment-input{
+			width : 95%;
+			height : 60px;
+		}
+		input[type="submit"] {
+    		position: absolute;
+    		top: 10px; /* 원하는 위치의 상단 여백(px) */
+    		margin : 0 1%;
+		}
+		.content-1{
+			width: 100%;
+			font-size: 16px; /* 텍스트 크기 조절 (예: 16px) */
+    		font-weight: lighter; /* 텍스트 굵기 조절 (예: 굵게 표시) */
+    		height : 90%;
+    		margin-top : 1%;
+		}
+		.title-1{
+			font-size: 16px; /* 텍스트 크기 조절 (예: 16px) */
+    		font-weight: lighter; /* 텍스트 굵기 조절 (예: 굵게 표시) */
+		}
+		#writer{
+			font-size: 16px; /* 텍스트 크기 조절 (예: 16px) */
+    		font-weight: lighter; /* 텍스트 굵기 조절 (예: 굵게 표시) */
+		}
+		.cell_head{
+			float: right;
+		}
+		.comment1{
+			width: 20%;
+		}
+		.comment2{
+			width: 80%;
+		}
+
+		
+	</style>
+</head>
+
+<body>
+    <div class="board-container">
+    <table class="post-table">
+        <thead>
+            <tr>
+                <th colspan="2">
+					제목 <span class="title-1" th:object="${postDTO}" th:text="${postDTO.getTitle()}"></span>
+                	<span class="cell_head">작성자 <span id="writer" th:object="${postDTO}" th:text="${postDTO.getWriter()}"></span></span>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+            	<th class="content" colspan="2">내용 <div class="content-1" th:object="${postDTO}" th:text="${postDTO.getContent()}"></div></th>
+            </tr>
+            <tr>
+            	<th class="comment-form" style="height:5%;" colspan="2">
+					<input type="hidden" id="postsId" th:object="${postDTO}" th:value="${postDTO.getBbs_id()}">
+					<div class="item2">
+						<input type="text" id="comment" class="comment-input"/>
+						<button type="button" id="comm_save" class="comment-submit">확인</button>
+					</div>
+				</th>
+            </tr>
+            <tr th:each = "comment : ${comments}">
+            	<td class="comment1"> <span th:text="${comment.writer}" id = "comm1_span"></span></td>
+            	<td class="comment2"> <span th:text="${comment.comment}" id = "comm2_span"></span></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<script src="/js/bbscomment.js"></script>
+</body>
+</html>

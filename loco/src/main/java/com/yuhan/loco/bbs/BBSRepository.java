@@ -15,7 +15,7 @@ import com.yuhan.loco.post.PostDB;
 
 
 @Repository
-public interface BBSRepository extends JpaRepository<BBSDB, String> {
+public interface BBSRepository extends JpaRepository<BBSDB, Long> {
     // 게시물 제목으로 게시물을 검색하는 메서드 추가
     /*List<BBSDTO> findByTitle(String title);
     List<BBSDTO> findByTitleContaining(String keyword);
@@ -25,7 +25,6 @@ public interface BBSRepository extends JpaRepository<BBSDB, String> {
     */
 	List<BBSDB> findAll();
 	Page<BBSDB> findAll(Pageable pageable);
-	BBSDB findById(Long id);
 	@Modifying
     @Query(value = "update bbs BBS set BBS.views = BBS.views + 1 where BBS.id = :id", nativeQuery=true)
     int updateView(@Param("id") Long id);

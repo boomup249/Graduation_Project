@@ -42,9 +42,6 @@ public class BBSService {
 	   this.Commentrepository.save(commdb);
    }
    
-   public BBSDB getbyID(Long id) {
-	   return BBSrepository.findById(id);
-   }
    public Page<BBSDB> search(int page, Pageable pageable){
 	   return this.BBSrepository.findAll(pageable);
    }

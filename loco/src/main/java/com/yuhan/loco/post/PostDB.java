@@ -24,6 +24,7 @@ import jakarta.persistence.Table;
 public class PostDB {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "ID")
 	private Long id;
 	@Column(name = "BBS_ID")
 	private Long bbs;
@@ -31,9 +32,6 @@ public class PostDB {
 	private String title;
     private String writer; // 작성자
     private String content;
-    @OneToMany(mappedBy = "id", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-    @OrderBy("id asc")
-    private List<CommentDB> commentDB;
 
 
 	public Long getId() {
@@ -65,12 +63,6 @@ public class PostDB {
 	}
 	public void setContent(String content) {
 		this.content = content;
-	}
-	public List<CommentDB> getCommentDB() {
-		return commentDB;
-	}
-	public void setCommentDB(List<CommentDB> commentDB) {
-		this.commentDB = commentDB;
 	}
 	public Long getBbs_id() {
 		return bbs;

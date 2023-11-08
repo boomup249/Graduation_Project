@@ -29,8 +29,9 @@ function PreferChange(Mapping){
 	xhr.send(JSON.stringify(data));
     setTimeout(function () {
     location.reload();
-    }, 100);
+    }, 1000);
 };ch_prefer
+
 
 //dislike 체크박스 비활성화
 var dislike_checkboxes = document.querySelectorAll('#checktableDislike_td input[type="checkbox"]');
@@ -47,6 +48,7 @@ for(var i=0; i < value.length; i++){//
       }
    }
 }
+
 
 //like 체크박스 비활성화
 var like_checkboxes = document.querySelectorAll('#checktableLike_td input[type="checkbox"]');
