@@ -10,12 +10,13 @@ import jakarta.transaction.Transactional;
 @Transactional
 public class PostService {
    private final PostRepository Postrepository;
-   PostDB post = new PostDB();
+
    public PostService(PostRepository Postrepository) {
         this.Postrepository = Postrepository;
     }
 
    public PostDB create(Long bbs_id, String category, String title, String writer, String content) {
+	  PostDB post = new PostDB();
 	  post.setBbs_id(bbs_id);
       post.setCategory(category);
       post.setTitle(title);

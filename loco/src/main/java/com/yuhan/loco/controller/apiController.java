@@ -284,6 +284,7 @@ public class apiController {
 		String comment = (String)data.get("comment");
 		
 		bbsService.commentcreate(id, comment, userId);
+		bbsService.commentup(id);
 		
 		return ResponseEntity.ok().build();
  	}

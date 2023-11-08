@@ -48,7 +48,7 @@ public class BBSController {
 			@RequestParam(value = "orderby", defaultValue = "id") String order, PostDB postDB)
 	{
 		pages -= 1;
-		Pageable pageable = PageRequest.of(pages, 5);
+		Pageable pageable = PageRequest.of(pages, 15);
 		Page<BBSDB> bbs = this.bbsService.search(pages, pageable);
 		if(page == "bbs") {bbs = this.bbsService.findbbs(pages, pageable);}
 		else if(page == "notice") {bbs = this.bbsService.findnotice(pages, pageable);}
@@ -89,7 +89,7 @@ public class BBSController {
 			@RequestParam(value = "pages", defaultValue = "1") int pages,
 			@RequestParam(value = "orderby", defaultValue = "date") String order, PostDB postDB) {
 		pages -= 1;
-		Pageable pageable = PageRequest.of(pages, 5, Sort.by("date").descending());
+		Pageable pageable = PageRequest.of(pages, 15, Sort.by("date").descending());
 		Page<BBSDB> bbs = this.bbsService.search(pages, pageable);
 		if(page == "bbs") {bbs = this.bbsService.findbbs(pages, pageable);}
 		else if(page == "notice") {bbs = this.bbsService.findnotice(pages, pageable);}
@@ -112,7 +112,7 @@ public class BBSController {
 			@RequestParam(value = "pages", defaultValue = "1") int pages,
 			@RequestParam(value = "orderby", defaultValue = "views") String order, PostDB postDB) {
 		pages -= 1;
-		Pageable pageable = PageRequest.of(pages, 5, Sort.by("views").descending());
+		Pageable pageable = PageRequest.of(pages, 15, Sort.by("views").descending());
 		Page<BBSDB> bbs = this.bbsService.search(pages, pageable);
 		if(page == "bbs") {bbs = this.bbsService.findbbs(pages, pageable);}
 		else if(page == "notice") {bbs = this.bbsService.findnotice(pages, pageable);}

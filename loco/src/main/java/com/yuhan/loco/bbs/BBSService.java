@@ -19,12 +19,13 @@ import jakarta.transaction.Transactional;
 public class BBSService {
    private final BBSRepository BBSrepository;
    private final CommentRepository Commentrepository;
-   BBSDB bbs = new BBSDB();
+
    public BBSService(BBSRepository BBSrepository, CommentRepository Commentrepository) {
         this.BBSrepository = BBSrepository;
         this.Commentrepository = Commentrepository;
     }
    public BBSDB create(String title, String writer, String category, String date, Long views, Long comment) {
+	   BBSDB bbs = new BBSDB();
 	   bbs.setTitle(title);
 	   bbs.setWriter(writer);
 	   bbs.setCategory(category);
@@ -50,6 +51,9 @@ public class BBSService {
    }*/
    public int viewerup(Long id) {
 	   return BBSrepository.updateView(id);
+   }
+   public int commentup(Long id) {
+	   return Commentrepository.updateComment(id);
    }
    public Page<BBSDB> findbytitle(String title, int page){
 	   Pageable pageable = PageRequest.of(page, 5);
@@ -81,4 +85,5 @@ public class BBSService {
    public List<CommentDB> findCommentDB(Long id){
 	   return this.Commentrepository.findByPost(id);
    }
+   
 }
