@@ -2,68 +2,114 @@ var ch_prefer = document.getElementById("ch_prefer");
 var ch_prefer1 = document.getElementById("ch_prefer1");
 
 
-function PreferChange(Mapping){
-	var checkboxes = document.querySelectorAll('input[type="checkbox"]');
-	var values = [];
-	for (var i = 0; i < checkboxes.length; i++) {
-	    if (checkboxes[i].checked) {
-	        values.push(checkboxes[i].value);
-	    }
+function PreferChangeDisLike(Mapping){
+    var checkboxes = document.querySelectorAll('#checktableDislike_td input[type="checkbox"]');
+    var values = [];
+    for (var i = 0; i < checkboxes.length; i++) {
+        if (checkboxes[i].checked) {
+            values.push(checkboxes[i].value);
+        }
+    }
+
+    if (values.length <= 5) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', Mapping, true);
+        xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+
+        var data = {
+            genre: values
+        };
+
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                console.log(data);
+            } else {
+                console.log('저장 실패');
+            }
+        };
+
+        xhr.send(JSON.stringify(data));
+        setTimeout(function () {
+            location.reload();
+        }, 1000);
+    } else if(values.length > 5){
+    	values.checked = false;
+        alert("5개 이상 선택할 수 없습니다.");
 	}
-	var xhr = new XMLHttpRequest();
-	xhr.open('POST', Mapping, true);
-	xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
-	
-	var data = {
-	    genre: values
-	};
-	
-	xhr.onload = function () {
-	    if (xhr.status === 200) {
-	        console.log(data);
-	    } else {
-	        console.log('저장 실패');
-	    }
-	};
-	
-	xhr.send(JSON.stringify(data));
-    setTimeout(function () {
-    location.reload();
-    }, 1000);
-};ch_prefer
+}
+
+function PreferChangeLike(Mapping){
+    var checkboxes = document.querySelectorAll('#checktablelike_td input[type="checkbox"]');
+    var values = [];
+    for (var i = 0; i < checkboxes.length; i++) {
+        if (checkboxes[i].checked) {
+            values.push(checkboxes[i].value);
+        }
+    }
+
+    if (values.length <= 5) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', Mapping, true);
+        xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+
+        var data = {
+            genre: values
+        };
+
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                console.log(data);
+            } else {
+                console.log('저장 실패');
+            }
+        };
+
+        xhr.send(JSON.stringify(data));
+        setTimeout(function () {
+            location.reload();
+        }, 1000);
+    } else if(values.length > 5){
+    	values.checked = false;
+        alert("5개 이상 선택할 수 없습니다.");
+	}
+}
+
+
+
 
 
 //dislike 체크박스 비활성화
 var dislike_checkboxes = document.querySelectorAll('#checktableDislike_td input[type="checkbox"]');
-//이전 폼에서 like된 체크박스
-var select_ck = document.getElementsByName('Love');
-var sc_value = select_ck[0].value; //value
+var like_checkboxes = document.querySelectorAll('#checktableLike_td input[type="checkbox"]');
 
-var value = sc_value.split(',');//,기준으로 나누어 배열에 넣기
+var select_ck_love = document.getElementsByName('Love');
+var sc_value_love = select_ck_love[0].value;
+var value_love = sc_value_love.split(',');
 
-for(var i=0; i < value.length; i++){//
-   for(var j=0; j < dislike_checkboxes.length; j++){//
-      if(value[i] == dislike_checkboxes[j].value){
-         dislike_checkboxes[j].disabled = true; // 선택된 체크박스를 비활성화
-      }
-   }
+var select_ck_dislike = document.getElementsByName('dislike');
+var sc_value_dislike = select_ck_dislike[0].value;
+var value_dislike = sc_value_dislike.split(',');
+
+var likecount = 0;
+var dislikecount = 0;
+var maxselect = 5;
+
+for (var i = 0; i < value_love.length; i++) {
+    for (var j = 0; j < dislike_checkboxes.length; j++) {
+        if (value_love[i] == dislike_checkboxes[j].value) {
+			like_checkboxes[j].checked = true;
+            dislike_checkboxes[j].disabled = true;
+        }
+    }
 }
 
-
-//like 체크박스 비활성화
-var like_checkboxes = document.querySelectorAll('#checktableLike_td input[type="checkbox"]');
-//이전 폼에서 like된 체크박스
-var select_ck = document.getElementsByName('dislike');
-var sc_value = select_ck[0].value; //value
-
-var value = sc_value.split(',');//,기준으로 나누어 배열에 넣기
-
-for(var i=0; i < value.length; i++){//
-   for(var j=0; j < like_checkboxes.length; j++){//
-      if(value[i] == like_checkboxes[j].value){
-         like_checkboxes[j].disabled = true; // 선택된 체크박스를 비활성화
-      }
-   }
+for (var i = 0; i < value_dislike.length; i++) {
+    for (var j = 0; j < like_checkboxes.length; j++) {
+        if (value_dislike[i] == like_checkboxes[j].value) {
+			dislike_checkboxes[j].checked = true;
+            like_checkboxes[j].disabled = true;
+        }
+    }
 }
 
 /* 비밀번호 변경 */
@@ -80,49 +126,49 @@ var new_ck = document.getElementById("new_ck");
 
 /* 기존 비밀번호 입력 input 띄우기 */
 pwd_btn.addEventListener("click",function(){
-	input_pwd.style.visibility = "visible";
-	pwd.style.visibility = "hidden";
+   input_pwd.style.visibility = "visible";
+   pwd.style.visibility = "hidden";
 });
 /* 기존 비밀번호 체크 */
 check_pwd.addEventListener("click", function(){
-	var pwdStr = current_pwd.value;
-	
-	const user = {pwd : pwdStr}
-	
-	fetch("/api/checkPwd", {
-		method: "POST",
-		body: JSON.stringify(user),
-		headers:{
-			"Content-Type": "application/json"
-		}
-	})
-	.then((response) => response.json())
-	.then((json) => {
-		if (json !== null){
-			console.log(json);
-		} else {
-			alert("서버오류")
-		}
-		if(json === true){
-			input_pwd.style.visibility = "hidden";
-			edit_pwd.style.visibility = "visible";
-			pwd_btn.style.visibility = "hidden";
-			ch_pwd_edit.style.visibility = "visible";
-			
-		}else{
-			span_ck.textContent = "비밀번호 불일치";
-			span_ck.style.color = "red";
-		}
-	})
-	
+   var pwdStr = current_pwd.value;
+   
+   const user = {pwd : pwdStr}
+   
+   fetch("/api/checkPwd", {
+      method: "POST",
+      body: JSON.stringify(user),
+      headers:{
+         "Content-Type": "application/json"
+      }
+   })
+   .then((response) => response.json())
+   .then((json) => {
+      if (json !== null){
+         console.log(json);
+      } else {
+         alert("서버오류")
+      }
+      if(json === true){
+         input_pwd.style.visibility = "hidden";
+         edit_pwd.style.visibility = "visible";
+         pwd_btn.style.visibility = "hidden";
+         ch_pwd_edit.style.visibility = "visible";
+         
+      }else{
+         span_ck.textContent = "비밀번호 불일치";
+         span_ck.style.color = "red";
+      }
+   })
+   
 });
 
 //newpwd입력
 
 newpwd_re.addEventListener("input", function(event) {
-	var newpwd_str = newpwd.value;
-	var newpwdRe_str = newpwd_re.value;
-	console.log(newpwd_str,newpwdRe_str);
+   var newpwd_str = newpwd.value;
+   var newpwdRe_str = newpwd_re.value;
+   console.log(newpwd_str,newpwdRe_str);
     if (newpwd_str === newpwdRe_str) {
         new_ck.textContent = "비밀번호 일치";
         new_ck.style.color = "blue";
@@ -136,8 +182,8 @@ newpwd_re.addEventListener("input", function(event) {
 
 //변경버튼
 ch_pwd_edit.addEventListener("click",function(){
-	var newpwdRe_str = newpwd_re.value;
-	var xhr = new XMLHttpRequest();
+   var newpwdRe_str = newpwd_re.value;
+   var xhr = new XMLHttpRequest();
     xhr.open('POST', '/api/UpdatekPwd', true);
     xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
 
@@ -162,9 +208,49 @@ ch_pwd_edit.addEventListener("click",function(){
 
 /* 장르 */
 ch_prefer.addEventListener("click", function(){
-	PreferChange('/api/genreLike');
+   PreferChangeLike('/api/genreLike');
 });
 
 ch_prefer1.addEventListener("click", function(){
-	PreferChange('/api/genreHate');
+   PreferChangeDisLike('/api/genreHate');
 });
+
+//dislike
+var checkboxes = document.querySelectorAll('#checktableDislike_td input[type="checkbox"]');
+checkboxes.forEach(function (checkbox) {
+    checkbox.addEventListener('change', function () {
+        checkCheckboxCount();
+    });
+});
+
+// 함수에서 체크박스 개수를 확인하고 처리
+function checkCheckboxCount() {
+    var checkboxes = document.querySelectorAll('#checktableDislike_td input[type="checkbox"]:checked');
+    if (checkboxes.length > 5) {
+        checkboxes.forEach(function (checkbox) {
+            checkbox.checked = false;
+        });
+        alert("5개 이상 선택할 수 없습니다.");
+        location.reload();
+    }
+}
+
+//like
+var checkboxes_like = document.querySelectorAll('#checktableLike_td input[type="checkbox"]');
+checkboxes_like.forEach(function (checkboxes_like) {
+    checkboxes_like.addEventListener('change', function () {
+        checkCheckboxCount_like();
+    });
+});
+
+// 함수에서 체크박스 개수를 확인하고 처리
+function checkCheckboxCount_like() {
+    var checkboxes = document.querySelectorAll('#checktableLike_td input[type="checkbox"]:checked');
+    if (checkboxes.length > 5) {
+        checkboxes.forEach(function (checkbox) {
+            checkbox.checked = false;
+        });
+        alert("5개 이상 선택할 수 없습니다.");
+        location.reload();
+    }
+}

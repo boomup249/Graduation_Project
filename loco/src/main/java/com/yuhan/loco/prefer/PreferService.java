@@ -38,7 +38,6 @@ public class PreferService {
 	
 	public void updateGenre(PreferDTO preferDTO, PreferDB preferdb) {
 		preferdb.setLove(preferDTO.getUserLike());
-		//System.out.println(preferDTO.getUserLike());
 		this.preferRepository.save(preferdb);
 	}
 	

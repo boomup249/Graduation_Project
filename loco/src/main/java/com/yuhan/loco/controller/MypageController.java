@@ -79,6 +79,8 @@ public class MypageController {
 	        
 	        PreferDTO preferDTO = new PreferDTO();
 	        preferDTO.setUserLike(preferdb.getLove());
+	        System.out.println("&&&&&&&&&&"+preferDTO.getUserLike()); 
+	        
 
 	        List<PreferDB> userSelect = preferService.getprefer();
 	        String profile_img = profileService.convertByteToBase64(profiledb.getIMG());
