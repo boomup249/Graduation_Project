@@ -7,8 +7,18 @@
 		<link rel="stylesheet" href="css/font.css"> <!-- 폰트 css -->
 		<link rel="stylesheet" href="css/background_image.css"> <!-- b_img css -->
 		
+		<link rel="stylesheet" href="css/main_animation.css"> <!-- 애니메이션 css -->
+		
+		<!-- 외부 js -->
+		<script src="js/emailLoad.js"></script>
+		
 		<style>
 			/*css 속성*/
+			
+			body { background-color: #fff;
+					margin: 0; padding: 0;
+					overflow-y: hidden;}
+			
 			/*logo*/
 			#logo {z-index: 3; /* logo가 b_img보다 위에 배치되어야 함*/
 					position: absolute;
@@ -82,9 +92,10 @@
 					display: flex;
 					justify-content: center;
 					align-items: center; }
+					
+			/*visibility*/
+	        .hidden { display: none; }
 			
-			body { background-color: #fff;
-					margin: 0; padding: 0;}
 		</style>
 	</head>
 	
@@ -98,7 +109,7 @@
 			</div>
 		</div>
 		
-		<div id="content">
+		<div id="content" class="hidden">
 			<div class="item1">
 				<img src="imgs/logo2.png" width="300px" height="125px"/>
 			</div>
