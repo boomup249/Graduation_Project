@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
   //인트로 애니메이션 실행
   logo.addEventListener("animationend", function() { //로고 애니메이션 끝나면 실행
 	  intro.classList.remove("hidden");
-	  intro.style.animation = "intro_animation 1s ease-in"; //한번만 실행, 인트로 메시지 opacity 조절
+	  intro.style.animation = "intro_animation 2s ease-in"; //한번만 실행, 인트로 메시지 opacity 조절
   });
   
   //버튼 애니메이션 실행
