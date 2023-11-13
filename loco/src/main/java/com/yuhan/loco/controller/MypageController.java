@@ -67,11 +67,12 @@ public class MypageController {
 	
 	@RequestMapping("/profile")
 	public String profile(Model model, HttpServletRequest req) {
-	    String userId;
+	    String getuserId, userId;
 
 	    if(req.getSession(false) != null) { //로그인?
 	        HttpSession session = req.getSession(false);
-	        userId = (String)session.getAttribute("user");
+	        getuserId = (String)session.getAttribute("user");
+	        userId = userService.findUserId(getuserId);
 
 	        UserDB userdb = userService.findUser(userId);
 	        PreferDB preferdb = preferService.findUser(userId);
@@ -100,11 +101,12 @@ public class MypageController {
 	
 	@GetMapping("/mypage")
     public String Mypage(Model model, HttpServletRequest req) {
-        String userId;
+        String getuserId, userId;
 
         if(req.getSession(false) != null) { //로그인?
             HttpSession session = req.getSession(false);
-            userId = (String)session.getAttribute("user");
+            getuserId = (String)session.getAttribute("user");
+            userId = userService.findUserId(getuserId);
             
             UserDB userdb = userService.findUser(userId);
             PreferDB preferdb = preferService.findUser(userId);

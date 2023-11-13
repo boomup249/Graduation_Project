@@ -132,11 +132,12 @@ public class BBSController {
 	}
 	@GetMapping("/bbs_write")
 	public String write(Model model, HttpServletRequest req, BBSDB bbsDB, PostDB postDB) {
-		String userId;
+		String getuserId, userId;
 		HttpSession session = req.getSession(false);
 
 		if(session != null) {
-			userId = (String)session.getAttribute("user");
+			getuserId = (String)session.getAttribute("user");
+			userId = userService.findUserId(getuserId);
 			UserDB userdb = userService.findUser(userId);
 			model.addAttribute("userDTO", userdb);
 			model.addAttribute("postDTO", new PostDB());
@@ -180,9 +181,10 @@ public class BBSController {
 	public String write(PostDTO postDTO, BBSDTO bbsDTO, UserDB userDB, Model model, HttpServletRequest req) {
 		LocalDateTime time = LocalDateTime.now();
 		String timestr = time.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-		String userId, title, category;
+		String getuserId, userId, title, category;
 		HttpSession session = req.getSession(false);
-		userId = (String)session.getAttribute("user");
+		getuserId = (String)session.getAttribute("user");
+		userId = userService.findUserId(getuserId);
 		title = postDTO.getTitle();
 		category = postDTO.getCategory();
 		if(category == "bbs") { //자유 게시판
@@ -220,7 +222,8 @@ public class BBSController {
 	public String show_article(@PathVariable Long id, HttpServletRequest req, Model model, BBSDB bbsDB) {
 		HttpSession session = req.getSession(false);
 		PostDB article = postService.getByID(id);
-		String userId = (String)session.getAttribute("user");
+		String getuserId = (String)session.getAttribute("user");
+		String userId = userService.findUserId(getuserId);
 		UserDB userdb = userService.findUser(userId);
 		model.addAttribute("userDTO", userdb);
 		

@@ -1,0 +1,175 @@
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+		<title>loco</title>
+		
+		<!-- 외부 css -->
+		<link rel="stylesheet" href="css/font.css"> <!-- 폰트 css -->
+		<link rel="stylesheet" href="css/header.css"> <!-- 헤더 css -->
+		<link rel="stylesheet" href="css/background_image.css"> <!-- b_img css -->
+		
+		<link rel="stylesheet" href="css/main_animation.css"> <!-- 애니메이션 css -->
+		
+		<!-- 외부 js -->
+		<script src="js/mainLoad.js"></script>
+		
+		<style>	
+			/*css 속성*/
+			
+			body { background-color: grey;
+					margin: 0; padding: 0;}
+			
+			/*내용*/
+			#content {z-index: 2;
+						position: relative;
+						top: 100px;
+						left: 0px; /*헤더 아래부터*/
+						width: 100%; height: calc(100% - 100px)/*화면 - 헤더*/;
+						/*자식 수직 중앙 정렬*/
+						display: flex;
+						flex-direction: column;
+						justify-content: center;}
+						
+			.item1 p {font-family: 'Cafe24ClassicType-Regular'; /*text*/
+						font-size: 30px;
+						color: white;
+						opacity: 0.6;}
+						
+			.item1 {width: 1500px; height: 100px;
+					position: relative;
+					left: 50%;
+					margin-left: -750px; /*content에 수평 중앙 정렬*/
+					/*자식 중앙정렬*/
+					display: flex;
+					justify-content: center;
+					align-items: center; }
+			
+			.item2 {width: 500px; height: 150px;
+					position: relative;
+					left: 50%;
+					margin-left: -250px;  /*content에 수평 중앙 정렬*/
+					margin-bottom: 30px;
+					/*자식 중앙정렬*/
+					display: flex;
+					justify-content: center;
+					align-items: center;}
+					
+			.item3 {width: 100px; height: 100px;
+					position: relative;
+					left: 50%;
+					margin-left: -50px; /*content에 수평 중앙 정렬*/
+					/*자식 중앙정렬*/
+					display: flex;
+					justify-content: center;
+					align-items: center; }
+			#search-btn{
+	            background-image: url("../imgs/header/search.png");
+	            border: none;
+	            width: 30px;
+	            height: 30px;
+	            background-position: center;
+	            background-repeat: no-repeat;
+	            background-size: cover;
+	              position: absolute;
+	              left: 17%;
+	              top: 26%;
+	         }
+	         
+	         /*visibility*/
+	         .hidden { visibility: hidden; }
+			
+		</style>
+	</head>
+	
+	<body>
+		<!-- 이미지 링크 넣기 -->
+		<div id="b_img"></div><!-- 배경 이미지 불투명도 조절해서 넣기 -->
+		<script src="js/backgroundImage.js"></script>
+		
+		<!-- 헤더 -->
+		<div id="header">
+			<!-- 로고 -->
+			<div class="logo_btn"><a href="/main"><img src="imgs/header/logo.png"/></a></div>
+			<!-- 검색창 -->
+				<form action="/search" method="GET">
+			        <input type="text" name="search" id="search" placeholder="검색어를 입력하세요">
+			        <input type="submit" id="search-btn" value="">
+				</form>
+	        <div id="search_box">
+				<ul id="search_ul"></ul>
+			</div>
+			<script src="js/search.js"></script>
+			
+			<!-- 메뉴 -->
+			<ul>
+				<!-- 콘솔 -->
+				<li>
+					<div class="menu">
+						<a href="/console">CONSOLE</a>
+					</div>
+				</li>
+				
+				<!-- pc -->
+				<li>
+					<div class="menu">
+						<a href="/pc">PC</a>
+					</div>
+				</li>
+				
+				<!-- 게시판 -->
+				<li>
+					<div class="menu">
+						<a href="/bbs">BBS</a>
+					</div>
+				</li>
+				
+				<!-- 신작 -->
+				<li>
+					<div class="menu">
+						<a href="/news">NEWS</a>
+					</div>
+				</li>
+				
+				<!-- 로그인 버튼-->
+				<li th:if="${session.user == null}"> <!-- 세션(user)가 없으면 -->
+					<div class="menu">
+						<a href="/login"><img src="imgs/header/login.png"/></a>
+					</div>
+				</li>
+				
+				<!-- 마이페이지 -->
+				<li th:if="${session.user != null}"> <!-- 세션(user)가 있으면 -->
+					<div class="mypage"></div>
+					<!-- 드롭다운 -->
+					<ul class="dropdown">
+						<li><a href="/profile">내 계정</a></li>
+						<li><a href="/mypage">프로필 설정</a></li>
+						<li><a href="/logout">로그아웃</a></li>
+						
+					</ul>
+				</li>
+			</ul>
+			
+		</div>
+		
+		<!-- 콘텐츠 -->
+		<div id="content">
+			<div class="item1 hidden" id="intro">
+				<p>Everything of the game's information</p>
+			</div>
+			<div class="item2" id="b_logo">
+				<img src="imgs/header/logo.png" width="350px"/>
+			</div>
+			
+			<!-- 이미지 링크 -->
+			<div th:if="${session.user == null}" class="item3 hidden" id="btn_go"><!-- 세션(user)가 없으면 -->
+				<a href="/join"><img src="imgs/main/down.png" width="100px"/></a>
+			</div>
+			
+			<div th:if="${session.user != null}" class="item3 hidden" id="btn_go"><!-- 세션(user)가 있으면(로그인 상태) -->
+				<a href="/console"><img src="imgs/main/down.png" width="100px"/></a>
+			</div>
+		</div>
+		
+	</body>
+</html>

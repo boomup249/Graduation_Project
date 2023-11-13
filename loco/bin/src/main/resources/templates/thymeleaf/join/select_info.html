@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>loco > join</title>
+
+    <!-- head에 jquery 불러옴 -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+            integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+            crossorigin="anonymous"></script>
+
+    <style>
+		/*폰트*/
+			@font-face {
+						    font-family: 'GmarketSansMedium';
+						    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
+						    font-weight: normal;
+						    font-style: normal;
+						}
+
+        #content {margin-top: 200px;}
+        #birth {font-size: 20px; color:black}
+        #gender {margin-top: 150px; font-size: 20px; color:black}
+        #recommend {margin-top: -10px; font-size: 15px; color: #6D6D6D;}
+        #btn {margin-top: 230px; margin-right: 50px}
+        #before {margin: 10px}
+        #after {margin: 10px}
+
+        select {font-size: 15px; margin-top: 20px}
+        input {margin-top: 20px}
+        body { background-color: #B5B5B5;
+            margin: 0; padding: 0;}
+
+        /* 추가 스타일 */
+        #start {
+            width: 200px; /* 달력 크기 조절 */
+            margin: 0 auto; /* 가운데 정렬 */
+            display: block;
+            text-align: center; /* 텍스트 가운데 정렬 */
+            font-size: 16px; /* 텍스트 크기 조절 */
+        }
+        
+        /*error 스타일*/
+        #error a {
+			font-family: 'GmarketSansMedium';
+			font-size: 15pt;
+			color: red;
+		}
+		#error {margin-top: 15px;}
+
+    </style>
+</head>
+
+<body>
+<form action ="#"
+      th:object="${userDTO}"
+      method = "post">
+
+    <!-- (email, id, 비번) 안보이게 넘기기 -->
+    <input type="hidden"
+           th:value="${userDTO.getUserEmail()}"
+           th:field="*{userEmail}"
+           required/>
+           
+    <input type="hidden"
+           th:value="${userDTO.getUserId()}"
+           th:field="*{userId}"
+           required/>
+
+    <input type="hidden"
+           th:value="${userDTO.getUserPwd()}"
+           th:field="*{userPwd}"
+           required/>
+    
+    <div style="text-align: center;"id="content">
+        <div id="birth">
+            <p>생일을 알려주세요!</p>
+        </div>
+        <div id="recommend">
+            <p>추천에 활용됩니다.</p>
+        </div>
+
+        <input type="date" id="start" name="trip-start"
+        		th:field="*{userBirth}"
+               th:value="${#dates.format(#dates.createNow(),'yyyy-MM-dd')}"
+               th:max="${#dates.format(#dates.createNow(),'yyyy-MM-dd')}"
+               min="1910-01-01" max="2023-12-31">
+        <!-- 에러 -->
+        <div id="error" th:if="${#fields.hasErrors('userBirth')}">
+			<a>생일을 선택해주세요.</a>
+		</div>
+        <!-- 에러 end -->
+
+        <div id="gender">
+            <p>성별을 선택해주세요.</p>
+        </div>
+        <div id="recommend">
+            <p>추천에 활용됩니다.</p>
+        </div>
+        <!-- 성별 선택 -->
+        <label><input type="radio" name="chk_gender" value="man" th:field="*{userGender}" th:checked="${userDTO.userGender == 'man'}">남자</label>
+        <label><input type="radio" name="chk_gender" value="women" th:field="*{userGender}" th:checked="${userDTO.userGender == 'women'}">여자</label>
+        <!-- 에러 -->
+        <div id="error">
+			<a th:if="${#fields.hasErrors('userGender')}" th:errors="*{userGender}" id="error"></a>
+		</div>
+        
+    </div>
+
+    <!-- 이전/다음 버튼-->
+    <div style="text-align: right;" id="btn">
+        <button onclick="action='/join_pwd'; submit();"
+                style="border: none; background: none; padding: 0; margin: 0; cursor: pointer;">
+            <img src="imgs/btn/before.png" alt="이전">
+        </button>
+        <button onclick="action='/join_like'; submit();" style="border: none; background: none; padding: 0; margin: 0; cursor: pointer;">
+            <img src="imgs/btn/after.png" alt="다음">
+        </button>
+    </div>
+
+</form>
+</body>
+</html>

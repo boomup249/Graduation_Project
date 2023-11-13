@@ -78,12 +78,12 @@ public class apiController {
 	@PostMapping("/genreLike")
 	public String handleRequest(@RequestBody Map<String, Object> genresMap, Model model,HttpServletRequest req) {
 		List<String> genres = (List<String>) genresMap.get("genre");
-	    String userId;
+	    String getuserId, userId;
 	    StringBuilder genreList = new StringBuilder();
 	    if(req.getSession(false) != null) { //로그인?
 	        HttpSession session = req.getSession(false);
-	        userId = (String)session.getAttribute("user");
-	        
+	        getuserId = (String)session.getAttribute("user");
+	        userId = userService.findUserId(getuserId);
 
 	        UserDB userdb = userService.findUser(userId);
 	        PreferDB preferdb = preferService.findUser(userId);
@@ -165,11 +165,12 @@ public class apiController {
 	@PostMapping("/userInfo")
 	public String userInfo(@RequestBody Map<String, String> userId_fdata,
 			Model model,HttpServletRequest req) {
-		String userId;
+		String getuserId, userId;
 		String userId_f = userId_fdata.get("id");
 	    if(req.getSession(false) != null) { //로그인?
 	        HttpSession session = req.getSession(false);
-	        userId = (String)session.getAttribute("user");
+	        getuserId = (String)session.getAttribute("user");
+	        userId = userService.findUserId(getuserId);
 
 	        UserDB userdb = userService.findUser(userId);
 	        PreferDB preferdb = preferService.findUser(userId);
@@ -191,11 +192,12 @@ public class apiController {
 	//기존비밀번호 체크
 	@PostMapping(value = "/checkPwd", consumes = org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Boolean> check_pwd(@RequestBody Map<String, String> user,HttpServletRequest req){
-		String userId;
+		String getuserId, userId;
 		boolean check = false;
 		 if(req.getSession(false) != null) {
 	        HttpSession session = req.getSession(false);
-	        userId = (String)session.getAttribute("user");
+	        getuserId = (String)session.getAttribute("user");
+	        userId = userService.findUserId(getuserId);
 	        UserDB userdb = userService.findUser(userId);
 	        
 			String userpwd = (String) user.get("pwd");
@@ -209,10 +211,11 @@ public class apiController {
 	//비밀번호 db저장
 	@PostMapping(value = "/UpdatekPwd", consumes = org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
 	public String Updatepwd(@RequestBody Map<String, String> user,HttpServletRequest req){
-		String userId;
+		String getuserId, userId;
 		 if(req.getSession(false) != null) {
 	        HttpSession session = req.getSession(false);
-	        userId = (String)session.getAttribute("user");
+	        getuserId = (String)session.getAttribute("user");
+	        userId = userService.findUserId(getuserId);
 	        UserDB userdb = userService.findUser(userId);
 			String userpwd = (String) user.get("new_pw");
 			String encodepwd = userService.encodePWD(userpwd);
@@ -227,13 +230,14 @@ public class apiController {
 	//마이페이지
 	@PostMapping(value = "/Uploadprofile", consumes = org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> uploadProfile(@RequestBody Map<String, String> data, HttpServletRequest req,Model model) {
-	    String userId;
+	    String getuserId, userId;
         String nickname = data.get("nickname");
         String des = data.get("des");
 	    if (req.getSession(false) != null) {
 	        HttpSession session = req.getSession(false);
-	        userId = (String) session.getAttribute("user");
-	    		
+	        getuserId = (String) session.getAttribute("user");
+	    	userId = userService.findUserId(getuserId);
+	        
 	        profiledb = profileService.findUser(userId);
 	        
 	        if (nickname.matches("\\s*")) {
@@ -247,10 +251,11 @@ public class apiController {
 	
 	@RequestMapping(value = "/UploadImg", consumes = org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<String> showUploadForm(@RequestParam("uploadedFiles") MultipartFile uploadedFile, HttpServletRequest req,Model model) {
-	    String userId;
+	    String getuserId, userId;
 	    if (req.getSession(false) != null) {
 	        HttpSession session = req.getSession(false);
-	        userId = (String) session.getAttribute("user");
+	        getuserId = (String) session.getAttribute("user");
+	        userId = userService.findUserId(getuserId);
 	        
 	        try {
 	        	byte[] imageBytes = uploadedFile.getBytes(); // MultipartFile을 byte[]로 변환
@@ -279,7 +284,8 @@ public class apiController {
  	@PostMapping(value="/article/{id}/comments", consumes = org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity commentSave(@PathVariable Long id, @RequestBody Map<String, String> data, HttpServletRequest req) {
 		HttpSession session = req.getSession(false);
-		String userId = (String)session.getAttribute("user");
+		String getuserId = (String)session.getAttribute("user");
+		String userId = userService.findUserId(getuserId);
 		
 		String comment = (String)data.get("comment");
 		
