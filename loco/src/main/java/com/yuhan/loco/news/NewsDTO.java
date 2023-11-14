@@ -3,13 +3,13 @@ package com.yuhan.loco.news;
 import java.util.Date;
 
 public class NewsDTO {
-	
+
 	private Date start;
 	private String title;
 	private String platform;
 	private String price;
 	private String etc;
-	
+
 	//getter setter
 	public Date getStart() {
 		return start;
@@ -41,9 +41,9 @@ public class NewsDTO {
 	public void setEtc(String etc) {
 		this.etc = etc;
 	}
-	
+
 	//
-	
-	
-	
+
+
+
 }

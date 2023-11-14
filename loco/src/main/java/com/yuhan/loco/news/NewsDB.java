@@ -9,17 +9,17 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "release_info")
 public class NewsDB {
-	
+
 	private Date DATE;
-	
+
 	@Id
 	private String TITLE;
-	
+
 	private String PLATFORM;
 	private String PRICE;
 	private String ETC;
 	private String VARIA;
-	
+
 	//getter setter
 	public Date getDATE() {
 		return DATE;
@@ -58,6 +58,6 @@ public class NewsDB {
 		VARIA = vARIA;
 	}
 	//
-	
-	
+
+
 }

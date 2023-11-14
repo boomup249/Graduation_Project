@@ -1,22 +1,10 @@
 package com.yuhan.loco.post;
 
-import java.util.List;
-
-import com.yuhan.loco.bbs.BBSDB;
-import com.yuhan.loco.bbs.CommentDB;
-
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 
 @Entity
@@ -70,7 +58,7 @@ public class PostDB {
 	public void setBbs_id(Long bbs_id) {
 		this.bbs = bbs_id;
 	}
-	
+
 
 
 }

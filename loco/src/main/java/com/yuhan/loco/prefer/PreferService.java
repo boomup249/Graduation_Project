@@ -31,16 +31,16 @@ public class PreferService {
 	    PreferDB preferdb = this.preferRepository.findByID(id);
 	    return preferdb;
 	}
-	
+
 	public List<PreferDB> getprefer(){
 		return preferRepository.findAll();
 	}
-	
+
 	public void updateGenre(PreferDTO preferDTO, PreferDB preferdb) {
 		preferdb.setLove(preferDTO.getUserLike());
 		this.preferRepository.save(preferdb);
 	}
-	
+
 	public void updateGenreHate(PreferDTO preferDTO, PreferDB preferdb) {
 		preferdb.setDislike(preferDTO.getUserHate());
 		//System.out.println(preferDTO.getUserHate());

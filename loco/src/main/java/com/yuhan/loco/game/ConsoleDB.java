@@ -12,19 +12,19 @@ import jakarta.persistence.Table;
 public class ConsoleDB {
 	@Id
 	private Integer NUM;
-	
+
 	private String TITLE;
 	private String SITEAVAILABILITY;
-	
+
 	private String PRICE;
 	private String SALEPRICE;
 	private String SALEPER;
-	
+
 	private String DESCRIPTION;
 	private String IMGDATA;
 	private String GAMEIMG;
 	private String URL;
-	
+
 	//getter setter
 	public Integer getNUM() {
 		return NUM;
@@ -86,6 +86,6 @@ public class ConsoleDB {
 	public void setURL(String uRL) {
 		URL = uRL;
 	}
-	
-	
+
+
 }

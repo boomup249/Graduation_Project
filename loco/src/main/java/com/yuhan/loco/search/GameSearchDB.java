@@ -45,7 +45,7 @@ public class GameSearchDB {
 	public void setSITEAVAILABILITY(String sITEAVAILABILITY) {
 		SITEAVAILABILITY = sITEAVAILABILITY;
 	}
-	
+
 	public String getPRICE() {
 		return PRICE;
 	}
@@ -63,5 +63,5 @@ public class GameSearchDB {
 		return "GameSearchDB [NUM=" + NUM + ", TITLE=" + TITLE + ", PRICE=" + PRICE + ", SALEPRICE=" + SALEPRICE
 				+ ", SALEPER=" + SALEPER + ", IMGDATA=" + IMGDATA + ", SITEAVAILABILITY=" + SITEAVAILABILITY + "]";
 	}
-	
+
 }

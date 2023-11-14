@@ -8,5 +8,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CrawlingTimeRepository extends JpaRepository<CrawlingTimeDB, LocalDateTime> {
+	@Override
 	List<CrawlingTimeDB> findAll();
 }

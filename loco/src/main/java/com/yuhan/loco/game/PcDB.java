@@ -40,7 +40,7 @@ public class PcDB {
 	private String STEAMURL;
 	private String EPICURL;
 
-	
+
 	//getter setter
 	public String getKEY() {
 		return KEY;

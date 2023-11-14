@@ -10,8 +10,8 @@ import org.springframework.stereotype.Repository;
 public interface NewsRepository extends JpaRepository<NewsDB, String> {
 	@Query("select n from NewsDB n where n.ETC IS NULL")
 	List<NewsDB> findEtcIsNull();
-	
+
 	@Query("select n from NewsDB n where n.ETC IS NOT NULL")
 	List<NewsDB> findEtcIsNotNull();
-	
+
 }

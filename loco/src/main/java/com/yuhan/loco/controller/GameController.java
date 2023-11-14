@@ -1,37 +1,29 @@
 package com.yuhan.loco.controller;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.yuhan.loco.game.PcDB;
 import com.yuhan.loco.game.ConsoleDB;
 import com.yuhan.loco.game.GameDTO;
-import com.yuhan.loco.game.PcRepository;
+import com.yuhan.loco.game.PcDB;
 import com.yuhan.loco.game.service.GameService;
 import com.yuhan.loco.game.service.GameThService;
 import com.yuhan.loco.prefer.PreferDB;
 import com.yuhan.loco.prefer.PreferService;
 import com.yuhan.loco.search.GameSearchDB;
-import com.yuhan.loco.user.UserDB;
 import com.yuhan.loco.user.UserService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 //게임 페이지 관련 컨트롤러
-//(현재) 테이블 여러개에서 정보를 join해서 불러와야 함 -> 1안) 디비별로 레포지토리 다 만들어서, dto에 정리해서 넣고 dto 활용하기 
+//(현재) 테이블 여러개에서 정보를 join해서 불러와야 함 -> 1안) 디비별로 레포지토리 다 만들어서, dto에 정리해서 넣고 dto 활용하기
 //												※단점: 페이징 처리가 빡셈, entity 및 레포지토리 다 만들어야 함, 전체 데이터를 다루게 돼서 pageable 사용 이점이 별로 없음
-//													장점(?): 어차피 2안도 정렬을 위해 불가피하게 전체 데이터를 스프링에서 처리할 가능성이 높음(먼저하냐 나중에 하냐 차이일 뿐) 
+//													장점(?): 어차피 2안도 정렬을 위해 불가피하게 전체 데이터를 스프링에서 처리할 가능성이 높음(먼저하냐 나중에 하냐 차이일 뿐)
 //											2안) mysql에서 뷰 만들어서 뷰로 레포지토리 만들어서 활용하기
 //												※단점: 스프링에서 후가공이 필요하다면 1안과 별로 차이가 없음, 디비에 뷰를 만들어야해서 수고스러움
 //													장점: entity 레포지토리 하나씩만 필요, 스프링 후가공에서 dto를 쓰지않고 정렬이 가능하다면 훨씬 깔끔한 페이징 가능
@@ -59,27 +51,27 @@ import java.util.List;
 		//사이트 필터링 로직:
 		//steam이면 SITEAVAILABILITY가 steam only, both인 항목 select
 		//epic이면 epic only, both인 항목 select
-		
+
 @Controller
 public class GameController {
 	//전역
 	String page = "";
-	
+
 	//
 	private final GameService gameService;
 	private final GameThService thService;
 	private final UserService userService;
 	private final PreferService preferService;
 
-	public GameController(GameService gameService, GameThService thService, 
+	public GameController(GameService gameService, GameThService thService,
 			UserService userService, PreferService preferService) {
         this.gameService = gameService;
         this.thService = thService;
         this.userService = userService;
         this.preferService = preferService;
     }
-	
-	
+
+
 	//연결
 	//pc
 	@GetMapping("/pc")
@@ -89,56 +81,56 @@ public class GameController {
 			@RequestParam(value = "category", defaultValue = "0") String category,
 			@RequestParam(value = "orderby", defaultValue = "popular") String order,
 			HttpServletRequest req) {
-		
+
 		/*선호 장르 가져오기(로그인 시)*/
-		
+
 		//선호 정보 문자열
 		String like = null;
-		
+
 		//로그인 했는지 확인
 		HttpSession session = req.getSession(false);
-		
+
 		//로그인했다면 userdb 객체 받아오기
 		if(session != null) { //로그인?
 			if(session.getAttribute("user") != null) { //로그인!
 				String id = (String)session.getAttribute("user");
 				String rId = userService.findUserId(id);
-				
+
 				PreferDB UserP = preferService.findUser(rId); //유저 선호 정보 db
 				like = UserP.getLove();
 			}
 		}
-		
+
 		/*선호 장르 가져오기(로그인 시) end*/
-		
-		
+
+
 		/*크롤링 완료 시간 가져오기*/
 		//크롤링 시간 가져오기(string)
 		String cTime = gameService.getCrawlingTime();
-		
+
 		/*크롤링 완료 시간 가져오기 end*/
-		
-		
+
+
 		/*Page<db> 객체 & 페이지 정보 가공*/
-		
+
 		//페이징용 page, pageable은 0부터 시작함 -> -1로 가공해주기, html에서도 가공 필요
 		page -= 1;
-		
+
 		//페이징 리스트 받아오기
 		Page<PcDB> paging = gameService.getPcPageByFilter(page, site, category, order, like);
 		System.out.println(paging.getTotalElements());
-			
+
 		//페이지네이션 정보 가공: 시작 페이지 번호, 현재 페이지 번호, 끝 페이지 번호
 		int currentPage = page + 1; //현재 페이지 번호
 		int calcEnd = (int)(Math.ceil(currentPage / 10.0) * 10); //현재 페이지를 10으로 나눈 후 올리고 10을 곱하면 끝번호가 나옴(ex. 3-> 0.3 - 1 - 10, 23-> 2.3 - 3 - 30)
 		int startPage = calcEnd - 9; //시작 페이지 번호
-			
+
 		//끝 페이지 번호 확정
 		int endPage = Math.min(calcEnd, paging.getTotalPages());
-		
+
 		/*Page<db> 객체 & 페이지 정보 가공 end*/
-			
-		
+
+
 		/*model에 넣기*/
 		//페이징 객체 model에 넣기
 		model.addAttribute("gamePage", paging);
@@ -147,18 +139,18 @@ public class GameController {
 		model.addAttribute("currentPage", currentPage);
 		model.addAttribute("totalPage", paging.getTotalPages());
 		model.addAttribute("gameService", thService);
-		
+
 		//정렬
 		model.addAttribute("siteF", site);
 		model.addAttribute("categoryF", category);
 		model.addAttribute("orderbyF", order);
-		
+
 		//크롤링 시간
 		model.addAttribute("cTime", cTime);
-			
+
 		return "/game/pc";
 		}
-	
+
 	//console
 	@GetMapping("/console")
 	public String console(Model model,
@@ -167,55 +159,55 @@ public class GameController {
 				@RequestParam(value = "category", defaultValue = "0") String category,
 				@RequestParam(value = "orderby", defaultValue = "popular") String order,
 				HttpServletRequest req) {
-		
+
 			/*선호 장르 가져오기(로그인 시)*/
-		
+
 		//선호 정보 문자열
 		String like = null;
-		
+
 		//로그인 했는지 확인
 		HttpSession session = req.getSession(false);
-		
+
 		//로그인했다면 userdb 객체 받아오기
 		if(session != null) { //로그인?
 			if(session.getAttribute("user") != null) { //로그인!
 				String id = (String)session.getAttribute("user");
 				String rId = userService.findUserId(id);
-				
+
 				PreferDB UserP = preferService.findUser(rId); //유저 선호 정보 db
 				like = UserP.getLove();
 			}
 		}
-		
+
 			/*선호 장르 가져오기(로그인 시) end*/
-		
-		
+
+
 			/*크롤링 완료 시간 가져오기*/
 		//크롤링 시간 가져오기(string)
 		String cTime = gameService.getCrawlingTime();
-		
+
 			/*크롤링 완료 시간 가져오기 end*/
-		
-		
+
+
 			/*Page<db> 객체 & 페이지 정보 가공*/
-		
+
 		//페이징용 page, pageable은 0부터 시작함 -> -1로 가공해주기, html에서도 가공 필요
 		page -= 1;
-				
+
 		//페이징 리스트 받아오기
 		Page<ConsoleDB> paging = gameService.getConsolePageByFilter(page, site, category, order, like);
 		System.out.println(paging.getTotalElements());
-					
+
 		//페이지네이션 정보 가공: 시작 페이지 번호, 현재 페이지 번호, 끝 페이지 번호
 		int currentPage = page + 1; //현재 페이지 번호
 		int calcEnd = (int)(Math.ceil(currentPage / 10.0) * 10); //현재 페이지를 10으로 나눈 후 올리고 10을 곱하면 끝번호가 나옴(ex. 3-> 0.3 - 1 - 10, 23-> 2.3 - 3 - 30)
 		int startPage = calcEnd - 9; //시작 페이지 번호
-					
+
 		//끝 페이지 번호 확정
 		int endPage = Math.min(calcEnd, paging.getTotalPages());
-		
+
 			/*Page<db> 객체 & 페이지 정보 가공 end*/
-				
+
 			/*model에 넣기*/
 		//페이징 객체 model에 넣기
 		model.addAttribute("gamePage", paging);
@@ -224,26 +216,26 @@ public class GameController {
 		model.addAttribute("currentPage", currentPage);
 		model.addAttribute("totalPage", paging.getTotalPages());
 		model.addAttribute("gameService", thService);
-				
+
 		//정렬
 		model.addAttribute("siteF", site);
 		model.addAttribute("categoryF", category);
 		model.addAttribute("orderbyF", order);
-				
+
 		//크롤링 시간
 		model.addAttribute("cTime", cTime);
-				
-		
+
+
 		return "/game/console";
 	}
-	
-	
+
+
     // PC Detail
-	@GetMapping("/pcDetail/{key}") 
+	@GetMapping("/pcDetail/{key}")
 	public String detail_pc(@PathVariable String key, Model model) {
 	    PcDB pcGameDetail = gameService.getPcByKey(key); // key에 해당하는 PC 게임 정보 가져오기
 	    GameDTO pcGameDTO = gameService.createToDTO(key, pcGameDetail);
-	    
+
 	    //List<PcDB> pcDB = gameService.getAllData();
 	    model.addAttribute("pcGameDTO", pcGameDTO);
 	    model.addAttribute("pcGameDetail", pcGameDetail);
@@ -252,7 +244,7 @@ public class GameController {
 	}
 
     // Console Detail
-    @GetMapping("/consoleDetail/{num}") 
+    @GetMapping("/consoleDetail/{num}")
     public String detail_console(@PathVariable int num, Model model) {
         ConsoleDB csGameDetail = gameService.getCsByNum(num);
 
@@ -260,30 +252,30 @@ public class GameController {
         model.addAttribute("gameService", thService);
         return "/game/ConsoleDetail";
 	}
-    
+
     @GetMapping("/search")
     public String search(Model model,
     		@RequestParam("search") String searchKeyword,
 			@RequestParam(value = "page", defaultValue = "1") int page) {
-    	
+
 		//크롤링 시간 가져오기(string)
 		String cTime = gameService.getCrawlingTime();
-		
+
 		//페이징용 page, pageable은 0부터 시작함 -> -1로 가공해주기, html에서도 가공 필요
 		page -= 1;
 		String Search = ".*" + searchKeyword + ".*";
 		//페이징 리스트 받아오기
 		Page<GameSearchDB> paging = gameService.getSearchPageByFilter(Search, page);
 		System.out.println(paging.getTotalElements());
-					
+
 		//페이지네이션 정보 가공: 시작 페이지 번호, 현재 페이지 번호, 끝 페이지 번호
 		int currentPage = page + 1; //현재 페이지 번호
 		int calcEnd = (int)(Math.ceil(currentPage / 10.0) * 10); //현재 페이지를 10으로 나눈 후 올리고 10을 곱하면 끝번호가 나옴(ex. 3-> 0.3 - 1 - 10, 23-> 2.3 - 3 - 30)
 		int startPage = calcEnd - 9; //시작 페이지 번호
-					
+
 		//끝 페이지 번호 확정
 		int endPage = Math.min(calcEnd, paging.getTotalPages());
-		
+
 		//페이징 객체 model에 넣기
 		model.addAttribute("gamePage", paging);
 		model.addAttribute("startPage", startPage);
@@ -292,12 +284,12 @@ public class GameController {
 		model.addAttribute("totalPage", paging.getTotalPages());
 		model.addAttribute("gameService", thService);
 		model.addAttribute("searchKeyword", searchKeyword);
-				
+
 		//크롤링 시간
 		model.addAttribute("cTime", cTime);
-				
-		
+
+
 		return "/game/search";
     }
- 
+
 }

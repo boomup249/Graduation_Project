@@ -12,10 +12,10 @@ import jakarta.persistence.Table;
 public class ConsoleTagDB {
 	@Id
 	private Integer NUM;
-	
+
 	private String TITLE;
 	private String GENRE;
-	
+
 	//getter setter
 	public Integer getNUM() {
 		return NUM;
@@ -35,6 +35,6 @@ public class ConsoleTagDB {
 	public void setGENRE(String gENRE) {
 		GENRE = gENRE;
 	}
-	
-	
+
+
 }

@@ -7,10 +7,7 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import com.yuhan.loco.bbs.CommentDB;
-
 
 import jakarta.transaction.Transactional;
 
@@ -42,7 +39,7 @@ public class BBSService {
 	   commdb.setWriter(writer);
 	   this.Commentrepository.save(commdb);
    }
-   
+
    public Page<BBSDB> search(int page, Pageable pageable){
 	   return this.BBSrepository.findAll(pageable);
    }
@@ -81,9 +78,9 @@ public class BBSService {
    public List<BBSDB> findID(String title) {
 	   return this.BBSrepository.findByTitle(title);
    }
-   
+
    public List<CommentDB> findCommentDB(Long id){
 	   return this.Commentrepository.findByPost(id);
    }
-   
+
 }

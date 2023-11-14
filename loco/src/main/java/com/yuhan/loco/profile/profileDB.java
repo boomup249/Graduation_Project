@@ -1,7 +1,5 @@
 package com.yuhan.loco.profile;
 
-import java.sql.Date;
-
 import jakarta.persistence.Basic;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -19,7 +17,7 @@ public class profileDB {
     @Lob
     @Basic(fetch = FetchType.LAZY)
 	private byte[] IMG;
-	
+
 	public String getID() {
 		return ID;
 	}
@@ -44,12 +42,12 @@ public class profileDB {
 	public void setIMG(byte[] iMG) {
 		IMG = iMG;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
+
+
 }

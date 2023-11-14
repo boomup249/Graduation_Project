@@ -10,8 +10,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.yuhan.loco.post.PostDB;
-
 
 
 @Repository
@@ -23,14 +21,16 @@ public interface BBSRepository extends JpaRepository<BBSDB, Long> {
     List<BBSDTO> findByDateBetween(LocalDate startDate, LocalDate endDate);
     List<BBSDTO> findByTitleAndAuthor(String title, String author);
     */
+	@Override
 	List<BBSDB> findAll();
+	@Override
 	Page<BBSDB> findAll(Pageable pageable);
 	@Modifying
     @Query(value = "update bbs BBS set BBS.views = BBS.views + 1 where BBS.id = :id", nativeQuery=true)
     int updateView(@Param("id") Long id);
-	
+
 	List<BBSDB> findByTitle(String title);
-	
+
 	Page<BBSDB> findByTitleContaining(String title, Pageable pageable);
 	Page<BBSDB> findByCategory(String category, Pageable pageable);
 }

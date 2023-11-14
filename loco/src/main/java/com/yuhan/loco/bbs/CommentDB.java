@@ -16,7 +16,7 @@ public class CommentDB {
 	private Long post;
     private String writer; // 작성자
     private String comment;
-    
+
 
     public Long getId() {
 		return id;

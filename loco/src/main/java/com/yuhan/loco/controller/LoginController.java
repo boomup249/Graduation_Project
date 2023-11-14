@@ -69,18 +69,18 @@ public class LoginController {
 		else { //에러가 없음 -> 디비에도 값이 있음
 			//세션 생성(id or email)
 			session.setAttribute("user", userDTO.getUserId());
-			
+
 			//id 찾기
 			String uID = userService.findUserId(userDTO.getUserId());
 			//id로 프로필 디비 찾기
 			profileDB pDB = profileService.findUser(uID);
-			
+
 			//세션 생성(프로필 이미지 src)
 			if(pDB.getIMG() != null) {
 				String profile_img = profileService.convertByteToBase64(pDB.getIMG());
 				session.setAttribute("userImg", profile_img);
 			}
-			
+
 			//메인으로 리다이렉트
 			System.out.println("로그인 성공");
 			return "redirect:/main";

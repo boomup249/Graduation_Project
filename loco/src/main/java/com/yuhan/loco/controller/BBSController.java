@@ -189,7 +189,7 @@ public class BBSController {
 		category = postDTO.getCategory();
 		if(category == "bbs") { //자유 게시판
 			postDTO.setCategory("bbs");
-			bbsDTO.setCategory("bbs");			
+			bbsDTO.setCategory("bbs");
 		}
 		else if(category == "guide") {
 			postDTO.setCategory("guide");
@@ -201,7 +201,7 @@ public class BBSController {
 		}
 		postDTO.setWriter(userId);
 		bbsDTO.setWriter(userId);
-		bbsDTO.setTitle(title);		
+		bbsDTO.setTitle(title);
 		bbsDTO.setDate(timestr);
 		bbsDTO.setViews(0L);
 		bbsDTO.setComment(0L);
@@ -217,7 +217,7 @@ public class BBSController {
 	public String cancel() {
 		return "redirect:/post";
 	}
-	
+
 	@GetMapping("/article/{id}")
 	public String show_article(@PathVariable Long id, HttpServletRequest req, Model model, BBSDB bbsDB){
 		HttpSession session = req.getSession(false);
@@ -229,7 +229,7 @@ public class BBSController {
 		String userId = userService.findUserId(getuserId);
 		UserDB userdb = userService.findUser(userId);
 		model.addAttribute("userDTO", userdb);
-		
+
 		List<CommentDB> comments = bbsService.findCommentDB(id);
 		System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@"+comments);
 		if(comments != null && !comments.isEmpty()) {

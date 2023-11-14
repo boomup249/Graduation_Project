@@ -1,7 +1,7 @@
 package com.yuhan.loco.game;
 
 public class GameDTO {
-	
+
     private int NUM;
     private String SITEAVAILABILITY;
 	private String TITLE;
@@ -12,7 +12,7 @@ public class GameDTO {
 	private String IMGDATA;
 	private String GAMEIMG;
 	private String URL;
-    
+
 	//getter setter
 	public int getNUM() {
 		return NUM;
@@ -79,7 +79,7 @@ public class GameDTO {
 	}
 
 
-	
+
 
 
 }

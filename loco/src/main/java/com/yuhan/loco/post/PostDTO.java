@@ -50,6 +50,6 @@ public class PostDTO {
 	public void setContent(String content) {
 		this.content = content;
 	}
-	
-	
+
+
 }

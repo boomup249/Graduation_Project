@@ -3,7 +3,6 @@ package com.yuhan.loco.post;
 
 import org.springframework.stereotype.Service;
 
-
 import jakarta.transaction.Transactional;
 
 @Service
