@@ -171,7 +171,7 @@ newpwd_re.addEventListener("input", function(event) {
    console.log(newpwd_str,newpwdRe_str);
     if (newpwd_str === newpwdRe_str) {
         new_ck.textContent = "비밀번호 일치";
-        new_ck.style.color = "blue";
+        new_ck.style.color = "#19d3da";
         ch_pwd_edit.disabled = false; // 비활성화 해제
     } else {
         new_ck.textContent = "비밀번호 불일치";

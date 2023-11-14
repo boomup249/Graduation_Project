@@ -212,6 +212,12 @@ body {
 	margin-left: 1.5%;
 	margin-top:2%;
 }
+
+#ck {
+	margin-top:40px;
+}
+
+
 /* 오른쪽 수정 버튼 */
 /*
 .id_btn_f{
@@ -337,7 +343,7 @@ body {
 	float: right;
 	border-radius: 20%;
 	font-size: 15px;
-	margin-top: 2%;
+	margin-top: 25px;
 	margin-right: 3%;
 	position: absolute;
 	top: 65%;
@@ -437,3 +443,6 @@ body {
 	left: 90%;
 }
 
+#new_ck {
+	margin-top: -15px;
+}
