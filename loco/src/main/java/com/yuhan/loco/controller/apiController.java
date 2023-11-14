@@ -120,12 +120,12 @@ public class apiController {
 	@PostMapping("/genreHate")
 	public String handleRequestHate(@RequestBody Map<String, Object> genresMap, Model model,HttpServletRequest req) {
 		List<String> genres = (List<String>) genresMap.get("genre");
-	    String userId;
+	    String getuserId, userId;
 	    StringBuilder genreList = new StringBuilder();
 	    if(req.getSession(false) != null) { //로그인?
 	        HttpSession session = req.getSession(false);
-	        userId = (String)session.getAttribute("user");
-	        
+	        getuserId = (String)session.getAttribute("user");
+	        userId = userService.findUserId(getuserId);
 
 	        UserDB userdb = userService.findUser(userId);
 	        PreferDB preferdb = preferService.findUser(userId);
