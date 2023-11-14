@@ -219,8 +219,11 @@ public class BBSController {
 	}
 	
 	@GetMapping("/article/{id}")
-	public String show_article(@PathVariable Long id, HttpServletRequest req, Model model, BBSDB bbsDB) {
+	public String show_article(@PathVariable Long id, HttpServletRequest req, Model model, BBSDB bbsDB){
 		HttpSession session = req.getSession(false);
+		if(session == null) {
+			return "/error";
+		}
 		PostDB article = postService.getByID(id);
 		String getuserId = (String)session.getAttribute("user");
 		String userId = userService.findUserId(getuserId);
