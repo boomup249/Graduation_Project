@@ -39,6 +39,7 @@ import com.yuhan.loco.user.UserDB;
 import com.yuhan.loco.user.UserDTO;
 import com.yuhan.loco.user.UserService;
 
+import ch.qos.logback.core.recovery.ResilientSyslogOutputStream;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
@@ -98,21 +99,19 @@ public class apiController {
 	        model.addAttribute("userSelect", userSelect);
 	        model.addAttribute("preferdb", preferdb); 
 	        
-			if(genres != null && !genres.isEmpty()) {
-				for(String genre : genres) {
-					genreList.append(genre);
-					genreList.append(",");
-					
-				}
-				if(genreList.length() > 0) {
-					genreList.deleteCharAt(genreList.length() - 1);
-					//System.out.println(genreList);
-					preferDTO.setUserLike(genreList.toString());
-					preferService.updateGenre(preferDTO,preferdb);
-				}
+			for(String genre : genres) {
+				genreList.append(genre);
+				genreList.append(",");
+				
 			}
-			else {
-				System.out.println("선택된 장르없음");
+			if(genreList.length() > 0) {
+				genreList.deleteCharAt(genreList.length() - 1);
+				preferDTO.setUserLike(genreList.toString());
+				preferService.updateGenre(preferDTO,preferdb);
+			}
+			else if(genreList.isEmpty()) {
+				preferDTO.setUserLike("");
+				preferService.updateGenre(preferDTO, preferdb);
 			}
 	    }
 		return "myaccount/profile";
@@ -141,22 +140,20 @@ public class apiController {
 	        model.addAttribute("userSelect", userSelect);
 	        model.addAttribute("preferdb", preferdb);
 	        
-	        
-			if(genres != null && !genres.isEmpty()) {
-				for(String genre : genres) {
-					genreList.append(genre);
-					genreList.append(",");
-					
-				}
-				if(genreList.length() > 0) {
-					genreList.deleteCharAt(genreList.length() - 1);
-					//System.out.println(genreList);
-					preferDTO.setUserHate(genreList.toString());
-					preferService.updateGenreHate(preferDTO,preferdb);
-				}
+			for(String genre : genres) {
+				genreList.append(genre);
+				genreList.append(",");
+				
 			}
-			else {
-				System.out.println("선택된 장르없음");
+			if(genreList.length() > 0) {
+				genreList.deleteCharAt(genreList.length() - 1);
+				//System.out.println(genreList);
+				preferDTO.setUserHate(genreList.toString());
+				preferService.updateGenreHate(preferDTO,preferdb);
+			}
+			else if(genreList.isEmpty()) {
+				preferDTO.setUserHate("");
+				preferService.updateGenreHate(preferDTO, preferdb);
 			}
 	    }
 		return "myaccount/profile";

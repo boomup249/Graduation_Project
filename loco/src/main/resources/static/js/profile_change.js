@@ -31,15 +31,36 @@ function PreferChangeDisLike(Mapping){
         xhr.send(JSON.stringify(data));
         setTimeout(function () {
             location.reload();
-        }, 1000);
+        }, 500);
     } else if(values.length > 5){
     	values.checked = false;
         alert("5개 이상 선택할 수 없습니다.");
-	}
+	} else if(values.length === 0){
+		var xhr = new XMLHttpRequest();
+        xhr.open('POST', Mapping, true);
+        xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+
+        var data = {
+            genre: ""
+        };
+
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                console.log(data);
+            } else {
+                console.log('저장 실패');
+            }
+        };
+
+        xhr.send(JSON.stringify(data));
+        setTimeout(function () {
+            location.reload();
+        }, 100);
+    }
 }
 
 function PreferChangeLike(Mapping){
-    var checkboxes = document.querySelectorAll('#checktablelike_td input[type="checkbox"]');
+    var checkboxes = document.querySelectorAll('#checktableLike_td input[type="checkbox"]');
     var values = [];
     for (var i = 0; i < checkboxes.length; i++) {
         if (checkboxes[i].checked) {
@@ -47,7 +68,7 @@ function PreferChangeLike(Mapping){
         }
     }
 
-    if (values.length <= 5) {
+   if (values.length <= 5) {
         var xhr = new XMLHttpRequest();
         xhr.open('POST', Mapping, true);
         xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
@@ -67,11 +88,32 @@ function PreferChangeLike(Mapping){
         xhr.send(JSON.stringify(data));
         setTimeout(function () {
             location.reload();
-        }, 1000);
+        }, 500);
     } else if(values.length > 5){
     	values.checked = false;
         alert("5개 이상 선택할 수 없습니다.");
-	}
+	} else if(values.length === 0){
+		var xhr = new XMLHttpRequest();
+        xhr.open('POST', Mapping, true);
+        xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+
+        var data = {
+            genre: ""
+        };
+
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                console.log(data);
+            } else {
+                console.log('저장 실패');
+            }
+        };
+
+        xhr.send(JSON.stringify(data));
+        setTimeout(function () {
+            location.reload();
+        }, 100);
+    }
 }
 
 
@@ -90,9 +132,6 @@ var select_ck_dislike = document.getElementsByName('dislike');
 var sc_value_dislike = select_ck_dislike[0].value;
 var value_dislike = sc_value_dislike.split(',');
 
-var likecount = 0;
-var dislikecount = 0;
-var maxselect = 5;
 
 for (var i = 0; i < value_love.length; i++) {
     for (var j = 0; j < dislike_checkboxes.length; j++) {
