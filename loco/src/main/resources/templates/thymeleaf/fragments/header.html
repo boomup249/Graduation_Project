@@ -1,0 +1,74 @@
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+	</head>
+	
+	<body th:fragment="fragment-header">
+		<div id="header">
+			<!-- 로고 -->
+			<div class="logo_btn"><a href="/main"><img src="/imgs/header/logo.png"/></a></div>
+			
+			<!-- 검색창 -->
+				<form action="/search" method="GET">
+			        <input type="text" name="search" id="search" placeholder="검색어를 입력하세요">
+			        <input type="submit" id="search-btn" value="">
+				</form>
+	        <div id="search_box">
+				<ul id="search_ul"></ul>
+			</div>
+			<script src="/js/search.js"></script>
+			
+			<!-- 메뉴 -->
+			<ul>
+				<!-- 콘솔 -->
+				<li>
+					<div class="menu">
+						<a href="/console">CONSOLE</a>
+					</div>
+				</li>
+				
+				<!-- pc -->
+				<li>
+					<div class="menu">
+						<a href="/pc">PC</a>
+					</div>
+				</li>
+				
+				<!-- 게시판 -->
+				<li>
+					<div class="menu">
+						<a href="/bbs">BBS</a>
+					</div>
+				</li>
+				
+				<!-- 신작 -->
+				<li>
+					<div class="menu">
+						<a href="/news">NEWS</a>
+					</div>
+				</li>
+				
+				<!-- 로그인 버튼-->
+				<li th:if="${session.user == null}"> <!-- 세션(user)가 없으면 -->
+					<div class="menu">
+						<a href="/login"><img src="/imgs/header/login.png"/></a>
+					</div>
+				</li>
+				
+				<!-- 마이페이지 -->
+				<li th:if="${session.user != null}"> <!-- 세션(user)가 있으면 -->
+					<div class="mypage"></div>
+					<!-- 드롭다운 -->
+					<ul class="dropdown">
+						<li><a href="/profile">내 계정</a></li>
+						<li><a href="/mypage">프로필 설정</a></li>
+						<li><a href="/logout">로그아웃</a></li>
+						
+					</ul>
+				</li>
+			</ul>
+			
+		</div>
+		
+	</body>
+</html>
