@@ -52,10 +52,10 @@ public class BBSController {
 		pages -= 1;
 		Pageable pageable = PageRequest.of(pages, 15);
 		Page<BBSDB> bbs = this.bbsService.search(pages, pageable);
-		if(page == "bbs") {bbs = this.bbsService.findbbs(pages, pageable);}
-		else if(page == "notice") {bbs = this.bbsService.findnotice(pages, pageable);}
-		else if(page == "party") {bbs = this.bbsService.findparty(pages, pageable);}
-		else if(page == "guide") {bbs = this.bbsService.findguide(pages, pageable);}
+		if("bbs".equals(page)) {bbs = this.bbsService.findbbs(pages, pageable);}
+		else if("notice".equals(page)) {bbs = this.bbsService.findnotice(pages, pageable);}
+		else if("party".equals(page)) {bbs = this.bbsService.findparty(pages, pageable);}
+		else if("guide".equals(page)) {bbs = this.bbsService.findguide(pages, pageable);}
 		int currentPage = pages + 1;
 		int calcEnd = (int)(Math.ceil(currentPage / 10.0) * 10);
 		int startPage = calcEnd - 9;
@@ -82,10 +82,10 @@ public class BBSController {
 		pages -= 1;
 		Pageable pageable = PageRequest.of(pages, 15, Sort.by("date").descending());
 		Page<BBSDB> bbs = this.bbsService.search(pages, pageable);
-		if(page == "bbs") {bbs = this.bbsService.findbbs(pages, pageable);}
-		else if(page == "notice") {bbs = this.bbsService.findnotice(pages, pageable);}
-		else if(page == "party") {bbs = this.bbsService.findparty(pages, pageable);}
-		else if(page == "guide") {bbs = this.bbsService.findguide(pages, pageable);}
+		if("bbs".equals(page)) {bbs = this.bbsService.findbbs(pages, pageable);}
+		else if("notice".equals(page)) {bbs = this.bbsService.findnotice(pages, pageable);}
+		else if("party".equals(page)) {bbs = this.bbsService.findparty(pages, pageable);}
+		else if("guide".equals(page)) {bbs = this.bbsService.findguide(pages, pageable);}
 		int currentPage = pages + 1;
 		int calcEnd = (int)(Math.ceil(currentPage / 10.0) * 10);
 		int startPage = calcEnd - 9;
@@ -105,10 +105,10 @@ public class BBSController {
 		pages -= 1;
 		Pageable pageable = PageRequest.of(pages, 15, Sort.by("views").descending());
 		Page<BBSDB> bbs = this.bbsService.search(pages, pageable);
-		if(page == "bbs") {bbs = this.bbsService.findbbs(pages, pageable);}
-		else if(page == "notice") {bbs = this.bbsService.findnotice(pages, pageable);}
-		else if(page == "party") {bbs = this.bbsService.findparty(pages, pageable);}
-		else if(page == "guide") {bbs = this.bbsService.findguide(pages, pageable);}
+		if("bbs".equals(page)) {bbs = this.bbsService.findbbs(pages, pageable);}
+		else if("notice".equals(page)) {bbs = this.bbsService.findnotice(pages, pageable);}
+		else if("party".equals(page)) {bbs = this.bbsService.findparty(pages, pageable);}
+		else if("guide".equals(page)) {bbs = this.bbsService.findguide(pages, pageable);}
 		int currentPage = pages + 1;
 		int calcEnd = (int)(Math.ceil(currentPage / 10.0) * 10);
 		int startPage = calcEnd - 9;
