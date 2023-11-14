@@ -1,0 +1,120 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>게시판</title>
+    
+    <link rel="stylesheet" href="css/font.css"> <!-- 폰트 css -->
+    <link rel="stylesheet" href="css/list.css"> <!-- 게시판 css -->
+    <style>
+		/* 게시판 컨테이너 */
+		.board-container {
+    		max-width: 100%;
+    		margin: 0 auto;
+    		
+		}
+		.post-table {
+    		width: 80%;
+    		position : relative;
+    		margin-left : auto;
+    		margin-right : auto;
+    		margin-top : 2%;
+    		text-align : center;
+    	
+		}
+
+		.post-table th, .post-table td {
+    	padding: 10px;
+    	text-align: center;
+    	border-bottom: 1px solid #ddd;
+    	position: relative;
+		}
+		
+		
+
+		.post-table th {
+		font-family: 'GmarketSansMedium';	
+    	background-color: #f2f2f2;
+    	padding: 10px;
+    	text-align: center;
+    	border-bottom: 1px solid #ddd;
+    	background-color: #f2f2f2;
+    	/* 원하는 너비로 지정 (예: 150px) */
+    	width : 1000px;
+    	
+		}	
+	
+
+		/* 게시글 목록 아이템 */
+		.post-item {   	
+    	justify-content: space-between;
+    	align-items: center;
+    	padding: 10px;
+    	border-bottom: 1px solid #ddd;
+    	flex-direction: column;
+		}
+		
+
+		
+		/* 게시글 목록 아이템 내 제목 스타일 변경 */
+		.post-item .post-title-link {
+    	color: #333;
+    	max-width: 200px; /* 최대 너비를 조정 (원하는 크기로 변경 가능) */
+    	overflow: hidden;
+    	white-space: nowrap;
+    	text-align: left;
+    	text-overflow: ellipsis; /* 넘칠 경우 ...으로 표시 */
+		}
+
+
+		.post-item:hover {
+    	background-color: #f5f5f5;
+		}
+
+		/* 게시글 제목 링크 */
+		.post-title-link {	
+    	text-decoration: none;
+    	color: #333;
+		}
+
+		/* 반응형 디자인 */
+		@media (max-width: 768px) {
+    	.board-container {
+        padding: 10px;
+    	}
+
+ 
+    	
+		}
+		
+	</style>
+</head>
+
+<body>
+    <div class="board-container">
+    <table class="post-table">
+        <thead>
+            <tr>
+                <th class="custom-width" style="width:60%;">제목</th>
+                <th>작성자</th>
+                <th>조회수</th>
+                <th>댓글</th>
+                <th>날짜</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each = "post : ${bbsDTO}">
+                <td>
+                    <a th:href="@{'/article/' + ${post.id}}"><div th:text="${post.title}"></div></a>
+                </td>
+                <td><div th:text="${post.writer}"></div></td>
+                <td><div th:text="${post.views}" ></div></td>
+                <td><div th:text="${post.comment}" ></div></td>
+                <td><div th:text="${post.date}" ></div></td>
+            </tr>
+            <!-- 추가적인 게시글 아이템들을 동적으로 생성하거나 서버에서 데이터를 가져와서 출력하세요. -->
+        </tbody>
+    </table>
+    
+</div>
+</body>
+</html>

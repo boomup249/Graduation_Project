@@ -68,11 +68,10 @@ public class BBSController {
 	}
 	@GetMapping("/list/search")
 	public String searchres(Model model, String search, PostDB postDB) {
-		List<BBSDB> bbs = bbsService.findbytitle2(search);
-		
+		List<BBSDB> bbs = bbsService.findbytitlelist(search);	
 		model.addAttribute("bbsDTO", bbs);
 		model.addAttribute("bbsService", bbsService);
-		return "/post/list2";
+		return "/post/searchlist";
 	}
 	@GetMapping("/new")
 	public String sortbyNew(Model model,

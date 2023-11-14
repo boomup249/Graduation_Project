@@ -70,7 +70,7 @@ public class BBSService {
    }
    
    //페이징 안 쓰고 찾기
-   public List<BBSDB> findbytitle2(String search){
+   public List<BBSDB> findbytitlelist(String search){
 	   return this.BBSrepository.findByTitleContaining(search);
    }
    
