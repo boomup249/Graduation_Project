@@ -96,7 +96,7 @@
             </tr>
             <tr th:each = "comment : ${comments}">
             	<td class="comment1"> <span th:text="${comment.writer}" id = "comm1_span"></span></td>
-            	<td class="comment2"> <span th:text="${comment.comment}" id = "comm2_span"></span></td>
+            	<td class="comment2"> <span th:utext="${comment.comment}" id = "comm2_span"></span></td>
             </tr>
         </tbody>
     </table>
