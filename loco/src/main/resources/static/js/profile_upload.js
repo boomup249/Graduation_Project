@@ -30,6 +30,9 @@ save_btn.addEventListener("click",function(){
         .catch(function (error) {
             console.log('요청 실패: ' + error);
         });
+    setTimeout(function () {
+		location.reload();
+    }, 100);
 });
 
 //이미지 저장

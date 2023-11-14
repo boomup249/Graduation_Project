@@ -45,7 +45,7 @@
 			<input type="text" id="input_nickname" th:placeholder="${profiledb.getNICKNAME()}">
 			
 			<span class="des_span">한줄소개</span>
-			<input type="text" id="input_des" th:placeholder="${profiledb.getDESCRIPTION()}">
+			<input type="text" id="input_des" th:value="${profiledb.getDESCRIPTION()}">
 			
 			<button id = "save_btn" type="button">저장</button>
 			<span class="img_span">프로필사진</span>
