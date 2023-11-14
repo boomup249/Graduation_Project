@@ -260,10 +260,16 @@ public class apiController {
 	        try {
 	        	byte[] imageBytes = uploadedFile.getBytes(); // MultipartFile을 byte[]로 변환
 	        	profileService.saveImage(userId, imageBytes);
+	        	
+	        	//세션 업데이트
+	        	String imgUrl = profileService.convertByteToBase64(imageBytes);
+	        	session.setAttribute("userImg", imgUrl);
+	        	
 	        	return new ResponseEntity<>("File uploaded successfully", HttpStatus.OK);
 	        }catch(IOException e) {
 	        	return new ResponseEntity<>("Failed to upload image", HttpStatus.INTERNAL_SERVER_ERROR);
 	        }
+	        
 	    }else {
 	            return new ResponseEntity<>("Session not found", HttpStatus.UNAUTHORIZED);
 	        }
