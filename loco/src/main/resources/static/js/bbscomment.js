@@ -5,9 +5,9 @@ document.addEventListener('DOMContentLoaded', function () {
 	    var comment = document.getElementById('comment').value;
 	    var url = "/api/article/" + postId + "/comments";
 	    
-	    console.log(postId);
-	    console.log(comment);
-	    console.log(url);
+	    //console.log(postId);
+	    //console.log(comment);
+	    //console.log(url);
 	    
 	    var data = {
         comment : comment

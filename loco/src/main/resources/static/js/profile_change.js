@@ -22,7 +22,8 @@ function PreferChangeDisLike(Mapping){
 
         xhr.onload = function () {
             if (xhr.status === 200) {
-                console.log(data);
+                //console.log(data);
+                console.log("저장 성공");
             } else {
                 console.log('저장 실패');
             }
@@ -46,7 +47,8 @@ function PreferChangeDisLike(Mapping){
 
         xhr.onload = function () {
             if (xhr.status === 200) {
-                console.log(data);
+                //console.log(data);
+                console.log("저장 성공");
             } else {
                 console.log('저장 실패');
             }
@@ -79,7 +81,8 @@ function PreferChangeLike(Mapping){
 
         xhr.onload = function () {
             if (xhr.status === 200) {
-                console.log(data);
+                //console.log(data);
+                console.log("저장 성공");
             } else {
                 console.log('저장 실패');
             }
@@ -103,7 +106,8 @@ function PreferChangeLike(Mapping){
 
         xhr.onload = function () {
             if (xhr.status === 200) {
-                console.log(data);
+                //console.log(data);
+                console.log("저장 성공");
             } else {
                 console.log('저장 실패');
             }
@@ -184,7 +188,8 @@ check_pwd.addEventListener("click", function(){
    .then((response) => response.json())
    .then((json) => {
       if (json !== null){
-         console.log(json);
+         //console.log(json);
+         console.log("json 전송");
       } else {
          alert("서버오류")
       }
@@ -207,7 +212,7 @@ check_pwd.addEventListener("click", function(){
 newpwd_re.addEventListener("input", function(event) {
    var newpwd_str = newpwd.value;
    var newpwdRe_str = newpwd_re.value;
-   console.log(newpwd_str,newpwdRe_str);
+   //console.log(newpwd_str,newpwdRe_str);
     if (newpwd_str === newpwdRe_str) {
         new_ck.textContent = "비밀번호 일치";
         new_ck.style.color = "#19d3da";
@@ -232,7 +237,8 @@ ch_pwd_edit.addEventListener("click",function(){
 
     xhr.onload = function () {
         if (xhr.status === 200) {
-            console.log(data);
+            //console.log(data);
+                console.log("저장 성공");
         } else {
             console.log('저장 실패');
         }

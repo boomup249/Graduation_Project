@@ -215,7 +215,7 @@ public class BBSController {
 	}
 	@GetMapping("post_cancel")
 	public String cancel() {
-		return "/post/list";
+		return "redirect:/post";
 	}
 	
 	@GetMapping("/article/{id}")

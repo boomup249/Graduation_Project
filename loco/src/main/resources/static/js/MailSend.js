@@ -21,7 +21,7 @@ mailCheck.addEventListener("click", () => {
             if (json !== null) {
                 Warn.textContent = "인증번호 발송이 완료되었습니다.";
                 authNum = json;
-                console.log(authNum);
+                //console.log(authNum);
             } else {
                 Warn.textContent = "인증메일 전송에 실패 하였습니다.";
             }
