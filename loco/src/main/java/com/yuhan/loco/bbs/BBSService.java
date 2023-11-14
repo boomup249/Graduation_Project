@@ -68,6 +68,13 @@ public class BBSService {
    public Page<BBSDB> findparty(int page, Pageable pageable){
 	   return this.BBSrepository.findByCategory("party", pageable);
    }
+   
+   //페이징 안 쓰고 찾기
+   public List<BBSDB> findbytitle2(String search){
+	   return this.BBSrepository.findByTitleContaining(search);
+   }
+   
+   
    /*
    public Long commentSave(String writer, Long id, CommentReqDTO comm) {
 	   comm.setBbs(bbs);

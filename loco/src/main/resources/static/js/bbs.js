@@ -14,11 +14,12 @@
         var iframe = document.querySelector(".change_frame");
         iframe.setAttribute("src", "/views");       
     });
+    /*
     document.getElementById("btn_search").addEventListener("click", function () {
         // iframe의 src 속성을 변경하여 /game/bbs_write 페이지를 표시
         var iframe = document.querySelector(".change_frame");
         iframe.setAttribute("src", "/list/search");       
-    });
+    });*/
     
 /*function Submit() {
 	var sz = "<request></request>";

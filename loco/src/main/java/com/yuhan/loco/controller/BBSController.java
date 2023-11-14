@@ -67,22 +67,12 @@ public class BBSController {
 		return "/post/list";
 	}
 	@GetMapping("/list/search")
-	public String searchres(Model model,
-			@RequestParam(value = "pages", defaultValue = "1") int pages,
-			@RequestParam(value = "orderby", defaultValue = "id") String order, String search, PostDB postDB) {
-		pages -= 1;
-		Page<BBSDB> bbs = this.bbsService.findbytitle(search, pages);
-		int currentPage = pages + 1;
-		int calcEnd = (int)(Math.ceil(currentPage / 10.0) * 10);
-		int startPage = calcEnd - 9;
-		int endPage = Math.min(calcEnd, bbs.getTotalPages());
+	public String searchres(Model model, String search, PostDB postDB) {
+		List<BBSDB> bbs = bbsService.findbytitle2(search);
+		
 		model.addAttribute("bbsDTO", bbs);
-		model.addAttribute("startPage", startPage);
-		model.addAttribute("endPage", endPage);
-		model.addAttribute("currentPage", currentPage);
-		model.addAttribute("totalPage", bbs.getTotalPages());
 		model.addAttribute("bbsService", bbsService);
-		return "/post/list";
+		return "/post/list2";
 	}
 	@GetMapping("/new")
 	public String sortbyNew(Model model,

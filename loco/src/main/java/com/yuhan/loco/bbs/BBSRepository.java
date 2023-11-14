@@ -32,5 +32,6 @@ public interface BBSRepository extends JpaRepository<BBSDB, Long> {
 	List<BBSDB> findByTitle(String title);
 
 	Page<BBSDB> findByTitleContaining(String title, Pageable pageable);
+	List<BBSDB> findByTitleContaining(String title);
 	Page<BBSDB> findByCategory(String category, Pageable pageable);
 }
