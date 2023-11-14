@@ -44,6 +44,7 @@
     		font-weight: lighter; /* 텍스트 굵기 조절 (예: 굵게 표시) */
     		height : 90%;
     		margin-top : 1%;
+    		white-space: pre-line;
 		}
 		.title-1{
 			font-size: 16px; /* 텍스트 크기 조절 (예: 16px) */
@@ -82,7 +83,7 @@
         </thead>
         <tbody>
             <tr>
-            	<th class="content" colspan="2">내용 <div class="content-1" th:object="${postDTO}" th:text="${postDTO.getContent()}"></div></th>
+            	<th class="content" colspan="2">내용 <div class="content-1" th:object="${postDTO}" th:utext="${postDTO.getContent()}"></div></th>
             </tr>
             <tr>
             	<th class="comment-form" style="height:5%;" colspan="2">
