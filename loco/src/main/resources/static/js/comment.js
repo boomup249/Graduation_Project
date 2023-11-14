@@ -15,14 +15,14 @@ const main = {
     commentSave : function () {
         const data = {
             postsId: $('#postsId').val(),
-            comment: $('#comment').val()
+            comment: $('#comment').val().trim()
         }
  
         // 공백 및 빈 문자열 체크
-        if (!data.comment || data.comment.trim() === "") {
+        if (!data.comment) {
             alert("공백 또는 입력하지 않은 부분이 있습니다.");
-            return false;
-        } else {
+            return;
+        }
             $.ajax({
                 type: 'POST',
                 url: '/comm/article/' + data.postsId + '/comments',
@@ -36,7 +36,6 @@ const main = {
                 alert(JSON.stringify(error));
             });
         }
-    }
-};
+    };
  
 main.init();

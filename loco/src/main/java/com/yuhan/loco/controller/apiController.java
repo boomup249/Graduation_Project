@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.ui.Model;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -281,12 +282,12 @@ public class apiController {
 		HttpSession session = req.getSession(false);
 		String getuserId = (String)session.getAttribute("user");
 		String userId = userService.findUserId(getuserId);
-
 		String comment = data.get("comment");
-
+		if (comment == null || comment.trim().isEmpty()) {
+	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("댓글을 입력해주세요.");
+	    }
 		bbsService.commentcreate(id, comment, userId);
 		bbsService.commentup(id);
-
 		return ResponseEntity.ok().build();
  	}
 }

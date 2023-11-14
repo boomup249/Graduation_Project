@@ -8,6 +8,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -175,6 +177,9 @@ public class BBSController {
 		getuserId = (String)session.getAttribute("user");
 		userId = userService.findUserId(getuserId);
 		title = postDTO.getTitle();
+		if (title == null || title.trim().isEmpty()) {
+	        return "/uperror";
+	    }
 		category = postDTO.getCategory();
 		if(category == "bbs") { //자유 게시판
 			postDTO.setCategory("bbs");
