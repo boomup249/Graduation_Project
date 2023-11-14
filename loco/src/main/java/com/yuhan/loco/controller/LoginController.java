@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.yuhan.loco.profile.ProfileService;
+import com.yuhan.loco.profile.profileDB;
 import com.yuhan.loco.user.UserDTO;
 import com.yuhan.loco.user.UserService;
 
@@ -19,9 +21,11 @@ import jakarta.validation.Valid;
 @Controller
 public class LoginController {
 	private final UserService userService;
+	private final ProfileService profileService;
 
-	public LoginController(UserService userService) {
+	public LoginController(UserService userService, ProfileService profileService) {
         this.userService = userService;
+        this.profileService = profileService;
     }
 
 	//연결
@@ -63,8 +67,15 @@ public class LoginController {
 		//에러가 있으면 로그인 화면으로 넘기기
 		if(bindingResult.hasErrors()) { return "/login"; }
 		else { //에러가 없음 -> 디비에도 값이 있음
-			//세션 생성
+			//세션 생성(id or email)
 			session.setAttribute("user", userDTO.getUserId());
+			
+			//id 찾기
+			String uID = userService.findUserId(userDTO.getUserId());
+			//id로 프로필 디비 찾기
+			/*profileDB pDB = profileService.*/
+			
+			
 			//메인으로 리다이렉트
 			System.out.println("로그인 성공");
 			return "redirect:/main";
