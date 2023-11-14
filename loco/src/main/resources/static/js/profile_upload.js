@@ -56,7 +56,7 @@ submit.addEventListener("click",function(e){
         
         formData.append('uploadedFiles', new File([files[i]], fileNameWithoutExtension, { type: files[i].type }));
     }
-	console.log(formData);
+	//console.log(formData);
     const xhr = new XMLHttpRequest();
     xhr.open('POST', '/api/UploadImg', true);
 

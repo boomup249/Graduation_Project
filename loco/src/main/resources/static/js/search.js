@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", function () {
 			let data = {};
 			
 			data.word = word;
-			console.log(data); // {world = "축구"}
+			//console.log(data); // {world = "축구"}
 			
 			fetch(cache,
 			{
@@ -58,7 +58,7 @@ document.addEventListener("DOMContentLoaded", function () {
 			//response 객체를 json 변환
 			.then((res) => res.json())
 			.then((data) => {
-				console.log(data);
+				//console.log(data);
 				fillSearch(data); // data로 list 만드는 함수 실행
 			})
 			.catch((err) => {
