@@ -96,13 +96,11 @@ document.addEventListener("DOMContentLoaded", function () {
 			leftBox.classList.add("left-box");
 			title.innerHTML = j_title;
 			img.setAttribute("src", j_imgdata);
-			leftBox.appendChild(link);
-			link.appendChild(img);
+			
+			leftBox.appendChild(img);
 			leftBox.appendChild(title);
 			
 			//rightBox.classList.add("right-box");
-			
-			
 			
 			if(j_site == "Switch" || j_site == "Ps")
 				link.setAttribute("href", `/consoleDetail/${j_num}`);
@@ -110,15 +108,17 @@ document.addEventListener("DOMContentLoaded", function () {
 				link.setAttribute("href", `/pcDetail/${j_num}`);
 				
 			li.appendChild(leftBox);
+			li.style.border = '1px solid #000';
+			
+			link.appendChild(li);
 			//li.appendChild(rightBox);
 			
-
-			search_Ul.appendChild(li);
+			search_Ul.appendChild(link);
 			
 
 			
 		})
-		
+
 		searchUl.style.height = `${data.length * 30}px`;
 	}//fillSearch
 	
