@@ -19,7 +19,7 @@ resend.addEventListener("click", () =>{
 		if (json !== null){
 			mailCheckWarn.textContent = " 인증번호가 전송되었습니다.";
 			authNum = json;
-			//console.log(authNum);
+			console.log(authNum);
 		} else {
 			alert("인증메일 전송에 실패했습니다.")
 		}
@@ -32,8 +32,8 @@ mailCheckInput.addEventListener("input", checkAuthNumFn);
 function checkAuthNumFn() {
 	const mailCheckValue = mailCheckInput.value;
  
-    //console.log(mailCheckValue);
-    //console.log(authNum);
+    console.log(mailCheckValue);
+    console.log(authNum);
  
     if (parseInt(mailCheckValue) !== parseInt(authNum)) {
         mailCheckWarn.textContent = " 인증번호가 다릅니다.";
