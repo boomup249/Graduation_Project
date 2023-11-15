@@ -30,6 +30,7 @@ public interface BBSRepository extends JpaRepository<BBSDB, Long> {
     int updateView(@Param("id") Long id);
 
 	List<BBSDB> findByTitle(String title);
+	List<BBSDB> findByTitleAndDate(String title, String Date);
 
 	Page<BBSDB> findByTitleContaining(String title, Pageable pageable);
 	List<BBSDB> findByTitleContaining(String title);

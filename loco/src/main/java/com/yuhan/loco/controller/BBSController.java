@@ -199,7 +199,7 @@ public class BBSController {
 		bbsDTO.setViews(0L);
 		bbsDTO.setComment(0L);
 		bbsService.create(bbsDTO.getTitle(), bbsDTO.getWriter(), bbsDTO.getCategory(), bbsDTO.getDate(), bbsDTO.getViews(), bbsDTO.getComment());
-		List<BBSDB> bbsDBList = bbsService.findID(bbsDTO.getTitle());
+		List<BBSDB> bbsDBList = bbsService.findIDBytitledate(bbsDTO.getTitle(), bbsDTO.getDate());
 		BBSDB bbsDB = bbsDBList.get(0);
 		Long bbs_Id = bbsDB.getId();
 		postService.create(bbs_Id, postDTO.getCategory(), postDTO.getTitle(), postDTO.getWriter(), postDTO.getContent());

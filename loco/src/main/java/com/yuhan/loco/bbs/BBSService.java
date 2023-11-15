@@ -89,5 +89,10 @@ public class BBSService {
    public List<CommentDB> findCommentDB(Long id){
 	   return this.Commentrepository.findByPost(id);
    }
+   
+   public List<BBSDB> findIDBytitledate(String title, String date){
+	   return BBSrepository.findByTitleAndDate(title, date);
+	   }
+
 
 }
