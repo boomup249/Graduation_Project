@@ -70,8 +70,9 @@ submit.addEventListener("click",function(e){
 
     // FormData를 서버로 전송합니다.
     xhr.send(formData);
-    setTimeout(function () {
-	    location.reload();
-    }, 100);
+	setTimeout(function () {
+		location.reload();
+	}, 300);
+
 	
 })
