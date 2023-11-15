@@ -125,7 +125,6 @@ public class BBSController {
 	public String write(Model model, HttpServletRequest req, BBSDB bbsDB, PostDB postDB) {
 		String getuserId, userId;
 		HttpSession session = req.getSession(false);
-
 		if(session != null) {
 			getuserId = (String)session.getAttribute("user");
 			userId = userService.findUserId(getuserId);
@@ -216,7 +215,7 @@ public class BBSController {
 	public String show_article(@PathVariable Long id, HttpServletRequest req, Model model, BBSDB bbsDB){
 		HttpSession session = req.getSession(false);
 		if(session == null) {
-			return "/error";
+			return "/loginerror";
 		}
 		PostDB article = postService.getByID(id);
 		String getuserId = (String)session.getAttribute("user");
