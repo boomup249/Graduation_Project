@@ -414,12 +414,12 @@
 						<img src="/imgs/btn/goto.png" />
 					</a>
 					
-					<div th:if="${csGameDetail.SALEPER.equals('할인 X') || csGameDetail.SALEPER == null}" 
+					<div th:if="${csGameDetail.SALEPER == null}" 
 						 id="no_dc" th:text="${csGameDetail.PRICE}"><!-- 할인 x -->
 							정가
 					</div>
 									
-					<div th:if="${!(csGameDetail.SALEPER.equals('할인 X') || csGameDetail.SALEPER == null)}"
+					<div th:if="${!(csGameDetail.SALEPER == null)}"
 						 id="dc"><!-- 할인 o -->
 							<div class="dc_rate" th:text="${csGameDetail.SALEPER}">할인율</div>
 							<div class="prices" >
@@ -441,12 +441,12 @@
 						<img src="/imgs/btn/goto.png" />
 					</a>
 					
-					<div th:if="${csGameDetail.SALEPER.equals('할인 X') || csGameDetail.SALEPER == null}" 
+					<div th:if="${csGameDetail.SALEPER == null}" 
 						 id="no_dc" th:text="${csGameDetail.PRICE}"><!-- 할인 x -->
 							정가
 					</div>
 									
-					<div th:if="${!(csGameDetail.SALEPER.equals('할인 X') || csGameDetail.SALEPER == null)}"
+					<div th:if="${!(csGameDetail.SALEPER == null)}"
 						 id="dc"><!-- 할인 o -->
 							<div class="dc_rate" th:text="${csGameDetail.SALEPER}">할인율</div>
 							<div class="prices" >
