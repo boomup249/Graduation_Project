@@ -43,6 +43,7 @@
 
 
 ### ② 회원가입
+
 - 이메일 인증
 - 아이디 중복 확인
 - 비밀번호 검증
@@ -51,6 +52,8 @@
 
 
 ### ③ 로그인
+![login](https://github.com/boomup249/Graduation_Project/assets/100755494/afb9931a-f591-4813-8a75-a3723ea9f62a)
+
 - 이메일 혹은 아이디, 비밀번호 입력 후 로그인
 - 가입하지 않은 사용자를 위한 회원가입 링크
 
@@ -64,6 +67,8 @@
 
 
 ### ⑤ 게임 상세 페이지(Console/PC)
+![detail](https://github.com/boomup249/Graduation_Project/assets/100755494/e9ba48ce-8d3b-4ecf-ab56-d11bbffa83fa)
+
 - 크롤링한 정보 표시(게임 제목, 대표 이미지, 서브 이미지, description) 표시
 - 판매 사이트 및 가격 표시
 - 판매 사이트 바로가기
