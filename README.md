@@ -63,68 +63,132 @@
 ### ① Main 
 
 - background img 랜덤 전환
-- 로고 애니메이션
-- 화살표(↓) 버튼 누를 시, 상황에 따른 화면 전환
+- 로고 애니메이션<br><br>
+![main_1](https://github.com/boomup249/Graduation_Project/assets/100755594/3eaeb700-744e-464e-a689-c1a2a0427a6a)
 
-  if 1) 로그인이 되어있지 않은 경우 - 이메일 입력 화면으로 전환. 이미 존재하는 이메일이라면 로그인 화면으로, 존재하지 않는 이메일이라면 회원가입 화면으로 전환. <br>
-     2) 로그인이 되어있는 경우 - CONSOLE 화면으로 전환
+<br>
+
+- 화살표(↓) 버튼 누를 시, 상황에 따른 화면 전환 <br><br>
+    **if )** <br>
+    ⑴ 로그인이 되어있지 않은 경우 - 이메일 입력 화면으로 전환. 이미 존재하는 이메일이라면 로그인 화면으로, 존재하지 않는 이메일이라면 회원가입 화면으로 전환. <br>
+    
+
+    ⑵ 로그인이 되어있는 경우 - CONSOLE 화면으로 전환 <br><br>
+      ![main_3](https://github.com/boomup249/Graduation_Project/assets/100755594/68f1ec33-d262-47ea-9955-f9b0f6cef4ff)
+  
+<br><br>
 
 
 ### ② 회원가입
 
 - 이메일 인증
-- 아이디 중복 확인
-- 비밀번호 검증
-- 생년월일 및 성별 선택
-- 선호/비선호 장르 선택
+- 아이디 중복 확인 <br><br>
+  ![id](https://github.com/boomup249/Graduation_Project/assets/100755594/3fabefbe-8be6-49cd-b7b9-089091356657)
 
+<br>
 
+- 비밀번호 검증 <br><br>
+  ![pwd](https://github.com/boomup249/Graduation_Project/assets/100755594/adfcc540-1a30-4d85-b44e-f9d059d3a587)
+
+<br>
+  
+- 생년월일 및 성별 선택 <br><br>
+ ![birth gender](https://github.com/boomup249/Graduation_Project/assets/100755594/8a00759a-5e61-4d57-b8af-ef6beb886a7a)
+
+<br>
+
+- 선호/비선호 장르 선택 <br><br>
+  ![like dislike](https://github.com/boomup249/Graduation_Project/assets/100755594/2c4284a0-e805-43be-93e9-bb627b072932)
+
+<br><br>
+
+  
 ### ③ 로그인
+- 이메일 혹은 아이디, 비밀번호 입력 후 로그인
+- 가입하지 않은 사용자를 위한 회원가입 링크 <br><br>
 ![login](https://github.com/boomup249/Graduation_Project/assets/100755494/afb9931a-f591-4813-8a75-a3723ea9f62a)
 
-- 이메일 혹은 아이디, 비밀번호 입력 후 로그인
-- 가입하지 않은 사용자를 위한 회원가입 링크
+<br><br>
+
 
 
 ### ④ 게임 목록(Console/PC)
-- 사이트, 장르 필터링
-- 순서(인기순, 할인순, 추천순) 정렬(※ 추천순은 로그인을 해야만 가능)
-- PC 게임의 경우, 두 사이트에 동시에 존재하는 게임이면 두 사이트 중 최저가를 표시
-- 해당 게임이 존재하는 사이트의 로고를 모두 표시
 - 크롤링한 정보(게임 대표 이미지, 가격, 마지막으로 크롤링 한 시간) 표시
+- 사이트, 장르 필터링
+- 순서(인기순, 할인순, 추천순) 정렬(※ 추천순은 로그인을 해야만 가능) <br><br>
+  ![gamelist_filter](https://github.com/boomup249/Graduation_Project/assets/100755594/cf40d7d8-c4d7-4a77-a3f7-6a807716240d)
+
+<br>
+
+- PC 게임의 경우, 두 사이트에 동시에 존재하는 게임이면 두 사이트 중 최저가를 표시
+- 해당 게임이 존재하는 사이트의 로고를 모두 표시 <br><br>
+  ![gamelist](https://github.com/boomup249/Graduation_Project/assets/100755594/da683168-c353-46ff-9a81-52fe72505ce6)
+
+<br><br>
 
 
 ### ⑤ 게임 상세 페이지(Console/PC)
-![detail](https://github.com/boomup249/Graduation_Project/assets/100755494/e9ba48ce-8d3b-4ecf-ab56-d11bbffa83fa)
-
 - 크롤링한 정보 표시(게임 제목, 대표 이미지, 서브 이미지, description) 표시
 - 판매 사이트 및 가격 표시
 - 판매 사이트 바로가기
-- 장르 태그(#) 표시
+- 장르 태그(#) 표시 <br><br>
+![game_detail](https://github.com/boomup249/Graduation_Project/assets/100755594/86fdea88-786e-442f-b4ac-ccb8141f8b20)
+
+<br><br>
+
 
 
 ### ⑥ 게시판(BBS)
 - 카테고리 별 구분(공지사항, 자유게시판, 공략, 파티원)
-- 최신글/인기글 순 정렬
-- 글(제목) 검색
-- 글 작성(카테고리 선택, 제목, 글 내용 작성)
-- 게시글에 댓글 작성
+- 최신글/인기글 순 정렬 <br><br>
+![bbs](https://github.com/boomup249/Graduation_Project/assets/100755594/050d3ee7-6e53-4a2f-b8da-d28b3bb3f7c8)
+
+<br>
+
+- 글 작성(카테고리 선택, 제목, 글 내용 작성) <br><br>
+![bbs_write](https://github.com/boomup249/Graduation_Project/assets/100755594/163f00df-6ff2-4c6e-b416-703789f49047)
+
+<br>
+
+- 글(제목) 검색 <br><br>
+![bbs_search](https://github.com/boomup249/Graduation_Project/assets/100755594/87ad2118-45e3-4d3b-8c3f-422bcdc03c6e)
+
+<br>
+
+- 게시글에 댓글 작성 <br><br>
+![bbs_comment](https://github.com/boomup249/Graduation_Project/assets/100755594/1e632723-6d20-44c3-b741-4b6681028460)
+
+<br><br>
 
 
 ### ⑦ 신작 게임(News)
 - 캘린더에 날짜별 출시 예정인 신작 게임을 표시
-- 날짜가 확실하게 정해지지 않은 경우(ex. 202n년 출시 예정) 오른쪽 박스에 표시
+- 날짜가 확실하게 정해지지 않은 경우(ex. 202n년 출시 예정) 오른쪽 박스에 표시 <br><br>
+![news](https://github.com/boomup249/Graduation_Project/assets/100755594/4e42960a-3e38-48f5-9f69-986e668463cc)
+
+<br><br>
+
 
 
 ### ⑧ 마이 페이지
 (1) 내 계정
   - 이메일, 아이디 표시
-  - 비밀번호 수정
-  - 선호/비선호 장르 수정
+  - 비밀번호 수정 <br><br>
+  ![myp_pwd](https://github.com/boomup249/Graduation_Project/assets/100755594/d6a0a666-5157-4313-ba9f-87b7ae695cb4)
+
+  <br>
+  
+  - 선호/비선호 장르 수정 <br><br>
+    ![myp_check](https://github.com/boomup249/Graduation_Project/assets/100755594/e9df3c04-46d4-439e-810b-f622923ee2fc)
+
+    <br>
 
 (2) 프로필
   - 프로필 이미지 설정
-  - 닉네임, 한줄 소개 설정
+  - 닉네임, 한줄 소개 설정 <br><br>
+  ![myp_profile](https://github.com/boomup249/Graduation_Project/assets/100755594/bf4a7a6e-dcbd-43f8-9cd0-bf137a226d60)
+
+<br><br>
 
 
 ### ⑨ 검색창
