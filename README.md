@@ -70,9 +70,9 @@
 
 - 화살표(↓) 버튼 누를 시, 상황에 따른 화면 전환 <br><br>
     **if )** <br>
-    ⑴ 로그인이 되어있지 않은 경우 - 이메일 입력 화면으로 전환. 이미 존재하는 이메일이라면 로그인 화면으로, 존재하지 않는 이메일이라면 회원가입 화면으로 전환. <br>
-    
-
+    ⑴ 로그인이 되어있지 않은 경우 - 이메일 입력 화면으로 전환. 이미 존재하는 이메일이라면 로그인 화면으로, 존재하지 않는 이메일이라면 회원가입 화면으로 전환. <br><br>
+    ![main_2](https://github.com/boomup249/Graduation_Project/assets/100755594/17f24e10-2530-43b1-a6e7-137afc781b8b)
+  
     ⑵ 로그인이 되어있는 경우 - CONSOLE 화면으로 전환 <br><br>
       ![main_3](https://github.com/boomup249/Graduation_Project/assets/100755594/68f1ec33-d262-47ea-9955-f9b0f6cef4ff)
   
@@ -81,7 +81,11 @@
 
 ### ② 회원가입
 
-- 이메일 인증
+- 이메일 인증 <br><br>
+![email](https://github.com/boomup249/Graduation_Project/assets/100755594/b243c5b4-0052-40b9-bd9a-58096a3319f3)
+
+<br>
+
 - 아이디 중복 확인 <br><br>
   ![id](https://github.com/boomup249/Graduation_Project/assets/100755594/3fabefbe-8be6-49cd-b7b9-089091356657)
 
@@ -118,7 +122,8 @@
 - 크롤링한 정보(게임 대표 이미지, 가격, 마지막으로 크롤링 한 시간) 표시
 - 사이트, 장르 필터링
 - 순서(인기순, 할인순, 추천순) 정렬(※ 추천순은 로그인을 해야만 가능) <br><br>
-  ![gamelist_filter](https://github.com/boomup249/Graduation_Project/assets/100755594/cf40d7d8-c4d7-4a77-a3f7-6a807716240d)
+  ![gamelist_filter](https://github.com/boomup249/Graduation_Project/assets/100755594/daebc833-9997-479a-9a06-c15610bd138d)
+
 
 <br>
 
@@ -196,4 +201,6 @@
 ### ⑨ 검색창
 - 드롭다운으로 검색한 게임 목록 표시
 - 입력한 텍스트가 포함된 게임 전체를 자동완성하여 목록으로 표시(최대 10개)
-- 검색 버튼을 누를 시, 전체 검색 결과 표시
+- 검색 버튼을 누를 시, 전체 검색 결과 표시 <br><br>
+
+![search](https://github.com/boomup249/Graduation_Project/assets/100755594/71cd1887-e88a-450f-8ca6-c726904de385)
