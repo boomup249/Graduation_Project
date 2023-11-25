@@ -106,7 +106,8 @@
 <br>
 
 - 선호/비선호 장르 선택 <br><br>
-  ![like dislike](https://github.com/boomup249/Graduation_Project/assets/100755594/2c4284a0-e805-43be-93e9-bb627b072932)
+  ![like dislike](https://github.com/boomup249/Graduation_Project/assets/100755594/b712bd63-9b1c-486f-a38c-1e987a6aa636)
+
 
 <br><br>
 
