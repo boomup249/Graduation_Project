@@ -88,12 +88,14 @@
 <br>
 
 - 비밀번호 검증 <br><br>
-  ![pwd](https://github.com/boomup249/Graduation_Project/assets/100755594/adfcc540-1a30-4d85-b44e-f9d059d3a587)
+  ![pwd](https://github.com/boomup249/Graduation_Project/assets/100755594/a516b785-e68b-41c9-8dae-0a983ef820ba)
+
 
 <br>
   
 - 생년월일 및 성별 선택 <br><br>
- ![birth gender](https://github.com/boomup249/Graduation_Project/assets/100755594/8a00759a-5e61-4d57-b8af-ef6beb886a7a)
+ ![info](https://github.com/boomup249/Graduation_Project/assets/100755594/a77ac85e-9cc0-4524-b39a-fdd0b8d8e501)
+
 
 <br>
 
