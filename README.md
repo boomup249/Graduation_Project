@@ -209,3 +209,4 @@
 ![search](https://github.com/boomup249/Graduation_Project/assets/100755594/71cd1887-e88a-450f-8ca6-c726904de385)
 
 ## 💾 데이터베이스 ERD
+![database_erd](https://github.com/boomup249/Graduation_Project/assets/112924147/7d766402-c474-4273-918d-af9e52036742)
