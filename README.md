@@ -207,3 +207,5 @@
 - 검색 버튼을 누를 시, 전체 검색 결과 표시 <br><br>
 
 ![search](https://github.com/boomup249/Graduation_Project/assets/100755594/71cd1887-e88a-450f-8ca6-c726904de385)
+
+## 💾 데이터베이스 ERD
