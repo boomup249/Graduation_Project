@@ -20,7 +20,7 @@ import requests
 #DB연결
 conn = MySQLdb.connect(
     user="root",
-    passwd="1937",
+    passwd="1234",
     host="localhost",
     db="member"
 )
@@ -61,7 +61,7 @@ gameURL = 'https://store.playstation.com/'
 services = Service(executable_path=ChromeDriverManager().install())
 options = Options()
 options.add_experimental_option("detach", True)
-options.add_argument("headless")
+#options.add_argument("headless")
 options.add_argument("disable-gpu")
 options.add_argument("lang=ko_KR")
 options.add_argument('window-size=1920x1080')
@@ -79,6 +79,11 @@ driver.get(URL)
 #할인 페이지로 접속(할인페이지 url을보니 변경될수도 있을거같아서 이렇게 접속)
 driver.find_element(By.XPATH, "//*[@id='main']/div/div[3]/section/div/ul/li[3]/a").click()
 sleep(2)
+driver.find_element(By.CSS_SELECTOR, '#main > section > div > div > div > div.psw-l-exclude\@laptop.psw-p-t-4\@tablet-s.psw-l-w-1\/4\@mobile-s.psw-l-w-1\/4\@mobile-l.psw-l-w-1\/4\@tablet-s.psw-l-w-1\/4\@laptop.psw-l-stack-right > button').click()
+sleep(0.5)
+driver.find_element(By.CSS_SELECTOR, '#main > section > div > div > div > div.psw-l-w-1\/1.psw-l-w-1\/4\@max.psw-l-w-1\/4\@desktop.psw-l-w-1\/3\@laptop.psw-l-w-1\/3\@tablet-l.psw-l-w-1\/2\@tablet-s > div > div > div > div.ems-sdk-sort-filter__drawer-mobile-content.psw-p-x-6.psw-p-t-6 > div.psw-m-b-3 > div > header > button').click()
+sleep(0.5)
+driver.find_element(By.CSS_SELECTOR, '#main > section > div > div > div > div.psw-l-w-1\/1.psw-l-w-1\/4\@max.psw-l-w-1\/4\@desktop.psw-l-w-1\/3\@laptop.psw-l-w-1\/3\@tablet-l.psw-l-w-1\/2\@tablet-s > div > div > div > div.ems-sdk-sort-filter__drawer-mobile-content.psw-p-x-6.psw-p-t-6 > div.psw-m-b-3 > div > div > span > label:nth-child(2) > span.psw-radio-trigger.psw-r-pill').click()
 
 html = driver.page_source
 soup = BeautifulSoup(html, "html.parser")
@@ -119,7 +124,7 @@ for roof in range(1000000):
     soup = BeautifulSoup(html, "html.parser")
 
     sleep(1.5)
-
+    """
     panel = soup.find("div", class_="psw-l-w-1/1")
     game_list = panel.find_all("li", class_="psw-l-w-1/2@mobile-s psw-l-w-1/2@mobile-l psw-l-w-1/6@tablet-l psw-l-w-1/4@tablet-s psw-l-w-1/6@laptop psw-l-w-1/8@desktop psw-l-w-1/8@max")
 
@@ -253,7 +258,7 @@ for roof in range(1000000):
         break
     
     sleep(1.5)
-
+    """
     #페이지 이동 실행하는 부분
     pagebar = driver.find_element(By.CLASS_NAME, "psw-l-stack-center")
     pages = pagebar.find_elements(By.CSS_SELECTOR, 'li')

@@ -28,7 +28,7 @@ def saleper_calc(price, saleprice):
 #DB연결
 conn = MySQLdb.connect(
     user="root",
-    passwd="1937",
+    passwd="1234",
     host="localhost",
     db="member"
 )
@@ -47,6 +47,7 @@ cursor.execute('''CREATE TABLE IF NOT EXISTS gamedata_switch (`NUM` INT NOT NULL
                                                               `IMGDATA` TEXT NULL DEFAULT NULL,
                                                               `GAMEIMG` TEXT NULL DEFAULT NULL,
                                                               `URL` TEXT NULL DEFAULT NULL,
+                                                              `VARIA` TINYINT(1) NOT NULL DEFAULT 1,
                                                               PRIMARY KEY (`NUM`),
                                                               UNIQUE KEY (`TITLE`))
                ''')
@@ -68,7 +69,7 @@ URL = 'https://store.nintendo.co.kr/games/sale'
 services = Service(executable_path=ChromeDriverManager().install())
 options = Options()
 options.add_experimental_option("detach", True)
-options.add_argument("headless")
+#options.add_argument("headless")
 options.add_argument("disable-gpu")
 options.add_argument("lang=ko_KR")
 options.add_argument('window-size=1920x1080')
@@ -84,9 +85,28 @@ driver.get(URL)
 
 sleep(2)
 driver.find_element(By.CLASS_NAME, 'popup-close').click()
+
+while True:
+            soup= BeautifulSoup(driver.page_source, "html.parser")
+            error = soup.select_one('h1')
+            if error.text == '403 Forbidden':
+                print("1분 30초 일시정지(403 forbidden 오류 회피를 위해)")
+                driver.quit()
+                sleep(90)
+                driver = webdriver.Chrome(service=services, options=options)
+                driver.implicitly_wait(5)
+                #driver.set_window_size(1400,800)
+                driver.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument", {"source": """ Object.defineProperty(navigator, 'webdriver', { get: () => undefined }) """})
+                driver.execute_script("Object.defineProperty(navigator, 'plugins', {get: function() {return[1, 2, 3, 4, 5];},});")
+                driver.execute_script("Object.defineProperty(navigator, 'languages', {get: function() {return ['ko-KR', 'ko']}})")
+                driver.get(URL)
+                sleep(3)
+            else:
+                break
+
 sleep(2)
 page = driver.find_element(By.TAG_NAME, "body")
-for _ in range(0,130):
+for _ in range(0,150):
     page.send_keys(Keys.PAGE_DOWN)
     sleep(0.3)
 
@@ -103,20 +123,19 @@ for item in gamelist:
     price = item.find("span", attrs={"data-price-type" : "oldPrice"})
     saleprice = item.find("span", attrs={"data-price-type" : "finalPrice"})
     img = item.find("img", class_="product-image-photo mplazyload mplazyload-transparent entered loaded")
-    imgdata = img["src"]
+    if img != None:
+        imgdata = img["src"]
 
     if price == None:
-        price = item.find("span", class_="point-icon-wrapper")
-        price = price.text + "포인트"
-        saleprice = "포인트로 구매 가능"
-        saleper = "X"
+        continue
     else:
         price = price.find("span").text
         saleprice = saleprice.find("span").text
         saleper = saleper_calc(price, saleprice)
 
     game_link = item.select_one('a')
-    move = game_link["href"]
+    if game_link != None:
+        move = game_link["href"]
     
     """
     if l > 120:
@@ -126,40 +145,38 @@ for item in gamelist:
         l=0
     """
 
-    driver.execute_script(f'window.open(\'{move}\');')
-    driver.switch_to.window(driver.window_handles[-1])
-    sleep(1.5)
-    new_soup = BeautifulSoup(driver.page_source, "html.parser")
-
-    error = new_soup.select_one('h1')
-    if error.text == '403 Forbidden':
-        print("4분30초간 일시정지(403 forbidden 오류 회피를 위해)")
-        driver.close()
-        driver.switch_to.window(driver.window_handles[-1])
-        sleep(270)
-        print("재실행")
+    while True:
         driver.execute_script(f'window.open(\'{move}\');')
+        sleep(1)
         driver.switch_to.window(driver.window_handles[-1])
-        sleep(5)
+        sleep(1)
         new_soup = BeautifulSoup(driver.page_source, "html.parser")
+        error = new_soup.select_one('h1')
+        if error.text == '403 Forbidden':
+            print("1분 30초 일시정지(403 forbidden 오류 회피를 위해)")
+            driver.close()
+            driver.switch_to.window(driver.window_handles[-1])
+            sleep(90)
+        else:
+            break
 
 
-    description = new_soup.select_one("div.game_ex")
-    if description == None:
-        description = new_soup.select_one("div.value")
+    descript = new_soup.select_one("div.game_ex")
+    description = ""
+    if descript == None:
+        descript = new_soup.select_one("div.value")
     else:
-        description = None
+        descript = None
     
-    if description != None:
-        description = description.text.strip()
+    if descript != None:
+        descript = descript.text.strip()
+        for char in descript:
+            if char.isalnum() or char.isspace():
+                description += char
 
-    gameimg = new_soup.select_one('img.fotorama__img')
-    if gameimg == None:
-        print("gameimg 오류 3초 대기후 재크롤링")
-        sleep(3)
-        new_soup = BeautifulSoup(driver.page_source, "html.parser")
-        gameimg = new_soup.select_one('img.fotorama__img')
-    gameimg = gameimg["src"]
+    gameimg = new_soup.select_one('img.fotorama__img')  
+    if gameimg != None:
+        gameimg = gameimg["src"]
 
     sql = 'INSERT INTO gamedata_switch (TITLE, PRICE, SALEPRICE, SALEPER, DESCRIPTION, IMGDATA, GAMEIMG, URL) VALUES (%s, %s, %s, %s, %s, %s, %s ,%s)'
     cursor.execute(sql, (title, price, saleprice, saleper, description, imgdata, gameimg, move))

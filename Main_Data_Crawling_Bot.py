@@ -1,5 +1,3 @@
-import Base_Setting
-from Base_Setting import *
 import Steam_Sale_Game_Crawling
 from Steam_Sale_Game_Crawling import *
 import Nintendo_Sale_Crawling
@@ -10,10 +8,12 @@ import Epic_Sale_Game_Crawling
 from Epic_Sale_Game_Crawling import *
 import Danawa_Release_Crawling
 from Danawa_Release_Crawling import *
+import schedule
 import multiprocessing
 
+mysql_passwd = "1234"
+
 def start_crawling(dict_list):
-    mysql_passwd = "1234"
     URL = dict_list['URL']
     platform = dict_list['platform']
 
@@ -38,6 +38,8 @@ def start_crawling(dict_list):
         print(f'{platform} 크롤링 시작 오류 - ', e)
 
 def run_daily_job():
+    print("크롤링 시작 메모리 할당")
+
     steam_dict = {'URL': 'https://store.steampowered.com/specials/', 'platform': 'steam'}
     steam_process = multiprocessing.Process(target=start_crawling, args=(steam_dict,))
     steam_process.start()
@@ -79,12 +81,18 @@ def run_daily_job():
     steam_process.join()
     del steam_process
 
+    print("크롤링 종료 메모리 해제")
+    print("익일 오전 6시까지 대기합니다.")
+
 if __name__ == "__main__":
     multiprocessing.freeze_support()
-    print("MYSQL root 비밀번호가 1234여야 작동됩니다")
+    print("loco 세일 게임 데이터 크롤링 봇을 구동합니다.")
+    print("매일 오전 6시에 크롤링을 진행한 후 크롤링이 종료되면 할당됐던 메모리를 해제한 뒤 다음날 오후 6시까지 대기합니다.")
+    print("")
+    print("※주의사항 : 입력한 Mysql 패스워드가 틀릴경우 크롤링 봇이 정상적으로 동작하지 않습니다!※")
+    mysql_passwd = input("Mysql 패스워드를 입력하세요 : ")
+
     schedule.every().day.at("06:00").do(run_daily_job)
-    base = Base_Setting()
-    del base
 
     try:
         print("bot 실행 시작")
