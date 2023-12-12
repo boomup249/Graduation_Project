@@ -11,12 +11,6 @@ class Crawling_Playstation_Sale_Game(Crawling_Game_Info):
         #할인 페이지로 이동
         driver.find_element(By.XPATH, "//*[@id='main']/div/div[3]/section/div/ul/li[3]/a").click()
         sleep(5)
-        driver.find_element(By.CSS_SELECTOR, '#main > section > div > div > div > div.psw-l-exclude\@laptop.psw-p-t-4\@tablet-s.psw-l-w-1\/4\@mobile-s.psw-l-w-1\/4\@mobile-l.psw-l-w-1\/4\@tablet-s.psw-l-w-1\/4\@laptop.psw-l-stack-right > button').click()
-        sleep(1)
-        driver.find_element(By.CSS_SELECTOR, '#main > section > div > div > div > div.psw-l-w-1\/1.psw-l-w-1\/4\@max.psw-l-w-1\/4\@desktop.psw-l-w-1\/3\@laptop.psw-l-w-1\/3\@tablet-l.psw-l-w-1\/2\@tablet-s > div > div > div > div.ems-sdk-sort-filter__drawer-mobile-content.psw-p-x-6.psw-p-t-6 > div.psw-m-b-3 > div > header > button').click()
-        sleep(1)
-        driver.find_element(By.CSS_SELECTOR, '#main > section > div > div > div > div.psw-l-w-1\/1.psw-l-w-1\/4\@max.psw-l-w-1\/4\@desktop.psw-l-w-1\/3\@laptop.psw-l-w-1\/3\@tablet-l.psw-l-w-1\/2\@tablet-s > div > div > div > div.ems-sdk-sort-filter__drawer-mobile-content.psw-p-x-6.psw-p-t-6 > div.psw-m-b-3 > div > div > span > label:nth-child(2) > span.psw-radio-trigger.psw-r-pill').click()
-        sleep(1)
         print("ps 이동완료")
         soup = BeautifulSoup(driver.page_source, "html.parser")
 
@@ -43,24 +37,10 @@ class Crawling_Playstation_Sale_Game(Crawling_Game_Info):
                 sleep(3)
                 restart = 1
 
-                pagebar = driver.find_element(By.CLASS_NAME, "psw-l-stack-center")
-                pages = pagebar.find_elements(By.CSS_SELECTOR, 'li')
-                for page in pages:
-                    #렉방지 재시작 이후 크롤링하던 페이지로 이동하기위해 if문 추가
-                    if page.text < str(next_page):
-                        page.click()
-                    elif page.text == str(next_page):
-                        page.click()
-                        next_page += 1
-                        restart += 1
-                        sleep(1.5)
-                        break
-
             #페이지가 변경됐을때 변경된 페이지를 파싱
             soup = BeautifulSoup(driver.page_source, "html.parser")
             sleep(1.5)
 
-            """
             panel = soup.find("div", class_="psw-l-w-1/1")
             game_list = panel.find_all("li", class_="psw-l-w-1/2@mobile-s psw-l-w-1/2@mobile-l psw-l-w-1/6@tablet-l psw-l-w-1/4@tablet-s psw-l-w-1/6@laptop psw-l-w-1/8@desktop psw-l-w-1/8@max")
             for game in game_list:
@@ -167,7 +147,7 @@ class Crawling_Playstation_Sale_Game(Crawling_Game_Info):
                 break
             
             sleep(1.5)
-            """
+            
             #페이지 이동 실행하는 부분
             pagebar = driver.find_element(By.CLASS_NAME, "psw-l-stack-center")
             pages = pagebar.find_elements(By.CSS_SELECTOR, 'li')
