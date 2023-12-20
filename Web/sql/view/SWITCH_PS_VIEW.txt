@@ -1,0 +1,40 @@
+CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = `root`@`localhost` 
+    SQL SECURITY DEFINER
+VIEW `member`.`game_switch_ps` AS
+    SELECT 
+        `member`.`gamedata_ps`.`NUM` AS `NUM`,
+        `member`.`gamedata_ps`.`TITLE` AS `TITLE`,
+        (CASE
+            WHEN (`member`.`gamedata_ps`.`TITLE` IS NOT NULL) THEN 'Ps Only'
+            ELSE 'None'
+        END) AS `SITEAVAILABILITY`,
+        `member`.`gamedata_ps`.`PRICE` AS `PRICE`,
+        `member`.`gamedata_ps`.`SALEPRICE` AS `SALEPRICE`,
+        `member`.`gamedata_ps`.`SALEPER` AS `SALEPER`,
+        `member`.`gamedata_ps`.`DESCRIPTION` AS `DESCRIPTION`,
+        `member`.`gamedata_ps`.`IMGDATA` AS `IMGDATA`,
+        `member`.`gamedata_ps`.`GAMEIMG` AS `GAMEIMG`,
+        `member`.`gamedata_ps`.`URL` AS `URL`
+    FROM
+        `member`.`gamedata_ps` 
+    UNION SELECT 
+        ((SELECT 
+                IFNULL(MAX(`member`.`gamedata_ps`.`NUM`), 0)
+            FROM
+                `member`.`gamedata_ps`) + `member`.`gamedata_switch`.`NUM`) AS `NUM`,
+        `member`.`gamedata_switch`.`TITLE` AS `TITLE`,
+        (CASE
+            WHEN (`member`.`gamedata_switch`.`TITLE` IS NOT NULL) THEN 'Switch Only'
+            ELSE 'None'
+        END) AS `SITEAVAILABILITY`,
+        `member`.`gamedata_switch`.`PRICE` AS `PRICE`,
+        `member`.`gamedata_switch`.`SALEPRICE` AS `SALEPRICE`,
+        `member`.`gamedata_switch`.`SALEPER` AS `SALEPER`,
+        `member`.`gamedata_switch`.`DESCRIPTION` AS `DESCRIPTION`,
+        `member`.`gamedata_switch`.`IMGDATA` AS `IMGDATA`,
+        `member`.`gamedata_switch`.`GAMEIMG` AS `GAMEIMG`,
+        `member`.`gamedata_switch`.`URL` AS `URL`
+    FROM
+        `member`.`gamedata_switch`

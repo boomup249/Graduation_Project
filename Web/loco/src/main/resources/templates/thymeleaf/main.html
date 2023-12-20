@@ -1,0 +1,102 @@
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+		<title>loco</title>
+		
+		<!-- 외부 css -->
+		<link rel="stylesheet" href="css/font.css"> <!-- 폰트 css -->
+		<link rel="stylesheet" href="css/header.css"> <!-- 헤더 css -->
+		<link rel="stylesheet" href="css/search.css"> <!-- 검색창 css -->
+		<link rel="stylesheet" href="css/background_image.css"> <!-- b_img css -->
+		
+		<link rel="stylesheet" href="css/main_animation.css"> <!-- 애니메이션 css -->
+		
+		<!-- 외부 js -->
+		<script src="js/mainLoad.js"></script>
+		
+		<style>	
+			/*css 속성*/
+			
+			body { background-color: grey;
+					margin: 0; padding: 0;}
+			
+			/*내용*/
+			#content {z-index: 2;
+						position: relative;
+						top: 100px;
+						left: 0px; /*헤더 아래부터*/
+						width: 100%; height: calc(100% - 100px)/*화면 - 헤더*/;
+						/*자식 수직 중앙 정렬*/
+						display: flex;
+						flex-direction: column;
+						justify-content: center;}
+						
+			.item1 p {font-family: 'Cafe24ClassicType-Regular'; /*text*/
+						font-size: 30px;
+						color: white;
+						opacity: 0.6;}
+						
+			.item1 {width: 1500px; height: 100px;
+					position: relative;
+					left: 50%;
+					margin-left: -750px; /*content에 수평 중앙 정렬*/
+					/*자식 중앙정렬*/
+					display: flex;
+					justify-content: center;
+					align-items: center; }
+			
+			.item2 {width: 500px; height: 150px;
+					position: relative;
+					left: 50%;
+					margin-left: -250px;  /*content에 수평 중앙 정렬*/
+					margin-bottom: 30px;
+					/*자식 중앙정렬*/
+					display: flex;
+					justify-content: center;
+					align-items: center;}
+					
+			.item3 {width: 100px; height: 100px;
+					position: relative;
+					left: 50%;
+					margin-left: -50px; /*content에 수평 중앙 정렬*/
+					/*자식 중앙정렬*/
+					display: flex;
+					justify-content: center;
+					align-items: center; }
+					
+	         
+	         /*visibility*/
+	         .hidden { visibility: hidden; }
+			
+		</style>
+	</head>
+	
+	<body>
+		<!-- 이미지 링크 넣기 -->
+		<div id="b_img"></div><!-- 배경 이미지 불투명도 조절해서 넣기 -->
+		<script src="js/backgroundImage.js"></script>
+		
+		<!-- 헤더 -->
+		<div th:replace="fragments/header.html :: fragment-header"></div>
+		
+		<!-- 콘텐츠 -->
+		<div id="content">
+			<div class="item1 hidden" id="intro">
+				<p>Everything of the game's information</p>
+			</div>
+			<div class="item2" id="b_logo">
+				<img src="imgs/header/logo.png" width="350px"/>
+			</div>
+			
+			<!-- 이미지 링크 -->
+			<div th:if="${session.user == null}" class="item3 hidden" id="btn_go"><!-- 세션(user)가 없으면 -->
+				<a href="/join"><img src="imgs/main/down.png" width="100px"/></a>
+			</div>
+			
+			<div th:if="${session.user != null}" class="item3 hidden" id="btn_go"><!-- 세션(user)가 있으면(로그인 상태) -->
+				<a href="/console"><img src="imgs/main/down.png" width="100px"/></a>
+			</div>
+		</div>
+		
+	</body>
+</html>

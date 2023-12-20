@@ -1,0 +1,102 @@
+@charset "UTF-8";
+
+/*폰트*/
+
+			@font-face {
+						    font-family: 'GmarketSansLight';
+						    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansLight.woff') format('woff');
+						    font-weight: normal;
+						    font-style: normal;
+						}
+
+			@font-face {
+						    font-family: 'GmarketSansMedium';
+						    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
+						    font-weight: normal;
+						    font-style: normal;
+						}
+			
+			@font-face {
+						    font-family: 'GmarketSansBold';
+						    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansBold.woff') format('woff');
+						    font-weight: normal;
+						    font-style: normal;
+						}
+						
+			@font-face {
+						    font-family: 'Cafe24ClassicType-Regular';
+						    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2210-2@1.0/Cafe24ClassicType-Regular.woff2') format('woff2');
+						    font-weight: normal;
+						    font-style: normal;
+						}
+			
+						
+			@font-face {
+						    font-family: 'DOSPilgiMedium';
+						    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2304-2@1.0/DOSPilgiMedium.woff2') format('woff2');
+						    font-weight: normal;
+						    font-style: normal;
+						}
+						
+			@font-face {
+						    font-family: 'IAMAPLAYER';
+						    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2307-2@1.0/IAMAPLAYER.woff2') format('woff2');
+						    font-weight: normal;
+						    font-style: normal;
+						}
+						
+			@font-face {
+						    font-family: 'HS-Regular';
+						    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/HS-Regular.woff') format('woff');
+						    font-weight: normal;
+						    font-style: normal;
+						}
+						
+			@font-face {
+						    font-family: 'GangwonEdu_OTFBoldA';
+						    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/GangwonEdu_OTFBoldA.woff') format('woff');
+						    font-weight: normal;
+						    font-style: normal;
+						}
+						
+			@font-face {
+						    font-family: 'HSBombaram21-Regular';
+						    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2302@1.0/HSBombaram21-Regular.woff2') format('woff2');
+						    font-weight: normal;
+						    font-style: normal;
+						}
+						
+			@font-face {
+
+    						font-family: 'TheJamsil5Bold';
+    						src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2302_01@1.0/TheJamsil5Bold.woff2') format('woff2');
+    						font-weight: lighter;
+    						font-style: normal;
+
+						    font-family: 'HakgyoansimWoojuR';
+						    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2307-2@1.0/HakgyoansimWoojuR.woff2') format('woff2');
+						    font-weight: normal;
+						    font-style: normal;
+						}
+			
+			@font-face {
+						    font-family: 'Ramche';
+						    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2307-1@1.1/Ramche.woff2') format('woff2');
+						    font-weight: normal;
+						    font-style: normal;
+						}
+						
+			@font-face {
+						    font-family: 'Dovemayo_gothic';
+						    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2302@1.1/Dovemayo_gothic.woff2') format('woff2');
+						    font-weight: normal;
+						    font-style: normal;
+
+						}
+						
+			@font-face {
+    font-family: 'NanumSquareNeo-Variable';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_11-01@1.0/NanumSquareNeo-Variable.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}

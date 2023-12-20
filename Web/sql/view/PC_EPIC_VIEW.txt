@@ -1,0 +1,87 @@
+CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = `root`@`localhost` 
+    SQL SECURITY DEFINER
+VIEW `member`.`game_steam_epic` AS
+    SELECT 
+        CONCAT_WS('_',
+                IFNULL(`s`.`NUM`, ''),
+                IFNULL(`e`.`NUM`, '')) AS `KEY`,
+        `s`.`NUM` AS `STEAMNUM`,
+        `e`.`NUM` AS `EPICNUM`,
+        `s`.`TITLE` AS `TITLE`,
+        (CASE
+            WHEN
+                ((`s`.`TITLE` IS NOT NULL)
+                    AND (`e`.`TITLE` IS NOT NULL))
+            THEN
+                'Both'
+            WHEN (`s`.`TITLE` IS NOT NULL) THEN 'Steam Only'
+            WHEN (`e`.`TITLE` IS NOT NULL) THEN 'Epic Only'
+            ELSE 'None'
+        END) AS `SITEAVAILABILITY`,
+        `s`.`PRICE` AS `STEAMPRICE`,
+        `e`.`PRICE` AS `EPICPRICE`,
+        `s`.`SALEPRICE` AS `STEAMSALEPRICE`,
+        `e`.`SALEPRICE` AS `EPICSALEPRICE`,
+        (CASE
+            WHEN (`s`.`SALEPER` > `e`.`SALEPER`) THEN `s`.`SALEPER`
+            WHEN (`s`.`SALEPER` < `e`.`SALEPER`) THEN `e`.`SALEPER`
+            WHEN (`s`.`SALEPER` IS NULL) THEN `e`.`SALEPER`
+            WHEN `e`.`SALEPER` THEN `s`.`SALEPER`
+            ELSE `s`.`SALEPER`
+        END) AS `SALEPER`,
+        `s`.`SALEPER` AS `STEAMSALEPER`,
+        `e`.`SALEPER` AS `EPICSALEPER`,
+        `s`.`DESCRIPTION` AS `STEAMDESCRIPTION`,
+        `e`.`DESCRIPTION` AS `EPICDESCRIPTION`,
+        `s`.`IMGDATA` AS `STEAMIMGDATA`,
+        `e`.`IMGDATA` AS `EPICIMGDATA`,
+        `s`.`GAMEIMG` AS `STEAMGAMEIMG`,
+        `e`.`GAMEIMG` AS `EPICGAMEIMG`,
+        `s`.`URL` AS `STEAMURL`,
+        `e`.`URL` AS `EPICURL`
+    FROM
+        (`member`.`gamedata_steam` `s`
+        LEFT JOIN `member`.`gamedata_epic` `e` ON ((`s`.`TITLE` = `e`.`TITLE`))) 
+    UNION SELECT 
+        CONCAT_WS('_',
+                IFNULL(`s`.`NUM`, ''),
+                IFNULL(`e`.`NUM`, '')) AS `KEY`,
+        `s`.`NUM` AS `STEAMNUM`,
+        `e`.`NUM` AS `EPICNUM`,
+        `e`.`TITLE` AS `TITLE`,
+        (CASE
+            WHEN
+                ((`s`.`TITLE` IS NOT NULL)
+                    AND (`e`.`TITLE` IS NOT NULL))
+            THEN
+                'Both'
+            WHEN (`s`.`TITLE` IS NOT NULL) THEN 'Steam Only'
+            WHEN (`e`.`TITLE` IS NOT NULL) THEN 'Epic Only'
+            ELSE 'None'
+        END) AS `SITEAVAILABILITY`,
+        `s`.`PRICE` AS `STEAMPRICE`,
+        `e`.`PRICE` AS `EPICPRICE`,
+        `s`.`SALEPRICE` AS `STEAMSALEPRICE`,
+        `e`.`SALEPRICE` AS `EPICSALEPRICE`,
+        (CASE
+            WHEN (`s`.`SALEPER` > `e`.`SALEPER`) THEN `s`.`SALEPER`
+            WHEN (`s`.`SALEPER` < `e`.`SALEPER`) THEN `e`.`SALEPER`
+            WHEN (`s`.`SALEPER` IS NULL) THEN `e`.`SALEPER`
+            WHEN `e`.`SALEPER` THEN `s`.`SALEPER`
+            ELSE `s`.`SALEPER`
+        END) AS `SALEPER`,
+        `s`.`SALEPER` AS `STEAMSALEPER`,
+        `e`.`SALEPER` AS `EPICSALEPER`,
+        `s`.`DESCRIPTION` AS `STEAMDESCRIPTION`,
+        `e`.`DESCRIPTION` AS `EPICDESCRIPTION`,
+        `s`.`IMGDATA` AS `STEAMIMGDATA`,
+        `e`.`IMGDATA` AS `EPICIMGDATA`,
+        `s`.`GAMEIMG` AS `STEAMGAMEIMG`,
+        `e`.`GAMEIMG` AS `EPICGAMEIMG`,
+        `s`.`URL` AS `STEAMURL`,
+        `e`.`URL` AS `EPICURL`
+    FROM
+        (`member`.`gamedata_epic` `e`
+        LEFT JOIN `member`.`gamedata_steam` `s` ON ((`s`.`TITLE` = `e`.`TITLE`)))
